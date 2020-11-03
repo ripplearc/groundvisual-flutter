@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 class AppBarTitleContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final selectedSite = Provider.of<CurrentSelectedSiteImpl>(context);
+    final selectedSite = Provider.of<CurrentSelectedSite>(context);
     return StreamBuilder<String>(
       stream: selectedSite.site(),
       builder: (context, site) {
-        if (site.hasData)
+        if (site.hasData && site.data.isNotEmpty)
           return Text(site.data,
               style: TextStyle(color: Theme.of(context).colorScheme.primary));
         else

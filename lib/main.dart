@@ -10,7 +10,7 @@ import 'AppBarTitleContent.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final preferences = await StreamingSharedPreferences.instance;
-  final currentSelectedSite = CurrentSelectedSiteImpl(preferences);
+  CurrentSelectedSite currentSelectedSite = CurrentSelectedSiteImpl(preferences);
   return runApp(Provider(
     create: (_) => currentSelectedSite,
     child: MyApp(),
@@ -45,6 +45,7 @@ class HomePage extends StatelessWidget {
             pinned: true,
             expandedHeight: 150,
             excludeHeaderSemantics: true,
+            backgroundColor: Theme.of(context).colorScheme.background,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               titlePadding: EdgeInsets.symmetric(horizontal: 20),
