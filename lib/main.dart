@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/SiteDropDownList.dart';
 import 'package:groundvisual_flutter/SliverAppBarTitle.dart';
+import 'package:groundvisual_flutter/repositories/CurrentSelectedSite.dart';
+import 'package:provider/provider.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
+import 'AppBarTitleContent.dart';
+
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final preferences = await StreamingSharedPreferences.instance;
+  final currentSelectedSite = CurrentSelectedSiteImpl(preferences);
+  return runApp(Provider(
+    create: (_) => currentSelectedSite,
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,14 +41,12 @@ class HomePage extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             title: SliverAppBarTitle(
-                child: Text("Kengsinton",
-                style: TextStyle(color: Theme.of(context).colorScheme.primary)), shouldStayWhenCollapse: true),
+                child: AppBarTitleContent(), shouldStayWhenCollapse: true),
             pinned: true,
             expandedHeight: 150,
             excludeHeaderSemantics: true,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
-              // centerTitle: true,
               titlePadding: EdgeInsets.symmetric(horizontal: 20),
               title: SliverAppBarTitle(
                 child: SiteDropDownList(),
@@ -47,13 +56,13 @@ class HomePage extends StatelessWidget {
           ),
           SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text("List tile $index"),
-                  );
-                },
-                childCount: 30,
-              ))
+            (BuildContext context, int index) {
+              return ListTile(
+                title: Text("List tile $index"),
+              );
+            },
+            childCount: 30,
+          ))
         ],
       ),
     );
