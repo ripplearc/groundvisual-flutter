@@ -11,7 +11,7 @@ class SiteDropDownList extends StatelessWidget {
       stream: selectedSite.site(),
       builder: (context, site) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington'];
-        String siteName = 'M51';//siteList.first;
+        String siteName = 'M51';
         if (site.hasData && site.data.isNotEmpty) {
           siteName = site.data;
         } else {
@@ -33,7 +33,7 @@ class SiteDropDownList extends StatelessWidget {
           items: siteList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(value, overflow: TextOverflow.ellipsis,),
             );
           }).toList(),
         );

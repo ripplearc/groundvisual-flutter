@@ -45,9 +45,9 @@ class HomePage extends StatelessWidget {
             title: SliverAppBarTitle(
                 child: AppBarTitleContent(), shouldStayWhenCollapse: true),
             pinned: true,
-            expandedHeight: 250,
+            expandedHeight: 120,
             excludeHeaderSemantics: true,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               titlePadding: EdgeInsets.symmetric(horizontal: 20),

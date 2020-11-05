@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/appBar/SiteDropDownList.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import 'SliverAppBarTitle.dart';
 
@@ -16,24 +17,31 @@ class LandingPageHeader extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              color: Colors.amber,
-              width: 100,
+              width: double.infinity,
             ),
           ),
           Container(
-            color: Colors.blue,
             height: 40.0,
-            // width: 100,
+            width: 130.0,
             child: SiteDropDownList(),
           ),
-          Container(
-            height: 35.0,
-            width: 100.0,
-            color: Colors.green,
-            child: Switch(
-              value: true,
-            ),
-          )
+          Padding(padding: EdgeInsets.all(2.0)),
+          ToggleSwitch(
+            minWidth: 55.0,
+            minHeight: 20.0,
+            iconSize: 12,
+            fontSize: 12,
+            cornerRadius: 20.0,
+            activeBgColor: Theme.of(context).colorScheme.primary,
+            activeFgColor: Colors.white,
+            inactiveBgColor: Theme.of(context).colorScheme.onBackground,
+            inactiveFgColor: Colors.white,
+            labels: ['Day', 'Trend'],
+            onToggle: (index) {
+              print('switched to: $index');
+            },
+          ),
+          Padding(padding: EdgeInsets.all(4.0)),
         ],
       ),
     );
