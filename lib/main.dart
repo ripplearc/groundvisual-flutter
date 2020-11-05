@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/SiteDropDownList.dart';
-import 'package:groundvisual_flutter/SliverAppBarTitle.dart';
+import 'package:groundvisual_flutter/appBar/LandingPageHeader.dart';
+import 'package:groundvisual_flutter/appBar/SiteDropDownList.dart';
+import 'package:groundvisual_flutter/appBar/SliverAppBarTitle.dart';
 import 'package:groundvisual_flutter/repositories/CurrentSelectedSite.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
-import 'AppBarTitleContent.dart';
+import 'appBar/AppBarTitleContent.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final preferences = await StreamingSharedPreferences.instance;
-  CurrentSelectedSite currentSelectedSite = CurrentSelectedSiteImpl(preferences);
+  CurrentSelectedSite currentSelectedSite =
+      CurrentSelectedSiteImpl(preferences);
   return runApp(Provider(
     create: (_) => currentSelectedSite,
     child: MyApp(),
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ground Visual',
       theme: ThemeData(
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -43,16 +45,13 @@ class HomePage extends StatelessWidget {
             title: SliverAppBarTitle(
                 child: AppBarTitleContent(), shouldStayWhenCollapse: true),
             pinned: true,
-            expandedHeight: 150,
+            expandedHeight: 250,
             excludeHeaderSemantics: true,
             backgroundColor: Theme.of(context).colorScheme.background,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               titlePadding: EdgeInsets.symmetric(horizontal: 20),
-              title: SliverAppBarTitle(
-                child: SiteDropDownList(),
-                shouldStayWhenCollapse: false,
-              ),
+              title: LandingPageHeader(),
             ),
           ),
           SliverList(

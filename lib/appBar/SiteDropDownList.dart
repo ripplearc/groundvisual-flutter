@@ -21,7 +21,7 @@ class SiteDropDownList extends StatelessWidget {
           icon: Icon(Icons.arrow_drop_down),
           iconSize: 24,
           elevation: 16,
-          isExpanded: false,
+          isExpanded: true,
           itemHeight: kToolbarHeight,
           style: TextStyle(
               color: Theme.of(context).colorScheme.primary, fontSize: 20),
