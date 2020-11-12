@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/HomePage.dart';
+import 'package:groundvisual_flutter/landing/LandingHomePage.dart';
 
 class GroundVisualApp extends StatelessWidget {
   @override
@@ -13,7 +13,7 @@ class GroundVisualApp extends StatelessWidget {
       ),
       darkTheme:
           ThemeData(brightness: Brightness.dark, primarySwatch: Colors.orange),
-      home: HomePage(),
+      home: LandingHomePage(),
     );
   }
 }

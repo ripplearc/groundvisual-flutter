@@ -1,21 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/repositories/CurrentSelectedSite.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 
 class SiteDropDownList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final selectedSite = Provider.of<CurrentSelectedSite>(context);
-    return StreamBuilder<String>(
-      stream: selectedSite.site(),
-      builder: (context, site) {
+    return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+      builder: (blocContext, state) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington'];
         String siteName = 'M51';
-        if (site.hasData && site.data.isNotEmpty) {
-          siteName = site.data;
-        } else {
-          selectedSite.setSelectedSite(siteName);
+        if (state is SelectedSiteEmpty) {
+          BlocProvider.of<SelectedSiteBloc>(context)
+              .add(SiteSelected(siteName));
+        } else if (state is SelectedSiteName) {
+          siteName = state.name;
         }
         return DropdownButton<String>(
           icon: Icon(Icons.arrow_drop_down),
@@ -24,16 +23,20 @@ class SiteDropDownList extends StatelessWidget {
           isExpanded: true,
           itemHeight: kToolbarHeight,
           style: TextStyle(
-              color: Theme.of(context).colorScheme.primary, fontSize: 20),
+              color: Theme.of(blocContext).colorScheme.primary, fontSize: 20),
           underline: Container(),
           value: siteName,
           onChanged: (String newValue) {
-            selectedSite.setSelectedSite(newValue);
+            BlocProvider.of<SelectedSiteBloc>(context)
+                .add(SiteSelected(newValue));
           },
           items: siteList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value, overflow: TextOverflow.ellipsis,),
+              child: Text(
+                value,
+                overflow: TextOverflow.ellipsis,
+              ),
             );
           }).toList(),
         );

@@ -1,72 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 
-class SliverAppBarTitle extends StatefulWidget {
-  final Widget child;
-  final bool shouldStayWhenCollapse;
-
-  const SliverAppBarTitle(
-      {Key key, @required this.child, this.shouldStayWhenCollapse = false})
-      : super(key: key);
-
+class SliverAppBarTitle extends StatelessWidget {
   @override
-  _SliverAppBarTitleState createState() {
-    return new _SliverAppBarTitleState();
-  }
-}
-
-class _SliverAppBarTitleState extends State<SliverAppBarTitle> {
-  ScrollPosition _position;
-  bool _visible;
-
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType();
-    print(settings.minExtent);
-    bool visible = false;
-    if (widget.shouldStayWhenCollapse) {
-      visible =
-          settings == null || settings.currentExtent <= settings.minExtent + 10;
-    } else {
-      visible =
-          settings == null || settings.currentExtent > settings.minExtent + 10;
-    }
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: Duration(milliseconds: 300),
-      opacity: _visible ? 1 : 0,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) =>
+      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+        builder: (context, state) {
+          if (state is SelectedSiteEmpty) {
+            return Text("");
+          } else if (state is SelectedSiteName) {
+            return Text(state.name,
+                style: TextStyle(color: Theme.of(context).colorScheme.primary));
+          } else {
+            return Text("");
+          }
+        },
+      );
 }

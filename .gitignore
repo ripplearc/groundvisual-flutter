@@ -41,3 +41,4 @@ app.*.symbols
 app.*.map.json
 ios/Podfile
 ios/Podfile.lock
+lib/di/di.config.dart
