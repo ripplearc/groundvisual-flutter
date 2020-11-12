@@ -10,11 +10,11 @@ class SiteDropDownList extends StatelessWidget {
       builder: (blocContext, state) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington'];
         String siteName = 'M51';
-        if (state is SelectedSiteEmpty) {
+        if (state is SelectedSiteName && state.name.isNotEmpty) {
+          siteName = state.name;
+        } else {
           BlocProvider.of<SelectedSiteBloc>(context)
               .add(SiteSelected(siteName));
-        } else if (state is SelectedSiteName) {
-          siteName = state.name;
         }
         return DropdownButton<String>(
           icon: Icon(Icons.arrow_drop_down),

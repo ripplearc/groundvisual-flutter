@@ -14,7 +14,9 @@ class SelectedSiteBloc extends Bloc<SelectedSiteEvent, SelectedSiteState> {
   CurrentSelectedSite selectedSitePreference;
 
   SelectedSiteBloc(this.selectedSitePreference)
-      : super(SelectedSiteName(selectedSitePreference.value()));
+      : super(selectedSitePreference.value().isEmpty
+            ? SelectedSiteEmpty()
+            : SelectedSiteName(selectedSitePreference.value()));
 
   @override
   Stream<SelectedSiteState> mapEventToState(
