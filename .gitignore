@@ -42,3 +42,4 @@ app.*.map.json
 ios/Podfile
 ios/Podfile.lock
 lib/di/di.config.dart
+lib/model/site_analysis_window.freezed.dart
