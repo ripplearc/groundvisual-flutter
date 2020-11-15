@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/LandingHomePage.dart';
+import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 
 class GroundVisualApp extends StatelessWidget {
   @override

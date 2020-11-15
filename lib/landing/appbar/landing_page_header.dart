@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/landing/appbar/sliver/sliver_appbar_body.dart';
+import 'package:groundvisual_flutter/landing/appbar/sliver/sliver_appbar_container.dart';
+import 'package:groundvisual_flutter/landing/appbar/title/sliver_appbar_title.dart';
 
-import 'SliverAppBarTitle.dart';
-import 'SliverAppBarBody.dart';
-import 'SliverAppBarContainer.dart';
 
 class LandingPageHeader extends StatelessWidget {
   @override
