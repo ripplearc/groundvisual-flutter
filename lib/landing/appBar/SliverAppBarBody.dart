@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/appBar/day_or_trend_selection_button.dart';
+import 'package:groundvisual_flutter/landing/appBar/day_trend_toggle.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import 'SiteDropDownList.dart';
 import 'SliverAppBarContainer.dart';
@@ -34,46 +35,10 @@ class SliverAppBarBody extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          ToggleSwitch(
-                            minWidth: 55.0,
-                            minHeight: 20.0,
-                            iconSize: 12,
-                            fontSize: 12,
-                            cornerRadius: 20.0,
-                            activeBgColor:
-                                Theme.of(context).colorScheme.primary,
-                            activeFgColor: Colors.white,
-                            inactiveBgColor:
-                                Theme.of(context).colorScheme.onBackground,
-                            inactiveFgColor: Colors.white,
-                            labels: ['Day', 'Trend'],
-                            onToggle: (index) {
-                              print('switched to: $index');
-                            },
-                          ),
-                          Expanded(
-                            child: Container(
-                              width: double.infinity,
-                            ),
-                          ),
+                          DayTrendToggle(),
+                          Expanded(child: Container(width: double.infinity)),
                           Container(
-                              height: 20,
-                              child: FlatButton.icon(
-                                height: 20,
-                                icon: Icon(
-                                  Icons.add_alarm,
-                                  size: 16,
-                                ),
-                                label: Text(
-                                  'Today',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                textColor:
-                                    Theme.of(context).colorScheme.primary,
-                                padding: EdgeInsets.all(0),
-                                color: null,
-                                onPressed: () {},
-                              ))
+                              height: 20, child: DayOrTrendSelectionButton())
                         ]),
                     Padding(padding: EdgeInsets.all(4.0)),
                   ],

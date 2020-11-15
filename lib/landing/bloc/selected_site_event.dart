@@ -1,10 +1,10 @@
 part of 'selected_site_bloc.dart';
 
-abstract class SelectedSiteEvent extends Equatable {
-  const SelectedSiteEvent();
+abstract class SelectedSiteDateTimeEvent extends Equatable {
+  const SelectedSiteDateTimeEvent();
 }
 
-class SiteSelected extends SelectedSiteEvent {
+class SiteSelected extends SelectedSiteDateTimeEvent {
   final String siteName;
 
   const SiteSelected(this.siteName);
@@ -12,21 +12,23 @@ class SiteSelected extends SelectedSiteEvent {
   @override
   List<Object> get props => throw [siteName];
 }
-//
-// class DaySelected extends SelectedSiteDateTimeEvent {
-//   final DateTime day;
-//
-//   const DaySelected(this.day);
-//
-//   @override
-//   List<Object> get props => throw [day];
-// }
-//
-// class TrendSelected extends SelectedSiteDateTimeEvent {
-//   final int numberOfLastDays;
-//
-//   const TrendSelected(this.numberOfLastDays);
-//
-//   @override
-//   List<Object> get props => throw [numberOfLastDays];
-// }
+
+class DaySelected extends SelectedSiteDateTimeEvent {
+  final DateTime day;
+
+  const DaySelected(this.day);
+
+  @override
+  List<Object> get props => throw [day];
+}
+
+class TrendSelected extends SelectedSiteDateTimeEvent {
+  final LengthOfTrendAnalysis numberOfLastDays;
+
+  const TrendSelected(this.numberOfLastDays);
+
+  @override
+  List<Object> get props => throw [numberOfLastDays];
+}
+
+enum LengthOfTrendAnalysis { oneWeek, twoWeeks, oneMonth, twoMonths }

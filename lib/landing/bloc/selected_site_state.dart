@@ -9,14 +9,32 @@ abstract class SelectedSiteState extends Equatable {
 
 class SelectedSiteEmpty extends SelectedSiteState {}
 
-class SelectedSiteName extends SelectedSiteState {
-  final String name;
+class SelectedSiteAtDay extends SelectedSiteState {
+  final String siteName;
+  final DateTime date;
 
-  const SelectedSiteName(this.name);
-
-  @override
-  List<Object> get props => [name];
+  const SelectedSiteAtDay(this.siteName, this.date);
 
   @override
-  String toString() => 'SelectedSiteName { name: $name }';
+  List<Object> get props => [siteName, date];
+
+  @override
+  String toString() =>
+      'SelectedSiteAtDay { name: $siteName, day: ${date.day} }';
+}
+
+class SelectedSiteAtWindow extends SelectedSiteState {
+  final String siteName;
+  final DateTimeRange dateRange;
+
+  const SelectedSiteAtWindow(this.siteName, this.dateRange);
+
+  @override
+  List<Object> get props => [siteName, dateRange];
+
+  @override
+  String toString() =>
+      'SelectedSteAtWindow { name: $siteName, ' +
+      ' start day: ${dateRange.start.day},' +
+      ' end day: ${dateRange.end.day} }';
 }
