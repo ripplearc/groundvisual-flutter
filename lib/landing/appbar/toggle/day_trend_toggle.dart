@@ -31,9 +31,9 @@ class _DayTrendToggle extends StatelessWidget {
         cornerRadius: 20.0,
         initialLabelIndex: initalIndex,
         activeBgColor: Theme.of(context).colorScheme.primary,
-        activeFgColor: Colors.white,
+        activeFgColor: Theme.of(context).colorScheme.background,
         inactiveBgColor: Theme.of(context).colorScheme.onBackground,
-        inactiveFgColor: Colors.white,
+        inactiveFgColor: Theme.of(context).textTheme.bodyText1.color,
         labels: ['Day', 'Trend'],
         onToggle: (index) => _triggerSelectSiteDateTimeEvent(index, context),
       );

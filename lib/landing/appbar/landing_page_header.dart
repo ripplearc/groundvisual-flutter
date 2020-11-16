@@ -14,7 +14,7 @@ class LandingPageHeader extends StatelessWidget {
       pinned: true,
       expandedHeight: 120,
       excludeHeaderSemantics: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.background,
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         titlePadding: EdgeInsets.symmetric(horizontal: 20),

@@ -12,7 +12,7 @@ class SliverAppBarTitle extends StatelessWidget {
             return Text("");
           } else if (state is SelectedSiteAtDay) {
             return Text(state.siteName,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary));
+                style: Theme.of(context).textTheme.headline6);
           } else {
             return Text("");
           }

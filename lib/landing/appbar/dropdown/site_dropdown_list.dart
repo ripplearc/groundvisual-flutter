@@ -19,13 +19,16 @@ class SiteDropDownList extends StatelessWidget {
               .add(SiteSelected(siteName));
         }
         return DropdownButton<String>(
-          icon: Icon(Icons.arrow_drop_down),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           iconSize: 24,
           elevation: 16,
           isExpanded: true,
           itemHeight: kToolbarHeight,
-          style: TextStyle(
-              color: Theme.of(blocContext).colorScheme.primary, fontSize: 20),
+          style: Theme.of(context).textTheme.headline6,
+          dropdownColor: Theme.of(context).colorScheme.background,
           underline: Container(),
           value: siteName,
           onChanged: (String newValue) {
