@@ -60,10 +60,11 @@ class AppTheme {
     colorScheme: ColorScheme.light(
         primary: Colors.orangeAccent,
         onPrimary: Colors.black87,
-        primaryVariant: Colors.amberAccent,
+        primaryVariant: Colors.deepOrangeAccent,
         secondary: Colors.yellowAccent,
         background: Colors.black87,
-        onBackground: Colors.white30,
+        onBackground: Colors.white,
+        surface: Colors.white30,
         onSurface: Colors.white60),
     cardTheme: CardTheme(
       color: Colors.black,

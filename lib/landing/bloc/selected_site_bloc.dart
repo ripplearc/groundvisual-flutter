@@ -34,7 +34,7 @@ class SelectedSiteBloc
       yield SelectedSiteAtDay(event.siteName, DateTime.now());
     } else if (event is DaySelected) {
       final siteName = await selectedSitePreference.site().first;
-      yield SelectedSiteAtDay(siteName, DateTime.now());
+      yield SelectedSiteAtDay(siteName, event.day);
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
       yield SelectedSiteAtWindow(

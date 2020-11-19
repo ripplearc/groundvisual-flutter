@@ -10,17 +10,17 @@ class DayTrendToggle extends StatelessWidget {
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
         if (state is SelectedSiteAtWindow) {
-          return _DayTrendToggle(initalIndex: 1);
+          return _DayTrendToggle(initialIndex: 1);
         } else {
-          return _DayTrendToggle(initalIndex: 0);
+          return _DayTrendToggle(initialIndex: 0);
         }
       });
 }
 
 class _DayTrendToggle extends StatelessWidget {
-  final int initalIndex;
+  final int initialIndex;
 
-  const _DayTrendToggle({Key key, this.initalIndex}) : super(key: key);
+  const _DayTrendToggle({Key key, this.initialIndex}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => ToggleSwitch(
@@ -29,10 +29,10 @@ class _DayTrendToggle extends StatelessWidget {
         iconSize: 12,
         fontSize: 12,
         cornerRadius: 20.0,
-        initialLabelIndex: initalIndex,
+        initialLabelIndex: initialIndex,
         activeBgColor: Theme.of(context).colorScheme.primary,
         activeFgColor: Theme.of(context).colorScheme.background,
-        inactiveBgColor: Theme.of(context).colorScheme.onBackground,
+        inactiveBgColor: Theme.of(context).colorScheme.surface,
         inactiveFgColor: Theme.of(context).textTheme.bodyText1.color,
         labels: ['Day', 'Trend'],
         onToggle: (index) => _triggerSelectSiteDateTimeEvent(index, context),
