@@ -35,7 +35,7 @@ class SliverAppBarBody extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          DayTrendToggle(),
+                          DateTrendToggle(),
                           Expanded(child: Container(width: double.infinity)),
                           Container(
                               height: 20, child: DayOrTrendSelectionButton())

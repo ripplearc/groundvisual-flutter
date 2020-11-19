@@ -19,7 +19,7 @@ class SelectedSiteBloc
       : super(
           selectedSitePreference.value().isEmpty
               ? SelectedSiteEmpty()
-              : SelectedSiteAtDay(
+              : SelectedSiteAtDate(
                   selectedSitePreference.value(),
                   DateTime.now(),
                 ),
@@ -31,10 +31,10 @@ class SelectedSiteBloc
   ) async* {
     if (event is SiteSelected) {
       selectedSitePreference.setSelectedSite(event.siteName);
-      yield SelectedSiteAtDay(event.siteName, DateTime.now());
-    } else if (event is DaySelected) {
+      yield SelectedSiteAtDate(event.siteName, DateTime.now());
+    } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
-      yield SelectedSiteAtDay(siteName, event.day);
+      yield SelectedSiteAtDate(siteName, event.day);
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
       yield SelectedSiteAtWindow(

@@ -13,10 +13,10 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
   List<Object> get props => throw [siteName];
 }
 
-class DaySelected extends SelectedSiteDateTimeEvent {
+class DateSelected extends SelectedSiteDateTimeEvent {
   final DateTime day;
 
-  const DaySelected(this.day);
+  const DateSelected(this.day);
 
   @override
   List<Object> get props => throw [day];

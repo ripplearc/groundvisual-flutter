@@ -9,11 +9,11 @@ abstract class SelectedSiteState extends Equatable {
 
 class SelectedSiteEmpty extends SelectedSiteState {}
 
-class SelectedSiteAtDay extends SelectedSiteState {
+class SelectedSiteAtDate extends SelectedSiteState {
   final String siteName;
   final DateTime date;
 
-  const SelectedSiteAtDay(this.siteName, this.date);
+  const SelectedSiteAtDate(this.siteName, this.date);
 
   @override
   List<Object> get props => [siteName, date];

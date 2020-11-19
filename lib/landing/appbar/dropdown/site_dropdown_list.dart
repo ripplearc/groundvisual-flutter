@@ -10,7 +10,7 @@ class SiteDropDownList extends StatelessWidget {
       builder: (blocContext, state) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington'];
         String siteName = 'M51';
-        if (state is SelectedSiteAtDay && state.siteName.isNotEmpty) {
+        if (state is SelectedSiteAtDate && state.siteName.isNotEmpty) {
           siteName = state.siteName;
         } else if (state is SelectedSiteAtWindow && state.siteName.isNotEmpty) {
           siteName = state.siteName;

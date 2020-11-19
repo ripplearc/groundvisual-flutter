@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/components/cancel_button.dart';
-import 'package:groundvisual_flutter/components/confirm_button.dart';
+import 'package:groundvisual_flutter/components/buttons/cancel_button.dart';
+import 'package:groundvisual_flutter/components/buttons/confirm_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
