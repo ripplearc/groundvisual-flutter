@@ -12,7 +12,7 @@ class DayOrTrendSelectionButton extends StatelessWidget {
         if (state is SelectedSiteAtDate) {
           return DateSelectionButton();
         } else {
-          return TrendLengthSelectionButton();
+          return TrendPeriodSelectionButton();
         }
       });
 }

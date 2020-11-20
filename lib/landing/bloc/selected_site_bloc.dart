@@ -42,7 +42,8 @@ class SelectedSiteBloc
           DateTimeRange(
             start: DateTime.now().subtract(Duration(days: 7)),
             end: DateTime.now(),
-          ));
+          ),
+          event.period);
     }
   }
 }

@@ -44,7 +44,7 @@ class _DateTrendToggle extends StatelessWidget {
           .add(DateSelected(DateTime.now()));
     } else {
       BlocProvider.of<SelectedSiteBloc>(context)
-          .add(TrendSelected(LengthOfTrendAnalysis.oneWeek));
+          .add(TrendSelected(TrendPeriod.oneWeek));
     }
   }
 }

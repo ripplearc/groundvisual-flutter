@@ -26,8 +26,9 @@ class SelectedSiteAtDate extends SelectedSiteState {
 class SelectedSiteAtWindow extends SelectedSiteState {
   final String siteName;
   final DateTimeRange dateRange;
+  final TrendPeriod period;
 
-  const SelectedSiteAtWindow(this.siteName, this.dateRange);
+  const SelectedSiteAtWindow(this.siteName, this.dateRange, this.period);
 
   @override
   List<Object> get props => [siteName, dateRange];
@@ -36,5 +37,6 @@ class SelectedSiteAtWindow extends SelectedSiteState {
   String toString() =>
       'SelectedSteAtWindow { name: $siteName, ' +
       ' start day: ${dateRange.start.day},' +
-      ' end day: ${dateRange.end.day} }';
+      ' end day: ${dateRange.end.day} }' +
+      'period: $period';
 }
