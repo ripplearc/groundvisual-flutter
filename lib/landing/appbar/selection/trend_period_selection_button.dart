@@ -11,80 +11,79 @@ class TrendPeriodSelectionButton extends StatelessWidget {
           builder: (context, state) => state is SelectedSiteAtWindow
               ? DateButton(
                   dateText: state.period.value(),
-                  // dateText: " Last 7 days",
                   action: () {
-                    _buildTrendWindowSelection(context, (TrendPeriod period) {
-                      BlocProvider.of<SelectedSiteBloc>(context)
-                          .add(TrendSelected(period));
-                    });
+                    _buildTrendWindowSelection(
+                      context,
+                      state.period,
+                      (TrendPeriod period) {
+                        BlocProvider.of<SelectedSiteBloc>(context)
+                            .add(TrendSelected(period));
+                      },
+                    );
                   })
               : null);
 
-  void _buildTrendWindowSelection(BuildContext context,
-      Function(TrendPeriod period) action,) =>
+  void _buildTrendWindowSelection(
+    BuildContext context,
+    TrendPeriod currentPeriod,
+    Function(TrendPeriod period) action,
+  ) =>
       showModalBottomSheet(
           context: context,
-          backgroundColor: Theme
-              .of(context)
-              .colorScheme
-              .onSurface,
-          builder: (_) =>
-              Container(
-                height: 300,
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .background,
+          backgroundColor: Theme.of(context).colorScheme.onSurface,
+          builder: (_) => Container(
+                height: 350,
+                color: Theme.of(context).colorScheme.background,
                 child: ListView(
-                  children: TrendPeriod.values.map((item) {
-                    if (item == TrendPeriod.oneWeek) {
-                      return _buildHighlightListTile(item, context);
-                    } else {
-                      return _buildNormalListTile(item, context, action);
-                    }
-                  }).toList(),
+                  children: [_buildHeaderTile(context)] +
+                      TrendPeriod.values.map((item) {
+                        if (item == currentPeriod) {
+                          return _buildHighlightListTile(item, context);
+                        } else {
+                          return _buildNormalListTile(item, context, action);
+                        }
+                      }).toList(),
                 ),
               ));
 
-  ListTile _buildHighlightListTile(TrendPeriod item,
-      BuildContext context,) {
-    return ListTile(
-      title: Text(
-        item.value(),
-        style: Theme
-            .of(context)
-            .textTheme
-            .headline6
-            .apply(color: Theme
-            .of(context)
-            .colorScheme
-            .primary),
-      ),
-      trailing: Icon(
-        Icons.check,
-        color: Theme
-            .of(context)
-            .colorScheme
-            .primary,
-      ),
-      onTap: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
+  ListTile _buildHeaderTile(BuildContext context) => ListTile(
+        title: Text("Trend Period",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline5),
+        contentPadding: EdgeInsets.all(20),
+      );
 
-  ListTile _buildNormalListTile(TrendPeriod item,
-      BuildContext context,
-      Function(TrendPeriod period) action,) {
-    return ListTile(
-      title: Text(item.value(), style: Theme
-          .of(context)
-          .textTheme
-          .headline6),
-      onTap: () {
-        action(item);
-        Navigator.of(context).pop();
-      },
-    );
-  }
+  ListTile _buildHighlightListTile(
+    TrendPeriod item,
+    BuildContext context,
+  ) =>
+      ListTile(
+        title: Text(
+          item.value(),
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .apply(color: Theme.of(context).colorScheme.primary),
+        ),
+        trailing: Icon(
+          Icons.check,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+  ListTile _buildNormalListTile(
+    TrendPeriod item,
+    BuildContext context,
+    Function(TrendPeriod period) action,
+  ) =>
+      ListTile(
+        title: Text(item.value(), style: Theme.of(context).textTheme.subtitle1),
+        onTap: () {
+          action(item);
+          Navigator.of(context).pop();
+        },
+      );
 }
