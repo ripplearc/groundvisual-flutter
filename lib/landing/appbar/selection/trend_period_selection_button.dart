@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/components/buttons/date_button.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 
+/// Select a period to display the information about the selected site. It selects
+/// the last 7 days by default, and it resets to last 7 days when toggle between sites,
+/// or between date and trend. Once a new period is selected, it updates the <SelectedSiteBloc>.
 class TrendPeriodSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
@@ -16,6 +19,7 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                       context,
                       state.period,
                       (TrendPeriod period) {
+                        if (period == state.period) return;
                         BlocProvider.of<SelectedSiteBloc>(context)
                             .add(TrendSelected(period));
                       },

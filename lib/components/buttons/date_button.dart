@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// RDS Button for showing the date or period. The action usually invoke
+/// another widget for selecting a widget or period.
 class DateButton extends StatelessWidget {
   final String dateText;
   final Function() action;

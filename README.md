@@ -1,6 +1,8 @@
 # groundvisual_flutter
 
 Ground Visual (Flutter) is the cross platform frontend solution for iOS/Android/Web.
+It allows the user to check the latest or the trend happening on the construction site,
+look up the fleet information, search the document and update the account.
 
 ## Getting Started
 

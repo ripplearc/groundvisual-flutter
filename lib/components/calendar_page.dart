@@ -4,6 +4,8 @@ import 'package:groundvisual_flutter/components/buttons/cancel_button.dart';
 import 'package:groundvisual_flutter/components/buttons/confirm_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+/// RDS Calendar page for selecting a certain date, and execute an action
+/// upon the confirmation of date selection.
 class CalendarPage extends StatefulWidget {
   CalendarPage(
       {Key key, this.confirmSelectedDateAction, this.initialSelectedDate})
