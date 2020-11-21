@@ -85,6 +85,11 @@ class _CalendarPageState extends State<CalendarPage>
 
   CalendarStyle _buildCalendarStyle(BuildContext context) => CalendarStyle(
       selectedColor: Theme.of(context).colorScheme.primary,
+      weekdayStyle: Theme.of(context).textTheme.subtitle1,
+      weekendStyle: Theme.of(context)
+          .textTheme
+          .subtitle1
+          .apply(color: Theme.of(context).colorScheme.primaryVariant),
       todayColor: Theme.of(context).colorScheme.primaryVariant,
       todayStyle: Theme.of(context)
           .textTheme
@@ -98,7 +103,7 @@ class _CalendarPageState extends State<CalendarPage>
       unavailableStyle: Theme.of(context)
           .textTheme
           .subtitle1
-          .apply(color: Theme.of(context).colorScheme.surface));
+          .apply(color: Theme.of(context).colorScheme.onSurface));
 
   Row _buildButtons(BuildContext context, Function(DateTime t) f) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

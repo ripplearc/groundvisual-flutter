@@ -1,6 +1,6 @@
 # groundvisual_flutter
 
-Flutter cross platform of Ground Visual
+Ground Visual (Flutter) is the cross platform frontend solution for iOS/Android/Web.
 
 ## Getting Started
 

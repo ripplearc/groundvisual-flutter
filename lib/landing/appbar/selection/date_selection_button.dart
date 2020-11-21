@@ -26,7 +26,7 @@ class DateSelectionButton extends StatelessWidget {
       showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
-          backgroundColor: Theme.of(context).colorScheme.onSurface,
+          backgroundColor: Theme.of(context).cardTheme.color,
           builder: (_) => _calenderSelection(context, state.date, (DateTime t) {
                 BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t));
               }));
@@ -38,7 +38,7 @@ class DateSelectionButton extends StatelessWidget {
   ) =>
       Container(
         height: 500,
-        color: Theme.of(context).colorScheme.background,
+        // color: Theme.of(context).colorScheme.background,
         child: CalendarPage(
             confirmSelectedDateAction: action,
             initialSelectedDate: initialSelectedDate),

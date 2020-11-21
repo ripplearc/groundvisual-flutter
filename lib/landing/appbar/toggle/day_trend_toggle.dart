@@ -33,7 +33,7 @@ class _DateTrendToggle extends StatelessWidget {
         activeBgColor: Theme.of(context).colorScheme.primary,
         activeFgColor: Theme.of(context).colorScheme.background,
         inactiveBgColor: Theme.of(context).colorScheme.surface,
-        inactiveFgColor: Theme.of(context).textTheme.bodyText1.color,
+        inactiveFgColor: Theme.of(context).colorScheme.primary,
         labels: ['Date', 'Trend'],
         onToggle: (index) => _triggerSelectSiteDateTimeEvent(index, context),
       );

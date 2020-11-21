@@ -6,7 +6,8 @@ class LandingPageBody extends StatelessWidget {
   Widget build(BuildContext context) => SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return ListTile(title: ListElement(index: index));
+            return ListTile(title: ListElement(index: index),
+            tileColor: Theme.of(context).colorScheme.background,);
           },
           childCount: 30,
         ),
