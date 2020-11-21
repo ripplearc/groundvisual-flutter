@@ -10,6 +10,8 @@ part 'selected_site_event.dart';
 
 part 'selected_site_state.dart';
 
+/// bloc to take events of selecting date or period, and notify listener about the
+/// selected date range.
 @injectable
 class SelectedSiteBloc
     extends Bloc<SelectedSiteDateTimeEvent, SelectedSiteState> {
@@ -19,7 +21,7 @@ class SelectedSiteBloc
       : super(
           selectedSitePreference.value().isEmpty
               ? SelectedSiteEmpty()
-              : SelectedSiteAtDay(
+              : SelectedSiteAtDate(
                   selectedSitePreference.value(),
                   DateTime.now(),
                 ),
@@ -31,10 +33,10 @@ class SelectedSiteBloc
   ) async* {
     if (event is SiteSelected) {
       selectedSitePreference.setSelectedSite(event.siteName);
-      yield SelectedSiteAtDay(event.siteName, DateTime.now());
-    } else if (event is DaySelected) {
+      yield SelectedSiteAtDate(event.siteName, DateTime.now());
+    } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
-      yield SelectedSiteAtDay(siteName, DateTime.now());
+      yield SelectedSiteAtDate(siteName, event.day);
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
       yield SelectedSiteAtWindow(
@@ -42,7 +44,8 @@ class SelectedSiteBloc
           DateTimeRange(
             start: DateTime.now().subtract(Duration(days: 7)),
             end: DateTime.now(),
-          ));
+          ),
+          event.period);
     }
   }
 }

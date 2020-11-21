@@ -9,11 +9,11 @@ abstract class SelectedSiteState extends Equatable {
 
 class SelectedSiteEmpty extends SelectedSiteState {}
 
-class SelectedSiteAtDay extends SelectedSiteState {
+class SelectedSiteAtDate extends SelectedSiteState {
   final String siteName;
   final DateTime date;
 
-  const SelectedSiteAtDay(this.siteName, this.date);
+  const SelectedSiteAtDate(this.siteName, this.date);
 
   @override
   List<Object> get props => [siteName, date];
@@ -26,8 +26,9 @@ class SelectedSiteAtDay extends SelectedSiteState {
 class SelectedSiteAtWindow extends SelectedSiteState {
   final String siteName;
   final DateTimeRange dateRange;
+  final TrendPeriod period;
 
-  const SelectedSiteAtWindow(this.siteName, this.dateRange);
+  const SelectedSiteAtWindow(this.siteName, this.dateRange, this.period);
 
   @override
   List<Object> get props => [siteName, dateRange];
@@ -36,5 +37,6 @@ class SelectedSiteAtWindow extends SelectedSiteState {
   String toString() =>
       'SelectedSteAtWindow { name: $siteName, ' +
       ' start day: ${dateRange.start.day},' +
-      ' end day: ${dateRange.end.day} }';
+      ' end day: ${dateRange.end.day} }' +
+      'period: $period';
 }

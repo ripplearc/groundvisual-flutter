@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/appbar/selection/day_or_trend_selection_button.dart';
+import 'package:groundvisual_flutter/landing/appbar/selection/date_or_trend_selection_button.dart';
 import 'package:groundvisual_flutter/landing/appbar/toggle/day_trend_toggle.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 
@@ -35,7 +35,7 @@ class SliverAppBarBody extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          DayTrendToggle(),
+                          DateTrendToggle(),
                           Expanded(child: Container(width: double.infinity)),
                           Container(
                               height: 20, child: DayOrTrendSelectionButton())

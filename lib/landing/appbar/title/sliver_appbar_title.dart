@@ -10,9 +10,9 @@ class SliverAppBarTitle extends StatelessWidget {
         builder: (context, state) {
           if (state is SelectedSiteEmpty) {
             return Text("");
-          } else if (state is SelectedSiteAtDay) {
+          } else if (state is SelectedSiteAtDate) {
             return Text(state.siteName,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary));
+                style: Theme.of(context).textTheme.headline6);
           } else {
             return Text("");
           }

@@ -13,22 +13,38 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
   List<Object> get props => throw [siteName];
 }
 
-class DaySelected extends SelectedSiteDateTimeEvent {
+class DateSelected extends SelectedSiteDateTimeEvent {
   final DateTime day;
 
-  const DaySelected(this.day);
+  const DateSelected(this.day);
 
   @override
   List<Object> get props => throw [day];
 }
 
 class TrendSelected extends SelectedSiteDateTimeEvent {
-  final LengthOfTrendAnalysis numberOfLastDays;
+  final TrendPeriod period;
 
-  const TrendSelected(this.numberOfLastDays);
+  const TrendSelected(this.period);
 
   @override
-  List<Object> get props => throw [numberOfLastDays];
+  List<Object> get props => throw [period];
 }
 
-enum LengthOfTrendAnalysis { oneWeek, twoWeeks, oneMonth, twoMonths }
+enum TrendPeriod { oneWeek, twoWeeks, oneMonth, twoMonths }
+
+extension Value on TrendPeriod {
+  String value() {
+    switch (this) {
+      case TrendPeriod.oneWeek:
+        return "Last 7 days";
+      case TrendPeriod.twoWeeks:
+        return "Last 14 days";
+      case TrendPeriod.oneMonth:
+        return "Last 30 days";
+      case TrendPeriod.twoMonths:
+        return "Last 60 days";
+    }
+    throw ArgumentError('$this is not a valid Trend Period');
+  }
+}

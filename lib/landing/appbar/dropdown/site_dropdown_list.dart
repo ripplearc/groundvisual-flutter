@@ -10,7 +10,7 @@ class SiteDropDownList extends StatelessWidget {
       builder: (blocContext, state) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington'];
         String siteName = 'M51';
-        if (state is SelectedSiteAtDay && state.siteName.isNotEmpty) {
+        if (state is SelectedSiteAtDate && state.siteName.isNotEmpty) {
           siteName = state.siteName;
         } else if (state is SelectedSiteAtWindow && state.siteName.isNotEmpty) {
           siteName = state.siteName;
@@ -19,18 +19,23 @@ class SiteDropDownList extends StatelessWidget {
               .add(SiteSelected(siteName));
         }
         return DropdownButton<String>(
-          icon: Icon(Icons.arrow_drop_down),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           iconSize: 24,
           elevation: 16,
           isExpanded: true,
           itemHeight: kToolbarHeight,
-          style: TextStyle(
-              color: Theme.of(blocContext).colorScheme.primary, fontSize: 20),
+          style: Theme.of(context).textTheme.headline6,
+          dropdownColor: Theme.of(context).colorScheme.background,
           underline: Container(),
           value: siteName,
           onChanged: (String newValue) {
-            BlocProvider.of<SelectedSiteBloc>(context)
-                .add(SiteSelected(newValue));
+            if (newValue != siteName) {
+              BlocProvider.of<SelectedSiteBloc>(context)
+                  .add(SiteSelected(newValue));
+            }
           },
           items: siteList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
