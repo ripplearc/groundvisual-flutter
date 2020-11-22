@@ -1,12 +1,18 @@
 import 'package:fluro/fluro.dart';
+import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:injectable/injectable.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 @module
 abstract class AppModule {
   @preResolve
-  Future<StreamingSharedPreferences> get prefs => StreamingSharedPreferences.instance;
+  Future<StreamingSharedPreferences> get prefs =>
+      StreamingSharedPreferences.instance;
 
   @preResolve
-  Future<FluroRouter> get router => Future.value(FluroRouter());
+  Future<FluroRouter> get router async {
+    final router = FluroRouter();
+    Routes.configureRoutes(router);
+    return router;
+  }
 }

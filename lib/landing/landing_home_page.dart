@@ -18,13 +18,9 @@ class LandingHomePage extends StatelessWidget {
               slivers: <Widget>[LandingPageHeader(), LandingPageBody()],
             )),
         bottomNavigationBar: BottomNavigation(action: () {
-          tappedMenuButton(context, 'native');
+          tappedMenuButton(context, getIt<FluroRouter>(), 'native');
         }));
   }
-}
-
-class Application {
-  static FluroRouter router;
 }
 
 class Routes {
@@ -134,7 +130,7 @@ class DemoSimpleComponent extends StatelessWidget {
 }
 
 // actions
-void tappedMenuButton(BuildContext context, String key) {
+void tappedMenuButton(BuildContext context, FluroRouter router, String key) {
   String message = "";
   String hexCode = "#FFFFFF";
   String result;
@@ -167,11 +163,11 @@ void tappedMenuButton(BuildContext context, String key) {
       route = "$route&result=$result";
     }
 
-    Application.router
+    router
         .navigateTo(context, route, transition: transitionType)
         .then((result) {
       if (key == "pop-result") {
-        Application.router.navigateTo(context, "/demo/func?message=$result");
+        router.navigateTo(context, "/demo/func?message=$result");
       }
     });
   } else if (key == "custom") {
@@ -187,7 +183,7 @@ void tappedMenuButton(BuildContext context, String key) {
         ),
       );
     };
-    Application.router.navigateTo(
+    router.navigateTo(
       context,
       "/demo?message=$message&color_hex=$hexCode",
       transition: TransitionType.custom,
@@ -195,10 +191,10 @@ void tappedMenuButton(BuildContext context, String key) {
       transitionDuration: const Duration(milliseconds: 600),
     );
   } else if (key == "fixed-trans") {
-    Application.router.navigateTo(
+    router.navigateTo(
         context, "/demo/fixedtrans?message=Hello!&color_hex=#f4424b");
   } else {
     message = "You tapped the function button!";
-    Application.router.navigateTo(context, "/demo/func?message=$message");
+    router.navigateTo(context, "/demo/func?message=$message");
   }
 }
