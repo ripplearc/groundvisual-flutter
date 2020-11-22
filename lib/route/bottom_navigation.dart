@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class BottomNavigation extends StatefulWidget {
-  final Function() action;
+  final Function(int index) action;
 
   const BottomNavigation({Key key, this.action}) : super(key: key);
   @override
@@ -13,12 +13,12 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   var _selectedTab = SelectedTab.site;
 
-  final Function() action;
+  final Function(int index) action;
 
   _BottomNavigationState(this.action);
 
   void _handleIndexChanged(int i) {
-    action();
+    action(i);
     setState(() {
       _selectedTab = SelectedTab.values[i];
     });

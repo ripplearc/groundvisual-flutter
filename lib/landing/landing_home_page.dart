@@ -8,18 +8,47 @@ import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/body/landing_page_body.dart';
 import 'package:groundvisual_flutter/route/bottom_navigation.dart';
 
-class LandingHomePage extends StatelessWidget {
+class LandingHomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _LandingHomePageState();
+}
+
+class _LandingHomePageState extends State<LandingHomePage> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    BlocProvider(
+        create: (_) => getIt<SelectedSiteBloc>(),
+        child: CustomScrollView(
+          slivers: <Widget>[LandingPageHeader(), LandingPageBody()],
+        )),
+    PlaceholderWidget(Colors.white),
+    PlaceholderWidget(Colors.deepOrange),
+    PlaceholderWidget(Colors.green)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocProvider(
-            create: (_) => getIt<SelectedSiteBloc>(),
-            child: CustomScrollView(
-              slivers: <Widget>[LandingPageHeader(), LandingPageBody()],
-            )),
-        bottomNavigationBar: BottomNavigation(action: () {
-          tappedMenuButton(context, getIt<FluroRouter>(), 'native');
+        body: _children[_currentIndex],
+        bottomNavigationBar: BottomNavigation(action: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          // tappedMenuButton(context, getIt<FluroRouter>(), 'native');
         }));
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+  final Color color;
+
+  PlaceholderWidget(this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+    );
   }
 }
 
@@ -37,10 +66,6 @@ class Routes {
     });
     router.define(root, handler: rootHandler);
     router.define(demoSimple, handler: demoRouteHandler);
-    // router.define(demoSimpleFixedTrans,
-    //     handler: demoRouteHandler, transitionType: TransitionType.inFromLeft);
-    // router.define(demoFunc, handler: demoFunctionHandler);
-    // router.define(deepLink, handler: deepLinkHandler);
   }
 }
 
@@ -76,9 +101,11 @@ class DemoSimpleComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Let's go back"),
+      ),
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image(
@@ -140,23 +167,8 @@ void tappedMenuButton(BuildContext context, FluroRouter router, String key) {
       hexCode = "#F76F00";
       message =
           "This screen should have appeared using the default flutter animation for the current OS";
-    } else if (key == "preset-from-left") {
-      hexCode = "#5BF700";
-      message =
-          "This screen should have appeared with a slide in from left transition";
-      transitionType = TransitionType.inFromLeft;
-    } else if (key == "preset-fade") {
-      hexCode = "#F700D2";
-      message = "This screen should have appeared with a fade in transition";
-      transitionType = TransitionType.fadeIn;
-    } else if (key == "pop-result") {
-      transitionType = TransitionType.native;
-      hexCode = "#7d41f4";
-      message =
-          "When you close this screen you should see the current day of the week";
-      result = ""; //"""Today is ${_daysOfWeek[DateTime.now().weekday - 1]}!";
+      transitionType = TransitionType.inFromRight;
     }
-
     String route = "/demo?message=$message&color_hex=$hexCode";
 
     if (result != null) {
@@ -170,29 +182,6 @@ void tappedMenuButton(BuildContext context, FluroRouter router, String key) {
         router.navigateTo(context, "/demo/func?message=$result");
       }
     });
-  } else if (key == "custom") {
-    hexCode = "#DFF700";
-    message = "This screen should have appeared with a crazy custom transition";
-    var transition = (BuildContext context, Animation<double> animation,
-        Animation<double> secondaryAnimation, Widget child) {
-      return ScaleTransition(
-        scale: animation,
-        child: RotationTransition(
-          turns: animation,
-          child: child,
-        ),
-      );
-    };
-    router.navigateTo(
-      context,
-      "/demo?message=$message&color_hex=$hexCode",
-      transition: TransitionType.custom,
-      transitionBuilder: transition,
-      transitionDuration: const Duration(milliseconds: 600),
-    );
-  } else if (key == "fixed-trans") {
-    router.navigateTo(
-        context, "/demo/fixedtrans?message=Hello!&color_hex=#f4424b");
   } else {
     message = "You tapped the function button!";
     router.navigateTo(context, "/demo/func?message=$message");
