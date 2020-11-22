@@ -21,9 +21,9 @@ class _LandingHomePageState extends State<LandingHomePage> {
         child: CustomScrollView(
           slivers: <Widget>[LandingPageHeader(), LandingPageBody()],
         )),
-    PlaceholderWidget(Colors.white),
-    PlaceholderWidget(Colors.deepOrange),
-    PlaceholderWidget(Colors.green)
+    PlaceholderWidget(Colors.white, "Fleet Page Under Construction"),
+    PlaceholderWidget(Colors.deepOrange, "Document Page Under Construction"),
+    PlaceholderWidget(Colors.green, "Account Page Under Construction")
   ];
 
   @override
@@ -34,20 +34,23 @@ class _LandingHomePageState extends State<LandingHomePage> {
           setState(() {
             _currentIndex = index;
           });
-          // tappedMenuButton(context, getIt<FluroRouter>(), 'native');
         }));
   }
 }
 
 class PlaceholderWidget extends StatelessWidget {
   final Color color;
+  final String pageTitle;
 
-  PlaceholderWidget(this.color);
+  PlaceholderWidget(this.color, this.pageTitle);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: color,
+      child: Center(
+        child: Text(pageTitle, style: Theme.of(context).textTheme.headline4),
+      ),
     );
   }
 }
@@ -153,37 +156,5 @@ class DemoSimpleComponent extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-// actions
-void tappedMenuButton(BuildContext context, FluroRouter router, String key) {
-  String message = "";
-  String hexCode = "#FFFFFF";
-  String result;
-  TransitionType transitionType = TransitionType.native;
-  if (key != "custom" && key != "function-call" && key != "fixed-trans") {
-    if (key == "native") {
-      hexCode = "#F76F00";
-      message =
-          "This screen should have appeared using the default flutter animation for the current OS";
-      transitionType = TransitionType.inFromRight;
-    }
-    String route = "/demo?message=$message&color_hex=$hexCode";
-
-    if (result != null) {
-      route = "$route&result=$result";
-    }
-
-    router
-        .navigateTo(context, route, transition: transitionType)
-        .then((result) {
-      if (key == "pop-result") {
-        router.navigateTo(context, "/demo/func?message=$result");
-      }
-    });
-  } else {
-    message = "You tapped the function button!";
-    router.navigateTo(context, "/demo/func?message=$message");
   }
 }
