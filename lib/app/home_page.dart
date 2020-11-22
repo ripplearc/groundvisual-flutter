@@ -8,12 +8,12 @@ import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/body/landing_page_body.dart';
 import 'package:groundvisual_flutter/route/bottom_navigation.dart';
 
-class LandingHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _LandingHomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _LandingHomePageState extends State<LandingHomePage> {
+class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     BlocProvider(
@@ -74,7 +74,7 @@ class Routes {
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return LandingHomePage();
+  return HomePage();
 });
 
 var demoRouteHandler = Handler(

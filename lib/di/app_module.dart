@@ -1,5 +1,5 @@
 import 'package:fluro/fluro.dart';
-import 'package:groundvisual_flutter/landing/landing_home_page.dart';
+import 'package:groundvisual_flutter/app/home_page.dart';
 import 'package:injectable/injectable.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
