@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/route/placeholder_navigation_page.dart';
 
 class LandingPageBody extends StatelessWidget {
   @override
@@ -34,30 +35,17 @@ class ListElement extends StatelessWidget {
 void tappedMenuButton(BuildContext context, FluroRouter router, String key) {
   String message = "";
   String hexCode = "#FFFFFF";
-  String result;
   TransitionType transitionType = TransitionType.native;
-  if (key != "custom" && key != "function-call" && key != "fixed-trans") {
-    if (key == "native") {
-      hexCode = "#F76F00";
-      message =
+  hexCode = "#F76F00";
+  message =
       "This screen should have appeared using the default flutter animation for the current OS";
-      transitionType = TransitionType.inFromRight;
-    }
-    String route = "/demo?message=$message&color_hex=$hexCode";
+  transitionType = TransitionType.inFromRight;
 
-    if (result != null) {
-      route = "$route&result=$result";
-    }
+  String route = "/site/detail?message=$message&color_hex=$hexCode";
 
-    router
-        .navigateTo(context, route, transition: transitionType)
-        .then((result) {
-      if (key == "pop-result") {
-        router.navigateTo(context, "/demo/func?message=$result");
-      }
-    });
-  } else {
-    message = "You tapped the function button!";
-    router.navigateTo(context, "/demo/func?message=$message");
-  }
+  router.navigateTo(context, route, transition: transitionType).then((result) {
+    if (key == "pop-result") {
+      router.navigateTo(context, "/demo/func?message=$result");
+    }
+  });
 }

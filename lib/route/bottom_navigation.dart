@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+/// Display bottom navigation tabs.
 class BottomNavigation extends StatefulWidget {
   final Function(int index) action;
 
@@ -30,8 +31,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
       onTap: _handleIndexChanged,
       items: SelectedTab.values.map((element) {
         return SalomonBottomBarItem(
-          icon: element._icon(),
-          title: element._text(),
+          icon: element.icon(),
+          title: element.text(),
           selectedColor: Theme.of(context).colorScheme.primary,
           unselectedColor: Theme.of(context).colorScheme.onBackground,
         );
@@ -40,8 +41,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
 enum SelectedTab { site, fleet, doc, account }
 
-extension _Value on SelectedTab {
-  Icon _icon() {
+extension Value on SelectedTab {
+  Icon icon() {
     switch (this) {
       case SelectedTab.site:
         return Icon(Icons.foundation);
@@ -55,7 +56,7 @@ extension _Value on SelectedTab {
     throw ArgumentError('$this is not a valid Trend Period');
   }
 
-  Text _text() {
+  Text text() {
     switch (this) {
       case SelectedTab.site:
         return Text("Site");
