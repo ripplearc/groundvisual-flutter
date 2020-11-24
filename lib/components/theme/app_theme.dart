@@ -6,12 +6,16 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.teal,
+    scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
-      color: Colors.teal,
+      color: Colors.white,
       iconTheme: IconThemeData(
-        color: Colors.white,
+        color: Colors.orangeAccent,
       ),
+    ),
+    bottomAppBarColor: Colors.grey[100],
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: Colors.grey[100],
     ),
     colorScheme: ColorScheme(
         primary: Colors.orangeAccent,
@@ -48,9 +52,9 @@ class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.black,
     appBarTheme: AppBarTheme(
-      color: Colors.amberAccent,
+      color: Colors.black87,
       iconTheme: IconThemeData(
-        color: Colors.white,
+        color: Colors.orangeAccent,
       ),
     ),
     colorScheme: ColorScheme(
