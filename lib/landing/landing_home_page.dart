@@ -11,6 +11,6 @@ class LandingHomePage extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
       create: (_) => getIt<SelectedSiteBloc>(),
       child: CustomScrollView(
-        slivers: <Widget>[LandingPageHeader(), LandingPageBody()],
+        slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
       ));
 }

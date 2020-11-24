@@ -5,7 +5,7 @@ import 'package:groundvisual_flutter/landing/appbar/sliver/sliver_appbar_contain
 import 'package:groundvisual_flutter/landing/appbar/title/sliver_appbar_title.dart';
 
 
-class LandingPageHeader extends StatelessWidget {
+class LandingHomePageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
      SliverAppBar(

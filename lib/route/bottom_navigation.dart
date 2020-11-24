@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-/// Display bottom navigation tabs.
+/// Display bottom navigation tabs. The action notifies about the selected tab.
 class BottomNavigation extends StatefulWidget {
   final Function(int index) action;
 
