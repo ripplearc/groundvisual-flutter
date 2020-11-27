@@ -2,7 +2,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/di/di.dart';
-import 'package:groundvisual_flutter/landing/chart/working_hours_bar_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/working_time_daily_chart.dart';
 
 class LandingHomePageBody extends StatelessWidget {
@@ -11,7 +10,7 @@ class LandingHomePageBody extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             if (index == 0) {
-              return WorkingTimeWeeklyChart();
+              return WorkingTimeDailyChart();
             }
             return ListTile(
               title: ListElement(index: index),

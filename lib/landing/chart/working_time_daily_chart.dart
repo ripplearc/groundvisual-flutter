@@ -1,15 +1,14 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class WorkingTimeWeeklyChart extends StatefulWidget {
+class WorkingTimeDailyChart extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => WorkingTimeWeeklyChartState();
+  State<StatefulWidget> createState() => WorkingTimeDailyChartState();
 }
 
-class WorkingTimeWeeklyChartState extends State<WorkingTimeWeeklyChart> {
+class WorkingTimeDailyChartState extends State<WorkingTimeDailyChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -19,12 +18,22 @@ class WorkingTimeWeeklyChartState extends State<WorkingTimeWeeklyChart> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.only(top: 72.0),
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.center,
               barTouchData: BarTouchData(
-                enabled: false,
+                touchTooltipData: BarTouchTooltipData(
+                    tooltipBgColor: Theme.of(context).colorScheme.background,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      String timeStamp = groupIndex.toString() +
+                          (rodIndex % 24 == 0 ? ":0" : ":") +
+                          (rodIndex % 24 * 15).toString();
+                      return BarTooltipItem('$timeStamp\n' + (rod.y).toString(),
+                          Theme.of(context).textTheme.caption.apply(
+                            color: Theme.of(context).colorScheme.onBackground
+                          ));
+                    }),
               ),
               titlesData: FlTitlesData(
                 show: true,
@@ -40,7 +49,7 @@ class WorkingTimeWeeklyChartState extends State<WorkingTimeWeeklyChart> {
                 ),
                 leftTitles: SideTitles(
                   showTitles: true,
-                  interval: 7,
+                  interval: 15,
                   getTextStyles: (value) {
                     return Theme.of(context).textTheme.caption;
                   },
@@ -62,7 +71,7 @@ class WorkingTimeWeeklyChartState extends State<WorkingTimeWeeklyChart> {
     int morningDistance = time;
     int eveningDistance = (96 - time).abs();
     int distance = min(morningDistance, eveningDistance);
-    if ([0, 24, 48, 72, 95].contains(time)) {
+    if ([].contains(time)) {
       return 0.1;
     } else {
       return pow(distance / 96.0, 4);
@@ -72,11 +81,11 @@ class WorkingTimeWeeklyChartState extends State<WorkingTimeWeeklyChart> {
   BarChartRodData _genBarChartRodData(Color dark, Color light, int time) {
     Random random = new Random();
     double randomMinutes =
-        random.nextDouble() * 15 * _probabilityOfWorking(time);
+        random.nextDouble() * 500 * _probabilityOfWorking(time);
     double randomPert = random.nextDouble() * 0.5;
     return BarChartRodData(
         y: randomMinutes,
-        width: 1.5,
+        width: 1.7,
         rodStackItems: [
           BarChartRodStackItem(0, randomMinutes * (1 - randomPert), dark),
           BarChartRodStackItem(
