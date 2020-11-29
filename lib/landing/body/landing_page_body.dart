@@ -1,26 +1,31 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/di/di.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/working_time_daily_chart.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            if (index == 0) {
-              return WorkingTimeDailyChart();
-            }
-            return ListTile(
-              title: ListElement(index: index),
-              tileColor: Theme.of(context).colorScheme.background,
-              onTap: () => _tapDetail(context, getIt<FluroRouter>(), 'native'),
-            );
-          },
-          childCount: 30,
-        ),
-      );
+  Widget build(BuildContext context) =>
+      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+          builder: (context, state) {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              if (state is SelectedSiteAtDate && state.bars == null) {
+                return WorkingTimeDailyChartShimmer();
+              } else if (state is SelectedSiteAtDate && state.bars.isNotEmpty) {
+                return WorkingTimeDailyChart();
+              } else {
+                return null;
+              }
+            },
+            childCount: 1,
+          ),
+        );
+      });
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";

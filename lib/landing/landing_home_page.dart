@@ -9,7 +9,7 @@ import 'body/landing_page_body.dart';
 class LandingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
-      create: (_) => getIt<SelectedSiteBloc>(),
+      create: (_) => getIt<SelectedSiteBloc>()..add(Init()),
       child: CustomScrollView(
         slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
       ));

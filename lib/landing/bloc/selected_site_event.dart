@@ -4,6 +4,11 @@ abstract class SelectedSiteDateTimeEvent extends Equatable {
   const SelectedSiteDateTimeEvent();
 }
 
+class Init extends SelectedSiteDateTimeEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class SiteSelected extends SelectedSiteDateTimeEvent {
   final String siteName;
 
