@@ -14,10 +14,10 @@ class LandingHomePageBody extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              if (state is SelectedSiteAtDate && state.bars == null) {
+              if (state is SelectedSiteAtDate && state.dailyChart == null) {
                 return WorkingTimeDailyChartShimmer();
-              } else if (state is SelectedSiteAtDate && state.bars.isNotEmpty) {
-                return WorkingTimeDailyChart();
+              } else if (state is SelectedSiteAtDate && state.dailyChart != null) {
+                return WorkingTimeDailyChart(state.dailyChart);
               } else {
                 return null;
               }

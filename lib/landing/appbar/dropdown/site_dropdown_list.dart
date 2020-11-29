@@ -16,7 +16,7 @@ class SiteDropDownList extends StatelessWidget {
           siteName = state.siteName;
         } else {
           BlocProvider.of<SelectedSiteBloc>(context)
-              .add(SiteSelected(siteName));
+              .add(SiteSelected(siteName, context));
         }
         return DropdownButton<String>(
           icon: Icon(
@@ -34,7 +34,7 @@ class SiteDropDownList extends StatelessWidget {
           onChanged: (String newValue) {
             if (newValue != siteName) {
               BlocProvider.of<SelectedSiteBloc>(context)
-                  .add(SiteSelected(newValue));
+                  .add(SiteSelected(newValue, context));
             }
           },
           items: siteList.map<DropdownMenuItem<String>>((String value) {
