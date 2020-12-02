@@ -10,22 +10,20 @@ class LandingHomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-          builder: (context, state) {
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              if (state is SelectedSiteAtDate && state.dailyChart == null) {
-                return WorkingTimeDailyChartShimmer();
-              } else if (state is SelectedSiteAtDate && state.dailyChart != null) {
-                return WorkingTimeDailyChart(state.dailyChart);
-              } else {
-                return null;
-              }
-            },
-            childCount: 1,
-          ),
-        );
-      });
+          builder: (context, state) => SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (state is SelectedSiteAtDate) {
+                      return state.dailyChart == null
+                          ? WorkingTimeDailyChartShimmer()
+                          : WorkingTimeDailyChart(state.dailyChart);
+                    } else {
+                      return null;
+                    }
+                  },
+                  childCount: 1,
+                ),
+              ));
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";

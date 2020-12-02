@@ -1,5 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/viewmodel/working_time_daily_chart_viewmodel.dart';
 
 class WorkingTimeDailyChart extends StatelessWidget {
@@ -8,34 +11,76 @@ class WorkingTimeDailyChart extends StatelessWidget {
   WorkingTimeDailyChart(this.data);
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
+  Widget build(BuildContext context) => BlocProvider(
+      create: (_) =>
+          getIt<WorkingTimeChartTouchBloc>()..add(NoBarRodSelection()),
+      child: AspectRatio(
         aspectRatio: 1.8,
-        child: _buildBarChartCard(context),
+        child: Stack(
+          children: [_buildBarChartCard(context), _buildThumbnailImage()],
+        ),
+      ));
+
+  BlocBuilder _buildThumbnailImage() =>
+      BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
+        builder: (context, state) => Positioned(
+          top: 0.0,
+          right: 0.0,
+          child: _buildThumbnailImageUponTouch(state),
+        ),
       );
 
-  Card _buildBarChartCard(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      color: Theme.of(context).colorScheme.background,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-        child: _buildBarChart(context),
-        // child: Stack(children: [_buildBarChart(context)]),
-      ),
-    );
+  Widget _buildThumbnailImageUponTouch(WorkingTimeChartTouchState state) {
+    if (state is WokringTimeChartTouchShowThumbnail) {
+      return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+              state.groupId.toString() + ":00 ~ " + state.rodId.toString()));
+    } else {
+      return Container();
+    }
   }
+
+  Positioned _buildBarChartCard(BuildContext context) => Positioned.fill(
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: Theme.of(context).colorScheme.background,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
+            child: _BarChart(data: data),
+            // child: Stack(children: [_buildBarChart(context)]),
+          ),
+        ),
+      );
+}
+
+class _BarChart extends StatelessWidget {
+  final WorkingTimeDailyChartData data;
+
+  const _BarChart({Key key, this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => _buildBarChart(context);
 
   BarChart _buildBarChart(BuildContext context) {
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.center,
         barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: Theme.of(context).colorScheme.background,
-              getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                  data.tooltips[groupIndex][rodIndex]),
-        ),
+            touchTooltipData: BarTouchTooltipData(
+                tooltipBgColor: Theme.of(context).colorScheme.background,
+                getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                    data.tooltips[groupIndex][rodIndex]),
+            touchCallback: (barTouchResponse) {
+              if (barTouchResponse.spot != null &&
+                  barTouchResponse.touchInput is! FlPanEnd &&
+                  barTouchResponse.touchInput is! FlLongPressEnd) {
+                BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
+                    BarRodSelection(barTouchResponse.spot.touchedBarGroupIndex,
+                        barTouchResponse.spot.touchedRodDataIndex));
+              }
+            }),
         titlesData: FlTitlesData(
           show: true,
           bottomTitles: SideTitles(
