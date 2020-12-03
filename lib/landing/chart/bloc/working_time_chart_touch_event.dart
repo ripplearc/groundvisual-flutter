@@ -1,5 +1,6 @@
 part of 'working_time_chart_touch_bloc.dart';
 
+/// Event of user touching on a certain bar rod.
 @immutable
 abstract class WorkingTimeChartTouchEvent extends Equatable {
   const WorkingTimeChartTouchEvent();

@@ -3,18 +3,12 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 
-class WorkingTimeDailyChartData {
-  List<BarChartGroupData> bars;
-  List<List<BarTooltipItem>> tooltips;
-  int leftTitleInterval;
-  List<String> bottomTitles;
-
-  WorkingTimeDailyChartData(
-      this.bars, this.tooltips, this.leftTitleInterval, this.bottomTitles);
-}
-
+/// Generate the data model to display on the daily chart. It divides
+/// into 24 groups with each group having 4 rods which represents 4 quarters.
+/// Each rod contains working and idling time.
 @injectable
 class WorkingTimeDailyChartViewModel {
   int _hoursPerDay = 24;
@@ -115,6 +109,7 @@ class WorkingTimeDailyChartViewModel {
   }
 }
 
+/// data model the represents the working and idling time in 15 minutes
 class _WorkingTimePerQuarter {
   double totalMinutes;
   double workingMinutes;

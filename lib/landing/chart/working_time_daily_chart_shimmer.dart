@@ -9,9 +9,9 @@ class WorkingTimeDailyChartShimmer extends StatefulWidget {
       _WorkingTimeDailyChartShimmerState();
 }
 
+/// A shimmer displays when the daily chart being generated.
 class _WorkingTimeDailyChartShimmerState
     extends State<WorkingTimeDailyChartShimmer> {
-  bool _enabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,6 @@ class _WorkingTimeDailyChartShimmerState
             child: Shimmer.fromColors(
                 baseColor: Theme.of(context).colorScheme.surface,
                 highlightColor: Theme.of(context).colorScheme.onSurface,
-                enabled: _enabled,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.end,

@@ -1,12 +1,12 @@
-import 'dart:io';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/working_time_chart_touch_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/viewmodel/working_time_daily_chart_viewmodel.dart';
 
+import 'model/working_time_daily_chart_data.dart';
+
+/// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
   final WorkingTimeDailyChartData data;
 
@@ -69,44 +69,49 @@ class _BarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _buildBarChart(context);
 
-  BarChart _buildBarChart(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        alignment: BarChartAlignment.center,
-        barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: Theme.of(context).colorScheme.background,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                    data.tooltips[groupIndex][rodIndex]),
-            touchCallback: (barTouchResponse) {
-              if (barTouchResponse.spot != null &&
-                  barTouchResponse.touchInput is! FlPanEnd &&
-                  barTouchResponse.touchInput is! FlLongPressEnd) {
-                BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
-                    BarRodSelection(barTouchResponse.spot.touchedBarGroupIndex,
-                        barTouchResponse.spot.touchedRodDataIndex));
-              }
-            }),
-        titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
-            margin: 2,
-            getTitles: (double index) => data.bottomTitles[index.toInt()],
+  BarChart _buildBarChart(BuildContext context) => BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.center,
+          barTouchData: BarTouchData(
+              touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Theme.of(context).colorScheme.background,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                      data.tooltips[groupIndex][rodIndex]),
+              touchCallback: (barTouchResponse) =>
+                  triggerBarRodSelectionEventUponTouch(
+                    barTouchResponse,
+                    context,
+                  )),
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
+              margin: 2,
+              getTitles: (double index) => data.bottomTitles[index.toInt()],
+            ),
+            leftTitles: SideTitles(
+              showTitles: true,
+              interval: 15,
+              getTextStyles: (value) => Theme.of(context).textTheme.caption,
+            ),
           ),
-          leftTitles: SideTitles(
-            showTitles: true,
-            interval: 15,
-            getTextStyles: (value) => Theme.of(context).textTheme.caption,
+          borderData: FlBorderData(
+            show: false,
           ),
+          groupsSpace: 1.8,
+          barGroups: data.bars,
         ),
-        borderData: FlBorderData(
-          show: false,
-        ),
-        groupsSpace: 1.8,
-        barGroups: data.bars,
-      ),
-    );
+      );
+
+  void triggerBarRodSelectionEventUponTouch(
+      BarTouchResponse barTouchResponse, BuildContext context) {
+    if (barTouchResponse.spot != null &&
+        barTouchResponse.touchInput is! FlPanEnd &&
+        barTouchResponse.touchInput is! FlLongPressEnd) {
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(BarRodSelection(
+          barTouchResponse.spot.touchedBarGroupIndex,
+          barTouchResponse.spot.touchedRodDataIndex));
+    }
   }
 }

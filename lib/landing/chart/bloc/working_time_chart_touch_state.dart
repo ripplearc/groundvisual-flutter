@@ -1,5 +1,6 @@
 part of 'working_time_chart_touch_bloc.dart';
 
+/// State that reflects the image corresponding to the touched rod bar.
 @immutable
 abstract class WorkingTimeChartTouchState extends Equatable {
   @override

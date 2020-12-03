@@ -18,7 +18,7 @@ class LandingHomePageBody extends StatelessWidget {
                           ? WorkingTimeDailyChartShimmer()
                           : WorkingTimeDailyChart(state.dailyChart);
                     } else {
-                      return null;
+                      return Container();
                     }
                   },
                   childCount: 1,
