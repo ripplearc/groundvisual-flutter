@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/working_time_daily_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/chart/working_time_daily_chart.dart';
+import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
+import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override

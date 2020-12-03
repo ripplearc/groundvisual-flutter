@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
+import 'package:groundvisual_flutter/landing/chart/date/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 
 /// Generate the data model to display on the daily chart. It divides
