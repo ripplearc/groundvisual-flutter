@@ -11,9 +11,10 @@ class WorkingTimeChartTouchInitial extends WorkingTimeChartTouchState {}
 class WokringTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
   final int groupId;
   final int rodId;
+  final String assetName;
 
-  WokringTimeChartTouchShowThumbnail(this.groupId, this.rodId);
+  WokringTimeChartTouchShowThumbnail(this.groupId, this.rodId, this.assetName);
 
   @override
-  List<Object> get props => [this.groupId, this.rodId];
+  List<Object> get props => [this.groupId, this.rodId, this.assetName];
 }

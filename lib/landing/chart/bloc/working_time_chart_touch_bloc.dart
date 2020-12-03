@@ -20,7 +20,8 @@ class WorkingTimeChartTouchBloc
     WorkingTimeChartTouchEvent event,
   ) async* {
     if (event is BarRodSelection) {
-      yield WokringTimeChartTouchShowThumbnail(event.groupId, event.rodId);
+      yield WokringTimeChartTouchShowThumbnail(event.groupId, event.rodId,
+          'images/${event.groupId * 4 + event.rodId}.jpg');
     } else {
       yield WorkingTimeChartTouchInitial();
     }

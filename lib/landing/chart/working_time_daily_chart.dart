@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,8 +36,12 @@ class WorkingTimeDailyChart extends StatelessWidget {
     if (state is WokringTimeChartTouchShowThumbnail) {
       return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(
-              state.groupId.toString() + ":00 ~ " + state.rodId.toString()));
+          child: Image.asset(
+            state.assetName,
+            width: 72,
+            height: 72,
+            fit: BoxFit.cover,
+          ));
     } else {
       return Container();
     }
