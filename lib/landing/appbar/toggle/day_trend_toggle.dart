@@ -24,10 +24,10 @@ class DateTrendToggle extends StatelessWidget {
   void _triggerSelectSiteDateTimeEvent(int index, BuildContext context) {
     if (index == 0) {
       BlocProvider.of<SelectedSiteBloc>(context)
-          .add(DateSelected(DateTime.now()));
+          .add(DateSelected(DateTime.now(), context));
     } else {
       BlocProvider.of<SelectedSiteBloc>(context)
-          .add(TrendSelected(TrendPeriod.oneWeek));
+          .add(TrendSelected(TrendPeriod.oneWeek, context));
     }
   }
 }

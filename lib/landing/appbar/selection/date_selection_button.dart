@@ -32,7 +32,7 @@ class DateSelectionButton extends StatelessWidget {
           backgroundColor: Theme.of(context).cardTheme.color,
           builder: (_) => _calenderSelection(context, state.date, (DateTime t) {
                 if (state.date.sameDate(t)) return;
-                BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t));
+                BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t, context));
               }));
 
   Container _calenderSelection(

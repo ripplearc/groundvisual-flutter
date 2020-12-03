@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.atom/
 .buildlog/
 .history
 .svn/
+images/
 
 # IntelliJ related
 *.iml

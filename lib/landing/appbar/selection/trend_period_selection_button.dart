@@ -21,7 +21,7 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                       (TrendPeriod period) {
                         if (period == state.period) return;
                         BlocProvider.of<SelectedSiteBloc>(context)
-                            .add(TrendSelected(period));
+                            .add(TrendSelected(period, context));
                       },
                     );
                   })

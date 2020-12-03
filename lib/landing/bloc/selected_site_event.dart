@@ -1,13 +1,22 @@
 part of 'selected_site_bloc.dart';
 
 abstract class SelectedSiteDateTimeEvent extends Equatable {
-  const SelectedSiteDateTimeEvent();
+  final BuildContext context;
+
+  const SelectedSiteDateTimeEvent(this.context);
+}
+
+class Init extends SelectedSiteDateTimeEvent {
+  Init(BuildContext context) : super(context);
+
+  @override
+  List<Object> get props => [];
 }
 
 class SiteSelected extends SelectedSiteDateTimeEvent {
   final String siteName;
 
-  const SiteSelected(this.siteName);
+  const SiteSelected(this.siteName, BuildContext context) : super(context);
 
   @override
   List<Object> get props => throw [siteName];
@@ -16,7 +25,7 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
 class DateSelected extends SelectedSiteDateTimeEvent {
   final DateTime day;
 
-  const DateSelected(this.day);
+  const DateSelected(this.day, BuildContext context) : super(context);
 
   @override
   List<Object> get props => throw [day];
@@ -25,7 +34,7 @@ class DateSelected extends SelectedSiteDateTimeEvent {
 class TrendSelected extends SelectedSiteDateTimeEvent {
   final TrendPeriod period;
 
-  const TrendSelected(this.period);
+  const TrendSelected(this.period, BuildContext context) : super(context);
 
   @override
   List<Object> get props => throw [period];
