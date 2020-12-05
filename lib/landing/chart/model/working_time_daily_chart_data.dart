@@ -1,12 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 
 /// data model to display daily working chart
-class WorkingTimeDailyChartData {
+class WorkingTimeChartData {
   List<BarChartGroupData> bars;
   List<List<BarTooltipItem>> tooltips;
-  int leftTitleInterval;
+  double leftTitleInterval;
   List<String> bottomTitles;
 
-  WorkingTimeDailyChartData(
+  WorkingTimeChartData(
       this.bars, this.tooltips, this.leftTitleInterval, this.bottomTitles);
 }

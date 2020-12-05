@@ -3,7 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class WorkingTimeDailyChartShimmer extends StatelessWidget {
+class WorkingTimeTrendChartShimmer extends StatelessWidget {
+  final int numberOfDays;
+
+  const WorkingTimeTrendChartShimmer({Key key, this.numberOfDays}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => AspectRatio(
       aspectRatio: 1.8,
@@ -28,11 +32,10 @@ class WorkingTimeDailyChartShimmer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: List<Container>.generate(
-                        96,
+                        numberOfDays,
                         (index) => Container(
-                              width: 1.5,
-                              height: pow(min(index, 96 - index), 1.3) *
-                                  random.nextDouble(),
+                              width: 24,
+                              height: 96 * random.nextDouble(),
                               color: Theme.of(context).colorScheme.background,
                             )).toList(growable: true))),
           ),

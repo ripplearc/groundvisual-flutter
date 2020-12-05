@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/chart/date/model/working_time_daily_chart_data.dart';
+import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 
 /// Generate the data model to display on the daily chart. It divides
@@ -14,7 +14,7 @@ class WorkingTimeDailyChartViewModel {
   int _hoursPerDay = 24;
   int _quartersPerHour = 4;
 
-  Future<WorkingTimeDailyChartData> dailyWorkingTime(
+  Future<WorkingTimeChartData> dailyWorkingTime(
       BuildContext context) async {
     final Color dark = Theme.of(context).colorScheme.primary;
     final Color light = Theme.of(context).colorScheme.onSurface;
@@ -39,7 +39,7 @@ class WorkingTimeDailyChartViewModel {
       return (hour % 6 == 0) ? hour.toString() + ":00" : "";
     });
 
-    return WorkingTimeDailyChartData(bars, tooltips, 15, bottomTitles);
+    return WorkingTimeChartData(bars, tooltips, 15, bottomTitles);
   }
 
   List<BarChartRodData> _genBarRods(Color dark, Color light,

@@ -2,13 +2,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 
 import 'bloc/working_time_chart_touch_bloc.dart';
-import 'model/working_time_daily_chart_data.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
-  final WorkingTimeDailyChartData data;
+  final WorkingTimeChartData data;
 
   WorkingTimeDailyChart(this.data);
 
@@ -62,7 +62,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
 }
 
 class _BarChart extends StatelessWidget {
-  final WorkingTimeDailyChartData data;
+  final WorkingTimeChartData data;
 
   const _BarChart({Key key, this.data}) : super(key: key);
 
@@ -92,7 +92,7 @@ class _BarChart extends StatelessWidget {
             ),
             leftTitles: SideTitles(
               showTitles: true,
-              interval: 15,
+              interval: data.leftTitleInterval,
               getTextStyles: (value) => Theme.of(context).textTheme.caption,
             ),
           ),
