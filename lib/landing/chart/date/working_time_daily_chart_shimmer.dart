@@ -3,27 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class WorkingTimeDailyChartShimmer extends StatefulWidget {
+class WorkingTimeDailyChartShimmer extends StatelessWidget {
   @override
-  _WorkingTimeDailyChartShimmerState createState() =>
-      _WorkingTimeDailyChartShimmerState();
-}
-
-/// A shimmer displays when the daily chart being generated.
-class _WorkingTimeDailyChartShimmerState
-    extends State<WorkingTimeDailyChartShimmer> {
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-        aspectRatio: 1.8,
-        child: Card(
-            elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            color: Theme.of(context).colorScheme.background,
-            child: _buildShimmerContent(context)));
-  }
+  Widget build(BuildContext context) => AspectRatio(
+      aspectRatio: 1.8,
+      child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: Theme.of(context).colorScheme.background,
+          child: _buildShimmerContent(context)));
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();

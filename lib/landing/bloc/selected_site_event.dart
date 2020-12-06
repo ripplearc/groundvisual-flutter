@@ -56,4 +56,18 @@ extension Value on TrendPeriod {
     }
     throw ArgumentError('$this is not a valid Trend Period');
   }
+
+  int numberOfDays() {
+    switch (this) {
+      case TrendPeriod.oneWeek:
+        return 7;
+      case TrendPeriod.twoWeeks:
+        return 14;
+      case TrendPeriod.oneMonth:
+        return 30;
+      case TrendPeriod.twoMonths:
+        return 60;
+    }
+    throw ArgumentError('$this is not a valid Trend Period');
+  }
 }
