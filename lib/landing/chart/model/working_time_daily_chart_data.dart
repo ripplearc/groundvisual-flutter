@@ -5,8 +5,14 @@ class WorkingTimeChartData {
   List<BarChartGroupData> bars;
   List<List<BarTooltipItem>> tooltips;
   double leftTitleInterval;
+  double space;
   List<String> bottomTitles;
 
   WorkingTimeChartData(
-      this.bars, this.tooltips, this.leftTitleInterval, this.bottomTitles);
+    this.bars,
+    this.tooltips,
+    this.leftTitleInterval,
+    this.space,
+    this.bottomTitles,
+  );
 }

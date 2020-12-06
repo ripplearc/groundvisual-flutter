@@ -13,9 +13,9 @@ import 'package:injectable/injectable.dart';
 class WorkingTimeDailyChartViewModel {
   int _hoursPerDay = 24;
   int _quartersPerHour = 4;
+  double _space = 1.4;
 
-  Future<WorkingTimeChartData> dailyWorkingTime(
-      BuildContext context) async {
+  Future<WorkingTimeChartData> dailyWorkingTime(BuildContext context) async {
     final Color dark = Theme.of(context).colorScheme.primary;
     final Color light = Theme.of(context).colorScheme.onSurface;
 
@@ -39,7 +39,7 @@ class WorkingTimeDailyChartViewModel {
       return (hour % 6 == 0) ? hour.toString() + ":00" : "";
     });
 
-    return WorkingTimeChartData(bars, tooltips, 15, bottomTitles);
+    return WorkingTimeChartData(bars, tooltips, 15, _space, bottomTitles);
   }
 
   List<BarChartRodData> _genBarRods(Color dark, Color light,

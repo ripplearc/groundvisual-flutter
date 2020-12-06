@@ -14,6 +14,7 @@ class DateTrendToggle extends StatelessWidget {
           builder: (context, state) {
         final index = state is SelectedSiteAtWindow ? 1 : 0;
         return ToggleButton(
+            key: UniqueKey(),
             initialIndex: index,
             labels: ["Date", "Trend"],
             toggleAction: (index) {

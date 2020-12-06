@@ -9,6 +9,7 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
 part 'selected_site_event.dart';
 
@@ -59,24 +60,31 @@ class SelectedSiteBloc
         yield emission;
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
-      yield SelectedSiteAtWindow(
-          siteName,
-          DateTimeRange(
-            start: DateTime.now().subtract(Duration(days: 7)),
-            end: DateTime.now(),
-          ),
-          event.period);
-      var chart = await Future.delayed(Duration(seconds: 2),
-          () => workingTimeTrendChartViewModel.trendWorkingTime(event.context));
-      yield SelectedSiteAtWindow(
-          siteName,
-          DateTimeRange(
-            start: DateTime.now().subtract(Duration(days: 7)),
-            end: DateTime.now(),
-          ),
-          event.period,
-          chartData: chart);
+      await for (var emission in _yieldTrendWorkingTime(siteName, event))
+        yield emission;
     }
+  }
+
+  Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) async* {
+    yield SelectedSiteAtWindow(
+        siteName,
+        DateTimeRange(
+          start: DateTime.now().subtract(Duration(days: 7)),
+          end: DateTime.now(),
+        ),
+        event.period);
+    var chart = await Future.delayed(
+        Duration(seconds: 2),
+        () => workingTimeTrendChartViewModel.trendWorkingTime(
+            event.context, event.period));
+    yield SelectedSiteAtWindow(
+        siteName,
+        DateTimeRange(
+          start: DateTime.now().subtract(Duration(days: 7)),
+          end: DateTime.now(),
+        ),
+        event.period,
+        chartData: chart);
   }
 
   Stream _yieldDailyWorkingTime(

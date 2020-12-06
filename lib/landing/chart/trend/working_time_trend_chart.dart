@@ -65,7 +65,7 @@ class _BarChart extends StatelessWidget {
           borderData: FlBorderData(
             show: false,
           ),
-          groupsSpace: 16,
+          groupsSpace: data.space,
           barGroups: data.bars,
         ),
       );
