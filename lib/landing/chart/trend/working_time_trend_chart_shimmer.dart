@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// Shimmer widget to display before the trend data is available. The number of bars
+/// depends on the period.
 class WorkingTimeTrendChartShimmer extends StatelessWidget {
-  final int numberOfDays;
+  final TrendPeriod period;
 
-  const WorkingTimeTrendChartShimmer({Key key, this.numberOfDays}) : super(key: key);
+  const WorkingTimeTrendChartShimmer({Key key, this.period}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => AspectRatio(
@@ -32,9 +35,9 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: List<Container>.generate(
-                        numberOfDays,
+                        period.numberOfDays(),
                         (index) => Container(
-                              width: 24,
+                              width: 24 / (period.numberOfDays() / 7),
                               height: 96 * random.nextDouble(),
                               color: Theme.of(context).colorScheme.background,
                             )).toList(growable: true))),

@@ -22,7 +22,7 @@ class LandingHomePageBody extends StatelessWidget {
                           : WorkingTimeDailyChart(state.chartData);
                     } else if (state is SelectedSiteAtWindow) {
                       return state.chartData == null
-                          ? WorkingTimeTrendChartShimmer(numberOfDays: 7)
+                          ? WorkingTimeTrendChartShimmer(period: state.period)
                           : WorkingTimeTrendChart(state.chartData);
                     } else {
                       return Container();

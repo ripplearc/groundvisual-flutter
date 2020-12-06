@@ -5,19 +5,15 @@ import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/chart/date/bloc/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 
-/// Widget displays the working and idling time on a certain date.
+/// Widget displays the working and idling time during a certain period.
 class WorkingTimeTrendChart extends StatelessWidget {
   final WorkingTimeChartData data;
 
   WorkingTimeTrendChart(this.data);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) =>
-            getIt<WorkingTimeChartTouchBloc>()..add(NoBarRodSelection()),
-        child:
-            AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context)),
-      );
+  Widget build(BuildContext context) =>
+      AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context));
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,
@@ -26,7 +22,6 @@ class WorkingTimeTrendChart extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
           child: _BarChart(data: data),
-          // child: Stack(children: [_buildBarChart(context)]),
         ),
       );
 }

@@ -10,8 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tuple/tuple.dart';
 
-/// Generate the data model to display on the trend chart. It divides
-/// into 24 groups with each group having 4 rods which represents 4 quarters.
+/// Generate the data model to display on the trend chart. For one week, it shows
+/// week day as the bottom titles. For more than one week, it shows the date at
+/// the bottom titles.
 /// Each rod contains working and idling time.
 @injectable
 class WorkingTimeTrendChartViewModel {
@@ -163,7 +164,7 @@ class WorkingTimeTrendChartViewModel {
           borderRadius: const BorderRadius.all(Radius.zero));
 }
 
-/// data model the represents the working and idling time in 15 minutes
+/// data model the represents the working and idling time in a day.
 class _WorkingTimePerRod {
   double totalHours;
   double workingHours;
