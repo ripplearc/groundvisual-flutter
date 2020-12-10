@@ -49,6 +49,7 @@ class WorkingTimeTrendChartViewModel {
       case TrendPeriod.twoMonths:
         return Tuple2(5, 12);
     }
+    return Tuple2(7, 1);
   }
 
   List<BarChartGroupData> _genRodBars(
