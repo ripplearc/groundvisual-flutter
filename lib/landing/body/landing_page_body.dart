@@ -16,21 +16,28 @@ class LandingHomePageBody extends StatelessWidget {
           builder: (context, state) => SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    if (state is SelectedSiteAtDate) {
-                      return state.chartData == null
-                          ? WorkingTimeDailyChartShimmer()
-                          : WorkingTimeDailyChart(state.chartData);
-                    } else if (state is SelectedSiteAtWindow) {
-                      return state.chartData == null
-                          ? WorkingTimeTrendChartShimmer(period: state.period)
-                          : WorkingTimeTrendChart(state.chartData);
-                    } else {
-                      return Container();
-                    }
+                    return _displayWorkingTimeChart(state);
                   },
                   childCount: 1,
                 ),
               ));
+
+  StatelessWidget _displayWorkingTimeChart(SelectedSiteState state) {
+    if (state is SelectedSiteAtDate) {
+      return state.chartData == null
+          ? WorkingTimeDailyChartShimmer()
+          : WorkingTimeDailyChart(state.chartData);
+    } else if (state is SelectedSiteAtWindow) {
+      return state.chartData == null
+          ? WorkingTimeTrendChartShimmer(period: state.period)
+          : WorkingTimeTrendChart(state.chartData);
+    } else {
+      return Container();
+    }
+  }
+
+
+
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";
@@ -61,3 +68,4 @@ class ListElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text("List tile $index");
 }
+
