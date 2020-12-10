@@ -1,10 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 
-import 'bloc/working_time_chart_touch_bloc.dart';
+import '../../bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
@@ -13,15 +12,12 @@ class WorkingTimeDailyChart extends StatelessWidget {
   WorkingTimeDailyChart(this.data);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-      create: (_) =>
-          getIt<WorkingTimeChartTouchBloc>()..add(NoBarRodSelection()),
-      child: AspectRatio(
+  Widget build(BuildContext context) => AspectRatio(
         aspectRatio: 1.8,
         child: Stack(
           children: [_buildBarChartCard(context), _buildThumbnailImage()],
         ),
-      ));
+      );
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(

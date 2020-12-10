@@ -3,11 +3,10 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:tuple/tuple.dart';
 
 /// Generate the data model to display on the trend chart. For one week, it shows

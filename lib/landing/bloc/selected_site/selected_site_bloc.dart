@@ -9,10 +9,8 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tuple/tuple.dart';
 
 part 'selected_site_event.dart';
-
 part 'selected_site_state.dart';
 
 /// bloc to take events of selecting date or period, and notify listener about the

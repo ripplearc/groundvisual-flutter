@@ -1,8 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/di/di.dart';
-import 'package:groundvisual_flutter/landing/chart/date/bloc/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 
 /// Widget displays the working and idling time during a certain period.

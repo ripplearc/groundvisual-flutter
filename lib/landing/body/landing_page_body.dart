@@ -7,7 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
@@ -107,6 +107,7 @@ class MapSampleState extends State<MapSample> with WidgetsBindingObserver {
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
+        mapToolbarEnabled: false,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
@@ -116,11 +117,6 @@ class MapSampleState extends State<MapSample> with WidgetsBindingObserver {
           ),
         ].toSet(),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
     );
   }
 
@@ -128,11 +124,6 @@ class MapSampleState extends State<MapSample> with WidgetsBindingObserver {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
     _lightMapStyle =
         await rootBundle.loadString('assets/map_styles/light.json');
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 
   @override

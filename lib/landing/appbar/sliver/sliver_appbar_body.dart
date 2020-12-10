@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/selection/date_or_trend_selection_button.dart';
 import 'package:groundvisual_flutter/landing/appbar/toggle/day_trend_toggle.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 
 import '../dropdown/site_dropdown_list.dart';
 import 'sliver_appbar_container.dart';
