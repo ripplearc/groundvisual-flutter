@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -12,7 +11,8 @@ class WorkingZoneMap extends StatefulWidget {
   State<WorkingZoneMap> createState() => WorkingZoneMapState();
 }
 
-class WorkingZoneMapState extends State<WorkingZoneMap> with WidgetsBindingObserver {
+class WorkingZoneMapState extends State<WorkingZoneMap>
+    with WidgetsBindingObserver {
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
@@ -30,25 +30,27 @@ class WorkingZoneMapState extends State<WorkingZoneMap> with WidgetsBindingObser
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _kGooglePlex,
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-      },
-      zoomControlsEnabled: false,
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-        Factory<OneSequenceGestureRecognizer>(
+    return AspectRatio(
+        aspectRatio: 1.8,
+        child: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _kGooglePlex,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          zoomControlsEnabled: false,
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+            Factory<OneSequenceGestureRecognizer>(
               () => EagerGestureRecognizer(),
-        ),
-      ].toSet(),
-    );
+            ),
+          ].toSet(),
+        ));
   }
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
     _lightMapStyle =
-    await rootBundle.loadString('assets/map_styles/light.json');
+        await rootBundle.loadString('assets/map_styles/light.json');
   }
 
   @override

@@ -1,4 +1,3 @@
-
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +19,7 @@ class LandingHomePageBody extends StatelessWidget {
                   (BuildContext context, int index) {
                     return index == 0
                         ? _displayWorkingTimeChart(state)
-                        : AspectRatio(aspectRatio: 1.8, child: WorkingZoneMap());
+                        : WorkingZoneMap();
                   },
                   childCount: 2,
                 ),
