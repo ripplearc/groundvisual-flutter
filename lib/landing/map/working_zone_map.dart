@@ -5,6 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/model/site_work_records.dart';
+import 'dart:convert';
+
+import 'package:groundvisual_flutter/model/lat_lng.dart';
 
 class WorkingZoneMap extends StatefulWidget {
   @override
@@ -41,7 +45,7 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
           zoomControlsEnabled: false,
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
             Factory<OneSequenceGestureRecognizer>(
-              () => EagerGestureRecognizer(),
+                  () => EagerGestureRecognizer(),
             ),
           ].toSet(),
         ));
@@ -50,7 +54,7 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
     _lightMapStyle =
-        await rootBundle.loadString('assets/map_styles/light.json');
+    await rootBundle.loadString('assets/map_styles/light.json');
   }
 
   @override
@@ -65,6 +69,11 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
       controller.setMapStyle(_darkMapStyle);
     else
       controller.setMapStyle(_lightMapStyle);
+
+
+    final test = await rootBundle.loadString('assets/mock_response/test.json');
+    final decoded = json.decode(test);
+    final object = SiteWorkZone.fromJson(decoded);
   }
 
   @override
