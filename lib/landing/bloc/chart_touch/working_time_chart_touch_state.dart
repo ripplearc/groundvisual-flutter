@@ -9,13 +9,22 @@ abstract class WorkingTimeChartTouchState extends Equatable {
 
 class WorkingTimeChartTouchInitial extends WorkingTimeChartTouchState {}
 
-class WokringTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
+class WorkingTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
   final int groupId;
   final int rodId;
   final String assetName;
 
-  WokringTimeChartTouchShowThumbnail(this.groupId, this.rodId, this.assetName);
+  WorkingTimeChartTouchShowThumbnail(this.groupId, this.rodId, this.assetName);
 
   @override
   List<Object> get props => [this.groupId, this.rodId, this.assetName];
+}
+
+class WorkingTimeChartTouchShowWorkArea extends WorkingTimeChartTouchState {
+  final Set<Polygon> workAreas;
+
+  WorkingTimeChartTouchShowWorkArea(this.workAreas);
+
+  @override
+  List<Object> get props => [this.workAreas];
 }

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
@@ -19,7 +20,11 @@ class LandingHomePageBody extends StatelessWidget {
                   (BuildContext context, int index) {
                     return index == 0
                         ? _displayWorkingTimeChart(state)
-                        : WorkingZoneMap();
+                        : BlocBuilder<WorkingTimeChartTouchBloc,
+                                WorkingTimeChartTouchState>(
+                            builder: (context, state) {
+                            return WorkingZoneMap();
+                          });
                   },
                   childCount: 2,
                 ),

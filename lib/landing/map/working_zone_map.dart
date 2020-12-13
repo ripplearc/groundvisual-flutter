@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/model/site_work_records.dart';
-import 'dart:convert';
-
-import 'package:groundvisual_flutter/model/lat_lng.dart';
+import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
 class WorkingZoneMap extends StatefulWidget {
   @override
@@ -17,11 +16,12 @@ class WorkingZoneMap extends StatefulWidget {
 
 class WorkingZoneMapState extends State<WorkingZoneMap>
     with WidgetsBindingObserver {
+  Set<Polygon> _polygons = Set();
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(42.626580, -83.000340),
+    target: LatLng(42.626985, -82.982993),
     zoom: 14.4746,
   );
 
@@ -34,27 +34,37 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-        aspectRatio: 1.8,
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-          zoomControlsEnabled: false,
-          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-            Factory<OneSequenceGestureRecognizer>(
+    return BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
+      buildWhen: (previous, current) =>
+          current is WorkingTimeChartTouchShowWorkArea,
+      builder: (context, state) {
+        if (state is WorkingTimeChartTouchShowWorkArea) {
+          _polygons = state.workAreas;
+        }
+        return AspectRatio(
+            aspectRatio: 1.8,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+              zoomControlsEnabled: false,
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                Factory<OneSequenceGestureRecognizer>(
                   () => EagerGestureRecognizer(),
-            ),
-          ].toSet(),
-        ));
+                ),
+              ].toSet(),
+              polygons: _polygons,
+            ));
+      },
+    );
   }
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
     _lightMapStyle =
-    await rootBundle.loadString('assets/map_styles/light.json');
+        await rootBundle.loadString('assets/map_styles/light.json');
   }
 
   @override
@@ -69,11 +79,10 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
       controller.setMapStyle(_darkMapStyle);
     else
       controller.setMapStyle(_lightMapStyle);
-
-
-    final test = await rootBundle.loadString('assets/mock_response/test.json');
-    final decoded = json.decode(test);
-    final object = SiteWorkZone.fromJson(decoded);
+    //
+    // final test = await rootBundle.loadString('assets/mock_response/test.json');
+    // final decoded = json.decode(test);
+    // final object = SiteWorkZone.fromJson(decoded);
   }
 
   @override

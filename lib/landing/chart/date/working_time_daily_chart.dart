@@ -21,6 +21,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
+        buildWhen: (previous, current) => current is WorkingTimeChartTouchShowThumbnail,
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
@@ -29,7 +30,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
       );
 
   Widget _buildThumbnailImageUponTouch(WorkingTimeChartTouchState state) {
-    if (state is WokringTimeChartTouchShowThumbnail) {
+    if (state is WorkingTimeChartTouchShowThumbnail) {
       return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Image.asset(
