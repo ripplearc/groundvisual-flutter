@@ -21,7 +21,8 @@ class WorkingTimeDailyChart extends StatelessWidget {
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
-        buildWhen: (previous, current) => current is WorkingTimeChartTouchShowThumbnail,
+        buildWhen: (previous, current) =>
+            current is WorkingTimeChartTouchShowThumbnail,
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
@@ -108,7 +109,8 @@ class _BarChart extends StatelessWidget {
         barTouchResponse.touchInput is! FlLongPressEnd) {
       BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(BarRodSelection(
           barTouchResponse.spot.touchedBarGroupIndex,
-          barTouchResponse.spot.touchedRodDataIndex));
+          barTouchResponse.spot.touchedRodDataIndex,
+          context));
     }
   }
 }

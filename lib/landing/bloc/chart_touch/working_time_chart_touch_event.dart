@@ -14,8 +14,9 @@ class NoBarRodSelection extends WorkingTimeChartTouchEvent {
 class BarRodSelection extends WorkingTimeChartTouchEvent {
   final int groupId;
   final int rodId;
+  final BuildContext context;
 
-  BarRodSelection(this.groupId, this.rodId);
+  BarRodSelection(this.groupId, this.rodId, this.context);
 
   @override
   List<Object> get props => [groupId, rodId];
