@@ -41,23 +41,32 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
         if (state is WorkingTimeChartTouchShowWorkArea) {
           _polygons = state.workAreas;
         }
-        return AspectRatio(
-            aspectRatio: 1.8,
-            child: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-              zoomControlsEnabled: false,
-              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                Factory<OneSequenceGestureRecognizer>(
-                  () => EagerGestureRecognizer(),
-                ),
-              ].toSet(),
-              polygons: _polygons,
-            ));
+        return Card(
+            elevation: 4,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            color: Theme.of(context).colorScheme.background,
+            child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: AspectRatio(aspectRatio: 3, child: _genGoogleMap())));
       },
+    );
+  }
+
+  GoogleMap _genGoogleMap() {
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: _kGooglePlex,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+      zoomControlsEnabled: false,
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+        ),
+      ].toSet(),
+      polygons: _polygons,
     );
   }
 

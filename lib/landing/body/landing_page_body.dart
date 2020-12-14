@@ -18,7 +18,7 @@ class LandingHomePageBody extends StatelessWidget {
           builder: (context, state) => SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return index == 0
+                    return index == 1
                         ? _displayWorkingTimeChart(state)
                         : BlocBuilder<WorkingTimeChartTouchBloc,
                                 WorkingTimeChartTouchState>(

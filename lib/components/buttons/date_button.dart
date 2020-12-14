@@ -12,6 +12,7 @@ class DateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FlatButton.icon(
       height: 20,
+      minWidth: 40,
       icon: Icon(Icons.calendar_today_outlined, size: 12),
       label: Text(
         dateText,

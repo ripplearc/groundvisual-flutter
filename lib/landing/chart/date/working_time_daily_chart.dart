@@ -33,11 +33,11 @@ class WorkingTimeDailyChart extends StatelessWidget {
   Widget _buildThumbnailImageUponTouch(WorkingTimeChartTouchState state) {
     if (state is WorkingTimeChartTouchShowThumbnail) {
       return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(top: 10.0, right: 6.0),
           child: Image.asset(
             state.assetName,
-            width: 72,
-            height: 72,
+            width: 96,
+            height: 96,
             fit: BoxFit.cover,
           ));
     } else {
