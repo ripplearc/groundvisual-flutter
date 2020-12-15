@@ -5,6 +5,9 @@ import 'package:injectable/injectable.dart';
 /// WorkingZoneMapViewModel finds the work areas given the site and time.
 @injectable
 class WorkZoneMapViewModel {
+  CameraPosition get getCameraPosition =>
+      CameraPosition(target: LatLng(42.626985, -82.982993), zoom: 14);
+
   Set<Polygon> getOddPolygons(BuildContext context) {
     final List<LatLng> points = <LatLng>[];
     points.add(_createLatLng(42.626985, -82.982993));

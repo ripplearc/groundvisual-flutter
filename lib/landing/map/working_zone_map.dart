@@ -16,14 +16,9 @@ class WorkingZoneMap extends StatefulWidget {
 
 class WorkingZoneMapState extends State<WorkingZoneMap>
     with WidgetsBindingObserver {
-  Set<Polygon> _polygons = Set();
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(42.626985, -82.982993),
-    zoom: 14.4746,
-  );
 
   void initState() {
     super.initState();
@@ -33,42 +28,48 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
-      buildWhen: (previous, current) =>
-          current is WorkingTimeChartTouchShowWorkArea,
-      builder: (context, state) {
-        if (state is WorkingTimeChartTouchShowWorkArea) {
-          _polygons = state.workAreas;
-        }
-        return Card(
-            elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            color: Theme.of(context).colorScheme.background,
-            child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: AspectRatio(aspectRatio: 3, child: _genGoogleMap())));
-      },
-    );
-  }
+  Widget build(BuildContext context) =>
+      BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
+          buildWhen: (previous, current) =>
+              current is WorkingTimeChartTouchShowWorkArea ||
+              current is WorkingTimeChartTouchInitial,
+          builder: (context, state) {
+            CameraPosition cameraPosition;
+            Set<Polygon> workAreas;
+            if (state is WorkingTimeChartTouchShowWorkArea) {
+              cameraPosition = state.cameraPosition;
+              workAreas = state.workAreas;
+            } else if (state is WorkingTimeChartTouchInitial) {
+              cameraPosition = state.cameraPosition;
+            }
+            return Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                color: Theme.of(context).colorScheme.background,
+                child: Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: AspectRatio(
+                        aspectRatio: 3,
+                        child: _genGoogleMap(cameraPosition, workAreas))));
+          });
 
-  GoogleMap _genGoogleMap() {
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _kGooglePlex,
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-      },
-      zoomControlsEnabled: false,
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-        Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
-        ),
-      ].toSet(),
-      polygons: _polygons,
-    );
-  }
+  GoogleMap _genGoogleMap(
+          CameraPosition cameraPosition, Set<Polygon> workAreas) =>
+      GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: cameraPosition,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        zoomControlsEnabled: false,
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+          Factory<OneSequenceGestureRecognizer>(
+            () => EagerGestureRecognizer(),
+          ),
+        ].toSet(),
+        polygons: workAreas,
+      );
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
@@ -88,10 +89,6 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
       controller.setMapStyle(_darkMapStyle);
     else
       controller.setMapStyle(_lightMapStyle);
-    //
-    // final test = await rootBundle.loadString('assets/mock_response/test.json');
-    // final decoded = json.decode(test);
-    // final object = SiteWorkZone.fromJson(decoded);
   }
 
   @override

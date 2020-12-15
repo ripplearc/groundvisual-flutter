@@ -7,7 +7,12 @@ abstract class WorkingTimeChartTouchState extends Equatable {
   List<Object> get props => [];
 }
 
-class WorkingTimeChartTouchInitial extends WorkingTimeChartTouchState {}
+class WorkingTimeChartTouchInitial extends WorkingTimeChartTouchState {
+
+  final CameraPosition cameraPosition;
+
+  WorkingTimeChartTouchInitial(this.cameraPosition);
+}
 
 class WorkingTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
   final int groupId;
@@ -22,8 +27,9 @@ class WorkingTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
 
 class WorkingTimeChartTouchShowWorkArea extends WorkingTimeChartTouchState {
   final Set<Polygon> workAreas;
+  final CameraPosition cameraPosition;
 
-  WorkingTimeChartTouchShowWorkArea(this.workAreas);
+  WorkingTimeChartTouchShowWorkArea(this.workAreas, this.cameraPosition);
 
   @override
   List<Object> get props => [this.workAreas];

@@ -19,7 +19,8 @@ class WorkingTimeChartTouchBloc
   final WorkZoneMapViewModel workZoneMapViewModel;
 
   WorkingTimeChartTouchBloc(this.workZoneMapViewModel)
-      : super(WorkingTimeChartTouchInitial());
+      : super(WorkingTimeChartTouchInitial(
+            workZoneMapViewModel.getCameraPosition));
 
   @override
   Stream<WorkingTimeChartTouchState> mapEventToState(
@@ -30,13 +31,13 @@ class WorkingTimeChartTouchBloc
           'images/${event.groupId * 4 + event.rodId}.jpg');
       if (event.groupId % 2 == 0) {
         yield WorkingTimeChartTouchShowWorkArea(
-            workZoneMapViewModel.getOddPolygons(event.context));
+            workZoneMapViewModel.getOddPolygons(event.context),
+            workZoneMapViewModel.getCameraPosition);
       } else {
         yield WorkingTimeChartTouchShowWorkArea(
-            workZoneMapViewModel.getEvenPolygons(event.context));
+            workZoneMapViewModel.getEvenPolygons(event.context),
+            workZoneMapViewModel.getCameraPosition);
       }
-    } else {
-      yield WorkingTimeChartTouchInitial();
     }
   }
 }
