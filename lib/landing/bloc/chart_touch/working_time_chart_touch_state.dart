@@ -2,34 +2,29 @@ part of 'working_time_chart_touch_bloc.dart';
 
 /// State that reflects the image corresponding to the touched rod bar.
 @immutable
-abstract class WorkingTimeChartTouchState extends Equatable {
+abstract class SiteSnapShotState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class WorkingTimeChartTouchInitial extends WorkingTimeChartTouchState {
+class WorkingTimeChartTouchInitial extends SiteSnapShotState {}
 
-  final CameraPosition cameraPosition;
-
-  WorkingTimeChartTouchInitial(this.cameraPosition);
-}
-
-class WorkingTimeChartTouchShowThumbnail extends WorkingTimeChartTouchState {
+class SiteSnapShotThumbnail extends SiteSnapShotState {
   final int groupId;
   final int rodId;
   final String assetName;
 
-  WorkingTimeChartTouchShowThumbnail(this.groupId, this.rodId, this.assetName);
+  SiteSnapShotThumbnail(this.groupId, this.rodId, this.assetName);
 
   @override
   List<Object> get props => [this.groupId, this.rodId, this.assetName];
 }
 
-class WorkingTimeChartTouchShowWorkArea extends WorkingTimeChartTouchState {
+class SiteSnapShotWorkArea extends SiteSnapShotState {
   final Set<Polygon> workAreas;
   final CameraPosition cameraPosition;
 
-  WorkingTimeChartTouchShowWorkArea(this.workAreas, this.cameraPosition);
+  SiteSnapShotWorkArea(this.workAreas, this.cameraPosition);
 
   @override
   List<Object> get props => [this.workAreas];

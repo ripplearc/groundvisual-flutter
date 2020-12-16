@@ -12,7 +12,7 @@ class LandingHomePage extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
           providers: [
             BlocProvider(
-                create: (_) => getIt<SelectedSiteBloc>()..add(Init(context))),
+                create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
             BlocProvider(
                 create: (_) => getIt<WorkingTimeChartTouchBloc>()
                   ..add(NoBarRodSelection()))

@@ -29,30 +29,31 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<WorkingTimeChartTouchBloc, WorkingTimeChartTouchState>(
-          buildWhen: (previous, current) =>
-              current is WorkingTimeChartTouchShowWorkArea ||
-              current is WorkingTimeChartTouchInitial,
+      BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
+          buildWhen: (previous, current) => current is SiteSnapShotWorkArea,
           builder: (context, state) {
             CameraPosition cameraPosition;
             Set<Polygon> workAreas;
-            if (state is WorkingTimeChartTouchShowWorkArea) {
+            if (state is SiteSnapShotWorkArea) {
               cameraPosition = state.cameraPosition;
               workAreas = state.workAreas;
-            } else if (state is WorkingTimeChartTouchInitial) {
-              cameraPosition = state.cameraPosition;
+              return _genMapCard(context, cameraPosition, workAreas);
+            } else {
+              return Container();
             }
-            return Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                color: Theme.of(context).colorScheme.background,
-                child: Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: AspectRatio(
-                        aspectRatio: 3,
-                        child: _genGoogleMap(cameraPosition, workAreas))));
           });
+
+  Card _genMapCard(BuildContext context, CameraPosition cameraPosition,
+          Set<Polygon> workAreas) =>
+      Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: Theme.of(context).colorScheme.background,
+          child: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: AspectRatio(
+                  aspectRatio: 3,
+                  child: _genGoogleMap(cameraPosition, workAreas))));
 
   GoogleMap _genGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workAreas) =>

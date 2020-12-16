@@ -21,7 +21,7 @@ class LandingHomePageBody extends StatelessWidget {
                     return index == 1
                         ? _displayWorkingTimeChart(state)
                         : BlocBuilder<WorkingTimeChartTouchBloc,
-                                WorkingTimeChartTouchState>(
+                                SiteSnapShotState>(
                             builder: (context, state) {
                             return WorkingZoneMap();
                           });

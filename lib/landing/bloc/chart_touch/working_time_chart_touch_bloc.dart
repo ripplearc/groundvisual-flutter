@@ -15,29 +15,35 @@ part 'working_time_chart_touch_state.dart';
 /// bloc to take events of touching a bar rod, and emits state of corresponding images.
 @injectable
 class WorkingTimeChartTouchBloc
-    extends Bloc<WorkingTimeChartTouchEvent, WorkingTimeChartTouchState> {
+    extends Bloc<WorkingTimeChartTouchEvent, SiteSnapShotState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
 
   WorkingTimeChartTouchBloc(this.workZoneMapViewModel)
-      : super(WorkingTimeChartTouchInitial(
-            workZoneMapViewModel.getCameraPosition));
+      : super(WorkingTimeChartTouchInitial());
 
   @override
-  Stream<WorkingTimeChartTouchState> mapEventToState(
+  Stream<SiteSnapShotState> mapEventToState(
     WorkingTimeChartTouchEvent event,
   ) async* {
     if (event is BarRodSelection) {
-      yield WorkingTimeChartTouchShowThumbnail(event.groupId, event.rodId,
+      yield SiteSnapShotThumbnail(event.groupId, event.rodId,
           'images/${event.groupId * 4 + event.rodId}.jpg');
       if (event.groupId % 2 == 0) {
-        yield WorkingTimeChartTouchShowWorkArea(
-            workZoneMapViewModel.getOddPolygons(event.context),
-            workZoneMapViewModel.getCameraPosition);
+        List<dynamic> result = await Future.wait<dynamic>([
+          workZoneMapViewModel.getOddPolygons(event.context),
+          workZoneMapViewModel.getCameraPosition("")
+        ]);
+        yield SiteSnapShotWorkArea(result[0], result[1]);
       } else {
-        yield WorkingTimeChartTouchShowWorkArea(
-            workZoneMapViewModel.getEvenPolygons(event.context),
-            workZoneMapViewModel.getCameraPosition);
+        List<dynamic> result = await Future.wait<dynamic>([
+          workZoneMapViewModel.getEvenPolygons(event.context),
+          workZoneMapViewModel.getCameraPosition("")
+        ]);
+        yield SiteSnapShotWorkArea(result[0], result[1]);
       }
+    } else if (event is NoBarRodSelection) {
+     final cameraPosition = await workZoneMapViewModel.getCameraPosition("");
+     yield SiteSnapShotWorkArea(Set(), cameraPosition);
     }
   }
 }

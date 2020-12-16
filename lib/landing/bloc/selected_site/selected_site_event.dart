@@ -6,8 +6,8 @@ abstract class SelectedSiteDateTimeEvent extends Equatable {
   const SelectedSiteDateTimeEvent(this.context);
 }
 
-class Init extends SelectedSiteDateTimeEvent {
-  Init(BuildContext context) : super(context);
+class SelectedSiteInit extends SelectedSiteDateTimeEvent {
+  SelectedSiteInit(BuildContext context) : super(context);
 
   @override
   List<Object> get props => [];

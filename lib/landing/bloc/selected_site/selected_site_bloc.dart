@@ -42,7 +42,7 @@ class SelectedSiteBloc
   Stream<SelectedSiteState> mapEventToState(
     SelectedSiteDateTimeEvent event,
   ) async* {
-    if (event is Init) {
+    if (event is SelectedSiteInit) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission
           in _yieldDailyWorkingTime(siteName, DateTime.now(), event.context))
