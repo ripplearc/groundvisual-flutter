@@ -29,15 +29,28 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
-          buildWhen: (previous, current) => current is SiteSnapShotWorkArea,
-          builder: (context, state) {
-            CameraPosition cameraPosition;
-            Set<Polygon> workAreas;
+      BlocConsumer<WorkingTimeChartTouchBloc, SiteSnapShotState>(
+          listener: (context, state) async {
+            final controller = await _controller.future;
             if (state is SiteSnapShotWorkArea) {
-              cameraPosition = state.cameraPosition;
-              workAreas = state.workAreas;
-              return _genMapCard(context, cameraPosition, workAreas);
+              controller.animateCamera(
+                CameraUpdate.newCameraPosition(state.cameraPosition),
+              );
+            } else if (state is WorkingTimeChartTouchInitial) {
+              controller.animateCamera(
+                CameraUpdate.newCameraPosition(state.cameraPosition),
+              );
+            }
+          },
+          buildWhen: (previous, current) =>
+              current is SiteSnapShotWorkArea ||
+              current is WorkingTimeChartTouchInitial,
+          builder: (context, state) {
+            if (state is SiteSnapShotWorkArea) {
+              return _genMapCard(
+                  context, state.cameraPosition, state.workAreas);
+            } else if (state is WorkingTimeChartTouchInitial) {
+              return _genMapCard(context, state.cameraPosition, Set());
             } else {
               return Container();
             }

@@ -4,7 +4,6 @@ import 'package:groundvisual_flutter/app/root_home_page.dart';
 import 'package:groundvisual_flutter/components/theme/app_theme.dart';
 
 class GroundVisualApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,13 +14,3 @@ class GroundVisualApp extends StatelessWidget {
     );
   }
 }
-
-// class GroundVisualApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Google Maps Demo',
-//       home: MapSample(),
-//     );
-//   }
-// }

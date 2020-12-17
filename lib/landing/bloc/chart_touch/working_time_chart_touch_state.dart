@@ -7,7 +7,13 @@ abstract class SiteSnapShotState extends Equatable {
   List<Object> get props => [];
 }
 
-class WorkingTimeChartTouchInitial extends SiteSnapShotState {}
+class WorkingTimeChartTouchInitial extends SiteSnapShotState {
+  final CameraPosition cameraPosition;
+
+  WorkingTimeChartTouchInitial(
+      {this.cameraPosition = const CameraPosition(
+          target: LatLng(44.182205, -84.506836), zoom: 10)});
+}
 
 class SiteSnapShotThumbnail extends SiteSnapShotState {
   final int groupId;
