@@ -44,7 +44,7 @@ app.*.map.json
 ios/Podfile
 ios/Podfile.lock
 lib/di/di.config.dart
-lib/model/site_analysis_window.freezed.dart
+lib/models/site_analysis_window.freezed.dart
 
 # flutter build run generated files
 *.g.dart

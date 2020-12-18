@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/landing/chart/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,9 +12,10 @@ import 'package:injectable/injectable.dart';
 /// Each rod contains working and idling time.
 @injectable
 class WorkingTimeDailyChartViewModel {
-  int _hoursPerDay = 24;
-  int _quartersPerHour = 4;
+  final DailyChartBarConverter dailyChartBarConverter;
   double _space = 1.4;
+
+  WorkingTimeDailyChartViewModel(this.dailyChartBarConverter);
 
   Future<WorkingTimeChartData> dailyWorkingTime(BuildContext context) async {
     final Color dark = Theme.of(context).colorScheme.primary;
@@ -22,20 +24,21 @@ class WorkingTimeDailyChartViewModel {
     final workingTime = _genWorkingTimes();
 
     final bars = List.generate(
-        _hoursPerDay,
+        dailyChartBarConverter.groupsPerDay,
         (groundId) => BarChartGroupData(
             x: groundId,
             barsSpace: 1.6,
             barRods: _genBarRods(dark, light, workingTime, groundId)));
 
     final tooltips = List.generate(
-        _hoursPerDay,
-        (groupId) => List.generate(_quartersPerHour,
+        dailyChartBarConverter.groupsPerDay,
+        (groupId) => List.generate(dailyChartBarConverter.rodsPerGroup,
             (rodId) => _genToolTip(groupId, rodId, workingTime, context)));
 
-    final bottomTitles = List.generate(_hoursPerDay, (index) {
+    final bottomTitles =
+        List.generate(dailyChartBarConverter.groupsPerDay, (index) {
       int hour = index + 1;
-      hour = hour % _hoursPerDay;
+      hour = hour % dailyChartBarConverter.groupsPerDay;
       return (hour % 6 == 0) ? hour.toString() + ":00" : "";
     });
 
@@ -45,11 +48,12 @@ class WorkingTimeDailyChartViewModel {
   List<BarChartRodData> _genBarRods(Color dark, Color light,
           List<_WorkingTimePerQuarter> workingTime, int groundId) =>
       List.generate(
-        _quartersPerHour,
+        dailyChartBarConverter.rodsPerGroup,
         (rodId) => _genBarChartRodData(
           dark,
           light,
-          workingTime.elementAt(rodId + groundId * _quartersPerHour),
+          workingTime.elementAt(
+              rodId + groundId * dailyChartBarConverter.rodsPerGroup),
         ),
       );
 
@@ -58,7 +62,8 @@ class WorkingTimeDailyChartViewModel {
     String starTimeStamp = groupId.toString() +
         (rodId == 0 ? ":0" : ":") +
         (rodId * 15).toString();
-    final time = workingTime.elementAt(rodId + groupId * _quartersPerHour);
+    final time = workingTime
+        .elementAt(rodId + groupId * dailyChartBarConverter.rodsPerGroup);
     return BarTooltipItem(
         '$starTimeStamp\n' +
             'work: ' +
@@ -73,7 +78,7 @@ class WorkingTimeDailyChartViewModel {
   }
 
   List<_WorkingTimePerQuarter> _genWorkingTimes() => List.generate(
-      _hoursPerDay * _quartersPerHour,
+      dailyChartBarConverter.rodsPerDay,
       (index) => _genWorkingTimePerQuarter(index));
 
   _WorkingTimePerQuarter _genWorkingTimePerQuarter(int quarterIndex) {

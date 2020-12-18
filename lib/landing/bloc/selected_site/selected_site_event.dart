@@ -23,12 +23,12 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
 }
 
 class DateSelected extends SelectedSiteDateTimeEvent {
-  final DateTime day;
+  final DateTime date;
 
-  const DateSelected(this.day, BuildContext context) : super(context);
+  const DateSelected(this.date, BuildContext context) : super(context);
 
   @override
-  List<Object> get props => throw [day];
+  List<Object> get props => throw [date];
 }
 
 class TrendSelected extends SelectedSiteDateTimeEvent {

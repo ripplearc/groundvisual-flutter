@@ -12,10 +12,9 @@ class LandingHomePage extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
           providers: [
             BlocProvider(
-                create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
-            BlocProvider(
-                create: (_) => getIt<WorkingTimeChartTouchBloc>()
-                  ..add(NoBarRodSelection()))
+                create: (_) =>
+                    getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
+            BlocProvider(create: (_) => getIt<WorkingTimeChartTouchBloc>())
           ],
           child: CustomScrollView(
             slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],

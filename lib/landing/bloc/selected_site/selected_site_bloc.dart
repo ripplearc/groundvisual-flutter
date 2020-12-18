@@ -54,7 +54,7 @@ class SelectedSiteBloc
     } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission
-          in _yieldDailyWorkingTime(siteName, event.day, event.context))
+          in _yieldDailyWorkingTime(siteName, event.date, event.context))
         yield emission;
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;

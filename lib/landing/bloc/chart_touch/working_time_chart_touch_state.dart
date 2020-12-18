@@ -33,5 +33,5 @@ class SiteSnapShotWorkArea extends SiteSnapShotState {
   SiteSnapShotWorkArea(this.workAreas, this.cameraPosition);
 
   @override
-  List<Object> get props => [this.workAreas];
+  List<Object> get props => [this.workAreas, this.cameraPosition];
 }

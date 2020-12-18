@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/landing/chart/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_viewmodel.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
@@ -18,8 +19,9 @@ part 'working_time_chart_touch_state.dart';
 class WorkingTimeChartTouchBloc
     extends Bloc<WorkingTimeChartTouchEvent, SiteSnapShotState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
+  final DailyChartBarConverter converter;
 
-  WorkingTimeChartTouchBloc(this.workZoneMapViewModel)
+  WorkingTimeChartTouchBloc(this.workZoneMapViewModel, this.converter)
       : super(WorkingTimeChartTouchInitial());
 
   @override
@@ -36,27 +38,17 @@ class WorkingTimeChartTouchBloc
       yield SiteSnapShotThumbnail(event.groupId, event.rodId,
           'images/${event.groupId * 4 + event.rodId}.jpg');
 
-      if (event.groupId % 3 == 0) {
-        List<dynamic> result = await Future.wait<dynamic>([
-          workZoneMapViewModel.getOddPolygons(event.context),
-          workZoneMapViewModel.getCameraPosition("")
-        ]);
-        yield SiteSnapShotWorkArea(result[0], result[1]);
-      } /*else if (event.groupId % 3 == 1) {
-        List<dynamic> result = await Future.wait<dynamic>([
-          workZoneMapViewModel.getEvenPolygons(event.context),
-          workZoneMapViewModel.getCameraPosition("")
-        ]);
-        yield SiteSnapShotWorkArea(result[0], result[1]);
-      } */else {
-        List<dynamic> result = await Future.wait<dynamic>([
-          workZoneMapViewModel.getPentonPolygons(event.context),
-          workZoneMapViewModel.getPentonCameraPosition("")
-        ]);
-        yield SiteSnapShotWorkArea(result[0], result[1]);
-      }
+      final selectedTime =
+          converter.convertToDateTime(event.date, event.groupId, event.rodId);
+      List<dynamic> result = await Future.wait<dynamic>([
+        workZoneMapViewModel.getPolygon(
+            event.siteName, selectedTime, event.context),
+        workZoneMapViewModel.getCameraPosition(event.siteName, selectedTime)
+      ]);
+      yield SiteSnapShotWorkArea(result[0], result[1]);
     } else if (event is NoBarRodSelection) {
-      final cameraPosition = await workZoneMapViewModel.getCameraPosition("");
+      final cameraPosition = await workZoneMapViewModel.getCameraPosition(
+          event.siteName, event.date);
       yield SiteSnapShotWorkArea(Set(), cameraPosition);
     }
   }

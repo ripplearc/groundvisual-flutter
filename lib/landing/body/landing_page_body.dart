@@ -19,22 +19,21 @@ class LandingHomePageBody extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return index == 1
-                        ? _displayWorkingTimeChart(state)
-                        : BlocBuilder<WorkingTimeChartTouchBloc,
-                                SiteSnapShotState>(
-                            builder: (context, state) {
-                            return WorkingZoneMap();
-                          });
+                        ? _displayWorkingTimeChart(state, context)
+                        : WorkingZoneMap();
                   },
                   childCount: 2,
                 ),
               ));
 
-  StatelessWidget _displayWorkingTimeChart(SelectedSiteState state) {
+  StatelessWidget _displayWorkingTimeChart(
+      SelectedSiteState state, BuildContext context) {
     if (state is SelectedSiteAtDate) {
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+          .add(NoBarRodSelection(state.siteName, state.date));
       return state.chartData == null
           ? WorkingTimeDailyChartShimmer()
-          : WorkingTimeDailyChart(state.chartData);
+          : WorkingTimeDailyChart(state);
     } else if (state is SelectedSiteAtWindow) {
       return state.chartData == null
           ? WorkingTimeTrendChartShimmer(period: state.period)

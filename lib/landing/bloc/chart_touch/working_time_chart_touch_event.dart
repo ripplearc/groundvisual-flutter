@@ -7,6 +7,11 @@ abstract class WorkingTimeChartTouchEvent extends Equatable {
 }
 
 class NoBarRodSelection extends WorkingTimeChartTouchEvent {
+  final String siteName;
+  final DateTime date;
+
+  NoBarRodSelection(this.siteName, this.date);
+
   @override
   List<Object> get props => [];
 }
@@ -14,9 +19,13 @@ class NoBarRodSelection extends WorkingTimeChartTouchEvent {
 class BarRodSelection extends WorkingTimeChartTouchEvent {
   final int groupId;
   final int rodId;
+  final String siteName;
+  final DateTime date;
+
   final BuildContext context;
 
-  BarRodSelection(this.groupId, this.rodId, this.context);
+  BarRodSelection(
+      this.groupId, this.rodId, this.siteName, this.date, this.context);
 
   @override
   List<Object> get props => [groupId, rodId];

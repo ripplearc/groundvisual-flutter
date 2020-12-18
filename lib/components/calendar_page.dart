@@ -48,8 +48,8 @@ class _CalendarPageState extends State<CalendarPage>
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events, List holidays) {
-    _selectedDate = day;
+  void _onDaySelected(DateTime date, List events, List holidays) {
+    _selectedDate = DateTime(date.year, date.month, date.day);
   }
 
   @override

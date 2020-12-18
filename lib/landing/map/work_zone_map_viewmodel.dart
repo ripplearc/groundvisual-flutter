@@ -1,71 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/landing/map/map_helper.dart';
+import 'package:groundvisual_flutter/models/zone.dart';
+import 'package:groundvisual_flutter/repositories/site_workzone_repository.dart';
 import 'package:injectable/injectable.dart';
 
 /// WorkingZoneMapViewModel finds the work areas given the site and time.
 @injectable
 class WorkZoneMapViewModel {
-  Future<CameraPosition> getCameraPosition(String siteName) => Future.delayed(
-      Duration(seconds: 1),
-      () => CameraPosition(target: LatLng(42.626985, -82.982993), zoom: 16.4, tilt: 30));
+  final SiteWorkZoneRepository siteWorkZoneRepository;
+  final Cartographer cartographer;
 
-  Future<CameraPosition> getPentonCameraPosition(String siteName) =>
-      Future.delayed(
-          Duration(seconds: 1),
-          () => CameraPosition(
-              target: LatLng(42.456140, -83.455860), zoom: 16.4, tilt: 30));
+  WorkZoneMapViewModel(this.siteWorkZoneRepository, this.cartographer);
 
-  Future<Set<Polygon>> getOddPolygons(BuildContext context) async {
-    final List<LatLng> points = <LatLng>[];
-
-    points.add(_createLatLng(42.626985, -82.982993));
-    points.add(_createLatLng(42.627034, -82.982821));
-    points.add(_createLatLng(42.62702, -82.982671));
-    points.add(_createLatLng(42.626939, -82.982585));
-    points.add(_createLatLng(42.626835, -82.982609));
-
-    return Future.delayed(
-        Duration(seconds: 1), () => _genPolygons(context, points));
+  Future<CameraPosition> getCameraPosition(
+      String siteName, DateTime time) async {
+    List<dynamic> result = await Future.wait<dynamic>(
+        [_getCameraLatLng(siteName, time), _getCameraZoom(siteName, time)]);
+    return CameraPosition(target: result[0], zoom: result[1], tilt: 30);
   }
 
-  Future<Set<Polygon>> getEvenPolygons(BuildContext context) {
-    final List<LatLng> points = <LatLng>[];
-    points.add(_createLatLng(42.626584, -82.982633));
-    points.add(_createLatLng(42.626669, -82.982341));
-    points.add(_createLatLng(42.62659, -82.982024));
-    points.add(_createLatLng(42.626436, -82.982024));
-    points.add(_createLatLng(42.62641, -82.982311));
-    return Future.value(_genPolygons(context, points));
-  }
+  Future<LatLng> _getCameraLatLng(String siteName, DateTime time) =>
+      siteWorkZoneRepository.getWorkZoneAtTime(siteName, time).then((zone) =>
+          cartographer.calcCentroid(
+              zone.regions.expand((e) => e.points).toList().toRegion()));
 
-  Future<Set<Polygon>> getPentonPolygons(BuildContext context) {
-    final List<LatLng> points = <LatLng>[];
-    points.add(_createLatLng(42.456211, -83.455702));
-    points.add(_createLatLng(42.456286, -83.455401));
-    points.add(_createLatLng(42.456060, -83.455127));
-    points.add(_createLatLng(42.455890, -83.455315));
-    points.add(_createLatLng(42.455906, -83.455836));
-    return Future.value(_genPolygons(context, points));
-  }
+  Future<double> _getCameraZoom(String siteName, DateTime time) =>
+      siteWorkZoneRepository.getWorkZoneAtTime(siteName, time).then((zone) =>
+          cartographer.determineRegionZoomLevel(zone.regions
+              .expand((element) => element.points)
+              .toList()
+              .toRegion()));
 
-//
-// final test = await rootBundle.loadString('assets/mock_response/test.json');
-// final decoded = json.decode(test);
-// final object = SiteWorkZone.fromJson(decoded);
-  LatLng _createLatLng(double lat, double lng) {
-    return LatLng(lat, lng);
-  }
+  Future<Set<Polygon>> getPolygon(
+          String siteName, DateTime time, BuildContext context) async =>
+      siteWorkZoneRepository
+          .getWorkZoneAtTime(siteName, time)
+          .then((zone) => _genPolygons(context, zone));
 
-  Set<Polygon> _genPolygons(BuildContext context, List<LatLng> points) {
-    return {
-      Polygon(
-        polygonId: PolygonId("Test_1"),
-        consumeTapEvents: true,
-        strokeColor: Theme.of(context).colorScheme.secondary,
-        strokeWidth: 2,
-        fillColor: Theme.of(context).colorScheme.primary,
-        points: points,
-      )
-    };
-  }
+  Set<Polygon> _genPolygons(BuildContext context, ConstructionZone zone) =>
+      zone.regions
+          .asMap()
+          .map((index, region) => MapEntry(index, Polygon(
+                polygonId: PolygonId(index.toString()),
+                consumeTapEvents: true,
+                strokeColor: Theme.of(context).colorScheme.secondary,
+                strokeWidth: 2,
+                fillColor: Theme.of(context).colorScheme.primary,
+                points: region.points,
+              )))
+          .values
+          .toSet();
 }

@@ -16,7 +16,7 @@ class DateSelectionButton extends StatelessWidget {
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) => state is SelectedSiteAtDate
               ? DateButton(
-                  dateText: state.date.sameDate(DateTime.now())
+                  dateText: state.date.isSameDate(DateTime.now())
                       ? 'Today'
                       : DateFormat('MM/dd/yyyy').format(state.date),
                   action: () {
@@ -31,7 +31,7 @@ class DateSelectionButton extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: Theme.of(context).cardTheme.color,
           builder: (_) => _calenderSelection(context, state.date, (DateTime t) {
-                if (state.date.sameDate(t)) return;
+                if (state.date.isSameDate(t)) return;
                 BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t, context));
               }));
 

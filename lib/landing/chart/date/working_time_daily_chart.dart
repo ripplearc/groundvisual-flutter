@@ -1,28 +1,29 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 
 import '../../bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
-  final WorkingTimeChartData data;
+  final SelectedSiteAtDate selectedSiteAtDate;
 
-  WorkingTimeDailyChart(this.data);
+  WorkingTimeDailyChart(this.selectedSiteAtDate);
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: 1.8,
-        child: Stack(
-          children: [_buildBarChartCard(context), _buildThumbnailImage()],
-        ),
-      );
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1.8,
+      child: Stack(
+        children: [_buildBarChartCard(context), _buildThumbnailImage()],
+      ),
+    );
+  }
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
-        buildWhen: (previous, current) =>
-            current is SiteSnapShotThumbnail,
+        buildWhen: (previous, current) => current is SiteSnapShotThumbnail,
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
@@ -52,7 +53,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
           color: Theme.of(context).colorScheme.background,
           child: Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-            child: _BarChart(data: data),
+            child: _BarChart(selectedSiteAtDate: selectedSiteAtDate),
             // child: Stack(children: [_buildBarChart(context)]),
           ),
         ),
@@ -60,9 +61,9 @@ class WorkingTimeDailyChart extends StatelessWidget {
 }
 
 class _BarChart extends StatelessWidget {
-  final WorkingTimeChartData data;
+  final SelectedSiteAtDate selectedSiteAtDate;
 
-  const _BarChart({Key key, this.data}) : super(key: key);
+  const _BarChart({Key key, this.selectedSiteAtDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildBarChart(context);
@@ -74,7 +75,8 @@ class _BarChart extends StatelessWidget {
               touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: Theme.of(context).colorScheme.background,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                      data.tooltips[groupIndex][rodIndex]),
+                      selectedSiteAtDate.chartData.tooltips[groupIndex]
+                          [rodIndex]),
               touchCallback: (barTouchResponse) =>
                   triggerBarRodSelectionEventUponTouch(
                     barTouchResponse,
@@ -86,11 +88,12 @@ class _BarChart extends StatelessWidget {
               showTitles: true,
               getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
               margin: 2,
-              getTitles: (double index) => data.bottomTitles[index.toInt()],
+              getTitles: (double index) =>
+                  selectedSiteAtDate.chartData.bottomTitles[index.toInt()],
             ),
             leftTitles: SideTitles(
               showTitles: true,
-              interval: data.leftTitleInterval,
+              interval: selectedSiteAtDate.chartData.leftTitleInterval,
               getTextStyles: (value) => Theme.of(context).textTheme.caption,
             ),
           ),
@@ -98,7 +101,7 @@ class _BarChart extends StatelessWidget {
             show: false,
           ),
           groupsSpace: 1.8,
-          barGroups: data.bars,
+          barGroups: selectedSiteAtDate.chartData.bars,
         ),
       );
 
@@ -110,6 +113,8 @@ class _BarChart extends StatelessWidget {
       BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(BarRodSelection(
           barTouchResponse.spot.touchedBarGroupIndex,
           barTouchResponse.spot.touchedRodDataIndex,
+          selectedSiteAtDate.siteName,
+          selectedSiteAtDate.date,
           context));
     }
   }
