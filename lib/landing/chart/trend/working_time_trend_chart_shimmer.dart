@@ -35,9 +35,9 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: List<Container>.generate(
-                        period.numberOfDays(),
+                        period.toInt(),
                         (index) => Container(
-                              width: 24 / (period.numberOfDays() / 7),
+                              width: 24 / (period.toInt() / 7),
                               height: 96 * random.nextDouble(),
                               color: Theme.of(context).colorScheme.background,
                             )).toList(growable: true))),

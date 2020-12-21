@@ -57,7 +57,7 @@ extension Value on TrendPeriod {
     throw ArgumentError('$this is not a valid Trend Period');
   }
 
-  int numberOfDays() {
+  int toInt() {
     switch (this) {
       case TrendPeriod.oneWeek:
         return 7;

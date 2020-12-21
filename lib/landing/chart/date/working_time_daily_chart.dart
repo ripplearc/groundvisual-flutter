@@ -78,7 +78,7 @@ class _BarChart extends StatelessWidget {
                       selectedSiteAtDate.chartData.tooltips[groupIndex]
                           [rodIndex]),
               touchCallback: (barTouchResponse) =>
-                  triggerBarRodSelectionEventUponTouch(
+                  _triggerBarRodSelectionEventUponTouch(
                     barTouchResponse,
                     context,
                   )),
@@ -105,12 +105,12 @@ class _BarChart extends StatelessWidget {
         ),
       );
 
-  void triggerBarRodSelectionEventUponTouch(
+  void _triggerBarRodSelectionEventUponTouch(
       BarTouchResponse barTouchResponse, BuildContext context) {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(BarRodSelection(
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(DateChartBarRodSelection(
           barTouchResponse.spot.touchedBarGroupIndex,
           barTouchResponse.spot.touchedRodDataIndex,
           selectedSiteAtDate.siteName,

@@ -16,7 +16,7 @@ class NoBarRodSelection extends WorkingTimeChartTouchEvent {
   List<Object> get props => [];
 }
 
-class BarRodSelection extends WorkingTimeChartTouchEvent {
+class DateChartBarRodSelection extends WorkingTimeChartTouchEvent {
   final int groupId;
   final int rodId;
   final String siteName;
@@ -24,8 +24,24 @@ class BarRodSelection extends WorkingTimeChartTouchEvent {
 
   final BuildContext context;
 
-  BarRodSelection(
+  DateChartBarRodSelection(
       this.groupId, this.rodId, this.siteName, this.date, this.context);
+
+  @override
+  List<Object> get props => [groupId, rodId];
+}
+
+class TrendChartBarRodSelection extends WorkingTimeChartTouchEvent {
+  final int groupId;
+  final int rodId;
+  final String siteName;
+  final DateTimeRange range;
+  final TrendPeriod period;
+
+  final BuildContext context;
+
+  TrendChartBarRodSelection(this.groupId, this.rodId, this.siteName, this.range,
+      this.period, this.context);
 
   @override
   List<Object> get props => [groupId, rodId];

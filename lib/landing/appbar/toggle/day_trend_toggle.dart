@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/components/buttons/toggle_button.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:dart_date/dart_date.dart';
+
 
 /// Toggle between date or trend for information about a site. Date option displays
 /// the information on a certain date, while trend option displays information within
@@ -24,10 +26,8 @@ class DateTrendToggle extends StatelessWidget {
 
   void _triggerSelectSiteDateTimeEvent(int index, BuildContext context) {
     if (index == 0) {
-      final now = DateTime.now();
-      final midnight = DateTime(now.year, now.month, now.day);
       BlocProvider.of<SelectedSiteBloc>(context)
-          .add(DateSelected(midnight, context));
+          .add(DateSelected(DateTime.now().startOfDay, context));
     } else {
       BlocProvider.of<SelectedSiteBloc>(context)
           .add(TrendSelected(TrendPeriod.oneWeek, context));

@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:dart_date/dart_date.dart';
 
 @injectable
 class DailyChartBarConverter {
@@ -8,7 +9,6 @@ class DailyChartBarConverter {
 
   int get rodsPerDay => groupsPerDay * rodsPerGroup;
 
-  DateTime convertToDateTime(DateTime startTime, int groupId, int rodId) {
-    return startTime.add(Duration(seconds: groupId * 3600 + rodId * 900));
-  }
+  DateTime convertToDateTime(DateTime startTime, int groupId, int rodId) =>
+      startTime + Duration(seconds: groupId * 3600 + rodId * 900);
 }

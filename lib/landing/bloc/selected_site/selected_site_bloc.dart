@@ -9,8 +9,10 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:dart_date/dart_date.dart';
 
 part 'selected_site_event.dart';
+
 part 'selected_site_state.dart';
 
 /// bloc to take events of selecting date or period, and notify listener about the
@@ -67,8 +69,8 @@ class SelectedSiteBloc
     yield SelectedSiteAtWindow(
         siteName,
         DateTimeRange(
-          start: DateTime.now().subtract(Duration(days: 7)),
-          end: DateTime.now(),
+          start: Date.startOfToday - Duration(days: 7),
+          end: Date.startOfToday,
         ),
         event.period);
     var chart = await Future.delayed(
@@ -78,8 +80,8 @@ class SelectedSiteBloc
     yield SelectedSiteAtWindow(
         siteName,
         DateTimeRange(
-          start: DateTime.now().subtract(Duration(days: 7)),
-          end: DateTime.now(),
+          start: Date.startOfToday - Duration(days: event.period.toInt()),
+          end: Date.startOfToday,
         ),
         event.period,
         chartData: chart);

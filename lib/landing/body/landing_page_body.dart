@@ -37,7 +37,7 @@ class LandingHomePageBody extends StatelessWidget {
     } else if (state is SelectedSiteAtWindow) {
       return state.chartData == null
           ? WorkingTimeTrendChartShimmer(period: state.period)
-          : WorkingTimeTrendChart(state.chartData);
+          : WorkingTimeTrendChart(state);
     } else {
       return Container();
     }
