@@ -1,3 +1,4 @@
+import 'package:dart_date/dart_date.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -30,11 +31,13 @@ class LandingHomePageBody extends StatelessWidget {
       SelectedSiteState state, BuildContext context) {
     if (state is SelectedSiteAtDate) {
       BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-          .add(NoBarRodSelection(state.siteName, state.date));
+          .add(NoBarRodSelection(state.siteName, state.date, context));
       return state.chartData == null
           ? WorkingTimeDailyChartShimmer()
           : WorkingTimeDailyChart(state);
-    } else if (state is SelectedSiteAtWindow) {
+    } else if (state is SelectedSiteAtTrend) {
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+          .add(NoBarRodSelection(state.siteName, Date.startOfToday, context));
       return state.chartData == null
           ? WorkingTimeTrendChartShimmer(period: state.period)
           : WorkingTimeTrendChart(state);

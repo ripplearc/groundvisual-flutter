@@ -22,7 +22,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
     return {
       "M51": _getM51Zone,
       "Cresent Blvd": _getCresentZone,
-      "Kensington": _getKensingtonZone,
+      "Kensington": _getKensingtonZoneAtDate,
       "Penton Rise": _getPentonZone
     }[siteName];
   }
@@ -32,7 +32,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
     return {
       "M51": _getM51Zone,
       "Cresent Blvd": _getCresentZone,
-      "Kensington": _getKensingtonZone,
+      "Kensington": _getKensingtonZoneAtTime,
       "Penton Rise": _getPentonZone
     }[siteName];
   }
@@ -79,13 +79,23 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         _createLatLng(42.485180, -83.473279)
       ].toRegion().toZone());
 
-  Future<ConstructionZone> get _getKensingtonZone async => Future.value([
+  Future<ConstructionZone> get _getKensingtonZoneAtTime async => Future.value([
         [
           _createLatLng(42.517211, -83.688453),
           _createLatLng(42.517591, -83.685812),
           _createLatLng(42.515519, -83.685275),
           _createLatLng(42.514491, -83.688045),
           _createLatLng(42.514776, -83.691008)
+        ].toList().toRegion()
+      ].toList().toZone());
+
+  Future<ConstructionZone> get _getKensingtonZoneAtDate async => Future.value([
+        [
+          _createLatLng(42.516714, -83.694909),
+          _createLatLng(42.516398, -83.685805),
+          _createLatLng(42.516208, -83.676872),
+          _createLatLng(42.512475, -83.678332),
+          _createLatLng(42.512349, -83.684774)
         ].toList().toRegion()
       ].toList().toZone());
 

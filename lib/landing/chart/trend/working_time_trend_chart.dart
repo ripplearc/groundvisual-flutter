@@ -6,7 +6,7 @@ import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bl
 
 /// Widget displays the working and idling time during a certain period.
 class WorkingTimeTrendChart extends StatelessWidget {
-  final SelectedSiteAtWindow selectedSiteAtWindow;
+  final SelectedSiteAtTrend selectedSiteAtWindow;
 
   WorkingTimeTrendChart(this.selectedSiteAtWindow);
 
@@ -26,7 +26,7 @@ class WorkingTimeTrendChart extends StatelessWidget {
 }
 
 class _BarChart extends StatelessWidget {
-  final SelectedSiteAtWindow selectedSiteAtWindow;
+  final SelectedSiteAtTrend selectedSiteAtWindow;
 
   const _BarChart({Key key, this.selectedSiteAtWindow}) : super(key: key);
 

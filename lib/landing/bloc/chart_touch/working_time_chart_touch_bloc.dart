@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,7 +14,6 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'working_time_chart_touch_event.dart';
-
 part 'working_time_chart_touch_state.dart';
 
 /// bloc to take events of touching a bar rod, and emits state of corresponding images.
@@ -24,7 +24,8 @@ class WorkingTimeChartTouchBloc
   final DailyChartBarConverter dailyChartConverter;
   final TrendChartBarConverter trendChartConverter;
 
-  WorkingTimeChartTouchBloc(this.workZoneMapViewModel, this.dailyChartConverter, this.trendChartConverter)
+  WorkingTimeChartTouchBloc(this.workZoneMapViewModel, this.dailyChartConverter,
+      this.trendChartConverter)
       : super(WorkingTimeChartTouchInitial());
 
   @override
@@ -37,43 +38,48 @@ class WorkingTimeChartTouchBloc
   Stream<SiteSnapShotState> mapEventToState(
     WorkingTimeChartTouchEvent event,
   ) async* {
-    if (event is DateChartBarRodSelection) {
-      await for (var state in _handleBarSelectionOnDateChart(event))
-        yield state;
-    } else if (event is TrendChartBarRodSelection) {
-      await for (var state in _handleBarSelectionOnTrendChart(event))
-        yield state;
-    } else if (event is NoBarRodSelection) {
-      final cameraPosition = await workZoneMapViewModel.getCameraPosition(
-          event.siteName, event.date);
-      yield SiteSnapShotWorkArea(Set(), cameraPosition);
-    }
+    if (event is DateChartBarRodSelection)
+      await for (var state in _handleBarSelectionOnTime(event)) yield state;
+    else if (event is TrendChartBarRodSelection)
+      await for (var state in _handleBarSelectionOnDate(event)) yield state;
+    else if (event is NoBarRodSelection)
+      await for (var state in _handleInitialLoadingOfChart(event)) yield state;
   }
 
-  Stream<SiteSnapShotState> _handleBarSelectionOnTrendChart(
-      TrendChartBarRodSelection event) async* {
-
-    final selectedTime =
-        trendChartConverter.convertToDateTime(event.range, event.period, event.groupId, event.rodId);
+  Stream<SiteSnapShotState> _handleInitialLoadingOfChart(
+      NoBarRodSelection event) async* {
     List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygon(
-          event.siteName, selectedTime, event.context),
-      workZoneMapViewModel.getCameraPosition(event.siteName, selectedTime)
+      workZoneMapViewModel.getPolygonAtDate(
+          event.siteName, Date.startOfToday, event.context),
+      workZoneMapViewModel.getCameraPositionAtDate(
+          event.siteName, Date.startOfToday)
     ]);
     yield SiteSnapShotWorkArea(result[0], result[1]);
   }
 
-  Stream<SiteSnapShotState> _handleBarSelectionOnDateChart(
+  Stream<SiteSnapShotState> _handleBarSelectionOnDate(
+      TrendChartBarRodSelection event) async* {
+    final selectedTime = trendChartConverter.convertToDateTime(
+        event.range, event.period, event.groupId, event.rodId);
+    List<dynamic> result = await Future.wait<dynamic>([
+      workZoneMapViewModel.getPolygonAtDate(
+          event.siteName, selectedTime, event.context),
+      workZoneMapViewModel.getCameraPositionAtDate(event.siteName, selectedTime)
+    ]);
+    yield SiteSnapShotWorkArea(result[0], result[1]);
+  }
+
+  Stream<SiteSnapShotState> _handleBarSelectionOnTime(
       DateChartBarRodSelection event) async* {
     yield SiteSnapShotThumbnail(event.groupId, event.rodId,
         'images/${event.groupId * 4 + event.rodId}.jpg');
 
-    final selectedTime =
-        dailyChartConverter.convertToDateTime(event.date, event.groupId, event.rodId);
+    final selectedTime = dailyChartConverter.convertToDateTime(
+        event.date, event.groupId, event.rodId);
     List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygon(
+      workZoneMapViewModel.getPolygonAtTime(
           event.siteName, selectedTime, event.context),
-      workZoneMapViewModel.getCameraPosition(event.siteName, selectedTime)
+      workZoneMapViewModel.getCameraPositionAtTime(event.siteName, selectedTime)
     ]);
     yield SiteSnapShotWorkArea(result[0], result[1]);
   }

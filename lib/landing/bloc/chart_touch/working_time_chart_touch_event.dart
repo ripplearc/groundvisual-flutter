@@ -9,8 +9,9 @@ abstract class WorkingTimeChartTouchEvent extends Equatable {
 class NoBarRodSelection extends WorkingTimeChartTouchEvent {
   final String siteName;
   final DateTime date;
+  final BuildContext context;
 
-  NoBarRodSelection(this.siteName, this.date);
+  NoBarRodSelection(this.siteName, this.date, this.context);
 
   @override
   List<Object> get props => [];

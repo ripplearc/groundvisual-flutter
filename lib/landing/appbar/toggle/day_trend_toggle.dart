@@ -14,7 +14,7 @@ class DateTrendToggle extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
-        final index = state is SelectedSiteAtWindow ? 1 : 0;
+        final index = state is SelectedSiteAtTrend ? 1 : 0;
         return ToggleButton(
             key: UniqueKey(),
             initialIndex: index,

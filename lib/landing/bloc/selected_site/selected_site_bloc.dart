@@ -66,10 +66,10 @@ class SelectedSiteBloc
   }
 
   Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) async* {
-    yield SelectedSiteAtWindow(
+    yield SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
-          start: Date.startOfToday - Duration(days: 7),
+          start: Date.startOfToday - Duration(days: event.period.toInt()),
           end: Date.startOfToday,
         ),
         event.period);
@@ -77,7 +77,7 @@ class SelectedSiteBloc
         Duration(seconds: 2),
         () => workingTimeTrendChartViewModel.trendWorkingTime(
             event.context, event.period));
-    yield SelectedSiteAtWindow(
+    yield SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
           start: Date.startOfToday - Duration(days: event.period.toInt()),

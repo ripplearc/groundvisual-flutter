@@ -12,7 +12,7 @@ class SiteDropDownList extends StatelessWidget {
         String siteName = 'M51';
         if (state is SelectedSiteAtDate && state.siteName.isNotEmpty) {
           siteName = state.siteName;
-        } else if (state is SelectedSiteAtWindow && state.siteName.isNotEmpty) {
+        } else if (state is SelectedSiteAtTrend && state.siteName.isNotEmpty) {
           siteName = state.siteName;
         } else {
           BlocProvider.of<SelectedSiteBloc>(context)
