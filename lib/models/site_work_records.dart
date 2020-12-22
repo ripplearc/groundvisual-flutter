@@ -1,42 +1,32 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/models/zone.dart';
 
 part 'site_work_records.g.dart';
 
 @JsonSerializable()
-class SiteWorkZone {
+class SiteConstructionZone {
   final String site;
-  final List<UnitWorkZone> records;
+  final List<UnitConstructionZone> records;
 
-  SiteWorkZone(this.site, this.records);
+  SiteConstructionZone(this.site, this.records);
 
-  factory SiteWorkZone.fromJson(Map<String, dynamic> json) =>
-      _$SiteWorkZoneFromJson(json);
+  factory SiteConstructionZone.fromJson(Map<String, dynamic> json) =>
+      _$SiteConstructionZoneFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SiteWorkZoneToJson(this);
+  Map<String, dynamic> toJson() => _$SiteConstructionZoneToJson(this);
 }
 
 @JsonSerializable()
-class UnitWorkZone {
+class UnitConstructionZone {
   final DateTime date;
+  final int durationInSeconds;
 
-  final List<Region> regions;
+  final ConstructionZone zone;
 
-  UnitWorkZone(this.date, this.regions);
+  UnitConstructionZone(this.date, this.durationInSeconds, this.zone);
 
-  factory UnitWorkZone.fromJson(Map<String, dynamic> json) =>
-      _$UnitWorkZoneFromJson(json);
+  factory UnitConstructionZone.fromJson(Map<String, dynamic> json) =>
+      _$UnitConstructionZoneFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UnitWorkZoneToJson(this);
-}
-
-class Region {
-  final List<LatLng> points;
-
-  Region(this.points);
-
-  factory Region.fromJson(List<dynamic> json) =>
-      Region(json.map((e) => LatLng.fromJson(e)).toList());
-
-  dynamic toJson() => points.map((e) => e.toJson());
+  Map<String, dynamic> toJson() => _$UnitConstructionZoneToJson(this);
 }

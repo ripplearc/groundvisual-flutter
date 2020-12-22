@@ -47,12 +47,12 @@ class SelectedSiteBloc
     if (event is SelectedSiteInit) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission
-          in _yieldDailyWorkingTime(siteName, DateTime.now(), event.context))
+          in _yieldDailyWorkingTime(siteName, Date.startOfToday, event.context))
         yield emission;
     } else if (event is SiteSelected) {
       selectedSitePreference.setSelectedSite(event.siteName);
       await for (var emission in _yieldDailyWorkingTime(
-          event.siteName, DateTime.now(), event.context)) yield emission;
+          event.siteName, Date.startOfToday, event.context)) yield emission;
     } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission

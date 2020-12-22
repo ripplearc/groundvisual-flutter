@@ -6,6 +6,11 @@ class Region {
   final List<LatLng> points;
 
   Region(this.points);
+
+  factory Region.fromJson(List<dynamic> json) =>
+      Region(json.map((e) => LatLng.fromJson(e)).toList());
+
+  dynamic toJson() => points.map((e) => e.toJson());
 }
 
 @injectable
@@ -13,6 +18,11 @@ class ConstructionZone {
   final List<Region> regions;
 
   ConstructionZone(this.regions);
+
+  factory ConstructionZone.fromJson(List<dynamic> json) =>
+      ConstructionZone(json.map((e) => Region.fromJson(e)).toList());
+
+  dynamic toJson() => regions.map((e) => e.toJson());
 }
 
 extension LatLngRegion on List<LatLng> {

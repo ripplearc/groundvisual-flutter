@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
-import 'package:groundvisual_flutter/route/bottom_navigation.dart';
-import 'package:groundvisual_flutter/route/placeholder_navigation_page.dart';
+import 'package:groundvisual_flutter/router/bottom_navigation.dart';
+import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 
 class RootHomePage extends StatefulWidget {
   @override

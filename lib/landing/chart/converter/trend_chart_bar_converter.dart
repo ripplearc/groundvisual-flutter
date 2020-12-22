@@ -27,6 +27,6 @@ class TrendChartBarConverter {
   DateTime convertToDateTime(
           DateTimeRange range, TrendPeriod period, int groupId, int rodId) =>
       Date.min(
-          range.start + Duration(days: groupId * numOfGroup(period) + rodId),
+          range.start + Duration(days: groupId * daysPerGroup(period) + rodId),
           range.end);
 }

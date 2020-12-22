@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/models/zone.dart';
+import 'package:groundvisual_flutter/repositories/site_workzone_service.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class SiteWorkZoneRepository {
@@ -12,9 +13,13 @@ abstract class SiteWorkZoneRepository {
 
 @Singleton(as: SiteWorkZoneRepository)
 class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
+
+  final SiteWorkZoneService siteWorkZoneService;
+
+  SiteWorkZoneRepositoryImpl(this.siteWorkZoneService);
   @factoryMethod
-  static Future<SiteWorkZoneRepositoryImpl> create() async {
-    return SiteWorkZoneRepositoryImpl();
+  static Future<SiteWorkZoneRepositoryImpl> create(SiteWorkZoneService siteWorkZoneService) async {
+    return SiteWorkZoneRepositoryImpl(siteWorkZoneService);
   }
 
   @override
@@ -23,7 +28,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
       "M51": _getM51Zone,
       "Cresent Blvd": _getCresentZone,
       "Kensington": _getKensingtonZoneAtDate,
-      "Penton Rise": _getPentonZone
+      "Penton Rise": siteWorkZoneService.getWorkZoneAtDate(siteName, time)
     }[siteName];
   }
 
@@ -33,7 +38,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
       "M51": _getM51Zone,
       "Cresent Blvd": _getCresentZone,
       "Kensington": _getKensingtonZoneAtTime,
-      "Penton Rise": _getPentonZone
+      "Penton Rise": siteWorkZoneService.getWorkZoneAtTime(siteName, time)
     }[siteName];
   }
 
@@ -99,10 +104,6 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         ].toList().toRegion()
       ].toList().toZone());
 
-//
-// final test = await rootBundle.loadString('assets/mock_response/test.json');
-// final decoded = json.decode(test);
-// final object = SiteWorkZone.fromJson(decoded);
   LatLng _createLatLng(double lat, double lng) {
     return LatLng(lat, lng);
   }

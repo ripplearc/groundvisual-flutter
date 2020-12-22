@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/route/bottom_navigation.dart';
+import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 
 /// Placeholder for testing the router.
 class PlaceholderWidget extends StatelessWidget {
