@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/landing/map/map_helper.dart';
+import 'package:groundvisual_flutter/landing/map/cartographer.dart';
 import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:groundvisual_flutter/repositories/site_workzone_repository.dart';
 import 'package:injectable/injectable.dart';

@@ -7,8 +7,8 @@ import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_con
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 
-/// Generate the data model to display on the daily chart. It divides
-/// into 24 groups with each group having 4 rods which represents 4 quarters.
+/// Generate the data model to display on the daily chart, based on
+/// the configuration given by the DailyChartBarConverter.
 /// Each rod contains working and idling time.
 @injectable
 class WorkingTimeDailyChartViewModel {

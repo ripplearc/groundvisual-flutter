@@ -16,7 +16,8 @@ import 'package:rxdart/rxdart.dart';
 part 'working_time_chart_touch_event.dart';
 part 'working_time_chart_touch_state.dart';
 
-/// bloc to take events of touching a bar rod, and emits state of corresponding images.
+/// bloc to take events of touching a bar rod on the date or trend chart,
+/// and emits state of corresponding images, group and rod id.
 @injectable
 class WorkingTimeChartTouchBloc
     extends Bloc<WorkingTimeChartTouchEvent, SiteSnapShotState> {
@@ -54,7 +55,7 @@ class WorkingTimeChartTouchBloc
       workZoneMapViewModel.getCameraPositionAtDate(
           event.siteName, Date.startOfToday)
     ]);
-    yield SiteSnapShotWorkArea(result[0], result[1]);
+    yield SiteSnapShotWorkZone(result[0], result[1]);
   }
 
   Stream<SiteSnapShotState> _handleBarSelectionOnDate(
@@ -66,7 +67,7 @@ class WorkingTimeChartTouchBloc
           event.siteName, selectedTime, event.context),
       workZoneMapViewModel.getCameraPositionAtDate(event.siteName, selectedTime)
     ]);
-    yield SiteSnapShotWorkArea(result[0], result[1]);
+    yield SiteSnapShotWorkZone(result[0], result[1]);
   }
 
   Stream<SiteSnapShotState> _handleBarSelectionOnTime(
@@ -81,6 +82,6 @@ class WorkingTimeChartTouchBloc
           event.siteName, selectedTime, event.context),
       workZoneMapViewModel.getCameraPositionAtTime(event.siteName, selectedTime)
     ]);
-    yield SiteSnapShotWorkArea(result[0], result[1]);
+    yield SiteSnapShotWorkZone(result[0], result[1]);
   }
 }

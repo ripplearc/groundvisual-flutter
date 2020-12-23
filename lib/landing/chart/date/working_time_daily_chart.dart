@@ -12,14 +12,12 @@ class WorkingTimeDailyChart extends StatelessWidget {
   WorkingTimeDailyChart(this.selectedSiteAtDate);
 
   @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.8,
-      child: Stack(
-        children: [_buildBarChartCard(context), _buildThumbnailImage()],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AspectRatio(
+        aspectRatio: 1.8,
+        child: Stack(
+          children: [_buildBarChartCard(context), _buildThumbnailImage()],
+        ),
+      );
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
@@ -110,12 +108,13 @@ class _BarChart extends StatelessWidget {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(DateChartBarRodSelection(
-          barTouchResponse.spot.touchedBarGroupIndex,
-          barTouchResponse.spot.touchedRodDataIndex,
-          selectedSiteAtDate.siteName,
-          selectedSiteAtDate.date,
-          context));
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
+          DateChartBarRodSelection(
+              barTouchResponse.spot.touchedBarGroupIndex,
+              barTouchResponse.spot.touchedRodDataIndex,
+              selectedSiteAtDate.siteName,
+              selectedSiteAtDate.date,
+              context));
     }
   }
 }

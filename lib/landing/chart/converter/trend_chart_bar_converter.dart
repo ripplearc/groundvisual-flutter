@@ -4,6 +4,7 @@ import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bl
 import 'package:injectable/injectable.dart';
 import 'package:tuple/tuple.dart';
 
+/// Compute the DateTime given the groupId and rodId on a trend chart.
 @injectable
 class TrendChartBarConverter {
   int numOfGroup(TrendPeriod period) => _groupsAndDays(period).item1;

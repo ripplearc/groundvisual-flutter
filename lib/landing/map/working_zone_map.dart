@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
+/// Widget displaying the work zone with polygon.
 class WorkingZoneMap extends StatefulWidget {
   @override
   State<WorkingZoneMap> createState() => WorkingZoneMapState();
@@ -32,7 +33,7 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
       BlocConsumer<WorkingTimeChartTouchBloc, SiteSnapShotState>(
           listener: (context, state) async {
             final controller = await _controller.future;
-            if (state is SiteSnapShotWorkArea) {
+            if (state is SiteSnapShotWorkZone) {
               controller.animateCamera(
                 CameraUpdate.newCameraPosition(state.cameraPosition),
               );
@@ -43,12 +44,12 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
             }
           },
           buildWhen: (previous, current) =>
-              current is SiteSnapShotWorkArea ||
+              current is SiteSnapShotWorkZone ||
               current is WorkingTimeChartTouchInitial,
           builder: (context, state) {
-            if (state is SiteSnapShotWorkArea) {
+            if (state is SiteSnapShotWorkZone) {
               return _genMapCard(
-                  context, state.cameraPosition, state.workAreas);
+                  context, state.cameraPosition, state.workZone);
             } else if (state is WorkingTimeChartTouchInitial) {
               return _genMapCard(context, state.cameraPosition, Set());
             } else {
@@ -57,7 +58,7 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
           });
 
   Card _genMapCard(BuildContext context, CameraPosition cameraPosition,
-          Set<Polygon> workAreas) =>
+          Set<Polygon> workZone) =>
       Card(
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -66,10 +67,10 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
               padding: const EdgeInsets.all(0.0),
               child: AspectRatio(
                   aspectRatio: 3,
-                  child: _genGoogleMap(cameraPosition, workAreas))));
+                  child: _genGoogleMap(cameraPosition, workZone))));
 
   GoogleMap _genGoogleMap(
-          CameraPosition cameraPosition, Set<Polygon> workAreas) =>
+          CameraPosition cameraPosition, Set<Polygon> workZone) =>
       GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: cameraPosition,
@@ -82,7 +83,7 @@ class WorkingZoneMapState extends State<WorkingZoneMap>
             () => EagerGestureRecognizer(),
           ),
         ].toSet(),
-        polygons: workAreas,
+        polygons: workZone,
       );
 
   Future _loadMapStyles() async {

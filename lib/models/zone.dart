@@ -1,7 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
-/// A list of LatLng that forms a convel hull to represent a work area.
+/// A list of LatLng that forms a convex hull to represent a work area.
 class Region {
   final List<LatLng> points;
 
@@ -13,6 +13,7 @@ class Region {
   dynamic toJson() => points.map((e) => e.toJson());
 }
 
+/// A zone composed of multiple regions.
 @injectable
 class ConstructionZone {
   final List<Region> regions;

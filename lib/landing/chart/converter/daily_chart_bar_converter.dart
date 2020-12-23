@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:dart_date/dart_date.dart';
 
+/// Compute the datetime given the the selected groupId and rodId on a daily chart.
 @injectable
 class DailyChartBarConverter {
   int get groupsPerDay => 24;
