@@ -24,13 +24,13 @@ class SelectedSiteAtDate extends SelectedSiteState {
       'SelectedSiteAtDay { name: $siteName, day: ${date.day} }';
 }
 
-class SelectedSiteAtWindow extends SelectedSiteState {
+class SelectedSiteAtTrend extends SelectedSiteState {
   final String siteName;
   final DateTimeRange dateRange;
   final TrendPeriod period;
   final WorkingTimeChartData chartData;
 
-  const SelectedSiteAtWindow(
+  const SelectedSiteAtTrend(
       this.siteName, this.dateRange, this.period, {this.chartData});
 
   @override

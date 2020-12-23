@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/components/buttons/cancel_button.dart';
 import 'package:groundvisual_flutter/components/buttons/confirm_button.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:dart_date/dart_date.dart';
+
 
 /// RDS Calendar page for selecting a certain date, and execute an action
 /// upon the confirmation of date selection.
@@ -48,8 +50,8 @@ class _CalendarPageState extends State<CalendarPage>
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events, List holidays) {
-    _selectedDate = day;
+  void _onDaySelected(DateTime date, List events, List holidays) {
+    _selectedDate = date.startOfDay;
   }
 
   @override

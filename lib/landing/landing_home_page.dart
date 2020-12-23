@@ -3,14 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 
 import 'appbar/landing_page_header.dart';
-import 'bloc/selected_site_bloc.dart';
+import 'bloc/selected_site/selected_site_bloc.dart';
 import 'body/landing_page_body.dart';
+import 'bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
 class LandingHomePage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => BlocProvider(
-      create: (_) => getIt<SelectedSiteBloc>()..add(Init(context)),
-      child: CustomScrollView(
-        slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
-      ));
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (_) =>
+                    getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
+            BlocProvider(create: (_) => getIt<WorkingTimeChartTouchBloc>())
+          ],
+          child: CustomScrollView(
+            slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
+          ));
 }

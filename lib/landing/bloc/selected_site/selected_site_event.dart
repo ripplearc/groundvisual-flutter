@@ -6,8 +6,8 @@ abstract class SelectedSiteDateTimeEvent extends Equatable {
   const SelectedSiteDateTimeEvent(this.context);
 }
 
-class Init extends SelectedSiteDateTimeEvent {
-  Init(BuildContext context) : super(context);
+class SelectedSiteInit extends SelectedSiteDateTimeEvent {
+  SelectedSiteInit(BuildContext context) : super(context);
 
   @override
   List<Object> get props => [];
@@ -23,12 +23,12 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
 }
 
 class DateSelected extends SelectedSiteDateTimeEvent {
-  final DateTime day;
+  final DateTime date;
 
-  const DateSelected(this.day, BuildContext context) : super(context);
+  const DateSelected(this.date, BuildContext context) : super(context);
 
   @override
-  List<Object> get props => throw [day];
+  List<Object> get props => throw [date];
 }
 
 class TrendSelected extends SelectedSiteDateTimeEvent {
@@ -57,7 +57,7 @@ extension Value on TrendPeriod {
     throw ArgumentError('$this is not a valid Trend Period');
   }
 
-  int numberOfDays() {
+  int toInt() {
     switch (this) {
       case TrendPeriod.oneWeek:
         return 7;

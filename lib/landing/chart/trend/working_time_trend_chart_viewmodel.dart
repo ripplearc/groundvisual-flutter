@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:tuple/tuple.dart';
+import 'package:dart_date/dart_date.dart';
 
 /// Generate the data model to display on the trend chart. For one week, it shows
 /// week day as the bottom titles. For more than one week, it shows the date at
@@ -18,13 +18,14 @@ import 'package:tuple/tuple.dart';
 class WorkingTimeTrendChartViewModel {
   final weekDays = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"];
 
-  WorkingTimeTrendChartViewModel();
+  final TrendChartBarConverter trendChartBarConverter;
+
+  WorkingTimeTrendChartViewModel(this.trendChartBarConverter);
 
   Future<WorkingTimeChartData> trendWorkingTime(
       BuildContext context, TrendPeriod period) async {
-    final groupsAndDays = _groupsAndDays(period);
-    final numOfGroup = groupsAndDays.item1;
-    final daysPerGroup = groupsAndDays.item2;
+    final numOfGroup = trendChartBarConverter.numOfGroup(period);
+    final daysPerGroup = trendChartBarConverter.daysPerGroup(period);
     double space = 20 / (numOfGroup * daysPerGroup / 7.0);
     final Color dark = Theme.of(context).colorScheme.primary;
     final Color light = Theme.of(context).colorScheme.onSurface;
@@ -37,19 +38,6 @@ class WorkingTimeTrendChartViewModel {
     final bottomTitles = _genBottomTitles(numOfGroup, daysPerGroup);
 
     return WorkingTimeChartData(bars, tooltips, 4.0, space, bottomTitles);
-  }
-
-  Tuple2<int, int> _groupsAndDays(TrendPeriod period) {
-    switch (period) {
-      case TrendPeriod.oneWeek:
-        return Tuple2(7, 1);
-      case TrendPeriod.twoWeeks:
-        return Tuple2(5, 3);
-      case TrendPeriod.oneMonth:
-        return Tuple2(5, 6);
-      case TrendPeriod.twoMonths:
-        return Tuple2(5, 12);
-    }
   }
 
   List<BarChartGroupData> _genRodBars(
@@ -95,8 +83,8 @@ class WorkingTimeTrendChartViewModel {
   List<String> _genBottomTitlesOfDate(int numOfGroup, int daysPerGroup) =>
       List.generate(
               numOfGroup,
-              (groupId) => DateFormat(' MM/dd ').format(DateTime.now()
-                  .subtract(Duration(days: groupId * daysPerGroup))))
+              (groupId) => DateFormat(' MM/dd ').format(
+                  DateTime.now() - Duration(days: groupId * daysPerGroup)))
           .reversed
           .toList();
 
@@ -120,8 +108,8 @@ class WorkingTimeTrendChartViewModel {
       List<_WorkingTimePerRod> workingTime,
       BuildContext context,
       int daysPerGroup) {
-    String date = DateFormat('MM/dd').format(DateTime.now()
-        .subtract(Duration(days: groupId * daysPerGroup + rodId)));
+    String date = DateFormat('MM/dd').format(
+        DateTime.now() - Duration(days: groupId * daysPerGroup + rodId));
 
     final time = workingTime.elementAt(rodId + groupId * daysPerGroup);
     return BarTooltipItem(

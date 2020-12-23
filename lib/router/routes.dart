@@ -2,7 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/app/root_home_page.dart';
-import 'package:groundvisual_flutter/route/placeholder_navigation_page.dart';
+import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 
 /// Register the route address and its destination
 class Routes {

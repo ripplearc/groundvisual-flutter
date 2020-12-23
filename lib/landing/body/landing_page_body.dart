@@ -1,13 +1,16 @@
+import 'package:dart_date/dart_date.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/map/working_zone_map.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
@@ -16,21 +19,32 @@ class LandingHomePageBody extends StatelessWidget {
           builder: (context, state) => SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    if (state is SelectedSiteAtDate) {
-                      return state.chartData == null
-                          ? WorkingTimeDailyChartShimmer()
-                          : WorkingTimeDailyChart(state.chartData);
-                    } else if (state is SelectedSiteAtWindow) {
-                      return state.chartData == null
-                          ? WorkingTimeTrendChartShimmer(period: state.period)
-                          : WorkingTimeTrendChart(state.chartData);
-                    } else {
-                      return Container();
-                    }
+                    return index == 1
+                        ? _displayWorkingTimeChart(state, context)
+                        : WorkingZoneMap();
                   },
-                  childCount: 1,
+                  childCount: 2,
                 ),
               ));
+
+  StatelessWidget _displayWorkingTimeChart(
+      SelectedSiteState state, BuildContext context) {
+    if (state is SelectedSiteAtDate) {
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+          .add(NoBarRodSelection(state.siteName, state.date, context));
+      return state.chartData == null
+          ? WorkingTimeDailyChartShimmer()
+          : WorkingTimeDailyChart(state);
+    } else if (state is SelectedSiteAtTrend) {
+      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+          .add(NoBarRodSelection(state.siteName, Date.startOfToday, context));
+      return state.chartData == null
+          ? WorkingTimeTrendChartShimmer(period: state.period)
+          : WorkingTimeTrendChart(state);
+    } else {
+      return Container();
+    }
+  }
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";

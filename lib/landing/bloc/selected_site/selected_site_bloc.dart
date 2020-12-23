@@ -9,7 +9,7 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tuple/tuple.dart';
+import 'package:dart_date/dart_date.dart';
 
 part 'selected_site_event.dart';
 
@@ -44,19 +44,19 @@ class SelectedSiteBloc
   Stream<SelectedSiteState> mapEventToState(
     SelectedSiteDateTimeEvent event,
   ) async* {
-    if (event is Init) {
+    if (event is SelectedSiteInit) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission
-          in _yieldDailyWorkingTime(siteName, DateTime.now(), event.context))
+          in _yieldDailyWorkingTime(siteName, Date.startOfToday, event.context))
         yield emission;
     } else if (event is SiteSelected) {
       selectedSitePreference.setSelectedSite(event.siteName);
       await for (var emission in _yieldDailyWorkingTime(
-          event.siteName, DateTime.now(), event.context)) yield emission;
+          event.siteName, Date.startOfToday, event.context)) yield emission;
     } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
       await for (var emission
-          in _yieldDailyWorkingTime(siteName, event.day, event.context))
+          in _yieldDailyWorkingTime(siteName, event.date, event.context))
         yield emission;
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
@@ -66,22 +66,22 @@ class SelectedSiteBloc
   }
 
   Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) async* {
-    yield SelectedSiteAtWindow(
+    yield SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
-          start: DateTime.now().subtract(Duration(days: 7)),
-          end: DateTime.now(),
+          start: Date.startOfToday - Duration(days: event.period.toInt()),
+          end: Date.startOfToday,
         ),
         event.period);
     var chart = await Future.delayed(
         Duration(seconds: 2),
         () => workingTimeTrendChartViewModel.trendWorkingTime(
             event.context, event.period));
-    yield SelectedSiteAtWindow(
+    yield SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
-          start: DateTime.now().subtract(Duration(days: 7)),
-          end: DateTime.now(),
+          start: Date.startOfToday - Duration(days: event.period.toInt()),
+          end: Date.startOfToday,
         ),
         event.period,
         chartData: chart);
