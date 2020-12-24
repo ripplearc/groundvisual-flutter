@@ -10,7 +10,7 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/map/working_zone_map.dart';
+import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
@@ -21,7 +21,7 @@ class LandingHomePageBody extends StatelessWidget {
                   (BuildContext context, int index) {
                     return index == 1
                         ? _displayWorkingTimeChart(state, context)
-                        : WorkingZoneMap();
+                        : WorkZoneMap();
                   },
                   childCount: 2,
                 ),

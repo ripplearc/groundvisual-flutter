@@ -10,12 +10,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
 
 /// Widget displaying the work zone with polygon.
-class WorkingZoneMap extends StatefulWidget {
+class WorkZoneMap extends StatefulWidget {
   @override
-  State<WorkingZoneMap> createState() => WorkingZoneMapState();
+  State<WorkZoneMap> createState() => WorkZoneMapState();
 }
 
-class WorkingZoneMapState extends State<WorkingZoneMap>
+class WorkZoneMapState extends State<WorkZoneMap>
     with WidgetsBindingObserver {
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
