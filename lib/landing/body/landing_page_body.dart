@@ -10,6 +10,7 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
+import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
 
 class LandingHomePageBody extends StatelessWidget {
@@ -19,11 +20,16 @@ class LandingHomePageBody extends StatelessWidget {
           builder: (context, state) => SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return index == 1
-                        ? _displayWorkingTimeChart(state, context)
-                        : WorkZoneMap();
+                    switch (index) {
+                      case 0:
+                        return WorkZoneMap();
+                      case 1:
+                        return _displayWorkingTimeChart(state, context);
+                      default:
+                        return MachineWorkingTimeList();
+                    }
                   },
-                  childCount: 2,
+                  childCount: 3,
                 ),
               ));
 
