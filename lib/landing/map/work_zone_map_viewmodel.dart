@@ -78,7 +78,7 @@ class WorkZoneMapViewModel {
               Polygon(
                 polygonId: PolygonId(index.toString()),
                 consumeTapEvents: true,
-                strokeColor: Theme.of(context).colorScheme.secondary,
+                strokeColor: Theme.of(context).colorScheme.primaryVariant,
                 strokeWidth: 2,
                 fillColor: Theme.of(context).colorScheme.primary,
                 points: region.points,

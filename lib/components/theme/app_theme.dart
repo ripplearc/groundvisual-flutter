@@ -19,9 +19,9 @@ class AppTheme {
     ),
     colorScheme: ColorScheme(
         primary: Colors.orangeAccent,
-        primaryVariant: Colors.deepOrangeAccent,
+        primaryVariant: Colors.yellowAccent,
         onPrimary: Colors.black,
-        secondary: Colors.yellowAccent,
+        secondary: Colors.green,
         secondaryVariant: Colors.yellow,
         onSecondary: Colors.black,
         background: Colors.white,
@@ -60,8 +60,8 @@ class AppTheme {
     colorScheme: ColorScheme(
         primary: Colors.orangeAccent,
         onPrimary: Colors.black87,
-        primaryVariant: Colors.deepOrangeAccent,
-        secondary: Colors.yellowAccent,
+        primaryVariant: Colors.yellowAccent,
+        secondary: Colors.green,
         secondaryVariant: Colors.yellow,
         onSecondary: Colors.black87,
         background: Colors.black87,
