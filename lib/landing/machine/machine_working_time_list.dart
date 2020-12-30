@@ -2,45 +2,74 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 
 import 'machine_bar_chart_sample.dart';
+import 'machine_bar_chart_sample2.dart';
 
 class MachineWorkingTimeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
-        buildWhen: (previous, current) => current is SiteSnapShotThumbnail,
         builder: (context, state) {
-          if (state is SiteSnapShotThumbnail) {
-            return _genCard();
-          } else {
-            return _genCard();
-          }
-        });
+      // if (state is ) {
+      return _genCard(context);
+      // } else {
+      //   return _genCard();
+      // }
+    });
   }
 
-  Card _genCard() {
+  Card _genCard2(BuildContext context) {
+    return Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+        color: Theme.of(context).colorScheme.background,
+        child: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: AspectRatio(
+                aspectRatio: 4,
+                child: Container(
+                    height: 72,
+                    color: Theme.of(context).colorScheme.primary,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _genOnlineNotification(context),
+                        _genMachineLabel(context),
+                        Expanded(child: MachineBarChartSample.withRandomData(context))
+                        // Expanded(child: Container(width: double.infinity)),
+                      ],
+                    )))));
+  }
+
+  Card _genCard(BuildContext context) {
     return Card(
         child: ListView.builder(
-            itemCount: 1,
+            itemCount: 8,
             // padding: const EdgeInsets.all(8),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                  height: 72,
-                  color: Theme.of(context).colorScheme.background,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _genOnlineNotification(context),
-                      _genMachineLabel(context),
-                      MachineBarChartSample()
-                      // Expanded(child: Container(width: double.infinity)),
-                    ],
-                  ));
+              return AspectRatio(
+                  aspectRatio: 4,
+                  child: Container(
+                      height: 72,
+                      color: Theme.of(context).colorScheme.background,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _genOnlineNotification(context),
+                          _genMachineLabel(context),
+                          Expanded(
+                              child: MachineBarChartSample.withRandomData(context))
+                          // Expanded(child: Container(width: double.infinity)),
+                        ],
+                      )));
             }));
   }
 
