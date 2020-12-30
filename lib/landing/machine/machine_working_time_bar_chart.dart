@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
 
 class MachineBarChartSample extends StatelessWidget {
@@ -14,7 +14,6 @@ class MachineBarChartSample extends StatelessWidget {
     return MachineBarChartSample(_createRandomData(context));
   }
 
-  /// Create random data.
   static List<charts.Series<OrdinalSales, String>> _createRandomData(
       BuildContext context) {
     final random = new Random();
@@ -24,7 +23,7 @@ class MachineBarChartSample extends StatelessWidget {
     ];
 
     final mobileSalesData = [
-      new OrdinalSales('2014', random.nextInt(25)),
+      new OrdinalSales('2014', random.nextInt(50)),
     ];
 
     return [
@@ -44,15 +43,10 @@ class MachineBarChartSample extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: mobileSalesData,
-        // Set a label accessor to control the text of the bar label.
         labelAccessorFn: (OrdinalSales sales, _) =>
             '${sales.year}: \$${sales.sales.toString()}',
-
         colorFn: (_, __) =>
             Theme.of(context).colorScheme.onSurface.toChartColor(),
-        // colorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault,
-        fillPatternFn: (OrdinalSales sales, _) =>
-            charts.FillPatternType.forwardHatch,
       )
     ];
   }
@@ -73,10 +67,10 @@ class MachineBarChartSample extends StatelessWidget {
       vertical: false,
       barRendererDecorator: charts.BarLabelDecorator(
           insideLabelStyleSpec: new charts.TextStyleSpec(
-              color: Theme.of(context).colorScheme.onSurface.toChartColor()),
+              color: Theme.of(context).colorScheme.background.toChartColor()),
           outsideLabelStyleSpec: new charts.TextStyleSpec(
               color:
-                  Theme.of(context).colorScheme.secondary.toChartColor())),
+                  Theme.of(context).colorScheme.onBackground.toChartColor())),
       domainAxis: charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
       primaryMeasureAxis: charts.NumericAxisSpec(
           renderSpec: charts.NoneRenderSpec(),

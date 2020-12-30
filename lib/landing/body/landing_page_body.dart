@@ -10,8 +10,8 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_bar_chart_sample.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_bar_chart_sample2.dart';
+import 'package:groundvisual_flutter/landing/machine/machine_working_time_bar_chart.dart';
+import 'package:groundvisual_flutter/landing/machine/machine_working_time_bar_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
 
@@ -30,7 +30,7 @@ class LandingHomePageBody extends StatelessWidget {
                       case 2:
                         return MachineWorkingTimeList();
                       default:
-                        return MachineBarChartSample.withRandomData(context);
+                        return MachineWorkingTimeChart.withRandomData(context);
                     }
                   },
                   childCount: 3,
