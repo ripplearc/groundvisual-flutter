@@ -16,11 +16,17 @@ class MachineWorkingTimeList extends StatelessWidget {
   }
 
   Card _genCard(BuildContext context) => Card(
-        color: Theme.of(context).colorScheme.background,
-        child: Column(
-            children: List<Container>.generate(
-                4, (index) => _genListItem(context, index))),
-      );
+      color: Theme.of(context).colorScheme.background,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        ListTile(
+          title: Text('Machines', style: Theme.of(context).textTheme.headline5),
+        ),
+        _genCardContent(context)
+      ]));
+
+  Column _genCardContent(BuildContext context) => Column(
+      children:
+          List<Container>.generate(4, (index) => _genListItem(context, index)));
 
   Container _genListItem(BuildContext context, int index) => Container(
       padding: EdgeInsets.only(left: 16, right: 16),
