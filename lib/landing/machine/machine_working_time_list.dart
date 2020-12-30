@@ -17,6 +17,8 @@ class MachineWorkingTimeList extends StatelessWidget {
 
   Card _genCard(BuildContext context) => Card(
       color: Theme.of(context).colorScheme.background,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         ListTile(
           title: Text('Machines', style: Theme.of(context).textTheme.headline5),

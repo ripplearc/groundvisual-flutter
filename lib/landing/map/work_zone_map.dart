@@ -15,8 +15,7 @@ class WorkZoneMap extends StatefulWidget {
   State<WorkZoneMap> createState() => WorkZoneMapState();
 }
 
-class WorkZoneMapState extends State<WorkZoneMap>
-    with WidgetsBindingObserver {
+class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
@@ -48,8 +47,7 @@ class WorkZoneMapState extends State<WorkZoneMap>
               current is WorkingTimeChartTouchInitial,
           builder: (context, state) {
             if (state is SiteSnapShotWorkZone) {
-              return _genMapCard(
-                  context, state.cameraPosition, state.workZone);
+              return _genMapCard(context, state.cameraPosition, state.workZone);
             } else if (state is WorkingTimeChartTouchInitial) {
               return _genMapCard(context, state.cameraPosition, Set());
             } else {
@@ -60,14 +58,23 @@ class WorkZoneMapState extends State<WorkZoneMap>
   Card _genMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
       Card(
+          color: Theme.of(context).colorScheme.background,
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          color: Theme.of(context).colorScheme.background,
-          child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: AspectRatio(
-                  aspectRatio: 3,
-                  child: _genGoogleMap(cameraPosition, workZone))));
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+              title: Text('Work Zone',
+                  style: Theme.of(context).textTheme.headline5),
+            ),
+            _genMapContent(context, cameraPosition, workZone)
+          ]));
+
+  Padding _genMapContent(BuildContext context, CameraPosition cameraPosition,
+          Set<Polygon> workZone) =>
+      Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: AspectRatio(
+              aspectRatio: 3, child: _genGoogleMap(cameraPosition, workZone)));
 
   GoogleMap _genGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workZone) =>

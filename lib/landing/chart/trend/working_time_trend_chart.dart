@@ -11,8 +11,15 @@ class WorkingTimeTrendChart extends StatelessWidget {
   WorkingTimeTrendChart(this.selectedSiteAtWindow);
 
   @override
-  Widget build(BuildContext context) =>
-      AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context));
+  Widget build(BuildContext context) => Stack(
+        children: [
+          AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context)),
+          ListTile(
+            title: Text('Working Time',
+                style: Theme.of(context).textTheme.headline5),
+          ),
+        ],
+      );
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,
