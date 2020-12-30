@@ -33,7 +33,9 @@ class WorkingTimeChartTouchBloc
   Stream<Transition<WorkingTimeChartTouchEvent, SiteSnapShotState>>
       transformEvents(
               Stream<WorkingTimeChartTouchEvent> events, transitionFn) =>
-          events.switchMap((transitionFn));
+          events
+              .debounceTime(Duration(milliseconds: 100))
+              .switchMap((transitionFn));
 
   @override
   Stream<SiteSnapShotState> mapEventToState(

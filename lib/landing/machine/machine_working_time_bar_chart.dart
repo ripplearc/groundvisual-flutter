@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
 
-class MachineBarChartSample extends StatelessWidget {
+class MachineWorkingTimeChart extends StatelessWidget {
   final List<charts.Series> seriesList;
 
-  MachineBarChartSample(this.seriesList);
+  MachineWorkingTimeChart(this.seriesList);
 
-  factory MachineBarChartSample.withRandomData(BuildContext context) {
-    return MachineBarChartSample(_createRandomData(context));
+  factory MachineWorkingTimeChart.withRandomData(BuildContext context) {
+    return MachineWorkingTimeChart(_createRandomData(context));
   }
 
   static List<charts.Series<OrdinalSales, String>> _createRandomData(
