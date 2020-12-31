@@ -58,12 +58,8 @@ class MachineWorkingTimeList extends StatelessWidget {
 
   Container _genListItem(BuildContext context, int index) {
     final data = Random().let((random) =>
-        UnitWorkingTime(1440, random.nextInt(720), random.nextInt(240)));
+        UnitWorkingTime(720, random.nextInt(720), random.nextInt(240)));
 
-    final verticalStaticTicks = [
-      charts.TickSpec(0),
-      charts.TickSpec(720),
-    ];
     return Container(
         padding: EdgeInsets.only(left: 16, right: 16),
         height: 96,
@@ -74,9 +70,7 @@ class MachineWorkingTimeList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _genMachineLabelWithStatus(context, index % 2 == 0),
-            Expanded(
-                child: MachineWorkingTimeChart(
-                    scale: verticalStaticTicks, data: data))
+            Expanded(child: MachineWorkingTimeChart.withData(data))
           ],
         ));
   }
@@ -85,10 +79,12 @@ class MachineWorkingTimeList extends StatelessWidget {
         children: [
           Container(child: SizedBox.fromSize(size: Size(58, 58))),
           MachineLabel(
-              name: "312", labelSize: Size(56, 56), shadowTopLeftOffset: Size(1, 1)),
+              name: "312",
+              labelSize: Size(56, 56),
+              shadowTopLeftOffset: Size(1, 1)),
           online
               ? MachineOnlineIndication(rightBottomOffset: Size(0, 0))
-              : MachineOfflineIndication(offset: Size(0, 0))
+              : MachineOfflineIndication(offset: Size(0, 0), warning: '21h')
         ],
       );
 }

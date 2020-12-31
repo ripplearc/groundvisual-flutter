@@ -13,7 +13,10 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'package:groundvisual_flutter/extensions/scoped.dart';
+
 part 'working_time_chart_touch_event.dart';
+
 part 'working_time_chart_touch_state.dart';
 
 /// bloc to take events of touching a bar rod on the date or trend chart,
@@ -73,17 +76,20 @@ class WorkingTimeChartTouchBloc
   }
 
   Stream<SiteSnapShotState> _handleBarSelectionOnTime(
-      DateChartBarRodSelection event) async* {
-    yield SiteSnapShotThumbnail(event.groupId, event.rodId,
-        'images/${event.groupId * 4 + event.rodId}.jpg');
+      DateChartBarRodSelection event) {
+    final thumbnailFuture = Future.value(SiteSnapShotThumbnail(event.groupId,
+            event.rodId, 'images/${event.groupId * 4 + event.rodId}.jpg'))
+        .then((value) => Future.delayed(Duration(seconds: 1), () => value));
 
-    final selectedTime = dailyChartConverter.convertToDateTime(
-        event.date, event.groupId, event.rodId);
-    List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtTime(
-          event.siteName, selectedTime, event.context),
-      workZoneMapViewModel.getCameraPositionAtTime(event.siteName, selectedTime)
-    ]);
-    yield SiteSnapShotWorkZone(result[0], result[1]);
+    final workZoneFuture = Future(() async => dailyChartConverter
+        .convertToDateTime(event.date, event.groupId, event.rodId)
+        .let((selectedTime) async => await Future.wait<dynamic>([
+              workZoneMapViewModel.getPolygonAtTime(
+                  event.siteName, selectedTime, event.context),
+              workZoneMapViewModel.getCameraPositionAtTime(
+                  event.siteName, selectedTime)
+            ]).then((result) => SiteSnapShotWorkZone(result[0], result[1]))));
+
+    return Stream.fromFutures([thumbnailFuture, workZoneFuture]);
   }
 }

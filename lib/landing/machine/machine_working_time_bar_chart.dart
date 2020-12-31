@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
 import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 /// A bar chart with only one domain, one tick on the x axis, to display
 /// the working and idling time for a machine.
@@ -10,8 +11,13 @@ class MachineWorkingTimeChart extends StatelessWidget {
   final List<charts.TickSpec<int>> scale;
   final UnitWorkingTime data;
 
-  const MachineWorkingTimeChart({Key key, this.scale, this.data})
+  const MachineWorkingTimeChart._({Key key, this.scale, this.data})
       : super(key: key);
+
+  factory MachineWorkingTimeChart.withData(UnitWorkingTime data) => [
+        charts.TickSpec(0),
+        charts.TickSpec(data.durationInMinutes),
+      ].let((ticks) => MachineWorkingTimeChart._(scale: ticks, data: data));
 
   @override
   Widget build(BuildContext context) => charts.BarChart(

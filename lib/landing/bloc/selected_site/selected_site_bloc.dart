@@ -65,33 +65,38 @@ class SelectedSiteBloc
     }
   }
 
-  Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) async* {
-    yield SelectedSiteAtTrend(
+  Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) {
+    final trendFuture = Future.value(SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
           start: Date.startOfToday - Duration(days: event.period.toInt()),
           end: Date.startOfToday,
         ),
-        event.period);
-    var chart = await Future.delayed(
+        event.period));
+
+    final trendWithChartFuture = Future(() async => await Future.delayed(
         Duration(seconds: 2),
         () => workingTimeTrendChartViewModel.trendWorkingTime(
-            event.context, event.period));
-    yield SelectedSiteAtTrend(
+            event.context, event.period)).then((chart) => SelectedSiteAtTrend(
         siteName,
         DateTimeRange(
           start: Date.startOfToday - Duration(days: event.period.toInt()),
           end: Date.startOfToday,
         ),
         event.period,
-        chartData: chart);
+        chartData: chart)));
+
+    return Stream.fromFutures([trendFuture, trendWithChartFuture]);
   }
 
   Stream _yieldDailyWorkingTime(
-      String siteName, DateTime date, BuildContext context) async* {
-    yield SelectedSiteAtDate(siteName, date);
-    var dailyChart = await Future.delayed(Duration(seconds: 2),
-        () => workingTimeDailyChartViewModel.dailyWorkingTime(context));
-    yield SelectedSiteAtDate(siteName, date, chartData: dailyChart);
+      String siteName, DateTime date, BuildContext context) {
+    final dailyFuture = Future.value(SelectedSiteAtDate(siteName, date));
+    final dailyWithChartFuture = Future(() async => await Future.delayed(
+            Duration(seconds: 2),
+            () => workingTimeDailyChartViewModel.dailyWorkingTime(context))
+        .then((dailyChart) =>
+            SelectedSiteAtDate(siteName, date, chartData: dailyChart)));
+    return Stream.fromFutures([dailyFuture, dailyWithChartFuture]);
   }
 }
