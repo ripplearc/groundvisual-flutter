@@ -15,7 +15,8 @@ class WorkingTimeDailyChartShimmer extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6)),
               color: Theme.of(context).colorScheme.background,
-              child: _buildShimmerContent(context))));
+              child: _buildShimmerContent(context))),
+  true);
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();

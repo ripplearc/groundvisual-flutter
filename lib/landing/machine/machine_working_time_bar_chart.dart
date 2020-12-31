@@ -4,6 +4,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
+import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
 
 class MachineWorkingTimeChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -14,37 +15,33 @@ class MachineWorkingTimeChart extends StatelessWidget {
     return MachineWorkingTimeChart(_createRandomData(context));
   }
 
-  static List<charts.Series<OrdinalSales, String>> _createRandomData(
+  static List<charts.Series<UnitWorkingTime, String>> _createRandomData(
       BuildContext context) {
     final random = new Random();
 
     final data = [
-      new OrdinalSales('2014', random.nextInt(100)),
-    ];
-
-    final mobileSalesData = [
-      new OrdinalSales('2014', random.nextInt(50)),
+      new UnitWorkingTime(1440, random.nextInt(720), random.nextInt(240)),
     ];
 
     return [
-      charts.Series<OrdinalSales, String>(
-          id: 'Sales',
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: data,
-          // Set a label accessor to control the text of the bar label.
-          // colorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault,
-          colorFn: (_, __) =>
-              Theme.of(context).colorScheme.primary.toChartColor(),
-          labelAccessorFn: (OrdinalSales sales, _) =>
-              '${sales.year}: \$${sales.sales.toString()}'),
-      charts.Series<OrdinalSales, String>(
-        id: 'Sales',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: mobileSalesData,
-        labelAccessorFn: (OrdinalSales sales, _) =>
-            '${sales.year}: \$${sales.sales.toString()}',
+      charts.Series<UnitWorkingTime, String>(
+        id: 'Working',
+        domainFn: (UnitWorkingTime timer, _) => '2020',
+        measureFn: (UnitWorkingTime timer, _) => timer.workingInMinutes,
+        data: data,
+        // Set a label accessor to control the text of the bar label.
+        colorFn: (_, __) =>
+            Theme.of(context).colorScheme.primary.toChartColor(),
+        labelAccessorFn: (UnitWorkingTime timer, _) =>
+            timer.workingInFormattedHours(),
+      ),
+      charts.Series<UnitWorkingTime, String>(
+        id: 'Idling',
+        domainFn: (UnitWorkingTime timer, _) => "2020",
+        measureFn: (UnitWorkingTime timer, _) => timer.idlingInMinutes,
+        data: data,
+        labelAccessorFn: (UnitWorkingTime timer, _) =>
+            timer.idlingInFormattedHours(),
         colorFn: (_, __) =>
             Theme.of(context).colorScheme.onSurface.toChartColor(),
       )
@@ -59,7 +56,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final verticalStaticTicks = <charts.TickSpec<double>>[
       new charts.TickSpec(0),
-      new charts.TickSpec(100),
+      new charts.TickSpec(720),
     ];
     return new charts.BarChart(
       seriesList,
@@ -78,12 +75,4 @@ class MachineWorkingTimeChart extends StatelessWidget {
               charts.StaticNumericTickProviderSpec(verticalStaticTicks)),
     );
   }
-}
-
-/// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
-
-  OrdinalSales(this.year, this.sales);
 }

@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
+import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
 import 'package:injectable/injectable.dart';
 
 /// Generate the data model to display on the daily chart, based on
@@ -46,7 +47,7 @@ class WorkingTimeDailyChartViewModel {
   }
 
   List<BarChartRodData> _genBarRods(Color dark, Color light,
-          List<_WorkingTimePerQuarter> workingTime, int groundId) =>
+          List<UnitWorkingTime> workingTime, int groundId) =>
       List.generate(
         dailyChartBarConverter.rodsPerGroup,
         (rodId) => _genBarChartRodData(
@@ -58,7 +59,7 @@ class WorkingTimeDailyChartViewModel {
       );
 
   BarTooltipItem _genToolTip(int groupId, int rodId,
-      List<_WorkingTimePerQuarter> workingTime, BuildContext context) {
+      List<UnitWorkingTime> workingTime, BuildContext context) {
     String starTimeStamp = groupId.toString() +
         (rodId == 0 ? ":0" : ":") +
         (rodId * 15).toString();
@@ -67,9 +68,9 @@ class WorkingTimeDailyChartViewModel {
     return BarTooltipItem(
         '$starTimeStamp\n' +
             'work: ' +
-            time.workingMinutes.toInt().toString() +
+            time.workingInMinutes.toInt().toString() +
             ' mins\nidle: ' +
-            time.idlingMinutes.toInt().toString() +
+            time.idlingInMinutes.toInt().toString() +
             " mins",
         Theme.of(context)
             .textTheme
@@ -77,28 +78,31 @@ class WorkingTimeDailyChartViewModel {
             .apply(color: Theme.of(context).colorScheme.onBackground));
   }
 
-  List<_WorkingTimePerQuarter> _genWorkingTimes() => List.generate(
+  List<UnitWorkingTime> _genWorkingTimes() => List.generate(
       dailyChartBarConverter.rodsPerDay,
       (index) => _genWorkingTimePerQuarter(index));
 
-  _WorkingTimePerQuarter _genWorkingTimePerQuarter(int quarterIndex) {
+  UnitWorkingTime _genWorkingTimePerQuarter(int quarterIndex) {
     Random random = new Random();
     double randomMinutes =
         random.nextDouble() * 500 * _probabilityOfWorking(quarterIndex);
     double randomPert = random.nextDouble() * 0.5;
-    return _WorkingTimePerQuarter(randomMinutes,
-        randomMinutes * (1 - randomPert), randomMinutes * randomPert);
+    return UnitWorkingTime(
+        randomMinutes.toInt(),
+        (randomMinutes * (1 - randomPert)).toInt(),
+        (randomMinutes * randomPert).toInt());
   }
 
   BarChartRodData _genBarChartRodData(
-          Color dark, Color light, _WorkingTimePerQuarter workingTime) =>
+          Color dark, Color light, UnitWorkingTime workingTime) =>
       BarChartRodData(
-          y: workingTime.totalMinutes,
+          y: workingTime.durationInMinutes.toDouble(),
           width: 1.6,
           rodStackItems: [
-            BarChartRodStackItem(0, workingTime.workingMinutes, dark),
             BarChartRodStackItem(
-                workingTime.workingMinutes, workingTime.totalMinutes, light),
+                0, workingTime.workingInMinutes.toDouble(), dark),
+            BarChartRodStackItem(workingTime.workingInMinutes.toDouble(),
+                workingTime.durationInMinutes.toDouble(), light),
           ],
           borderRadius: const BorderRadius.all(Radius.zero));
 
@@ -112,14 +116,4 @@ class WorkingTimeDailyChartViewModel {
       return pow(distance / 96.0, 4);
     }
   }
-}
-
-/// data model the represents the working and idling time in 15 minutes
-class _WorkingTimePerQuarter {
-  double totalMinutes;
-  double workingMinutes;
-  double idlingMinutes;
-
-  _WorkingTimePerQuarter(
-      this.totalMinutes, this.workingMinutes, this.idlingMinutes);
 }

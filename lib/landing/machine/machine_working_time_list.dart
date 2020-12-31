@@ -22,9 +22,30 @@ class MachineWorkingTimeList extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         ListTile(
           title: Text('Machines', style: Theme.of(context).textTheme.headline5),
+          subtitle: _genLegend(context),
         ),
         _genCardContent(context)
       ]));
+
+  Row _genLegend(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+              color: Theme.of(context).colorScheme.primary,
+              width: 60,
+              height: 5),
+          Spacer(flex: 2),
+          Text('working', style: Theme.of(context).textTheme.caption),
+          Spacer(flex: 2),
+          Container(
+              color: Theme.of(context).colorScheme.onSurface,
+              width: 60,
+              height: 5),
+          Spacer(flex: 2),
+          Text('idling', style: Theme.of(context).textTheme.caption),
+          Spacer(flex: 10),
+        ],
+      );
 
   Column _genCardContent(BuildContext context) => Column(
       children:

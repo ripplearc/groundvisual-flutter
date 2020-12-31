@@ -20,7 +20,8 @@ class WorkingTimeDailyChart extends StatelessWidget {
         child: Stack(
           children: [_buildBarChartCard(context), _buildThumbnailImage()],
         ),
-      ));
+      ),
+      true);
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
