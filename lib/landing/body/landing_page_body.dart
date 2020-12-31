@@ -30,7 +30,7 @@ class LandingHomePageBody extends StatelessWidget {
                       case 2:
                         return MachineWorkingTimeList();
                       default:
-                        return MachineWorkingTimeChart.withRandomData(context);
+                        return Container();
                     }
                   },
                   childCount: 3,

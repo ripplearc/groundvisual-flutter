@@ -1,30 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// Label showing machine name and online status.
 class MachineLabel extends StatelessWidget {
-  final String label;
-  final Size size;
-  final Size topLeftOffset;
+  final String name;
+  final Size labelSize;
+  final Size shadowTopLeftOffset;
 
-  const MachineLabel({Key key, this.label, this.topLeftOffset, this.size})
+  const MachineLabel({Key key, this.name, this.shadowTopLeftOffset, this.labelSize})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => Stack(
         overflow: Overflow.visible,
         children: [
-          _genOffset(context),
+          _genShadow(context),
           _genForeground(context),
         ],
       );
 
-  Positioned _genOffset(BuildContext context) => Positioned(
-      top: topLeftOffset.height,
-      left: topLeftOffset.width,
+  Positioned _genShadow(BuildContext context) => Positioned(
+      top: shadowTopLeftOffset.height,
+      left: shadowTopLeftOffset.width,
       child: ClipOval(
         child: Container(
-          height: size.height,
-          width: size.width,
+          height: labelSize.height,
+          width: labelSize.width,
           alignment: Alignment.center,
           color: Theme.of(context).colorScheme.primary,
         ),
@@ -32,12 +33,12 @@ class MachineLabel extends StatelessWidget {
 
   ClipOval _genForeground(BuildContext context) => ClipOval(
         child: Container(
-          height: size.height,
-          width: size.width,
+          height: labelSize.height,
+          width: labelSize.width,
           alignment: Alignment.center,
           color: Theme.of(context).colorScheme.surface,
           child: Text(
-            label,
+            name,
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

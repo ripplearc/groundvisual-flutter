@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/chart/chart_section_with_title.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// Shimmer displayed when fetching data for the WorkingTimeDailyChart.
 class WorkingTimeDailyChartShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => genChartSectionWithTitle(
