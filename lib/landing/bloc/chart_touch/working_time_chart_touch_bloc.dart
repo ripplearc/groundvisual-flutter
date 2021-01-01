@@ -5,6 +5,7 @@ import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
@@ -13,10 +14,7 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:groundvisual_flutter/extensions/scoped.dart';
-
 part 'working_time_chart_touch_event.dart';
-
 part 'working_time_chart_touch_state.dart';
 
 /// bloc to take events of touching a bar rod on the date or trend chart,

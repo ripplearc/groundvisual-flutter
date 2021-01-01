@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 /// data model the represents the working and idling time in a certain duration.
 @immutable
-class UnitWorkingTime {
+class UnitWorkingTime extends Equatable {
   final int durationInMinutes;
   final int workingInMinutes;
   final int idlingInMinutes;
@@ -17,10 +18,15 @@ class UnitWorkingTime {
 
   double idlingInHours() => idlingInMinutes / 60.0;
 
-  String idlingInFormattedHours() => idlingInHours().toStringAsFixed(1) + " hrs";
+  String idlingInFormattedHours() =>
+      idlingInHours().toStringAsFixed(1) + " hrs";
 
   double durationInHours() => durationInMinutes / 60.0;
 
   String durationInFormattedHours() =>
       durationInHours().toStringAsFixed(1) + " hrs";
+
+  @override
+  List<Object> get props =>
+      [durationInMinutes, workingInMinutes, idlingInMinutes];
 }

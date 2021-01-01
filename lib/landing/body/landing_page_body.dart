@@ -10,50 +10,49 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_working_time_bar_chart.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_working_time_bar_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-          builder: (context, state) => SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    switch (index) {
-                      case 0:
-                        return WorkZoneMap();
-                      case 1:
-                        return _displayWorkingTimeChart(state, context);
-                      case 2:
-                        return MachineWorkingTimeList();
-                      default:
-                        return Container();
-                    }
-                  },
-                  childCount: 3,
-                ),
-              ));
+  Widget build(BuildContext context) => SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            switch (index) {
+              case 0:
+                return WorkZoneMap();
+              case 1:
+                return _displayWorkingTimeChart();
+              case 2:
+                return MachineWorkingTimeList();
+              default:
+                return Container();
+            }
+          },
+          childCount: 3,
+        ),
+      );
 
-  StatelessWidget _displayWorkingTimeChart(
-      SelectedSiteState state, BuildContext context) {
-    if (state is SelectedSiteAtDate) {
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-          .add(NoBarRodSelection(state.siteName, state.date, context));
-      return state.chartData == null
-          ? WorkingTimeDailyChartShimmer()
-          : WorkingTimeDailyChart(state);
-    } else if (state is SelectedSiteAtTrend) {
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-          .add(NoBarRodSelection(state.siteName, Date.startOfToday, context));
-      return state.chartData == null
-          ? WorkingTimeTrendChartShimmer(period: state.period)
-          : WorkingTimeTrendChart(state);
-    } else {
-      return Container();
-    }
+  Widget _displayWorkingTimeChart() {
+    return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+        buildWhen: (previous, current) => current is BasicSelectedSite,
+        builder: (context, state) {
+          if (state is SelectedSiteAtDate) {
+            BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+                .add(NoBarRodSelection(state.siteName, state.date, context));
+            return state.chartData == null
+                ? WorkingTimeDailyChartShimmer()
+                : WorkingTimeDailyChart(state);
+          } else if (state is SelectedSiteAtTrend) {
+            BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
+                NoBarRodSelection(state.siteName, Date.startOfToday, context));
+            return state.chartData == null
+                ? WorkingTimeTrendChartShimmer(period: state.period)
+                : WorkingTimeTrendChart(state);
+          } else {
+            return Container();
+          }
+        });
   }
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {

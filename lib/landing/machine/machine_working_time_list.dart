@@ -1,26 +1,23 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_label.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_offline_indication.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_online_indication.dart';
 import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
 
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'machine_working_time_bar_chart.dart';
 
 class MachineWorkingTimeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
-        builder: (context, state) => _genCard(context));
+    return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+        buildWhen: (prev, current) => current is MachineStatusAtSelectedSite,
+        builder: (context, state) => _genCard(context, state));
   }
 
-  Card _genCard(BuildContext context) => Card(
+  Card _genCard(BuildContext context, SelectedSiteState state) => Card(
       color: Theme.of(context).colorScheme.background,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -29,7 +26,7 @@ class MachineWorkingTimeList extends StatelessWidget {
           title: Text('Machines', style: Theme.of(context).textTheme.headline5),
           subtitle: _genLegend(context),
         ),
-        _genCardContent(context)
+        _genCardContent(context, state)
       ]));
 
   Row _genLegend(BuildContext context) => Row(
@@ -52,34 +49,38 @@ class MachineWorkingTimeList extends StatelessWidget {
         ],
       );
 
-  Column _genCardContent(BuildContext context) => Column(
-      children:
-          List<Container>.generate(4, (index) => _genListItem(context, index)));
-
-  Container _genListItem(BuildContext context, int index) {
-    final data = Random().let((random) =>
-        UnitWorkingTime(720, random.nextInt(720), random.nextInt(240)));
-
-    return Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
-        height: 96,
-        color: Theme.of(context).colorScheme.background,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _genMachineLabelWithStatus(context, index % 2 == 0),
-            Expanded(child: MachineWorkingTimeChart.withData(data))
-          ],
-        ));
+  Column _genCardContent(BuildContext context, SelectedSiteState state) {
+    if (state is WorkingTimeAtSelectedSite) {
+      return Column(
+        children: state.workingTimes.entries
+            .map((e) => _genListItem(context, e.key, e.value))
+            .toList(),
+      );
+    } else {
+      return Column(children: []);
+    }
   }
 
-  Stack _genMachineLabelWithStatus(BuildContext context, bool online) => Stack(
+  Container _genListItem(BuildContext context, String machineName, UnitWorkingTime data) =>
+      Container(
+          padding: EdgeInsets.only(left: 16, right: 16),
+          height: 96,
+          color: Theme.of(context).colorScheme.background,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _genMachineLabelWithStatus(context, machineName, true),
+              Expanded(child: MachineWorkingTimeChart.withData(data))
+            ],
+          ));
+
+  Stack _genMachineLabelWithStatus(BuildContext context, String machineName, bool online) => Stack(
         children: [
           Container(child: SizedBox.fromSize(size: Size(58, 58))),
           MachineLabel(
-              name: "312",
+              name: machineName,
               labelSize: Size(56, 56),
               shadowTopLeftOffset: Size(1, 1)),
           online

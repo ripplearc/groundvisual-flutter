@@ -7,6 +7,7 @@ class SliverAppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+        buildWhen: (previous, current) => current is BasicSelectedSite,
         builder: (context, state) {
           if (state is SelectedSiteEmpty) {
             return Text("");
