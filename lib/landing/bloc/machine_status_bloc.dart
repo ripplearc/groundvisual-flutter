@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/machine/machine_status_viewmodel.dart';
 import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
-import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
@@ -14,10 +13,9 @@ part 'machine_status_state.dart';
 
 @singleton
 class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
-  MachineStatusBloc(this.machineWorkingTimeRepository)
+  MachineStatusBloc(this.machineStatusViewModel)
       : super(MachineStatusInitial());
-
-  final MachineWorkingTimeRepository machineWorkingTimeRepository;
+  final MachineStatusViewModel machineStatusViewModel;
 
   @override
   Stream<MachineStatusState> mapEventToState(
@@ -32,22 +30,18 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
     }
   }
 
-  Stream _handleSelectDateEvent(String siteName, DateTime date) {
+  Stream<MachineStatusState> _handleSelectDateEvent(String siteName, DateTime date) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-    final workingTimeFuture = machineWorkingTimeRepository
-        .getMachineWorkingTime(siteName, date.startOfDay, date.endOfDay)
-        .then((time) => MachineStatusWorkingTime(time));
+    final workingTimeFuture =
+        machineStatusViewModel.getMachineWorkingTimeAtDate(siteName, date);
 
     return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
   }
 
-  Stream _handleSelectTrendEvent(String siteName, TrendPeriod period) {
+  Stream<MachineStatusState> _handleSelectTrendEvent(String siteName, TrendPeriod period) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-
-    final workingTimeFuture = machineWorkingTimeRepository
-        .getMachineWorkingTime(siteName, Date.startOfToday,
-            Date.startOfToday.subtract(Duration(days: period.toInt())))
-        .then((time) => MachineStatusWorkingTime(time));
+    final workingTimeFuture =
+        machineStatusViewModel.getMachineWorkingTimeAtPeriod(siteName, period);
 
     return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
   }
