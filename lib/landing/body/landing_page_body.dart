@@ -33,27 +33,27 @@ class LandingHomePageBody extends StatelessWidget {
         ),
       );
 
-  Widget _displayWorkingTimeChart() {
-    return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-        buildWhen: (previous, current) => current is BasicSelectedSite,
-        builder: (context, state) {
-          if (state is SelectedSiteAtDate) {
-            BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-                .add(NoBarRodSelection(state.siteName, state.date, context));
-            return state.chartData == null
-                ? WorkingTimeDailyChartShimmer()
-                : WorkingTimeDailyChart(state);
-          } else if (state is SelectedSiteAtTrend) {
-            BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
-                NoBarRodSelection(state.siteName, Date.startOfToday, context));
-            return state.chartData == null
-                ? WorkingTimeTrendChartShimmer(period: state.period)
-                : WorkingTimeTrendChart(state);
-          } else {
-            return Container();
-          }
-        });
-  }
+  Widget _displayWorkingTimeChart() =>
+      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+          buildWhen: (previous, current) => current is BasicSelectedSite,
+          builder: (context, state) {
+            if (state is SelectedSiteAtDate) {
+              BlocProvider.of<WorkingTimeChartTouchBloc>(context)
+                  .add(NoBarRodSelection(state.siteName, state.date, context));
+              return state.chartData == null
+                  ? WorkingTimeDailyChartShimmer()
+                  : WorkingTimeDailyChart(state);
+            } else if (state is SelectedSiteAtTrend) {
+              BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
+                  NoBarRodSelection(
+                      state.siteName, Date.startOfToday, context));
+              return state.chartData == null
+                  ? WorkingTimeTrendChartShimmer(period: state.period)
+                  : WorkingTimeTrendChart(state);
+            } else {
+              return Container();
+            }
+          });
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";

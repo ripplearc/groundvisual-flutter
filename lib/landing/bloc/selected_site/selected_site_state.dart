@@ -51,14 +51,3 @@ class SelectedSiteAtTrend extends BasicSelectedSite {
       ' end day: ${dateRange.end.day} }' +
       'period: $period';
 }
-
-class MachineInitialStatusAtSelectedSite extends MachineStatusAtSelectedSite {}
-
-class WorkingTimeAtSelectedSite extends MachineStatusAtSelectedSite {
-  final Map<String, UnitWorkingTime> workingTimes;
-
-  WorkingTimeAtSelectedSite(this.workingTimes);
-
-  @override
-  List<Object> get props => [workingTimes];
-}
