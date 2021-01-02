@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,14 +48,14 @@ class MachineWorkingTimeList extends StatelessWidget {
       ]);
 
   Widget _genCardContent(BuildContext context, MachineStatusState state) {
-    if (state is WorkingTimeAtSelectedSite) {
+    if (state is MachineStatusWorkingTime) {
       return _buildContent(state, context);
     } else {
       return _buildShimmerContent(context);
     }
   }
 
-  Column _buildContent(WorkingTimeAtSelectedSite state, BuildContext context) =>
+  Column _buildContent(MachineStatusWorkingTime state, BuildContext context) =>
       Column(
         children: state.workingTimes.entries
             .map((e) => _genListItem(context, e.key, e.value, false))
