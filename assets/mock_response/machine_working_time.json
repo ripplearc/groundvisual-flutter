@@ -1,0 +1,44 @@
+{
+  "site": "Hall Road",
+  "records": [
+	{
+	  "startDate": "2021-01-02T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 86400,
+	  "machines": [
+		{
+		  "name": "312",
+		  "working": 8.6,
+		  "idling": 1.2
+		},
+		{
+		  "name": "332",
+		  "working": 4.3,
+		  "idling": 0.8
+		}
+	  ]
+	},
+	{
+	  "startDate": "2020-12-27T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 604800,
+	  "machines": [
+		{
+		  "name": "312",
+		  "working": 28.6,
+		  "idling": 8.2
+		},
+		{
+		  "name": "332",
+		  "working": 34.3,
+		  "idling": 10.8
+		},
+		{
+		  "name": "331",
+		  "working": 25.2,
+		  "idling": 2.8
+		}
+	  ]
+	}
+  ]
+}
