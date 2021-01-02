@@ -29,25 +29,19 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
     Random random = new Random();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            child: Shimmer.fromColors(
-                baseColor: Theme.of(context).colorScheme.surface,
-                highlightColor: Theme.of(context).colorScheme.onSurface,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: List<Container>.generate(
-                        period.toInt(),
-                        (index) => Container(
-                              width: 24 / (period.toInt() / 7),
-                              height: 96 * random.nextDouble(),
-                              color: Theme.of(context).colorScheme.background,
-                            )).toList(growable: true))),
-          ),
-        ],
+      child:  Shimmer.fromColors(
+            baseColor: Theme.of(context).colorScheme.surface,
+            highlightColor: Theme.of(context).colorScheme.onSurface,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List<Container>.generate(
+                    period.toInt(),
+                    (index) => Container(
+                          width: 24 / (period.toInt() / 7),
+                          height: 96 * random.nextDouble(),
+                          color: Theme.of(context).colorScheme.background,
+                        )).toList(growable: true)),
       ),
     );
   }

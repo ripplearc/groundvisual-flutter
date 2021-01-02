@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:groundvisual_flutter/landing/machine/machine_label.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_offline_indication.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_online_indication.dart';
 import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'machine_working_time_bar_chart.dart';
 
@@ -16,7 +19,6 @@ class MachineWorkingTimeList extends StatelessWidget {
       create: (_) => getIt<MachineStatusBloc>(), child: _genCard());
 
   Widget _genCard() => BlocBuilder<MachineStatusBloc, MachineStatusState>(
-      buildWhen: (prev, current) => current is WorkingTimeAtSelectedSite,
       builder: (context, state) => Card(
           color: Theme.of(context).colorScheme.background,
           elevation: 4,
@@ -46,20 +48,29 @@ class MachineWorkingTimeList extends StatelessWidget {
         Spacer(flex: 10),
       ]);
 
-  Column _genCardContent(BuildContext context, MachineStatusState state) {
+  Widget _genCardContent(BuildContext context, MachineStatusState state) {
     if (state is WorkingTimeAtSelectedSite) {
-      return Column(
-        children: state.workingTimes.entries
-            .map((e) => _genListItem(context, e.key, e.value))
-            .toList(),
-      );
+      return _buildContent(state, context);
     } else {
-      return Column(children: []);
+      return _buildShimmerContent(context);
     }
   }
 
-  Container _genListItem(
-          BuildContext context, String machineName, UnitWorkingTime data) =>
+  Column _buildContent(WorkingTimeAtSelectedSite state, BuildContext context) =>
+      Column(
+        children: state.workingTimes.entries
+            .map((e) => _genListItem(context, e.key, e.value, false))
+            .toList(),
+      );
+
+  Widget _buildShimmerContent(BuildContext context) => Column(
+      children: List.generate(
+          2,
+          (index) => _genListItem(
+              context, "", UnitWorkingTime(720, 480, 240), true)).toList());
+
+  Container _genListItem(BuildContext context, String machineName,
+          UnitWorkingTime data, bool shimming) =>
       Container(
           padding: EdgeInsets.only(left: 16, right: 16),
           height: 96,
@@ -69,8 +80,21 @@ class MachineWorkingTimeList extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _genMachineLabelWithStatus(context, machineName, true),
-              Expanded(child: MachineWorkingTimeChart.withData(data))
+              shimming
+                  ? Shimmer.fromColors(
+                      baseColor: Theme.of(context).colorScheme.surface,
+                      highlightColor: Theme.of(context).colorScheme.onSurface,
+                      child: _genMachineLabelWithStatus(
+                          context, machineName, true))
+                  : _genMachineLabelWithStatus(context, machineName, true),
+              Expanded(
+                  child: shimming
+                      ? Shimmer.fromColors(
+                          baseColor: Theme.of(context).colorScheme.surface,
+                          highlightColor:
+                              Theme.of(context).colorScheme.onSurface,
+                          child: MachineWorkingTimeChart.withData(data))
+                      : MachineWorkingTimeChart.withData(data))
             ],
           ));
 

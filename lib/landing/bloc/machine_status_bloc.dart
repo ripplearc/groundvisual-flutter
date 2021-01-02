@@ -29,10 +29,9 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   }
 
   Stream _handleSelectDateEvent() {
-    final machineInitialFuture = Future.delayed(
-        Duration(milliseconds: 15), () => MachineStatusInitial());
+    final machineInitialFuture = Future.value(MachineStatusInitial());
     final workingTimeFuture = Future.delayed(
-        Duration(milliseconds: 16),
+        Duration(milliseconds: 1000),
         () => Random().let((random) => WorkingTimeAtSelectedSite({
               "332": UnitWorkingTime(
                   720, random.nextInt(720), random.nextInt(240)),
@@ -44,10 +43,9 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   }
 
   Stream _handleSelectTrendEvent() {
-    final machineInitialFuture = Future.delayed(
-        Duration(milliseconds: 15), () => MachineStatusInitial());
+    final machineInitialFuture = Future.value(MachineStatusInitial());
     final workingTimeFuture = Future.delayed(
-        Duration(milliseconds: 16),
+        Duration(milliseconds: 1000),
         () => Random().let((random) => WorkingTimeAtSelectedSite({
               "332": UnitWorkingTime(
                   7200, random.nextInt(7200), random.nextInt(2400)),

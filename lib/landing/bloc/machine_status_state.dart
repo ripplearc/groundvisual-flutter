@@ -4,9 +4,7 @@ part of 'machine_status_bloc.dart';
 abstract class MachineStatusState extends Equatable {}
 
 class MachineStatusInitial extends MachineStatusState {
-  @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }
 
 class WorkingTimeAtSelectedSite extends MachineStatusState {
