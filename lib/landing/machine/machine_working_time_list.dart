@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,8 +84,9 @@ class MachineWorkingTimeList extends StatelessWidget {
                       baseColor: Theme.of(context).colorScheme.surface,
                       highlightColor: Theme.of(context).colorScheme.onSurface,
                       child: _genMachineLabelWithStatus(
-                          context, machineName, true))
-                  : _genMachineLabelWithStatus(context, machineName, true),
+                          context, machineName, _OnlineStatus.connecting))
+                  : _genMachineLabelWithStatus(
+                      context, machineName, _OnlineStatus.connecting),
               Expanded(
                   child: shimming
                       ? Shimmer.fromColors(
@@ -99,7 +99,7 @@ class MachineWorkingTimeList extends StatelessWidget {
           ));
 
   Stack _genMachineLabelWithStatus(
-          BuildContext context, String machineName, bool online) =>
+          BuildContext context, String machineName, _OnlineStatus status) =>
       Stack(
         children: [
           Container(child: SizedBox.fromSize(size: Size(58, 58))),
@@ -107,9 +107,22 @@ class MachineWorkingTimeList extends StatelessWidget {
               name: machineName,
               labelSize: Size(56, 56),
               shadowTopLeftOffset: Size(1, 1)),
-          online
-              ? MachineOnlineIndication(rightBottomOffset: Size(0, 0))
-              : MachineOfflineIndication(offset: Size(0, 0), warning: '21h')
+          _genIndication(status, context)
         ],
       );
+
+  Widget _genIndication(_OnlineStatus status, BuildContext context) {
+    switch (status) {
+      case _OnlineStatus.offline:
+        return MachineOfflineIndication(offset: Size(0, 0), warning: '21h');
+      case _OnlineStatus.online:
+        return MachineOnlineIndication(
+            rightBottomOffset: Size(0, 0), shimming: false);
+      default:
+        return MachineOnlineIndication(
+            rightBottomOffset: Size(0, 0), shimming: true);
+    }
+  }
 }
+
+enum _OnlineStatus { online, offline, connecting }
