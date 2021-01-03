@@ -11,6 +11,7 @@ class TrendPeriodSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+          buildWhen: (previous, current) => current is SelectedSiteAtTrend,
           builder: (context, state) => state is SelectedSiteAtTrend
               ? DateButton(
                   dateText: state.period.value(),
@@ -25,7 +26,7 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                       },
                     );
                   })
-              : null);
+              : Container());
 
   void _buildTrendWindowSelection(
     BuildContext context,

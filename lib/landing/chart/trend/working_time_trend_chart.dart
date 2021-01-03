@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/chart_section_with_title.dart';
 
 /// Widget displays the working and idling time during a certain period.
 class WorkingTimeTrendChart extends StatelessWidget {
@@ -11,8 +12,8 @@ class WorkingTimeTrendChart extends StatelessWidget {
   WorkingTimeTrendChart(this.selectedSiteAtWindow);
 
   @override
-  Widget build(BuildContext context) =>
-      AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context));
+  Widget build(BuildContext context) => genChartSectionWithTitle(context,
+      AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context)), false);
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,

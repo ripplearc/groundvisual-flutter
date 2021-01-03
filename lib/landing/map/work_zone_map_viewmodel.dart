@@ -5,7 +5,7 @@ import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:groundvisual_flutter/repositories/site_workzone_repository.dart';
 import 'package:injectable/injectable.dart';
 
-/// WorkingZoneMapViewModel finds the work areas given the site and time.
+/// WorkZoneMapViewModel finds the work areas given the site and time.
 @injectable
 class WorkZoneMapViewModel {
   final SiteWorkZoneRepository siteWorkZoneRepository;
@@ -78,7 +78,7 @@ class WorkZoneMapViewModel {
               Polygon(
                 polygonId: PolygonId(index.toString()),
                 consumeTapEvents: true,
-                strokeColor: Theme.of(context).colorScheme.secondary,
+                strokeColor: Theme.of(context).colorScheme.primaryVariant,
                 strokeWidth: 2,
                 fillColor: Theme.of(context).colorScheme.primary,
                 points: region.points,

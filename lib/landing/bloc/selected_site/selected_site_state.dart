@@ -30,8 +30,8 @@ class SelectedSiteAtTrend extends SelectedSiteState {
   final TrendPeriod period;
   final WorkingTimeChartData chartData;
 
-  const SelectedSiteAtTrend(
-      this.siteName, this.dateRange, this.period, {this.chartData});
+  const SelectedSiteAtTrend(this.siteName, this.dateRange, this.period,
+      {this.chartData});
 
   @override
   List<Object> get props => [siteName, dateRange, period, chartData];

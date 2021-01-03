@@ -18,31 +18,26 @@ abstract class SiteWorkZoneService {
 @Injectable(as: SiteWorkZoneService)
 class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
   @override
-  Future<ConstructionZone> getWorkZoneAtDate(
-      String siteName, DateTime time) async {
-    final decoded = await rootBundle
-        .loadString('assets/mock_response/penton_date_work_zone.json')
-        .then((value) => json.decode(value));
-    return SiteConstructionZone.fromJson(decoded)
-        .records
-        .firstWhere((element) => time.weekday == element.date.weekday,
-            orElse: (() => UnitConstructionZone(
-                Date.startOfToday, 900, ConstructionZone([].toList()))))
-        .zone;
-  }
+  Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>
+      rootBundle
+          .loadString('assets/mock_response/penton_date_work_zone.json')
+          .then((value) => json.decode(value))
+          .then((decoded) => SiteConstructionZone.fromJson(decoded)
+              .records
+              .firstWhere((element) => time.weekday == element.date.weekday,
+                  orElse: (() => UnitConstructionZone(
+                      Date.startOfToday, 900, ConstructionZone([].toList()))))
+              .zone);
 
   @override
-  Future<ConstructionZone> getWorkZoneAtTime(
-      String siteName, DateTime time) async {
-    final decoded = await rootBundle
-        .loadString('assets/mock_response/penton_time_work_zone.json')
-        .then((value) => json.decode(value));
-
-    return SiteConstructionZone.fromJson(decoded)
-        .records
-        .firstWhere((element) => time.minute == element.date.minute,
-            orElse: (() => UnitConstructionZone(
-                Date.startOfToday, 900, ConstructionZone([].toList()))))
-        .zone;
-  }
+  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>
+      rootBundle
+          .loadString('assets/mock_response/penton_time_work_zone.json')
+          .then((value) => json.decode(value))
+          .then((decoded) => SiteConstructionZone.fromJson(decoded)
+              .records
+              .firstWhere((element) => time.minute == element.date.minute,
+                  orElse: (() => UnitConstructionZone(
+                      Date.startOfToday, 900, ConstructionZone([].toList()))))
+              .zone);
 }

@@ -19,7 +19,7 @@ class SiteSelected extends SelectedSiteDateTimeEvent {
   const SiteSelected(this.siteName, BuildContext context) : super(context);
 
   @override
-  List<Object> get props => throw [siteName];
+  List<Object> get props => [siteName];
 }
 
 class DateSelected extends SelectedSiteDateTimeEvent {
@@ -28,7 +28,7 @@ class DateSelected extends SelectedSiteDateTimeEvent {
   const DateSelected(this.date, BuildContext context) : super(context);
 
   @override
-  List<Object> get props => throw [date];
+  List<Object> get props => [date];
 }
 
 class TrendSelected extends SelectedSiteDateTimeEvent {
@@ -37,7 +37,7 @@ class TrendSelected extends SelectedSiteDateTimeEvent {
   const TrendSelected(this.period, BuildContext context) : super(context);
 
   @override
-  List<Object> get props => throw [period];
+  List<Object> get props => [period];
 }
 
 enum TrendPeriod { oneWeek, twoWeeks, oneMonth, twoMonths }

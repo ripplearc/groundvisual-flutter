@@ -9,10 +9,10 @@ class DayOrTrendSelectionButton extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
-        if (state is SelectedSiteAtDate) {
-          return DateSelectionButton();
-        } else {
-          return TrendPeriodSelectionButton();
-        }
-      });
+            if (state is SelectedSiteAtDate) {
+              return DateSelectionButton();
+            } else {
+              return TrendPeriodSelectionButton();
+            }
+          });
 }

@@ -7,7 +7,6 @@ import 'package:groundvisual_flutter/components/calendar_page.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:intl/intl.dart';
 
-
 /// Select a date to display information about the current site. By default it selects today,
 /// and it doesn't allow to select the future. It resets to today when toggles between sites,
 /// or between date and trend. Once a new date is selected, it updates the <SelectedSiteBloc>.
@@ -15,6 +14,7 @@ class DateSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+          buildWhen: (prev, current) => current is SelectedSiteAtDate,
           builder: (context, state) => state is SelectedSiteAtDate
               ? DateButton(
                   dateText: state.date.isSameDay(DateTime.now())
@@ -24,7 +24,7 @@ class DateSelectionButton extends StatelessWidget {
                     _buildCalendarPage(context, state);
                   },
                 )
-              : null);
+              : Container());
 
   void _buildCalendarPage(BuildContext context, SelectedSiteAtDate state) =>
       showModalBottomSheet<void>(
@@ -33,7 +33,8 @@ class DateSelectionButton extends StatelessWidget {
           backgroundColor: Theme.of(context).cardTheme.color,
           builder: (_) => _calenderSelection(context, state.date, (DateTime t) {
                 if (state.date.isSameDay(t)) return;
-                BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t, context));
+                BlocProvider.of<SelectedSiteBloc>(context)
+                    .add(DateSelected(t, context));
               }));
 
   Container _calenderSelection(
