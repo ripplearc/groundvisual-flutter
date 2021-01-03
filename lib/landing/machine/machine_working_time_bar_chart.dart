@@ -16,7 +16,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
 
   factory MachineWorkingTimeChart.withData(UnitWorkingTime data) => [
         charts.TickSpec(0),
-        charts.TickSpec(data.durationInMinutes),
+        charts.TickSpec(data.durationInSeconds),
       ].let((ticks) => MachineWorkingTimeChart._(scale: ticks, data: data));
 
   @override
@@ -44,7 +44,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
         charts.Series<UnitWorkingTime, String>(
           id: 'Working',
           domainFn: (UnitWorkingTime timer, _) => '',
-          measureFn: (UnitWorkingTime timer, _) => timer.workingInMinutes,
+          measureFn: (UnitWorkingTime timer, _) => timer.workingInSeconds,
           data: [data],
           colorFn: (_, __) =>
               Theme.of(context).colorScheme.primary.toChartColor(),
@@ -54,7 +54,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
         charts.Series<UnitWorkingTime, String>(
           id: 'Idling',
           domainFn: (UnitWorkingTime timer, _) => "",
-          measureFn: (UnitWorkingTime timer, _) => timer.idlingInMinutes,
+          measureFn: (UnitWorkingTime timer, _) => timer.idlingInSeconds,
           data: [data],
           colorFn: (_, __) =>
               Theme.of(context).colorScheme.onSurface.toChartColor(),

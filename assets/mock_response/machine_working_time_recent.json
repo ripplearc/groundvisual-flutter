@@ -1,0 +1,110 @@
+{
+  "site": "Hall Road",
+  "records": [
+	{
+	  "startDate": "2021-01-02T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 86400,
+	  "machines": [
+		{
+		  "name": "312",
+		  "workingInSeconds": 30960,
+		  "idlingInSeconds": 4320
+		},
+		{
+		  "name": "332",
+		  "workingInSeconds": 15480,
+		  "idlingInSeconds": 2880
+		}
+	  ]
+	},
+	{
+	  "startDate": "2020-12-27T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 604800,
+	  "machines": [
+		{
+		  "name": "312",
+		  "workingInSeconds": 102960,
+		  "idlingInSeconds": 29520
+		},
+		{
+		  "name": "332",
+		  "workingInSeconds": 123480,
+		  "idlingInSeconds": 38880
+		},
+		{
+		  "name": "331",
+		  "workingInSeconds": 90720,
+		  "idlingInSeconds": 10080
+		}
+	  ]
+	},
+	{
+	  "startDate": "2020-12-20T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 1209600,
+	  "machines": [
+		{
+		  "name": "312",
+		  "workingInSeconds": 205920,
+		  "idlingInSeconds": 59040
+		},
+		{
+		  "name": "332",
+		  "workingInSeconds": 246960,
+		  "idlingInSeconds": 77760
+		},
+		{
+		  "name": "331",
+		  "workingInSeconds": 181440,
+		  "idlingInSeconds": 20160
+		}
+	  ]
+	},
+	{
+	  "startDate": "2020-12-04T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 2592000,
+	  "machines": [
+		{
+		  "name": "312",
+		  "workingInSeconds": 440668,
+		  "idlingInSeconds": 126345
+		},
+		{
+		  "name": "332",
+		  "workingInSeconds": 528494,
+		  "idlingInSeconds": 166406
+		},
+		{
+		  "name": "331",
+		  "workingInSeconds": 388281,
+		  "idlingInSeconds": 43142
+		}
+	  ]
+	},
+	{
+	  "startDate": "2020-11-04T00:00:00.000000-05:00",
+	  "endDate": "2021-01-02T23:59:59.000000-05:00",
+	  "durationInSeconds": 5184000,
+	  "machines": [
+		{
+		  "name": "312",
+		  "workingInSeconds": 880000,
+		  "idlingInSeconds": 250345
+		},
+		{
+		  "name": "332",
+		  "workingInSeconds": 1028494,
+		  "idlingInSeconds": 333406
+		},
+		{
+		  "name": "331",
+		  "workingInSeconds": 700281,
+		  "idlingInSeconds": 86142
+		}
+	  ]
+	}
+  ]
+}

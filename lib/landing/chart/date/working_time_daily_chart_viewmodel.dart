@@ -68,9 +68,9 @@ class WorkingTimeDailyChartViewModel {
     return BarTooltipItem(
         '$starTimeStamp\n' +
             'work: ' +
-            time.workingInMinutes.toInt().toString() +
+            time.workingInSeconds.toInt().toString() +
             ' mins\nidle: ' +
-            time.idlingInMinutes.toInt().toString() +
+            time.idlingInSeconds.toInt().toString() +
             " mins",
         Theme.of(context)
             .textTheme
@@ -96,13 +96,13 @@ class WorkingTimeDailyChartViewModel {
   BarChartRodData _genBarChartRodData(
           Color dark, Color light, UnitWorkingTime workingTime) =>
       BarChartRodData(
-          y: workingTime.durationInMinutes.toDouble(),
+          y: workingTime.durationInSeconds.toDouble(),
           width: 1.6,
           rodStackItems: [
             BarChartRodStackItem(
-                0, workingTime.workingInMinutes.toDouble(), dark),
-            BarChartRodStackItem(workingTime.workingInMinutes.toDouble(),
-                workingTime.durationInMinutes.toDouble(), light),
+                0, workingTime.workingInSeconds.toDouble(), dark),
+            BarChartRodStackItem(workingTime.workingInSeconds.toDouble(),
+                workingTime.durationInSeconds.toDouble(), light),
           ],
           borderRadius: const BorderRadius.all(Radius.zero));
 

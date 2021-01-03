@@ -4,29 +4,29 @@ import 'package:flutter/cupertino.dart';
 /// data model the represents the working and idling time in a certain duration.
 @immutable
 class UnitWorkingTime extends Equatable {
-  final int durationInMinutes;
-  final int workingInMinutes;
-  final int idlingInMinutes;
+  final int durationInSeconds;
+  final int workingInSeconds;
+  final int idlingInSeconds;
 
   UnitWorkingTime(
-      this.durationInMinutes, this.workingInMinutes, this.idlingInMinutes);
+      this.durationInSeconds, this.workingInSeconds, this.idlingInSeconds);
 
-  double workingInHours() => workingInMinutes / 60.0;
+  double workingInHours() => workingInSeconds / 3600.0;
 
   String workingInFormattedHours() =>
       workingInHours().toStringAsFixed(1) + " hrs";
 
-  double idlingInHours() => idlingInMinutes / 60.0;
+  double idlingInHours() => idlingInSeconds / 3600.0;
 
   String idlingInFormattedHours() =>
       idlingInHours().toStringAsFixed(1) + " hrs";
 
-  double durationInHours() => durationInMinutes / 60.0;
+  double durationInHours() => durationInSeconds / 3600.0;
 
   String durationInFormattedHours() =>
       durationInHours().toStringAsFixed(1) + " hrs";
 
   @override
   List<Object> get props =>
-      [durationInMinutes, workingInMinutes, idlingInMinutes];
+      [durationInSeconds, workingInSeconds, idlingInSeconds];
 }

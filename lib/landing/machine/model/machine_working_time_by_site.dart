@@ -6,7 +6,7 @@ part 'machine_working_time_by_site.g.dart';
 class SiteMachineWorkingTime {
   final String site;
 
-  final List<_DurationMachineWorkingTime> records;
+  final List<DurationMachineWorkingTime> records;
 
   SiteMachineWorkingTime(this.site, this.records);
 
@@ -17,31 +17,31 @@ class SiteMachineWorkingTime {
 }
 
 @JsonSerializable()
-class _DurationMachineWorkingTime {
+class DurationMachineWorkingTime {
   final DateTime startDate;
   final DateTime endDate;
   final int durationInSeconds;
-  final List<_MachineWorkingTime> machines;
+  final List<MachineWorkingTime> machines;
 
-  _DurationMachineWorkingTime(
+  DurationMachineWorkingTime(
       this.startDate, this.endDate, this.durationInSeconds, this.machines);
 
-  factory _DurationMachineWorkingTime.fromJson(Map<String, dynamic> json) =>
-      _$_DurationMachineWorkingTimeFromJson(json);
+  factory DurationMachineWorkingTime.fromJson(Map<String, dynamic> json) =>
+      _$DurationMachineWorkingTimeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$_DurationMachineWorkingTimeToJson(this);
+  Map<String, dynamic> toJson() => _$DurationMachineWorkingTimeToJson(this);
 }
 
 @JsonSerializable()
-class _MachineWorkingTime {
+class MachineWorkingTime {
   final String name;
   final int workingInSeconds;
   final int idlingInSeconds;
 
-  _MachineWorkingTime(this.name, this.workingInSeconds, this.idlingInSeconds);
+  MachineWorkingTime(this.name, this.workingInSeconds, this.idlingInSeconds);
 
-  factory _MachineWorkingTime.fromJson(Map<String, dynamic> json) =>
-      _$_MachineWorkingTimeFromJson(json);
+  factory MachineWorkingTime.fromJson(Map<String, dynamic> json) =>
+      _$MachineWorkingTimeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$_MachineWorkingTimeToJson(this);
+  Map<String, dynamic> toJson() => _$MachineWorkingTimeToJson(this);
 }
