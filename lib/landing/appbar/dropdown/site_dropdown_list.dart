@@ -7,7 +7,6 @@ class SiteDropDownList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-      buildWhen: (previous, current) => current is BasicSelectedSite,
       builder: (blocContext, state) {
         final siteList = <String>['M51', 'Cresent Blvd', 'Kensington', 'Penton Rise'];
         String siteName = 'M51';

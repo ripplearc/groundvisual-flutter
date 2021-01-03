@@ -93,8 +93,8 @@ class _CalendarPageState extends State<CalendarPage>
       weekendStyle: Theme.of(context)
           .textTheme
           .subtitle1
-          .apply(color: Theme.of(context).colorScheme.primary),
-      todayColor: Theme.of(context).colorScheme.primaryVariant,
+          .apply(color: Theme.of(context).colorScheme.secondaryVariant),
+      todayColor: Theme.of(context).colorScheme.secondary,
       todayStyle: Theme.of(context)
           .textTheme
           .subtitle1

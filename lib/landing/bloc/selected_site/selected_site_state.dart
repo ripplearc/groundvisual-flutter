@@ -7,17 +7,9 @@ abstract class SelectedSiteState extends Equatable {
   List<Object> get props => [];
 }
 
-abstract class BasicSelectedSite extends SelectedSiteState {
-  const BasicSelectedSite();
-}
+class SelectedSiteEmpty extends SelectedSiteState {}
 
-abstract class MachineStatusAtSelectedSite extends SelectedSiteState {
-  const MachineStatusAtSelectedSite();
-}
-
-class SelectedSiteEmpty extends BasicSelectedSite {}
-
-class SelectedSiteAtDate extends BasicSelectedSite {
+class SelectedSiteAtDate extends SelectedSiteState {
   final String siteName;
   final DateTime date;
   final WorkingTimeChartData chartData;
@@ -32,7 +24,7 @@ class SelectedSiteAtDate extends BasicSelectedSite {
       'SelectedSiteAtDay { name: $siteName, day: ${date.day} }';
 }
 
-class SelectedSiteAtTrend extends BasicSelectedSite {
+class SelectedSiteAtTrend extends SelectedSiteState {
   final String siteName;
   final DateTimeRange dateRange;
   final TrendPeriod period;

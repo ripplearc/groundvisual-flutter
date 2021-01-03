@@ -8,7 +8,6 @@ class DayOrTrendSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-          buildWhen: (previous, current) => current is BasicSelectedSite,
           builder: (context, state) {
             if (state is SelectedSiteAtDate) {
               return DateSelectionButton();

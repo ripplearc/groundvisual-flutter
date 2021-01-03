@@ -23,7 +23,7 @@ class MachineOnlineIndication extends StatelessWidget {
   Icon _genOnlineIndicator(BuildContext context) => Icon(
         Icons.circle,
         size: 14,
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).highlightColor,
       );
 
   Icon _genShadow(BuildContext context) => Icon(

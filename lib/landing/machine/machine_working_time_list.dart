@@ -12,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 
 import 'machine_working_time_bar_chart.dart';
 
+/// Widget displays the list of the machines and their working hours and online status.
 class MachineWorkingTimeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(

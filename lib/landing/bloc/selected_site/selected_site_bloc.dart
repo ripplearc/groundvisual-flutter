@@ -13,6 +13,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'selected_site_event.dart';
+
 part 'selected_site_state.dart';
 
 /// bloc to take events of selecting date or period, and notify listener about the
@@ -95,10 +96,7 @@ class SelectedSiteBloc
         ),
         event.period,
         chartData: chart)));
-    return Stream.fromFutures([
-      trendFuture,
-      trendWithChartFuture,
-    ]);
+    return Stream.fromFutures([trendFuture, trendWithChartFuture]);
   }
 
   Stream _yieldDailyWorkingTime(
@@ -110,9 +108,6 @@ class SelectedSiteBloc
         .then((dailyChart) =>
             SelectedSiteAtDate(siteName, date, chartData: dailyChart)));
 
-    return Stream.fromFutures([
-      dailyFuture,
-      dailyWithChartFuture,
-    ]);
+    return Stream.fromFutures([dailyFuture, dailyWithChartFuture]);
   }
 }

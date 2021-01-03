@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:groundvisual_flutter/landing/machine/model/machine_working_time_by_site.dart';
 import 'package:injectable/injectable.dart';
 
+/// Fetch the machine working time at a site from the backend.
 abstract class MachineWorkingTimeService {
   Future<SiteMachineWorkingTime> getMachineWorkingTimeOfRecentBySite(
       String siteName);

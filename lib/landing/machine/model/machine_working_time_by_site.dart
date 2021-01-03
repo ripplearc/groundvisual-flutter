@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'machine_working_time_by_site.g.dart';
 
+/// Json response model of list of machines working hours at a site.
 @JsonSerializable()
 class SiteMachineWorkingTime {
   final String site;

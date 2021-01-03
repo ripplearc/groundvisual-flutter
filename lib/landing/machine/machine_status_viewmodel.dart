@@ -4,6 +4,7 @@ import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bl
 import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
 import 'package:injectable/injectable.dart';
 
+/// Viewmodel for determining the UI model of the machine working hours and online status.
 @injectable
 class MachineStatusViewModel {
   final MachineWorkingTimeRepository machineWorkingTimeRepository;

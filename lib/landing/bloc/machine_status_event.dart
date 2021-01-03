@@ -12,7 +12,7 @@ class SearchMachineStatusOnDate extends MachineStatusEvent {
   const SearchMachineStatusOnDate(this.siteName, this.date) : super();
 
   @override
-  List<Object> get props => throw [siteName, date];
+  List<Object> get props => [siteName, date];
 }
 
 class SearchMachineStatueOnTrend extends MachineStatusEvent {

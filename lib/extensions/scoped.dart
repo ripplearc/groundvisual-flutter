@@ -1,4 +1,3 @@
-/// main() {
 ///   Map<String, String> maybeNull;
 ///   maybeNull = {'hello': 'world'};
 ///
@@ -11,7 +10,6 @@
 ///   final int nrOfKeys = bar?.let((mapNotNull) => mapNotNull.keys.length);
 ///
 ///   print(nrOfKeys); // 2
-/// }
 extension ScopingFunctions<T> on T {
   /// Calls the specified function [block] with `this` value
   /// as its argument and returns its result.

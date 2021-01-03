@@ -35,7 +35,6 @@ class LandingHomePageBody extends StatelessWidget {
 
   Widget _displayWorkingTimeChart() =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-          buildWhen: (previous, current) => current is BasicSelectedSite,
           builder: (context, state) {
             if (state is SelectedSiteAtDate) {
               BlocProvider.of<WorkingTimeChartTouchBloc>(context)
