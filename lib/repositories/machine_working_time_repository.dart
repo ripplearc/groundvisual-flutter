@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/repositories/machine_working_time_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:dart_date/dart_date.dart';
 
@@ -11,9 +12,14 @@ abstract class MachineWorkingTimeRepository {
 
 @Singleton(as: MachineWorkingTimeRepository)
 class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
+  final MachineWorkingTimeService machineWorkingTimeService;
+
+  MachineWorkingTimeRepositoryImpl(this.machineWorkingTimeService);
+
   @override
   Future<Map<String, UnitWorkingTime>> getMachineWorkingTime(
       String siteName, DateTime startTime, DateTime endTime) async {
+    final foo = await machineWorkingTimeService.getMachineWorkingTimeBySite(siteName);
     return Future.delayed(Duration(milliseconds: 1000),
         () => _fakeWorkingTime(endTime, startTime));
   }

@@ -8,13 +8,13 @@
 	  "machines": [
 		{
 		  "name": "312",
-		  "working": 8.6,
-		  "idling": 1.2
+		  "workingInSeconds": 30960,
+		  "idlingInSeconds": 4320
 		},
 		{
 		  "name": "332",
-		  "working": 4.3,
-		  "idling": 0.8
+		  "workingInSeconds": 15480,
+		  "idlingInSeconds": 2880
 		}
 	  ]
 	},
@@ -25,18 +25,18 @@
 	  "machines": [
 		{
 		  "name": "312",
-		  "working": 28.6,
-		  "idling": 8.2
+		  "workingInSeconds": 102960,
+		  "idlingInSeconds": 29520
 		},
 		{
 		  "name": "332",
-		  "working": 34.3,
-		  "idling": 10.8
+		  "workingInSeconds": 123480,
+		  "idlingInSeconds": 38880
 		},
 		{
 		  "name": "331",
-		  "working": 25.2,
-		  "idling": 2.8
+		  "workingInSeconds": 90720,
+		  "idlingInSeconds": 10080
 		}
 	  ]
 	}
