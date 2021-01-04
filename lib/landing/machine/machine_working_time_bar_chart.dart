@@ -2,7 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
-import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 /// A bar chart with only one domain, one tick on the x axis, to display

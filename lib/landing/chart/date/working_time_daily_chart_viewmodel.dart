@@ -5,7 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
-import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:injectable/injectable.dart';
 
 /// Generate the data model to display on the daily chart, based on

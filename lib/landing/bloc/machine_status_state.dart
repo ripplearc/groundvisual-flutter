@@ -9,8 +9,9 @@ class MachineStatusInitial extends MachineStatusState {
 
 class MachineStatusWorkingTime extends MachineStatusState {
   final Map<String, UnitWorkingTime> workingTimes;
+  final Map<String, Stream<MachineOnlineStatus>> onlineStatuses;
 
-  MachineStatusWorkingTime(this.workingTimes);
+  MachineStatusWorkingTime(this.workingTimes, this.onlineStatuses);
 
   @override
   List<Object> get props => [workingTimes];

@@ -6,7 +6,8 @@ import 'package:groundvisual_flutter/landing/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_label.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_offline_indication.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_online_indication.dart';
-import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/models/machine_online_status.dart';
+import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'machine_working_time_bar_chart.dart';
@@ -58,7 +59,8 @@ class MachineWorkingTimeList extends StatelessWidget {
   Column _buildContent(MachineStatusWorkingTime state, BuildContext context) =>
       Column(
         children: state.workingTimes.entries
-            .map((e) => _genListItem(context, e.key, e.value, false))
+            .map((e) => _genListItem(
+                context, e.key, e.value, state.onlineStatuses[e.key], false))
             .toList(),
       );
 
@@ -66,10 +68,18 @@ class MachineWorkingTimeList extends StatelessWidget {
       children: List.generate(
           2,
           (index) => _genListItem(
-              context, "", UnitWorkingTime(720, 480, 240), true)).toList());
+              context,
+              "",
+              UnitWorkingTime(720, 480, 240),
+              Stream.value(MachineOnlineStatus(OnlineStatus.connecting, null)),
+              true)).toList());
 
-  Container _genListItem(BuildContext context, String machineName,
-          UnitWorkingTime data, bool shimming) =>
+  Container _genListItem(
+          BuildContext context,
+          String machineName,
+          UnitWorkingTime data,
+          Stream<MachineOnlineStatus> onlineStatusStream,
+          bool shimming) =>
       Container(
           padding: EdgeInsets.only(left: 16, right: 16),
           height: 96,
@@ -84,9 +94,9 @@ class MachineWorkingTimeList extends StatelessWidget {
                       baseColor: Theme.of(context).colorScheme.surface,
                       highlightColor: Theme.of(context).colorScheme.onSurface,
                       child: _genMachineLabelWithStatus(
-                          context, machineName, _OnlineStatus.connecting))
+                          context, machineName, onlineStatusStream))
                   : _genMachineLabelWithStatus(
-                      context, machineName, _OnlineStatus.connecting),
+                      context, machineName, onlineStatusStream),
               Expanded(
                   child: shimming
                       ? Shimmer.fromColors(
@@ -98,8 +108,8 @@ class MachineWorkingTimeList extends StatelessWidget {
             ],
           ));
 
-  Stack _genMachineLabelWithStatus(
-          BuildContext context, String machineName, _OnlineStatus status) =>
+  Stack _genMachineLabelWithStatus(BuildContext context, String machineName,
+          Stream<MachineOnlineStatus> onlineStatusStream) =>
       Stack(
         children: [
           Container(child: SizedBox.fromSize(size: Size(58, 58))),
@@ -107,15 +117,24 @@ class MachineWorkingTimeList extends StatelessWidget {
               name: machineName,
               labelSize: Size(56, 56),
               shadowTopLeftOffset: Size(1, 1)),
-          _genIndication(status, context)
+          StreamBuilder(
+              stream: onlineStatusStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<MachineOnlineStatus> snapshot) {
+                if (snapshot.hasData) {
+                  return _genIndication(snapshot.data, context);
+                } else {
+                  return Container();
+                }
+              })
         ],
       );
 
-  Widget _genIndication(_OnlineStatus status, BuildContext context) {
-    switch (status) {
-      case _OnlineStatus.offline:
-        return MachineOfflineIndication(offset: Size(0, 0), warning: '21h');
-      case _OnlineStatus.online:
+  Widget _genIndication(MachineOnlineStatus status, BuildContext context) {
+    switch (status.status) {
+      case OnlineStatus.offline:
+        return MachineOfflineIndication(offset: Size(0, 0), warning: status.offlineFormattedString());
+      case OnlineStatus.online:
         return MachineOnlineIndication(
             rightBottomOffset: Size(0, 0), shimming: false);
       default:
@@ -124,5 +143,3 @@ class MachineWorkingTimeList extends StatelessWidget {
     }
   }
 }
-
-enum _OnlineStatus { online, offline, connecting }
