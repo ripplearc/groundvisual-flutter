@@ -13,6 +13,9 @@ class SliverAppBarTitle extends StatelessWidget {
           } else if (state is SelectedSiteAtDate) {
             return Text(state.siteName,
                 style: Theme.of(context).textTheme.headline6);
+          } else if (state is SelectedSiteAtTrend) {
+            return Text(state.siteName,
+                style: Theme.of(context).textTheme.headline6);
           } else {
             return Text("");
           }
