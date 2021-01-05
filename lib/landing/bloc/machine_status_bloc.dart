@@ -44,18 +44,18 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   Stream<MachineStatusState> _handleSelectDateEvent(
       String siteName, DateTime date) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-    final workingTimeFuture =
-        machineStatusViewModel.getMachineWorkingTimeAtDate(siteName, date);
+    final machineStatusFuture =
+        machineStatusViewModel.getMachineStatusAtDate(siteName, date);
 
-    return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
+    return Stream.fromFutures([machineInitialFuture, machineStatusFuture]);
   }
 
   Stream<MachineStatusState> _handleSelectTrendEvent(
       String siteName, TrendPeriod period) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-    final workingTimeFuture =
-        machineStatusViewModel.getMachineWorkingTimeAtPeriod(siteName, period);
+    final machineStatusFuture =
+        machineStatusViewModel.getMachineStatusAtPeriod(siteName, period);
 
-    return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
+    return Stream.fromFutures([machineInitialFuture, machineStatusFuture]);
   }
 }

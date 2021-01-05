@@ -49,18 +49,24 @@ class MachineWorkingTimeList extends StatelessWidget {
       ]);
 
   Widget _genCardContent(BuildContext context, MachineStatusState state) {
-    if (state is MachineStatusWorkingTime) {
+    if (state is MachineStatusOfWorkingTimeAndOnline) {
       return _buildContent(state, context);
     } else {
       return _buildShimmerContent(context);
     }
   }
 
-  Column _buildContent(MachineStatusWorkingTime state, BuildContext context) =>
+  Column _buildContent(
+          MachineStatusOfWorkingTimeAndOnline state, BuildContext context) =>
       Column(
         children: state.workingTimes.entries
             .map((e) => _genListItem(
-                context, e.key, e.value, state.onlineStatuses[e.key], false))
+                context,
+                e.key,
+                e.value,
+                state.onlineStatuses[e.key] ??
+                    Stream.error("No Status Available"),
+                false))
             .toList(),
       );
 
@@ -123,6 +129,9 @@ class MachineWorkingTimeList extends StatelessWidget {
                   AsyncSnapshot<MachineOnlineStatus> snapshot) {
                 if (snapshot.hasData) {
                   return _genIndication(snapshot.data, context);
+                } else if (snapshot.hasError) {
+                  return _genIndication(
+                      MachineOnlineStatus(OnlineStatus.unknown, null), context);
                 } else {
                   return Container();
                 }
@@ -133,7 +142,10 @@ class MachineWorkingTimeList extends StatelessWidget {
   Widget _genIndication(MachineOnlineStatus status, BuildContext context) {
     switch (status.status) {
       case OnlineStatus.offline:
-        return MachineOfflineIndication(offset: Size(0, 0), warning: status.offlineFormattedString());
+        return MachineOfflineIndication(
+            offset: Size(0, 0), warning: status.offlineFormattedString());
+      case OnlineStatus.unknown:
+        return MachineOfflineIndication(offset: Size(0, 0), warning: "?!");
       case OnlineStatus.online:
         return MachineOnlineIndication(
             rightBottomOffset: Size(0, 0), shimming: false);

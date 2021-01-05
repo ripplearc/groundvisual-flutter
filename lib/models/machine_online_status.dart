@@ -26,4 +26,4 @@ class MachineOnlineStatus {
   }
 }
 
-enum OnlineStatus { online, offline, connecting }
+enum OnlineStatus { online, offline, connecting, unknown }

@@ -15,23 +15,24 @@ class MachineStatusViewModel {
   MachineStatusViewModel(
       this.machineWorkingTimeRepository, this.machineStatusCommunicator);
 
-  Future<MachineStatusWorkingTime> getMachineWorkingTimeAtDate(
+  Future<MachineStatusOfWorkingTimeAndOnline> getMachineStatusAtDate(
           String siteName, DateTime date) =>
       machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, date.startOfDay, date.endOfDay)
-          .then((time) => MachineStatusWorkingTime(time, {
-                "312": machineStatusCommunicator.getMachineOnlineStatus("312"),
-                "332": machineStatusCommunicator.getMachineOnlineStatus("332"),
-              }));
+          .then((time) => MachineStatusOfWorkingTimeAndOnline(
+              time, _getMachineOnlineStatuses(time.keys)));
 
-  Future<MachineStatusWorkingTime> getMachineWorkingTimeAtPeriod(
+  Future<MachineStatusOfWorkingTimeAndOnline> getMachineStatusAtPeriod(
           String siteName, TrendPeriod period) =>
       machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, Date.startOfToday,
               Date.startOfToday.subtract(Duration(days: period.toInt())))
-          .then((time) => MachineStatusWorkingTime(time, {
-                "312": machineStatusCommunicator.getMachineOnlineStatus("312"),
-                "332": machineStatusCommunicator.getMachineOnlineStatus("332"),
-                "331": machineStatusCommunicator.getMachineOnlineStatus("331"),
-              }));
+          .then((time) => MachineStatusOfWorkingTimeAndOnline(
+              time, _getMachineOnlineStatuses(time.keys)));
+
+  Map<String, Stream<MachineOnlineStatus>> _getMachineOnlineStatuses(
+          Iterable<String> machines) =>
+      Map.fromIterable(machines,
+          key: (m) => m,
+          value: (m) => machineStatusCommunicator.getMachineOnlineStatus(m));
 }

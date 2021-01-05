@@ -7,11 +7,11 @@ class MachineStatusInitial extends MachineStatusState {
   List<Object> get props => [];
 }
 
-class MachineStatusWorkingTime extends MachineStatusState {
+class MachineStatusOfWorkingTimeAndOnline extends MachineStatusState {
   final Map<String, UnitWorkingTime> workingTimes;
   final Map<String, Stream<MachineOnlineStatus>> onlineStatuses;
 
-  MachineStatusWorkingTime(this.workingTimes, this.onlineStatuses);
+  MachineStatusOfWorkingTimeAndOnline(this.workingTimes, this.onlineStatuses);
 
   @override
   List<Object> get props => [workingTimes];
