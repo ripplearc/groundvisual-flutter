@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dart_date/dart_date.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/machine/model/machine_working_time_by_site.dart';
-import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:groundvisual_flutter/repositories/machine_working_time_service.dart';
 import 'package:injectable/injectable.dart';
 

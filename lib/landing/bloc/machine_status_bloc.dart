@@ -4,7 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_status_viewmodel.dart';
-import 'package:groundvisual_flutter/models/UnitWorkingTime.dart';
+import 'package:groundvisual_flutter/models/machine_online_status.dart';
+import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -43,18 +44,18 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   Stream<MachineStatusState> _handleSelectDateEvent(
       String siteName, DateTime date) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-    final workingTimeFuture =
-        machineStatusViewModel.getMachineWorkingTimeAtDate(siteName, date);
+    final machineStatusFuture =
+        machineStatusViewModel.getMachineStatusAtDate(siteName, date);
 
-    return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
+    return Stream.fromFutures([machineInitialFuture, machineStatusFuture]);
   }
 
   Stream<MachineStatusState> _handleSelectTrendEvent(
       String siteName, TrendPeriod period) {
     final machineInitialFuture = Future.value(MachineStatusInitial());
-    final workingTimeFuture =
-        machineStatusViewModel.getMachineWorkingTimeAtPeriod(siteName, period);
+    final machineStatusFuture =
+        machineStatusViewModel.getMachineStatusAtPeriod(siteName, period);
 
-    return Stream.fromFutures([machineInitialFuture, workingTimeFuture]);
+    return Stream.fromFutures([machineInitialFuture, machineStatusFuture]);
   }
 }
