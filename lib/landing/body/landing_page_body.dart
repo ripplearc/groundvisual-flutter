@@ -12,6 +12,7 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
+import 'package:groundvisual_flutter/landing/summary/animation_playground.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
@@ -24,12 +25,14 @@ class LandingHomePageBody extends StatelessWidget {
               case 1:
                 return _displayWorkingTimeChart();
               case 2:
+                return AnimationSlideSample();
+              case 3:
                 return MachineWorkingTimeList();
               default:
                 return Container();
             }
           },
-          childCount: 3,
+          childCount: 4,
         ),
       );
 
