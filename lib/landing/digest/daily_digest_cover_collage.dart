@@ -1,0 +1,101 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class DailyDigestCoverCollage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Container(
+        color: Theme.of(context).colorScheme.primary,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            _genRanCollageLayout(),
+            _genPlayButton(context),
+          ],
+        ),
+      );
+
+  StatelessWidget _genRanCollageLayout() => [
+        _DailyDigestCoverCollageLayoutOne(),
+        _DailyDigestCoverCollageLayoutTwo()
+      ].elementAt(Random().nextInt(2));
+
+  Container _genPlayButton(BuildContext context) => Container(
+      width: 80,
+      height: 80,
+      child: IconButton(
+          onPressed: null,
+          color: Colors.green,
+          icon: Icon(
+            Icons.play_arrow_sharp,
+            size: 65,
+            color: Theme.of(context).colorScheme.primary,
+          )));
+}
+
+class _DailyDigestCoverCollageLayoutOne extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.all(1),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+              flex: 8,
+              child: _layoutImagesHorizontally(
+                [
+                  'images/digest/summary_1.jpg',
+                  'images/digest/summary_2.jpg',
+                  'images/digest/summary_3.jpg'
+                ],
+              )),
+          _paddedImage('images/digest/summary_4.jpg', 2),
+        ]),
+      );
+}
+
+class _DailyDigestCoverCollageLayoutTwo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.all(1),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 8,
+                    child: _layoutImagesHorizontally([
+                      'images/digest/summary_1.jpg',
+                      'images/digest/summary_2.jpg'
+                    ]),
+                  ),
+                  _paddedImage('images/digest/summary_3.jpg', 2),
+                ],
+              )),
+          Expanded(
+              flex: 1,
+              child: _layoutImagesVertically(
+                ['images/digest/summary_4.jpg', 'images/digest/summary_5.jpg'],
+              )),
+        ]),
+      );
+}
+
+Widget _layoutImagesHorizontally(List<String> images) => Row(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: images.map((image) => _paddedImage(image, 1)).toList());
+
+Widget _layoutImagesVertically(List<String> images) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: images.map((image) => _paddedImage(image, 1)).toList());
+
+Widget _paddedImage(String image, int flex) => Expanded(
+    flex: flex,
+    child: Padding(
+        padding: EdgeInsets.all(1),
+        child: Image.asset(
+          image,
+          fit: BoxFit.cover,
+        )));

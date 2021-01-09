@@ -10,9 +10,9 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
+import 'package:groundvisual_flutter/landing/digest/daily_digest_photo_show.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
-import 'package:groundvisual_flutter/landing/summary/animation_playground.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
@@ -25,7 +25,7 @@ class LandingHomePageBody extends StatelessWidget {
               case 1:
                 return _displayWorkingTimeChart();
               case 2:
-                return AnimationSlideSample();
+                return DailyDigestPhotoShow();
               case 3:
                 return MachineWorkingTimeList();
               default:

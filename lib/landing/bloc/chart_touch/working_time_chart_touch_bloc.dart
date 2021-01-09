@@ -76,7 +76,7 @@ class WorkingTimeChartTouchBloc
   Stream<SiteSnapShotState> _handleBarSelectionOnTime(
       DateChartBarRodSelection event) {
     final thumbnailFuture = Future.value(SiteSnapShotThumbnail(event.groupId,
-            event.rodId, 'images/${event.groupId * 4 + event.rodId}.jpg'))
+            event.rodId, 'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'))
         .then((value) => Future.delayed(Duration(seconds: 1), () => value));
 
     final workZoneFuture = Future(() async => dailyChartConverter
