@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DailyDigestCoverCollage extends StatelessWidget {
+  final double padding;
+
+  DailyDigestCoverCollage({Key key, this.padding = 1}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Container(
         color: Theme.of(context).colorScheme.primary,
@@ -17,8 +21,8 @@ class DailyDigestCoverCollage extends StatelessWidget {
       );
 
   StatelessWidget _genRanCollageLayout() => [
-        _DailyDigestCoverCollageLayoutOne(),
-        _DailyDigestCoverCollageLayoutTwo()
+        _DailyDigestCoverCollageLayoutOne(padding: padding),
+        _DailyDigestCoverCollageLayoutTwo(padding: padding)
       ].elementAt(Random().nextInt(2));
 
   Container _genPlayButton(BuildContext context) => Container(
@@ -35,9 +39,13 @@ class DailyDigestCoverCollage extends StatelessWidget {
 }
 
 class _DailyDigestCoverCollageLayoutOne extends StatelessWidget {
+  final double padding;
+
+  _DailyDigestCoverCollageLayoutOne({Key key, this.padding}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.all(1),
+        padding: EdgeInsets.all(padding),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Expanded(
@@ -55,9 +63,14 @@ class _DailyDigestCoverCollageLayoutOne extends StatelessWidget {
 }
 
 class _DailyDigestCoverCollageLayoutTwo extends StatelessWidget {
+  final double padding;
+
+  const _DailyDigestCoverCollageLayoutTwo({Key key, this.padding})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.all(1),
+        padding: EdgeInsets.all(padding),
         child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Expanded(
               flex: 2,
