@@ -9,12 +9,10 @@ class PlayDigestInitial extends PlayDigestState {
 }
 
 class PlayDigestShowImage extends PlayDigestState {
-  final String image;
-  final int animationTimeInSeconds;
-  final Offset beginPosition;
+  final List<String> images;
 
-  PlayDigestShowImage(this.image, this.animationTimeInSeconds, this.beginPosition);
+  PlayDigestShowImage(this.images);
 
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [images];
 }

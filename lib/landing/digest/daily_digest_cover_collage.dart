@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
 class DailyDigestCoverCollage extends StatelessWidget {
   final double padding;
@@ -29,7 +31,9 @@ class DailyDigestCoverCollage extends StatelessWidget {
       width: 80,
       height: 80,
       child: IconButton(
-          onPressed: null,
+          onPressed: () {
+            BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestResume());
+          },
           color: Colors.green,
           icon: Icon(
             Icons.play_arrow_sharp,

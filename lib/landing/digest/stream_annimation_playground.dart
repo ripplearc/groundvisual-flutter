@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:groundvisual_flutter/extensions/stream_logger.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
 class StreamAnimationSlide extends StatelessWidget {
   final Random random = Random();
@@ -11,16 +11,14 @@ class StreamAnimationSlide extends StatelessWidget {
   StreamAnimationSlide({Key key, this.padding = 1}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-      stream: Stream.periodic(Duration(seconds: 4))
-          .scan((accumulated, value, index) => accumulated + 1, 0)
-          .take(5)
-          .map((index) => 'images/digest/summary_$index.jpg')
-          .scan<List<String>>(
-              (acc, value, index) => (acc..insert(0, value)).take(2).toList(),
-              <String>[]).log('🤘'),
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) =>
-          snapshot.hasData ? _genAnimatedSlide(snapshot.data) : Container());
+  Widget build(BuildContext context) =>
+      BlocBuilder<PlayDigestBloc, PlayDigestState>(builder: (context, state) {
+        if (state is PlayDigestShowImage) {
+          return _genAnimatedSlide(state.images);
+        } else {
+          return Container();
+        }
+      });
 
   Padding _genAnimatedSlide(List<String> images) => Padding(
       padding: EdgeInsets.all(padding),

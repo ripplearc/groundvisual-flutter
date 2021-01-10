@@ -20,12 +20,21 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   Stream<PlayDigestState> mapEventToState(
     PlayDigestEvent event,
   ) async* {
-    final position = [
-      Offset(1.5, 0),
-      Offset(-1.5, 0),
-      Offset(0, 1.5),
-      Offset(0, -1.5)
-    ].elementAt(random.nextInt(4));
-    yield PlayDigestShowImage('images/digest/summary_1.jpg', 3, position);
+    yield PlayDigestShowImage(['images/digest/summary_1.jpg']);
+    await Future.delayed(Duration(seconds: 4));
+    yield PlayDigestShowImage(
+        ['images/digest/summary_2.jpg', 'images/digest/summary_1.jpg']);
+    await Future.delayed(Duration(seconds: 4));
+    yield PlayDigestShowImage(
+        ['images/digest/summary_3.jpg', 'images/digest/summary_2.jpg']);
+    await Future.delayed(Duration(seconds: 4));
+    yield PlayDigestShowImage(
+        ['images/digest/summary_4.jpg', 'images/digest/summary_3.jpg']);
+    await Future.delayed(Duration(seconds: 4));
+    yield PlayDigestShowImage(
+        ['images/digest/summary_5.jpg', 'images/digest/summary_4.jpg']);
+    await Future.delayed(Duration(seconds: 4));
+    yield PlayDigestShowImage(
+        ['images/digest/summary_2.jpg', 'images/digest/summary_1.jpg']);
   }
 }
