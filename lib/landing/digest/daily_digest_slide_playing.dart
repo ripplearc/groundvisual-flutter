@@ -4,17 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
-class StreamAnimationSlide extends StatelessWidget {
+class DailyDigestSlidePlaying extends StatelessWidget {
   final Random random = Random();
   final double padding;
 
-  StreamAnimationSlide({Key key, this.padding = 1}) : super(key: key);
+  DailyDigestSlidePlaying({Key key, this.padding = 1}) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<PlayDigestBloc, PlayDigestState>(builder: (context, state) {
+      BlocBuilder<PlayDigestBloc, PlayDigestState>(buildWhen: (prev, curr) {
+        return curr is PlayDigestShowImage;
+      }, builder: (context, state) {
         if (state is PlayDigestShowImage) {
-          return _genAnimatedSlide(state.images);
+          return GestureDetector(
+              onTap: () {
+                BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestPause());
+              },
+              child: _genAnimatedSlide(state.images));
         } else {
           return Container();
         }
@@ -28,7 +34,9 @@ class StreamAnimationSlide extends StatelessWidget {
         return Stack(
           children: [
             images.length > 1 ? _genStaticImage(images.last) : Container(),
-            _genAnimatedImage(images.first ?? '', beginRect, imageSize)
+            images.length > 0
+                ? _genAnimatedImage(images.first ?? '', beginRect, imageSize)
+                : Container()
           ],
         );
       }));
@@ -38,9 +46,9 @@ class StreamAnimationSlide extends StatelessWidget {
         fit: BoxFit.cover,
       );
 
-  StreamAnimationSlideSample _genAnimatedImage(
+  _DailyDigestSlideAnimation _genAnimatedImage(
           String image, Rect beginRect, Size imageSize) =>
-      StreamAnimationSlideSample(
+      _DailyDigestSlideAnimation(
         key: Key(image),
         image: image,
         animationTime: 3,
@@ -57,24 +65,24 @@ class StreamAnimationSlide extends StatelessWidget {
 }
 
 /// This is the stateful widget that the main application instantiates.
-class StreamAnimationSlideSample extends StatefulWidget {
+class _DailyDigestSlideAnimation extends StatefulWidget {
   final String image;
   final int animationTime;
   final Rect beginRect;
   final Size imageSize;
 
-  StreamAnimationSlideSample(
+  _DailyDigestSlideAnimation(
       {Key key, this.image, this.animationTime, this.beginRect, this.imageSize})
       : super(key: key);
 
   @override
-  _StreamAnimationSlideSampleState createState() =>
-      _StreamAnimationSlideSampleState(
+  _DailyDigestSlideAnimationState createState() =>
+      _DailyDigestSlideAnimationState(
           image, animationTime, beginRect, imageSize);
 }
 
 /// This is the private State class that goes with MyStatefulWidget.
-class _StreamAnimationSlideSampleState extends State<StreamAnimationSlideSample>
+class _DailyDigestSlideAnimationState extends State<_DailyDigestSlideAnimation>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<RelativeRect> _relativeRect;
@@ -83,7 +91,7 @@ class _StreamAnimationSlideSampleState extends State<StreamAnimationSlideSample>
   final Rect beginRect;
   final Size imageSize;
 
-  _StreamAnimationSlideSampleState(
+  _DailyDigestSlideAnimationState(
       this.image, this.animationTime, this.beginRect, this.imageSize);
 
   @override

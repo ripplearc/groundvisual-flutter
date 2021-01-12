@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
 class DailyDigestCoverCollage extends StatelessWidget {
   final double padding;
@@ -13,33 +11,13 @@ class DailyDigestCoverCollage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         color: Theme.of(context).colorScheme.primary,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            _genRanCollageLayout(),
-            _genPlayButton(context),
-          ],
-        ),
+        child: _genRandomCollageLayout(),
       );
 
-  StatelessWidget _genRanCollageLayout() => [
+  StatelessWidget _genRandomCollageLayout() => [
         _DailyDigestCoverCollageLayoutOne(padding: padding),
         _DailyDigestCoverCollageLayoutTwo(padding: padding)
       ].elementAt(Random().nextInt(2));
-
-  Container _genPlayButton(BuildContext context) => Container(
-      width: 80,
-      height: 80,
-      child: IconButton(
-          onPressed: () {
-            BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestResume());
-          },
-          color: Colors.green,
-          icon: Icon(
-            Icons.play_arrow_sharp,
-            size: 65,
-            color: Theme.of(context).colorScheme.primary,
-          )));
 }
 
 class _DailyDigestCoverCollageLayoutOne extends StatelessWidget {

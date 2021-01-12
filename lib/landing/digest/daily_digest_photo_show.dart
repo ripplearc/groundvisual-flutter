@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_cover_collage.dart';
-import 'package:groundvisual_flutter/landing/digest/stream_annimation_playground.dart';
+import 'package:groundvisual_flutter/landing/digest/daily_digest_play_button.dart';
+import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_playing.dart';
 
 class DailyDigestPhotoShow extends StatelessWidget {
   @override
@@ -23,9 +24,15 @@ class DailyDigestPhotoShow extends StatelessWidget {
             AspectRatio(
               aspectRatio: 336 / 190,
               child: BlocProvider(
-                create: (_) => getIt<PlayDigestBloc>(),
+                create: (_) =>
+                    getIt<PlayDigestBloc>()..add(PlayDigestInitPlayer()),
                 child: Stack(
-                  children: [DailyDigestCoverCollage(), StreamAnimationSlide()],
+                  alignment: Alignment.center,
+                  children: [
+                    DailyDigestCoverCollage(),
+                    DailyDigestSlidePlaying(),
+                    DailyDigestPlayButton()
+                  ],
                 ),
               ),
             )
