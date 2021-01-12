@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_cover_collage.dart';
+import 'package:groundvisual_flutter/landing/digest/daily_digest_collage_cover.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_play_button.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_playing.dart';
 
-class DailyDigestPhotoShow extends StatelessWidget {
+class DailyDigestSlideShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
       color: Theme.of(context).colorScheme.background,
@@ -29,7 +29,7 @@ class DailyDigestPhotoShow extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    DailyDigestCoverCollage(),
+                    DailyDigestCollageCover(),
                     DailyDigestSlidePlaying(),
                     DailyDigestPlayButton()
                   ],

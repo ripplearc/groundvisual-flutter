@@ -4,8 +4,12 @@ part of 'play_digest_bloc.dart';
 abstract class PlayDigestState extends Equatable {}
 
 class PlayDigestPausePlaying extends PlayDigestState {
+  final List<String> coverImages;
+
+  PlayDigestPausePlaying(this.coverImages);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [coverImages];
 }
 
 class PlayDigestBuffering extends PlayDigestState {

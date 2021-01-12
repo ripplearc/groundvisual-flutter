@@ -20,18 +20,16 @@ class DailyDigestPlayButton extends StatelessWidget {
         }
       });
 
-  Container _genPlayButton(BuildContext context) {
-    return Container(
-        width: 80,
-        height: 80,
-        child: IconButton(
-            onPressed: () => BlocProvider.of<PlayDigestBloc>(context)
-                .add(PlayDigestResume()),
-            color: Colors.green,
-            icon: Icon(
-              Icons.play_arrow_sharp,
-              size: 65,
-              color: Theme.of(context).colorScheme.primary,
-            )));
-  }
+  Container _genPlayButton(BuildContext context) => Container(
+      width: 80,
+      height: 80,
+      child: IconButton(
+          onPressed: () =>
+              BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestResume()),
+          color: Colors.green,
+          icon: Icon(
+            Icons.play_arrow_sharp,
+            size: 65,
+            color: Theme.of(context).colorScheme.primary,
+          )));
 }

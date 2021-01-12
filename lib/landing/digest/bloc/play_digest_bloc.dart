@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,7 +14,7 @@ part 'play_digest_state.dart';
 
 @injectable
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
-  PlayDigestBloc() : super(PlayDigestPausePlaying());
+  PlayDigestBloc() : super(PlayDigestPausePlaying([]));
   final Random random = Random();
 
   @override
@@ -27,10 +28,12 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   ) async* {
     switch (event.runtimeType) {
       case PlayDigestInitPlayer:
-        yield PlayDigestPausePlaying();
+        yield PlayDigestPausePlaying(List.generate(
+            5, (index) => 'images/digest/summary_${index + 1}.jpg'));
         return;
       case PlayDigestPause:
-        yield PlayDigestPausePlaying();
+        yield PlayDigestPausePlaying(List.generate(
+            5, (index) => 'images/digest/summary_${index + 1}.jpg'));
         return;
       case PlayDigestResume:
         yield PlayDigestBuffering();
@@ -53,7 +56,8 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
             ['images/digest/summary_2.jpg', 'images/digest/summary_5.jpg']);
         await Future.delayed(Duration(seconds: 4));
         yield PlayDigestShowImage([]);
-        yield PlayDigestPausePlaying();
+        yield PlayDigestPausePlaying(List.generate(
+            5, (index) => 'images/digest/summary_${index + 1}.jpg'));
         return;
     }
   }
