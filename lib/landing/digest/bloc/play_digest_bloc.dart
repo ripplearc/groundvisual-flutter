@@ -36,8 +36,10 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
 
       case PlayDigestResume:
         yield PlayDigestBuffering();
+        await Future.delayed(Duration(seconds: 4));
         await for (var images in dailyDigestViewModel
-            .getDigestPrevAndCurrentImages()) yield PlayDigestShowImage(images);
+            .getDigestPrevAndCurrentImagesWithTimeInterval(4))
+          yield PlayDigestShowImage(images);
 
         yield await _getCoverImages();
         return;
