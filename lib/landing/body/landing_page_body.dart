@@ -1,61 +1,62 @@
-import 'package:dart_date/dart_date.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/working_time_chart_touch_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
+import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_show.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map.dart';
 
 class LandingHomePageBody extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            switch (index) {
-              case 0:
-                return WorkZoneMap();
-              case 1:
-                return _displayWorkingTimeChart();
-              case 2:
-                return DailyDigestSlideShow();
-              case 3:
-                return MachineWorkingTimeList();
-              default:
-                return Container();
-            }
-          },
-          childCount: 4,
-        ),
-      );
-
-  Widget _displayWorkingTimeChart() =>
+  Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
-            if (state is SelectedSiteAtDate) {
-              BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-                  .add(NoBarRodSelection(state.siteName, state.date, context));
-              return state.chartData == null
-                  ? WorkingTimeDailyChartShimmer()
-                  : WorkingTimeDailyChart(state);
-            } else if (state is SelectedSiteAtTrend) {
-              BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
-                  NoBarRodSelection(
-                      state.siteName, Date.startOfToday, context));
-              return state.chartData == null
-                  ? WorkingTimeTrendChartShimmer(period: state.period)
-                  : WorkingTimeTrendChart(state);
-            } else {
+        if (state is SelectedSiteAtDate) {
+          return SliverList(delegate: _dateSliverChildBuilder);
+        } else if (state is SelectedSiteAtTrend) {
+          return SliverList(delegate: _trendSliverChildBuilder);
+        } else {
+          return Container();
+        }
+      });
+
+  SliverChildBuilderDelegate get _dateSliverChildBuilder =>
+      SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          switch (index) {
+            case 0:
+              return WorkZoneMap();
+            case 1:
+              return WorkingTimeChart();
+            case 2:
+              return DailyDigestSlideShow();
+            case 3:
+              return MachineWorkingTimeList();
+            default:
               return Container();
-            }
-          });
+          }
+        },
+        childCount: 4,
+      );
+
+  SliverChildBuilderDelegate get _trendSliverChildBuilder =>
+      SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          switch (index) {
+            case 0:
+              return WorkZoneMap();
+            case 1:
+              return WorkingTimeChart();
+            case 2:
+              return MachineWorkingTimeList();
+            default:
+              return Container();
+          }
+        },
+        childCount: 3,
+      );
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";
@@ -76,13 +77,4 @@ class LandingHomePageBody extends StatelessWidget {
       }
     });
   }
-}
-
-class ListElement extends StatelessWidget {
-  final int index;
-
-  const ListElement({Key key, this.index}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Text("List tile $index");
 }

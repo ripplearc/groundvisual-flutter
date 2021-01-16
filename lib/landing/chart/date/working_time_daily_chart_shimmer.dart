@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/chart/chart_section_with_title.dart';
+import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Shimmer displayed when fetching data for the WorkingTimeDailyChart.
