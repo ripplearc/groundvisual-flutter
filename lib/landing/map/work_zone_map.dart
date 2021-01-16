@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/working_time_chart_touch_bloc.dart';
 
 /// Widget displaying the work zone with polygon.
 class WorkZoneMap extends StatefulWidget {

@@ -18,7 +18,6 @@ part 'play_digest_state.dart';
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   PlayDigestBloc(this.dailyDigestViewModel) : super(PlayDigestPausePlaying([]));
   final DailyDigestViewModel dailyDigestViewModel;
-  final Random random = Random();
 
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
@@ -49,6 +48,8 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
         yield await _getCoverImages();
         return;
       case PlayDigestResume:
+        yield PlayDigestBuffering();
+        await Future.delayed(Duration(milliseconds: 50));
         final images = await dailyDigestViewModel
             .incrementCurrentDigestImageCursor();
         yield PlayDigestShowImage(images);

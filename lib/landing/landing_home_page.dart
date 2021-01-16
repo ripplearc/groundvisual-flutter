@@ -5,7 +5,7 @@ import 'package:groundvisual_flutter/di/di.dart';
 import 'appbar/landing_page_header.dart';
 import 'bloc/selected_site/selected_site_bloc.dart';
 import 'body/landing_page_body.dart';
-import 'bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'chart/bloc/working_time_chart_touch_bloc.dart';
 
 class LandingHomePage extends StatelessWidget {
   @override
