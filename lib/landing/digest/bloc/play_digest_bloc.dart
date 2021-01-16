@@ -13,6 +13,7 @@ part 'play_digest_event.dart';
 
 part 'play_digest_state.dart';
 
+/// Bloc for playing the digested images with certain interval
 @injectable
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   PlayDigestBloc(this.dailyDigestViewModel) : super(PlayDigestPausePlaying([]));
@@ -22,31 +23,49 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
           Stream<PlayDigestEvent> events, transitionFn) =>
-      events.switchMap((transitionFn));
+      events
+          .switchMap<PlayDigestEvent>(
+              (event) => _playDigestImagePeriodicallyAfterResume(event))
+          .switchMap((transitionFn));
+
+  Stream<PlayDigestEvent> _playDigestImagePeriodicallyAfterResume(
+      PlayDigestEvent event) {
+    if (event is PlayDigestPause || event is PlayDigestInitPlayer) {
+      return Stream.value(event);
+    } else if (event is PlayDigestResume) {
+      return Stream.periodic(Duration(seconds: 4))
+          .startWith(null)
+          .map((__) => event);
+    } else {
+      return Stream.empty();
+    }
+  }
 
   @override
-  Stream<PlayDigestState> mapEventToState(
-    PlayDigestEvent event,
-  ) async* {
+  Stream<PlayDigestState> mapEventToState(PlayDigestEvent event) async* {
     switch (event.runtimeType) {
       case PlayDigestInitPlayer:
       case PlayDigestPause:
         yield await _getCoverImages();
         return;
-
       case PlayDigestResume:
-        yield PlayDigestBuffering();
-        await Future.delayed(Duration(seconds: 4));
-        await for (var images in dailyDigestViewModel
-            .getDigestPrevAndCurrentImagesWithTimeInterval(4))
-          yield PlayDigestShowImage(images);
-
-        yield await _getCoverImages();
+        final images = await dailyDigestViewModel
+            .incrementCurrentDigestImageCursor();
+        yield PlayDigestShowImage(images);
+        _pauseWhenReachTheEnd(images);
+        return;
+      default:
         return;
     }
   }
 
-  Future<PlayDigestPausePlaying> _getCoverImages() => dailyDigestViewModel
-      .getCoverImages()
-      .then((images) => PlayDigestPausePlaying(images));
+  void _pauseWhenReachTheEnd(List<String> images) {
+    if (images.length == 0) {
+      add(PlayDigestPause());
+    }
+  }
+
+  Future<PlayDigestPausePlaying> _getCoverImages() =>
+      dailyDigestViewModel.coverImages
+          .then((images) => PlayDigestPausePlaying(images));
 }
