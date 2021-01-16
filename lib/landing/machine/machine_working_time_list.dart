@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
-import 'package:groundvisual_flutter/landing/bloc/machine_status_bloc.dart';
+import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_label.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_offline_indication.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_online_indication.dart';

@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/bloc/machine_status_bloc.dart';
+import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
