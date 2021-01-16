@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_viewmodel.dart';

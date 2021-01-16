@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/selection/date_or_trend_selection_button.dart';
+import 'package:groundvisual_flutter/landing/appbar/site/site_dropdown_list.dart';
 import 'package:groundvisual_flutter/landing/appbar/toggle/day_trend_toggle.dart';
 
-import '../dropdown/site_dropdown_list.dart';
 import 'sliver_appbar_container.dart';
 
 class SliverAppBarBody extends StatelessWidget {
