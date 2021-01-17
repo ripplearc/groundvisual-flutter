@@ -34,5 +34,7 @@ class MachineStatusViewModel {
           Iterable<String> machines) =>
       Map.fromIterable(machines,
           key: (m) => m,
-          value: (m) => machineStatusCommunicator.getMachineOnlineStatus(m));
+          value: (m) => machineStatusCommunicator
+              .getMachineOnlineStatus(m)
+              .asBroadcastStream());
 }

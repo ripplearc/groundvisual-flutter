@@ -13,50 +13,30 @@ class LandingHomePageBody extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
-        if (state is SelectedSiteAtDate) {
-          return SliverList(delegate: _dateSliverChildBuilder);
-        } else if (state is SelectedSiteAtTrend) {
-          return SliverList(delegate: _trendSliverChildBuilder);
-        } else {
-          return Container();
-        }
+        return SliverList(
+            delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            switch (index) {
+              case 0:
+                return WorkZoneMap();
+              case 1:
+                return WorkingTimeChart();
+              case 2:
+                if (state is SelectedSiteAtDate) {
+                  return DailyDigestSlideShow();
+                } else {
+                  return Container();
+                }
+                return DailyDigestSlideShow();
+              case 3:
+                return MachineWorkingTimeList();
+              default:
+                return Container();
+            }
+          },
+          childCount: 4,
+        ));
       });
-
-  SliverChildBuilderDelegate get _dateSliverChildBuilder =>
-      SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          switch (index) {
-            case 0:
-              return WorkZoneMap();
-            case 1:
-              return WorkingTimeChart();
-            case 2:
-              return DailyDigestSlideShow();
-            case 3:
-              return MachineWorkingTimeList();
-            default:
-              return Container();
-          }
-        },
-        childCount: 4,
-      );
-
-  SliverChildBuilderDelegate get _trendSliverChildBuilder =>
-      SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          switch (index) {
-            case 0:
-              return WorkZoneMap();
-            case 1:
-              return WorkingTimeChart();
-            case 2:
-              return MachineWorkingTimeList();
-            default:
-              return Container();
-          }
-        },
-        childCount: 3,
-      );
 
   void _tapDetail(BuildContext context, FluroRouter router, String key) {
     String message = "";
@@ -77,4 +57,8 @@ class LandingHomePageBody extends StatelessWidget {
       }
     });
   }
+}
+
+class SliverBuilder {
+
 }
