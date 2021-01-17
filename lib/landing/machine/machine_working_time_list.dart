@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_label.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_offline_indication.dart';
@@ -15,8 +14,7 @@ import 'machine_working_time_bar_chart.dart';
 /// Widget displays the list of the machines and their working hours and online status.
 class MachineWorkingTimeList extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => BlocProvider(
-      create: (_) => getIt<MachineStatusBloc>(), child: _genCard());
+  Widget build(BuildContext context) => _genCard();
 
   Widget _genCard() => BlocBuilder<MachineStatusBloc, MachineStatusState>(
       builder: (context, state) => Card(

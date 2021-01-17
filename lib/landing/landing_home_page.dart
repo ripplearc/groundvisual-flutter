@@ -6,6 +6,7 @@ import 'appbar/bloc/selected_site_bloc.dart';
 import 'appbar/landing_page_header.dart';
 import 'body/landing_page_body.dart';
 import 'chart/bloc/working_time_chart_touch_bloc.dart';
+import 'machine/bloc/machine_status_bloc.dart';
 
 class LandingHomePage extends StatelessWidget {
   @override
@@ -14,7 +15,8 @@ class LandingHomePage extends StatelessWidget {
             BlocProvider(
                 create: (_) =>
                     getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
-            BlocProvider(create: (_) => getIt<WorkingTimeChartTouchBloc>())
+            BlocProvider(create: (_) => getIt<WorkingTimeChartTouchBloc>()),
+            BlocProvider(create: (_) => getIt<MachineStatusBloc>())
           ],
           child: CustomScrollView(
             slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
