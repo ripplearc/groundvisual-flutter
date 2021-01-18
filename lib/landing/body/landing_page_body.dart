@@ -85,7 +85,7 @@ class _SliverBuilder {
   Widget _getItemAtDateMode(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return WorkZoneMap();
+        return WorkZoneMapCard();
       case 1:
         return WorkingTimeChart();
       case 2:
@@ -100,7 +100,7 @@ class _SliverBuilder {
   Widget _getItemAtTrendMode(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return WorkZoneMap();
+        return WorkZoneMapCard();
       case 1:
         return WorkingTimeChart();
       case 2:

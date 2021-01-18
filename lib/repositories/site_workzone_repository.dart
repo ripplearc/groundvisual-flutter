@@ -14,7 +14,7 @@ abstract class SiteWorkZoneRepository {
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time);
 }
 
-@Singleton(as: SiteWorkZoneRepository)
+@Injectable(as: SiteWorkZoneRepository)
 class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
   final SiteWorkZoneService siteWorkZoneService;
 

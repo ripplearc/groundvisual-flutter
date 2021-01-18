@@ -13,6 +13,13 @@ class WorkZoneMapViewModel {
 
   WorkZoneMapViewModel(this.siteWorkZoneRepository, this.cartographer);
 
+  // @factoryMethod
+  // static Future<WorkZoneMapViewModel> create(
+  //     SiteWorkZoneRepository siteWorkZoneRepository,
+  //     Cartographer cartographer) async {
+  //   return WorkZoneMapViewModel(siteWorkZoneRepository, cartographer);
+  // }
+
   Future<CameraPosition> getCameraPositionAtTime(
       String siteName, DateTime time) async {
     List<dynamic> result = await Future.wait<dynamic>([
@@ -45,18 +52,18 @@ class WorkZoneMapViewModel {
       .calcCentroid(zone.regions.expand((e) => e.points).toList().toRegion());
 
   Future<double> _getCameraZoomAtTime(String siteName, DateTime time) =>
-      siteWorkZoneRepository.getWorkZoneAtTime(siteName, time).then((zone) =>
-          _determineRegionZoomLevel(zone));
+      siteWorkZoneRepository
+          .getWorkZoneAtTime(siteName, time)
+          .then((zone) => _determineRegionZoomLevel(zone));
 
   Future<double> _getCameraZoomAtDate(String siteName, DateTime time) =>
-      siteWorkZoneRepository.getWorkZoneAtDate(siteName, time).then((zone) =>
-          _determineRegionZoomLevel(zone));
+      siteWorkZoneRepository
+          .getWorkZoneAtDate(siteName, time)
+          .then((zone) => _determineRegionZoomLevel(zone));
 
   double _determineRegionZoomLevel(ConstructionZone zone) =>
-     cartographer.determineRegionZoomLevel(zone.regions
-            .expand((element) => element.points)
-            .toList()
-            .toRegion());
+      cartographer.determineRegionZoomLevel(
+          zone.regions.expand((element) => element.points).toList().toRegion());
 
   Future<Set<Polygon>> getPolygonAtTime(
           String siteName, DateTime time, BuildContext context) async =>
