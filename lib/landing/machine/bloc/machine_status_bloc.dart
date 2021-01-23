@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/machine_status_viewmodel.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
@@ -17,7 +17,7 @@ part 'machine_status_state.dart';
 /// MachineStatusBloc computes the state of the machine working time and online notification
 /// It has to be singleton because it needs to receive events from the SelectedSiteBloc, and
 /// we have to make sure the copy receives events and the copy provided in the BlocBuilder is the same.
-@singleton
+@LazySingleton()
 class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   MachineStatusBloc(this.machineStatusViewModel)
       : super(MachineStatusInitial());

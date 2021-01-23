@@ -8,14 +8,14 @@ import 'package:groundvisual_flutter/repositories/machine_working_time_service.d
 import 'package:injectable/injectable.dart';
 
 /// Repository for managing the working time of machines at a site. It can be
-/// an individual date or an period.
+/// an date or an period.
 /// All repository implementations should be singleton to eliminate duplicated network call.
 abstract class MachineWorkingTimeRepository {
   Future<Map<String, UnitWorkingTime>> getMachineWorkingTime(
       String siteName, DateTime startTime, DateTime endTime);
 }
 
-@Singleton(as: MachineWorkingTimeRepository)
+@LazySingleton(as: MachineWorkingTimeRepository)
 class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
   final MachineWorkingTimeService machineWorkingTimeService;
   static const normalTenWorkingHourPerDayInSeconds = 36000;

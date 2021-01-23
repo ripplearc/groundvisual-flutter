@@ -1,30 +1,40 @@
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:groundvisual_flutter/repositories/site_workzone_service.dart';
 import 'package:injectable/injectable.dart';
 
-/// Repository to provide the work zone at specific time or over a period of time.
+/// Repository to provide the work zone at specific time, date or over a period of time.
 abstract class SiteWorkZoneRepository {
   /// Get the work zone at specific time, typically over 15 mins.
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time);
 
   /// Get the work zone for one day.
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time);
+
+  /// Get the work zone for a period .
+  Future<ConstructionZone> getWorkZoneAtPeriod(
+      String siteName, DateTime date, TrendPeriod period);
 }
 
-@Singleton(as: SiteWorkZoneRepository)
+@LazySingleton(as: SiteWorkZoneRepository)
 class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
   final SiteWorkZoneService siteWorkZoneService;
 
   SiteWorkZoneRepositoryImpl(this.siteWorkZoneService);
 
-  @factoryMethod
-  static Future<SiteWorkZoneRepositoryImpl> create(
-      SiteWorkZoneService siteWorkZoneService) async {
-    return SiteWorkZoneRepositoryImpl(siteWorkZoneService);
-  }
+  @override
+  Future<ConstructionZone> getWorkZoneAtPeriod(
+          String siteName, DateTime date, TrendPeriod period) =>
+      {
+        "M51": _getM51Zone,
+        "Cresent Blvd": _getCresentZone,
+        "Kensington": _getKensingtonZoneAtDate,
+        "Penton Rise":
+            siteWorkZoneService.getWorkZoneAtPeriod(siteName, date, period)
+      }[siteName];
 
   @override
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>

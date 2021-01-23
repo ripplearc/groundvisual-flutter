@@ -1,6 +1,6 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:groundvisual_flutter/landing/bloc/machine_status_bloc.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/messenger/machine_status_communicator.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
@@ -26,7 +26,7 @@ class MachineStatusViewModel {
           String siteName, TrendPeriod period) =>
       machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, Date.startOfToday,
-              Date.startOfToday.subtract(Duration(days: period.toInt())))
+              Date.startOfToday.subtract(Duration(days: period.days())))
           .then((time) => MachineStatusOfWorkingTimeAndOnline(
               time, _getMachineOnlineStatuses(time.keys)));
 
@@ -34,5 +34,7 @@ class MachineStatusViewModel {
           Iterable<String> machines) =>
       Map.fromIterable(machines,
           key: (m) => m,
-          value: (m) => machineStatusCommunicator.getMachineOnlineStatus(m));
+          value: (m) => machineStatusCommunicator
+              .getMachineOnlineStatus(m)
+              .asBroadcastStream());
 }

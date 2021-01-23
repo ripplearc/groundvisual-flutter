@@ -6,15 +6,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/bloc/selected_site/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_viewmodel.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'working_time_chart_touch_event.dart';
+
 part 'working_time_chart_touch_state.dart';
 
 /// bloc to take events of touching a bar rod on the date or trend chart,
@@ -25,9 +27,10 @@ class WorkingTimeChartTouchBloc
   final WorkZoneMapViewModel workZoneMapViewModel;
   final DailyChartBarConverter dailyChartConverter;
   final TrendChartBarConverter trendChartConverter;
+  final WorkZoneMapBloc workZoneMapBloc;
 
   WorkingTimeChartTouchBloc(this.workZoneMapViewModel, this.dailyChartConverter,
-      this.trendChartConverter)
+      this.trendChartConverter, this.workZoneMapBloc)
       : super(WorkingTimeChartTouchInitial());
 
   @override
@@ -45,49 +48,29 @@ class WorkingTimeChartTouchBloc
     if (event is DateChartBarRodSelection)
       await for (var state in _handleBarSelectionOnTime(event)) yield state;
     else if (event is TrendChartBarRodSelection)
-      await for (var state in _handleBarSelectionOnDate(event)) yield state;
-    else if (event is NoBarRodSelection)
-      await for (var state in _handleInitialLoadingOfChart(event)) yield state;
+      _handleBarSelectionOnDate(event);
   }
 
-  Stream<SiteSnapShotState> _handleInitialLoadingOfChart(
-      NoBarRodSelection event) async* {
-    List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtDate(
-          event.siteName, Date.startOfToday, event.context),
-      workZoneMapViewModel.getCameraPositionAtDate(
-          event.siteName, Date.startOfToday)
-    ]);
-    yield SiteSnapShotWorkZone(result[0], result[1]);
-  }
-
-  Stream<SiteSnapShotState> _handleBarSelectionOnDate(
-      TrendChartBarRodSelection event) async* {
-    final selectedTime = trendChartConverter.convertToDateTime(
+  void _handleBarSelectionOnDate(TrendChartBarRodSelection event) {
+    final date = trendChartConverter.convertToDateTime(
         event.range, event.period, event.groupId, event.rodId);
-    List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtDate(
-          event.siteName, selectedTime, event.context),
-      workZoneMapViewModel.getCameraPositionAtDate(event.siteName, selectedTime)
-    ]);
-    yield SiteSnapShotWorkZone(result[0], result[1]);
+    workZoneMapBloc
+        .add(SelectWorkZoneAtDate(event.siteName, date, event.context));
   }
 
   Stream<SiteSnapShotState> _handleBarSelectionOnTime(
       DateChartBarRodSelection event) {
-    final thumbnailFuture = Future.value(SiteSnapShotThumbnail(event.groupId,
-            event.rodId, 'images/${event.groupId * 4 + event.rodId}.jpg'))
+    dailyChartConverter
+        .convertToDateTime(event.date, event.groupId, event.rodId)
+        .let((time) => workZoneMapBloc
+            .add(SelectWorkZoneAtTime(event.siteName, time, event.context)));
+
+    final thumbnailFuture = Future.value(SiteSnapShotThumbnail(
+            event.groupId,
+            event.rodId,
+            'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'))
         .then((value) => Future.delayed(Duration(seconds: 1), () => value));
 
-    final workZoneFuture = Future(() async => dailyChartConverter
-        .convertToDateTime(event.date, event.groupId, event.rodId)
-        .let((selectedTime) async => await Future.wait<dynamic>([
-              workZoneMapViewModel.getPolygonAtTime(
-                  event.siteName, selectedTime, event.context),
-              workZoneMapViewModel.getCameraPositionAtTime(
-                  event.siteName, selectedTime)
-            ]).then((result) => SiteSnapShotWorkZone(result[0], result[1]))));
-
-    return Stream.fromFutures([thumbnailFuture, workZoneFuture]);
+    return Stream.fromFutures([thumbnailFuture]);
   }
 }

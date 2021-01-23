@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/landing/bloc/chart_touch/working_time_chart_touch_bloc.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
 
 /// Widget displaying the work zone with polygon.
-class WorkZoneMap extends StatefulWidget {
+class WorkZoneMapCard extends StatefulWidget {
   @override
-  State<WorkZoneMap> createState() => WorkZoneMapState();
+  State<WorkZoneMapCard> createState() => WorkZoneMapCardState();
 }
 
-class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
+class WorkZoneMapCardState extends State<WorkZoneMapCard> with WidgetsBindingObserver {
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
@@ -29,26 +29,23 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) =>
-      BlocConsumer<WorkingTimeChartTouchBloc, SiteSnapShotState>(
+      BlocConsumer<WorkZoneMapBloc, WorkZoneMapState>(
           listener: (context, state) async {
             final controller = await _controller.future;
-            if (state is SiteSnapShotWorkZone) {
+            if (state is WorkZoneMapPolygons) {
               controller.animateCamera(
                 CameraUpdate.newCameraPosition(state.cameraPosition),
               );
-            } else if (state is WorkingTimeChartTouchInitial) {
+            } else if (state is WorkZoneMapInitial) {
               controller.animateCamera(
                 CameraUpdate.newCameraPosition(state.cameraPosition),
               );
             }
           },
-          buildWhen: (previous, current) =>
-              current is SiteSnapShotWorkZone ||
-              current is WorkingTimeChartTouchInitial,
           builder: (context, state) {
-            if (state is SiteSnapShotWorkZone) {
+            if (state is WorkZoneMapPolygons) {
               return _genMapCard(context, state.cameraPosition, state.workZone);
-            } else if (state is WorkingTimeChartTouchInitial) {
+            } else if (state is WorkZoneMapInitial) {
               return _genMapCard(context, state.cameraPosition, Set());
             } else {
               return Container();
