@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/play_digest_bloc.dart';
 
+/// Play or pause the digest stream, and show progressive indication
+/// when downloading the image.
 class DailyDigestPlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
@@ -26,7 +28,6 @@ class DailyDigestPlayButton extends StatelessWidget {
       child: IconButton(
           onPressed: () =>
               BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestResume()),
-          color: Colors.green,
           icon: Icon(
             Icons.play_arrow_sharp,
             size: 65,

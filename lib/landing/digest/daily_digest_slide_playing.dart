@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
+/// Animate sliding in the next digest image, and pause when touching anywhere on the image.
 class DailyDigestSlidePlaying extends StatelessWidget {
   final Random random = Random();
   final double padding;

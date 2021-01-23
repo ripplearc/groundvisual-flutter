@@ -6,7 +6,7 @@ import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:groundvisual_flutter/repositories/site_workzone_service.dart';
 import 'package:injectable/injectable.dart';
 
-/// Repository to provide the work zone at specific time or over a period of time.
+/// Repository to provide the work zone at specific time, date or over a period of time.
 abstract class SiteWorkZoneRepository {
   /// Get the work zone at specific time, typically over 15 mins.
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time);

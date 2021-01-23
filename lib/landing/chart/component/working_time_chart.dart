@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 
+/// Displays the working time of a day or a period.
 class WorkingTimeChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>

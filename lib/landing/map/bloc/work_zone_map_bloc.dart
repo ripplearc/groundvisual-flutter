@@ -15,6 +15,8 @@ part 'work_zone_map_event.dart';
 
 part 'work_zone_map_state.dart';
 
+/// Bloc to control the the WorkZone widget.
+/// Both SelectedSiteBloc and WorkingTimeChartTouchBloc signal events to WorkZoneMapBloc.
 @LazySingleton()
 class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   final WorkZoneMapViewModel workZoneMapViewModel;

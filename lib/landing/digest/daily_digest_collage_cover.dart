@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 
+/// Display a collage of images before playing digest.
 class DailyDigestCollageCover extends StatelessWidget {
   final double padding;
 

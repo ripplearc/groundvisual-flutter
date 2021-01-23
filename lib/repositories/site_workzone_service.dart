@@ -7,7 +7,7 @@ import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:injectable/injectable.dart';
 import 'package:dart_date/dart_date.dart';
 
-/// Network service to get the work zone for a specific time or over time.
+/// Network service to get the work zone for a specific time, date or over a period.
 abstract class SiteWorkZoneService {
   /// Get the work zone at a specific time.
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time);

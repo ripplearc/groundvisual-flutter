@@ -9,6 +9,7 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'play_digest_event.dart';
+
 part 'play_digest_state.dart';
 
 /// Bloc for playing the digested images with certain interval
@@ -20,10 +21,8 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
           Stream<PlayDigestEvent> events, transitionFn) =>
-      events
-          .switchMap<PlayDigestEvent>(
-              (event) => _playDigestImagePeriodicallyAfterResume(event))
-          .switchMap((transitionFn));
+      events.switchMap((event) => _playDigestImagePeriodicallyAfterResume(event)
+          .switchMap(transitionFn));
 
   Stream<PlayDigestEvent> _playDigestImagePeriodicallyAfterResume(
       PlayDigestEvent event) {
@@ -48,8 +47,8 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
       case PlayDigestResume:
         yield PlayDigestBuffering();
         await Future.delayed(Duration(milliseconds: 50));
-        final images = await dailyDigestViewModel
-            .incrementCurrentDigestImageCursor();
+        final images =
+            await dailyDigestViewModel.incrementCurrentDigestImageCursor();
         yield PlayDigestShowImage(images);
         _pauseWhenReachTheEnd(images);
         return;

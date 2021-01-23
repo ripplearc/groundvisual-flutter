@@ -7,6 +7,7 @@ import 'package:groundvisual_flutter/landing/digest/daily_digest_collage_cover.d
 import 'package:groundvisual_flutter/landing/digest/daily_digest_play_button.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_playing.dart';
 
+/// Display the digest of daily activity with animation.
 class DailyDigestSlideShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
