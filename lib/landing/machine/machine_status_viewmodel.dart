@@ -26,7 +26,7 @@ class MachineStatusViewModel {
           String siteName, TrendPeriod period) =>
       machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, Date.startOfToday,
-              Date.startOfToday.subtract(Duration(days: period.toInt())))
+              Date.startOfToday.subtract(Duration(days: period.days())))
           .then((time) => MachineStatusOfWorkingTimeAndOnline(
               time, _getMachineOnlineStatuses(time.keys)));
 

@@ -17,7 +17,7 @@ part 'machine_status_state.dart';
 /// MachineStatusBloc computes the state of the machine working time and online notification
 /// It has to be singleton because it needs to receive events from the SelectedSiteBloc, and
 /// we have to make sure the copy receives events and the copy provided in the BlocBuilder is the same.
-@singleton
+@LazySingleton()
 class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   MachineStatusBloc(this.machineStatusViewModel)
       : super(MachineStatusInitial());

@@ -57,7 +57,7 @@ extension Value on TrendPeriod {
     throw ArgumentError('$this is not a valid Trend Period');
   }
 
-  int toInt() {
+  int days() {
     switch (this) {
       case TrendPeriod.oneWeek:
         return 7;
@@ -67,6 +67,20 @@ extension Value on TrendPeriod {
         return 30;
       case TrendPeriod.twoMonths:
         return 60;
+    }
+    throw ArgumentError('$this is not a valid Trend Period');
+  }
+
+  int seconds() {
+    switch (this) {
+      case TrendPeriod.oneWeek:
+        return 604800;
+      case TrendPeriod.twoWeeks:
+        return 1209600;
+      case TrendPeriod.oneMonth:
+        return 2592000;
+      case TrendPeriod.twoMonths:
+        return 5184000;
     }
     throw ArgumentError('$this is not a valid Trend Period');
   }

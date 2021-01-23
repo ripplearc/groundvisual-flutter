@@ -24,3 +24,15 @@ class SelectWorkZoneAtDate extends WorkZoneMapEvent {
   @override
   List<Object> get props => [site, date];
 }
+
+class SelectWorkZoneAtPeriod extends WorkZoneMapEvent {
+  final String site;
+  final DateTime date;
+  final TrendPeriod period;
+  final BuildContext context;
+
+  SelectWorkZoneAtPeriod(this.site, this.date, this.period, this.context);
+
+  @override
+  List<Object> get props => [site, date];
+}

@@ -15,7 +15,7 @@ abstract class MachineWorkingTimeRepository {
       String siteName, DateTime startTime, DateTime endTime);
 }
 
-@Singleton(as: MachineWorkingTimeRepository)
+@LazySingleton(as: MachineWorkingTimeRepository)
 class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
   final MachineWorkingTimeService machineWorkingTimeService;
   static const normalTenWorkingHourPerDayInSeconds = 36000;

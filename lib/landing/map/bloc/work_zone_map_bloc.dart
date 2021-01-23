@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -14,7 +15,7 @@ part 'work_zone_map_event.dart';
 
 part 'work_zone_map_state.dart';
 
-@singleton
+@LazySingleton()
 class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
 
@@ -31,9 +32,22 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   ) async* {
     if (event is SelectWorkZoneAtTime) {
       yield await _handleSelectWorkZoneAtTime(event);
-    } else {
+    } else if (event is SelectWorkZoneAtDate) {
       yield await _handleSelectWorkZoneAtDate(event);
+    } else if (event is SelectWorkZoneAtPeriod) {
+      yield await _handleSelectWorkZoneAtPeriod(event);
     }
+  }
+
+  Future<WorkZoneMapState> _handleSelectWorkZoneAtPeriod(
+      SelectWorkZoneAtPeriod event) async {
+    List<dynamic> result = await Future.wait<dynamic>([
+      workZoneMapViewModel.getPolygonAtPeriod(
+          event.site, event.date, event.period, event.context),
+      workZoneMapViewModel.getCameraPositionAtPeriod(
+          event.site, event.date, event.period)
+    ]);
+    return WorkZoneMapPolygons(result[0], result[1]);
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtDate(

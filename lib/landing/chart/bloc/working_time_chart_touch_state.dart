@@ -26,12 +26,3 @@ class SiteSnapShotThumbnail extends SiteSnapShotState {
   List<Object> get props => [this.groupId, this.rodId, this.assetName];
 }
 
-class SiteSnapShotWorkZone extends SiteSnapShotState {
-  final Set<Polygon> workZone;
-  final CameraPosition cameraPosition;
-
-  SiteSnapShotWorkZone(this.workZone, this.cameraPosition);
-
-  @override
-  List<Object> get props => [this.workZone, this.cameraPosition];
-}
