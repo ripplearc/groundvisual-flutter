@@ -77,7 +77,7 @@ class _BarChart extends StatelessWidget {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
+      BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
           TrendChartBarRodSelection(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,

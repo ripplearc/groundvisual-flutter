@@ -2,22 +2,22 @@ part of 'working_time_chart_touch_bloc.dart';
 
 /// Event of user touching on a certain bar rod.
 @immutable
-abstract class WorkingTimeChartTouchEvent extends Equatable {
-  const WorkingTimeChartTouchEvent();
+abstract class DailyWorkingTimeChartEvent extends Equatable {
+  const DailyWorkingTimeChartEvent();
 }
 
-class NoBarRodSelection extends WorkingTimeChartTouchEvent {
+class SearchWorkingTimeOnDate extends DailyWorkingTimeChartEvent {
   final String siteName;
   final DateTime date;
   final BuildContext context;
 
-  NoBarRodSelection(this.siteName, this.date, this.context);
+  SearchWorkingTimeOnDate(this.siteName, this.date, this.context);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [siteName, date];
 }
 
-class DateChartBarRodSelection extends WorkingTimeChartTouchEvent {
+class DailyChartBarRodSelection extends DailyWorkingTimeChartEvent {
   final int groupId;
   final int rodId;
   final String siteName;
@@ -25,14 +25,14 @@ class DateChartBarRodSelection extends WorkingTimeChartTouchEvent {
 
   final BuildContext context;
 
-  DateChartBarRodSelection(
+  DailyChartBarRodSelection(
       this.groupId, this.rodId, this.siteName, this.date, this.context);
 
   @override
   List<Object> get props => [groupId, rodId];
 }
 
-class TrendChartBarRodSelection extends WorkingTimeChartTouchEvent {
+class TrendChartBarRodSelection extends DailyWorkingTimeChartEvent {
   final int groupId;
   final int rodId;
   final String siteName;

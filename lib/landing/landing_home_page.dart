@@ -16,7 +16,7 @@ class LandingHomePage extends StatelessWidget {
             BlocProvider(
                 create: (_) =>
                     getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
-            BlocProvider(create: (_) => getIt<WorkingTimeChartTouchBloc>()),
+            BlocProvider(create: (_) => getIt<DailyWorkingTimeChartBloc>()),
             BlocProvider(create: (_) => getIt<MachineStatusBloc>()),
             BlocProvider(create: (_) => getIt<WorkZoneMapBloc>()),
           ],

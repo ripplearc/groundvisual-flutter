@@ -1,16 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/working_time_chart_touch_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
+import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
+import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
-  final SelectedSiteAtDate selectedSiteAtDate;
-
-  WorkingTimeDailyChart(this.selectedSiteAtDate);
-
   @override
   Widget build(BuildContext context) => genChartSectionWithTitle(
       context,
@@ -23,7 +20,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
       true);
 
   BlocBuilder _buildThumbnailImage() =>
-      BlocBuilder<WorkingTimeChartTouchBloc, SiteSnapShotState>(
+      BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
         buildWhen: (previous, current) => current is SiteSnapShotThumbnail,
         builder: (context, state) => Positioned(
           top: 0.0,
@@ -32,7 +29,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
         ),
       );
 
-  Widget _buildThumbnailImageUponTouch(SiteSnapShotState state) {
+  Widget _buildThumbnailImageUponTouch(DailyWorkingTimeState state) {
     if (state is SiteSnapShotThumbnail) {
       return Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 6.0),
@@ -48,30 +45,37 @@ class WorkingTimeDailyChart extends StatelessWidget {
   }
 
   Positioned _buildBarChartCard(BuildContext context) => Positioned.fill(
-        child: Card(
+      child: Card(
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: Theme.of(context).colorScheme.background,
           child: Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-            child: _BarChart(selectedSiteAtDate: selectedSiteAtDate),
-            // child: Stack(children: [_buildBarChart(context)]),
-          ),
-        ),
-      );
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
+              child:
+                  BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
+                      buildWhen: (previous, current) =>
+                          current is WorkingTimeBarChartDataLoaded,
+                      builder: (context, state) {
+                        if (state is WorkingTimeBarChartDataLoaded) {
+                          return _BarChart(barChartDataAtDate: state);
+                        } else {
+                          return Container();
+                        }
+                      }))));
 }
 
 class _BarChart extends StatefulWidget {
-  final SelectedSiteAtDate selectedSiteAtDate;
+  final WorkingTimeBarChartDataLoaded barChartDataAtDate;
 
-  const _BarChart({Key key, this.selectedSiteAtDate}) : super(key: key);
+  const _BarChart({Key key, this.barChartDataAtDate}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BarChartState(selectedSiteAtDate);
+  State<StatefulWidget> createState() => _BarChartState(barChartDataAtDate);
 }
 
 class _BarChartState extends State<_BarChart> {
-  final SelectedSiteAtDate selectedSiteAtDate;
+  final WorkingTimeBarChartDataLoaded barChartDataAtDate;
 
   final _horizontalMagnifier = 3;
   final _verticalMagnifier = 1.5;
@@ -79,7 +83,7 @@ class _BarChartState extends State<_BarChart> {
   int _touchedBarGroupIndex = -1;
   int _touchedRodDataIndex = -1;
 
-  _BarChartState(this.selectedSiteAtDate);
+  _BarChartState(this.barChartDataAtDate);
 
   @override
   Widget build(BuildContext context) => BarChart(
@@ -89,7 +93,7 @@ class _BarChartState extends State<_BarChart> {
                 touchTooltipData: BarTouchTooltipData(
                     tooltipBgColor: Theme.of(context).colorScheme.background,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                        selectedSiteAtDate.chartData.tooltips[groupIndex]
+                        barChartDataAtDate.chartData.tooltips[groupIndex]
                             [rodIndex]),
                 touchCallback: (response) => _uponSelectingBarRod(response)),
             titlesData: FlTitlesData(
@@ -99,11 +103,11 @@ class _BarChartState extends State<_BarChart> {
                 getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
                 margin: 2,
                 getTitles: (double index) =>
-                    selectedSiteAtDate.chartData.bottomTitles[index.toInt()],
+                    barChartDataAtDate.chartData.bottomTitles[index.toInt()],
               ),
               leftTitles: SideTitles(
                 showTitles: true,
-                interval: selectedSiteAtDate.chartData.leftTitleInterval,
+                interval: barChartDataAtDate.chartData.leftTitleInterval,
                 getTextStyles: (value) => Theme.of(context).textTheme.caption,
               ),
             ),
@@ -115,7 +119,7 @@ class _BarChartState extends State<_BarChart> {
       );
 
   List<BarChartGroupData> _highlightSelectedGroupIfAny() =>
-      selectedSiteAtDate.chartData.bars.asMap().entries.map((entry) {
+      barChartDataAtDate.chartData.bars.asMap().entries.map((entry) {
         if (entry.key == _touchedBarGroupIndex) {
           BarChartGroupData groupData = entry.value;
           return BarChartGroupData(
@@ -168,12 +172,12 @@ class _BarChartState extends State<_BarChart> {
   }
 
   void _signalDateTimeSelection(BarTouchResponse barTouchResponse) =>
-      BlocProvider.of<WorkingTimeChartTouchBloc>(context).add(
-          DateChartBarRodSelection(
+      BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
+          DailyChartBarRodSelection(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
-              selectedSiteAtDate.siteName,
-              selectedSiteAtDate.date,
+              barChartDataAtDate.siteName,
+              barChartDataAtDate.date,
               context));
 
   void _highlightSelectedBar(BarTouchResponse barTouchResponse) {

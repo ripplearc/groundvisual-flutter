@@ -1,4 +1,3 @@
-import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
@@ -12,16 +11,16 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 class WorkingTimeChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(builder: (context, state) {
+      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
+          builder: (context, state) {
         if (state is SelectedSiteAtDate) {
-          BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-              .add(NoBarRodSelection(state.siteName, state.date, context));
-          return state.chartData == null
-              ? WorkingTimeDailyChartShimmer()
-              : WorkingTimeDailyChart(state);
+          return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
+              builder: (context, state) {
+            return state is WorkingTimeChartLoading
+                ? WorkingTimeDailyChartShimmer()
+                : WorkingTimeDailyChart();
+          });
         } else if (state is SelectedSiteAtTrend) {
-          BlocProvider.of<WorkingTimeChartTouchBloc>(context)
-              .add(NoBarRodSelection(state.siteName, Date.startOfToday, context));
           return state.chartData == null
               ? WorkingTimeTrendChartShimmer(period: state.period)
               : WorkingTimeTrendChart(state);
@@ -29,5 +28,4 @@ class WorkingTimeChart extends StatelessWidget {
           return Container();
         }
       });
-
 }

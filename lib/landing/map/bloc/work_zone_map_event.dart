@@ -16,12 +16,12 @@ class SelectWorkZoneAtTime extends WorkZoneMapEvent {
 }
 
 /// Select a date to query the work zone.
-class SelectWorkZoneAtDate extends WorkZoneMapEvent {
+class SearchWorkZoneOnDate extends WorkZoneMapEvent {
   final String site;
   final DateTime date;
   final BuildContext context;
 
-  SelectWorkZoneAtDate(this.site, this.date, this.context);
+  SearchWorkZoneOnDate(this.site, this.date, this.context);
 
   @override
   List<Object> get props => [site, date];
