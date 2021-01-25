@@ -1,4 +1,4 @@
-part of 'working_time_chart_touch_bloc.dart';
+part of 'daily_working_time_chart_bloc.dart';
 
 /// State that reflects the image corresponding to the touched rod bar.
 @immutable

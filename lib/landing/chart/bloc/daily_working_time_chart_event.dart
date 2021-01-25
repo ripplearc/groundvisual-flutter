@@ -1,4 +1,4 @@
-part of 'working_time_chart_touch_bloc.dart';
+part of 'daily_working_time_chart_bloc.dart';
 
 /// Event of user touching on a certain bar rod.
 @immutable

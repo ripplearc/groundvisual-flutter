@@ -14,11 +14,9 @@ import 'package:groundvisual_flutter/landing/map/work_zone_map_viewmodel.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:groundvisual_flutter/extensions/stream_logger.dart';
 
-part 'working_time_chart_touch_event.dart';
-
-part 'working_time_chart_touch_state.dart';
+part 'daily_working_time_chart_event.dart';
+part 'daily_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the date or trend chart,
 /// and emits state of corresponding images, group and rod id.
