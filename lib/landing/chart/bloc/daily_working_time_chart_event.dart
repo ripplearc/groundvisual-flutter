@@ -31,19 +31,3 @@ class DailyChartBarRodSelection extends DailyWorkingTimeChartEvent {
   @override
   List<Object> get props => [groupId, rodId];
 }
-
-class TrendChartBarRodSelection extends DailyWorkingTimeChartEvent {
-  final int groupId;
-  final int rodId;
-  final String siteName;
-  final DateTimeRange range;
-  final TrendPeriod period;
-
-  final BuildContext context;
-
-  TrendChartBarRodSelection(this.groupId, this.rodId, this.siteName, this.range,
-      this.period, this.context);
-
-  @override
-  List<Object> get props => [groupId, rodId];
-}

@@ -4,13 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
-import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
-import 'package:groundvisual_flutter/landing/map/work_zone_map_viewmodel.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,20 +20,14 @@ part 'daily_working_time_chart_state.dart';
 @LazySingleton()
 class DailyWorkingTimeChartBloc
     extends Bloc<DailyWorkingTimeChartEvent, DailyWorkingTimeState> {
-  final WorkZoneMapViewModel workZoneMapViewModel;
   final DailyChartBarConverter dailyChartConverter;
-  final TrendChartBarConverter trendChartConverter;
   final WorkZoneMapBloc workZoneMapBloc;
 
   final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
 
-  DailyWorkingTimeChartBloc(
-      this.workZoneMapViewModel,
-      this.dailyChartConverter,
-      this.trendChartConverter,
-      this.workZoneMapBloc,
+  DailyWorkingTimeChartBloc(this.dailyChartConverter, this.workZoneMapBloc,
       this.workingTimeDailyChartViewModel)
-      : super(WorkingTimeChartLoading());
+      : super(DailyWorkingTimeDataLoading());
 
   @override
   Stream<Transition<DailyWorkingTimeChartEvent, DailyWorkingTimeState>>
@@ -56,26 +47,18 @@ class DailyWorkingTimeChartBloc
         yield state;
     } else if (event is DailyChartBarRodSelection)
       await for (var state in _handleBarSelectionOnTime(event)) yield state;
-    else if (event is TrendChartBarRodSelection)
-      _handleBarSelectionOnDate(event);
   }
 
   Stream _yieldDailyWorkingTime(
       String siteName, DateTime date, BuildContext context) {
-    final loadingFuture = Future.value(WorkingTimeChartLoading());
-    final dailyWithChartFuture = Future.delayed(Duration(seconds: 2),
-            () => workingTimeDailyChartViewModel.dailyWorkingTime(context))
-        .then((dailyChart) =>
-            WorkingTimeBarChartDataLoaded(dailyChart, siteName, date));
+    final loadingFuture = Future.value(DailyWorkingTimeDataLoading());
+    final dailyWithChartFuture = Future.delayed(
+        Duration(seconds: 2),
+        () =>
+            workingTimeDailyChartViewModel.dailyWorkingTime(context)).then(
+        (dailyChart) => DailyWorkingTimeDataLoaded(dailyChart, siteName, date));
 
     return Stream.fromFutures([loadingFuture, dailyWithChartFuture]);
-  }
-
-  void _handleBarSelectionOnDate(TrendChartBarRodSelection event) {
-    final date = trendChartConverter.convertToDateTime(
-        event.range, event.period, event.groupId, event.rodId);
-    workZoneMapBloc
-        .add(SearchWorkZoneOnDate(event.siteName, date, event.context));
   }
 
   Stream<DailyWorkingTimeState> _handleBarSelectionOnTime(

@@ -1,15 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 
 /// Widget displays the working and idling time during a certain period.
 class WorkingTimeTrendChart extends StatelessWidget {
-  final SelectedSiteAtTrend selectedSiteAtWindow;
+  final TrendWorkingTimeDataLoaded trendChartData;
 
-  WorkingTimeTrendChart(this.selectedSiteAtWindow);
+  WorkingTimeTrendChart(this.trendChartData);
 
   @override
   Widget build(BuildContext context) => genChartSectionWithTitle(context,
@@ -21,15 +20,15 @@ class WorkingTimeTrendChart extends StatelessWidget {
         color: Theme.of(context).colorScheme.background,
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-          child: _BarChart(selectedSiteAtWindow: selectedSiteAtWindow),
+          child: _BarChart(trendChartData: trendChartData),
         ),
       );
 }
 
 class _BarChart extends StatelessWidget {
-  final SelectedSiteAtTrend selectedSiteAtWindow;
+  final TrendWorkingTimeDataLoaded trendChartData;
 
-  const _BarChart({Key key, this.selectedSiteAtWindow}) : super(key: key);
+  const _BarChart({Key key, this.trendChartData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildBarChart(context);
@@ -41,8 +40,7 @@ class _BarChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
                 tooltipBgColor: Theme.of(context).colorScheme.background,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                    selectedSiteAtWindow.chartData.tooltips[groupIndex]
-                        [rodIndex]),
+                    trendChartData.chartData.tooltips[groupIndex][rodIndex]),
             touchCallback: (barTouchResponse) =>
                 _triggerBarRodSelectionEventUponTouch(
               barTouchResponse,
@@ -56,19 +54,19 @@ class _BarChart extends StatelessWidget {
               getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
               margin: 2,
               getTitles: (double index) =>
-                  selectedSiteAtWindow.chartData.bottomTitles[index.toInt()],
+                  trendChartData.chartData.bottomTitles[index.toInt()],
             ),
             leftTitles: SideTitles(
               showTitles: true,
-              interval: selectedSiteAtWindow.chartData.leftTitleInterval,
+              interval: trendChartData.chartData.leftTitleInterval,
               getTextStyles: (value) => Theme.of(context).textTheme.caption,
             ),
           ),
           borderData: FlBorderData(
             show: false,
           ),
-          groupsSpace: selectedSiteAtWindow.chartData.space,
-          barGroups: selectedSiteAtWindow.chartData.bars,
+          groupsSpace: trendChartData.chartData.space,
+          barGroups: trendChartData.chartData.bars,
         ),
       );
 
@@ -77,13 +75,13 @@ class _BarChart extends StatelessWidget {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
-      BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
+      BlocProvider.of<TrendWorkingTimeChartBloc>(context).add(
           TrendChartBarRodSelection(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
-              selectedSiteAtWindow.siteName,
-              selectedSiteAtWindow.dateRange,
-              selectedSiteAtWindow.period,
+              trendChartData.siteName,
+              trendChartData.dateRange,
+              trendChartData.period,
               context));
     }
   }

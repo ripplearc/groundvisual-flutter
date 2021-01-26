@@ -7,14 +7,14 @@ abstract class DailyWorkingTimeState extends Equatable {
   List<Object> get props => [];
 }
 
-class WorkingTimeChartLoading extends DailyWorkingTimeState {}
+class DailyWorkingTimeDataLoading extends DailyWorkingTimeState {}
 
-class WorkingTimeBarChartDataLoaded extends DailyWorkingTimeState {
+class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   final WorkingTimeChartData chartData;
   final String siteName;
   final DateTime date;
 
-  WorkingTimeBarChartDataLoaded(this.chartData, this.siteName, this.date);
+  DailyWorkingTimeDataLoaded(this.chartData, this.siteName, this.date);
 
   @override
   List<Object> get props => [chartData, siteName, date];

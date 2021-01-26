@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
@@ -55,9 +53,9 @@ class WorkingTimeDailyChart extends StatelessWidget {
               child:
                   BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
                       buildWhen: (previous, current) =>
-                          current is WorkingTimeBarChartDataLoaded,
+                          current is DailyWorkingTimeDataLoaded,
                       builder: (context, state) {
-                        if (state is WorkingTimeBarChartDataLoaded) {
+                        if (state is DailyWorkingTimeDataLoaded) {
                           return _BarChart(barChartDataAtDate: state);
                         } else {
                           return Container();
@@ -66,7 +64,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
 }
 
 class _BarChart extends StatefulWidget {
-  final WorkingTimeBarChartDataLoaded barChartDataAtDate;
+  final DailyWorkingTimeDataLoaded barChartDataAtDate;
 
   const _BarChart({Key key, this.barChartDataAtDate}) : super(key: key);
 
@@ -75,7 +73,7 @@ class _BarChart extends StatefulWidget {
 }
 
 class _BarChartState extends State<_BarChart> {
-  final WorkingTimeBarChartDataLoaded barChartDataAtDate;
+  final DailyWorkingTimeDataLoaded barChartDataAtDate;
 
   final _horizontalMagnifier = 3;
   final _verticalMagnifier = 1.5;
