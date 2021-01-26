@@ -6,6 +6,7 @@ abstract class DailyWorkingTimeChartEvent extends Equatable {
   const DailyWorkingTimeChartEvent();
 }
 
+/// Load the daily working time chart and start searching for working time data.
 class SearchWorkingTimeOnDate extends DailyWorkingTimeChartEvent {
   final String siteName;
   final DateTime date;
@@ -17,7 +18,9 @@ class SearchWorkingTimeOnDate extends DailyWorkingTimeChartEvent {
   List<Object> get props => [siteName, date];
 }
 
-class DailyChartBarRodSelection extends DailyWorkingTimeChartEvent {
+/// Select a bar rod on the daily chart with group and rod information.
+/// It includes site, and date information to make it easy to search.
+class SelectDailyChartBarRod extends DailyWorkingTimeChartEvent {
   final int groupId;
   final int rodId;
   final String siteName;
@@ -25,7 +28,7 @@ class DailyChartBarRodSelection extends DailyWorkingTimeChartEvent {
 
   final BuildContext context;
 
-  DailyChartBarRodSelection(
+  SelectDailyChartBarRod(
       this.groupId, this.rodId, this.siteName, this.date, this.context);
 
   @override

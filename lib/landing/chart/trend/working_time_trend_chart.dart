@@ -1,8 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
+import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time during a certain period.
 class WorkingTimeTrendChart extends StatelessWidget {
@@ -25,15 +29,25 @@ class WorkingTimeTrendChart extends StatelessWidget {
       );
 }
 
-class _BarChart extends StatelessWidget {
+class _BarChart extends StatefulWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
 
   const _BarChart({Key key, this.trendChartData}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _buildBarChart(context);
+  State<StatefulWidget> createState() => _BarChartState(trendChartData);
+}
 
-  BarChart _buildBarChart(BuildContext context) => BarChart(
+class _BarChartState extends State<_BarChart> {
+  final TrendWorkingTimeDataLoaded trendChartData;
+
+  _BarChartState(this.trendChartData);
+
+  int _touchedBarGroupIndex = -1;
+  int _touchedRodDataIndex = -1;
+
+  @override
+  Widget build(BuildContext context) => BarChart(
         BarChartData(
           alignment: BarChartAlignment.center,
           barTouchData: BarTouchData(
@@ -41,10 +55,8 @@ class _BarChart extends StatelessWidget {
                 tooltipBgColor: Theme.of(context).colorScheme.background,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                     trendChartData.chartData.tooltips[groupIndex][rodIndex]),
-            touchCallback: (barTouchResponse) =>
-                _triggerBarRodSelectionEventUponTouch(
+            touchCallback: (barTouchResponse) => _uponSelectingBarRod(
               barTouchResponse,
-              context,
             ),
           ),
           titlesData: FlTitlesData(
@@ -66,17 +78,45 @@ class _BarChart extends StatelessWidget {
             show: false,
           ),
           groupsSpace: trendChartData.chartData.space,
-          barGroups: trendChartData.chartData.bars,
+          barGroups: magnifyValue(trendChartData.period).let((magnifying) =>
+              BarRodMagnifier(
+                      context, _touchedBarGroupIndex, _touchedRodDataIndex,
+                      horizontalMagnifier: magnifying.item1,
+                      verticalMagnifier: magnifying.item2)
+                  .highlightSelectedGroupIfAny(trendChartData.chartData.bars)),
         ),
       );
 
-  void _triggerBarRodSelectionEventUponTouch(
-      BarTouchResponse barTouchResponse, BuildContext context) {
+  Tuple2<double, double> magnifyValue(TrendPeriod period) {
+    switch (period) {
+      case TrendPeriod.oneWeek:
+        return Tuple2(1.1, 1.1);
+      case TrendPeriod.twoWeeks:
+        return Tuple2(1.2, 1.1);
+      case TrendPeriod.oneMonth:
+        return Tuple2(1.5, 1.1);
+      case TrendPeriod.twoMonths:
+        return Tuple2(1.7, 1.1);
+      default:
+        return Tuple2(1, 1);
+    }
+  }
+
+  void _uponSelectingBarRod(BarTouchResponse barTouchResponse) {
+    if (barTouchResponse.spot != null &&
+        barTouchResponse.touchInput is! FlPanEnd &&
+        barTouchResponse.touchInput is! FlLongPressEnd) {
+      _highlightSelectedBar(barTouchResponse);
+      _signalDateTimeSelection(barTouchResponse);
+    }
+  }
+
+  void _signalDateTimeSelection(BarTouchResponse barTouchResponse) {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
       BlocProvider.of<TrendWorkingTimeChartBloc>(context).add(
-          TrendChartBarRodSelection(
+          SelectTrendChartBarRod(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
               trendChartData.siteName,
@@ -84,5 +124,12 @@ class _BarChart extends StatelessWidget {
               trendChartData.period,
               context));
     }
+  }
+
+  void _highlightSelectedBar(BarTouchResponse barTouchResponse) {
+    setState(() {
+      _touchedBarGroupIndex = barTouchResponse.spot.touchedBarGroupIndex;
+      _touchedRodDataIndex = barTouchResponse.spot.touchedRodDataIndex;
+    });
   }
 }

@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 
 /// Widget displays the working and idling time on a certain date.
@@ -75,13 +76,10 @@ class _BarChart extends StatefulWidget {
 class _BarChartState extends State<_BarChart> {
   final DailyWorkingTimeDataLoaded barChartDataAtDate;
 
-  final _horizontalMagnifier = 3;
-  final _verticalMagnifier = 1.5;
+  _BarChartState(this.barChartDataAtDate);
 
   int _touchedBarGroupIndex = -1;
   int _touchedRodDataIndex = -1;
-
-  _BarChartState(this.barChartDataAtDate);
 
   @override
   Widget build(BuildContext context) => BarChart(
@@ -113,52 +111,10 @@ class _BarChartState extends State<_BarChart> {
               show: false,
             ),
             groupsSpace: 1.8,
-            barGroups: _highlightSelectedGroupIfAny()),
+            barGroups:
+                BarRodMagnifier(context, _touchedBarGroupIndex, _touchedRodDataIndex)
+                    .highlightSelectedGroupIfAny(barChartDataAtDate.chartData.bars)),
       );
-
-  List<BarChartGroupData> _highlightSelectedGroupIfAny() =>
-      barChartDataAtDate.chartData.bars.asMap().entries.map((entry) {
-        if (entry.key == _touchedBarGroupIndex) {
-          BarChartGroupData groupData = entry.value;
-          return BarChartGroupData(
-              x: groupData.x,
-              barsSpace: groupData.barsSpace,
-              barRods: _highlightSelectedBarRodIfAny(groupData));
-        } else {
-          return entry.value;
-        }
-      }).toList();
-
-  List<BarChartRodData> _highlightSelectedBarRodIfAny(
-          BarChartGroupData groupData) =>
-      groupData.barRods.asMap().entries.map((entry) {
-        if (entry.key == _touchedRodDataIndex) {
-          BarChartRodData rodData = entry.value;
-          return BarChartRodData(
-              y: rodData.y * _verticalMagnifier,
-              width: rodData.width * _horizontalMagnifier,
-              borderRadius: rodData.borderRadius,
-              rodStackItems: _recolorStackItem(rodData));
-        } else {
-          return entry.value;
-        }
-      }).toList();
-
-  List<BarChartRodStackItem> _recolorStackItem(BarChartRodData rodData) =>
-      rodData.rodStackItems.asMap().entries.map((entry) {
-        BarChartRodStackItem item = entry.value;
-        if (entry.key == 0) {
-          return BarChartRodStackItem(
-              item.fromY * _verticalMagnifier,
-              item.toY * _verticalMagnifier,
-              Theme.of(context).colorScheme.primaryVariant);
-        } else if (entry.key == 1) {
-          return BarChartRodStackItem(item.fromY * _verticalMagnifier,
-              item.toY * _verticalMagnifier, item.color);
-        } else {
-          return item;
-        }
-      }).toList();
 
   void _uponSelectingBarRod(BarTouchResponse barTouchResponse) {
     if (barTouchResponse.spot != null &&
@@ -171,7 +127,7 @@ class _BarChartState extends State<_BarChart> {
 
   void _signalDateTimeSelection(BarTouchResponse barTouchResponse) =>
       BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
-          DailyChartBarRodSelection(
+          SelectDailyChartBarRod(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
               barChartDataAtDate.siteName,

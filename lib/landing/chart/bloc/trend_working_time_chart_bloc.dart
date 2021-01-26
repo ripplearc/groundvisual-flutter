@@ -18,15 +18,14 @@ part 'trend_working_time_chart_event.dart';
 
 part 'trend_working_time_chart_state.dart';
 
-/// bloc to take events of touching a bar rod on the date or trend chart,
+/// bloc to take events of touching a bar rod on the trend chart,
 /// and emits state of corresponding images, group and rod id.
 @LazySingleton()
 class TrendWorkingTimeChartBloc
     extends Bloc<TrendWorkingTimeChartEvent, TrendWorkingTimeChartState> {
+  final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
   final TrendChartBarConverter trendChartConverter;
   final WorkZoneMapBloc workZoneMapBloc;
-
-  final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
 
   TrendWorkingTimeChartBloc(this.trendChartConverter, this.workZoneMapBloc,
       this.workingTimeTrendChartViewModel)
@@ -45,7 +44,7 @@ class TrendWorkingTimeChartBloc
     if (event is SearchWorkingTimeOnTrend) {
       await for (var state in _yieldTrendWorkingTime(
           event.siteName, event.period, event.context)) yield state;
-    } else if (event is TrendChartBarRodSelection) {
+    } else if (event is SelectTrendChartBarRod) {
       _triggerWorkZoneBloc(event);
     }
   }
@@ -70,7 +69,7 @@ class TrendWorkingTimeChartBloc
     return Stream.fromFutures([loadingTrendFuture, trendWithChartFuture]);
   }
 
-  void _triggerWorkZoneBloc(TrendChartBarRodSelection event) =>
+  void _triggerWorkZoneBloc(SelectTrendChartBarRod event) =>
       trendChartConverter
           .convertToDateTime(
               event.range, event.period, event.groupId, event.rodId)

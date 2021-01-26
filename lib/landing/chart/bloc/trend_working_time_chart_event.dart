@@ -4,6 +4,7 @@ abstract class TrendWorkingTimeChartEvent extends Equatable {
   const TrendWorkingTimeChartEvent();
 }
 
+/// Load the trend working time chart and start searching for working time data.
 class SearchWorkingTimeOnTrend extends TrendWorkingTimeChartEvent {
   final String siteName;
   final TrendPeriod period;
@@ -16,7 +17,9 @@ class SearchWorkingTimeOnTrend extends TrendWorkingTimeChartEvent {
 }
 
 
-class TrendChartBarRodSelection extends TrendWorkingTimeChartEvent {
+/// Select a bar rod on the trend chart with group and rod information.
+/// It includes site, date range and period information to make it easy to search.
+class SelectTrendChartBarRod extends TrendWorkingTimeChartEvent {
   final int groupId;
   final int rodId;
   final String siteName;
@@ -25,7 +28,7 @@ class TrendChartBarRodSelection extends TrendWorkingTimeChartEvent {
 
   final BuildContext context;
 
-  TrendChartBarRodSelection(this.groupId, this.rodId, this.siteName, this.range,
+  SelectTrendChartBarRod(this.groupId, this.rodId, this.siteName, this.range,
       this.period, this.context);
 
   @override

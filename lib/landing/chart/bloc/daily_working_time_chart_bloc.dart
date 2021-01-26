@@ -13,17 +13,17 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'daily_working_time_chart_event.dart';
+
 part 'daily_working_time_chart_state.dart';
 
-/// bloc to take events of touching a bar rod on the date or trend chart,
+/// bloc to take events of touching a bar rod on the date chart,
 /// and emits state of corresponding images, group and rod id.
 @LazySingleton()
 class DailyWorkingTimeChartBloc
     extends Bloc<DailyWorkingTimeChartEvent, DailyWorkingTimeState> {
+  final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
   final DailyChartBarConverter dailyChartConverter;
   final WorkZoneMapBloc workZoneMapBloc;
-
-  final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
 
   DailyWorkingTimeChartBloc(this.dailyChartConverter, this.workZoneMapBloc,
       this.workingTimeDailyChartViewModel)
@@ -45,7 +45,7 @@ class DailyWorkingTimeChartBloc
       await for (var state
           in _yieldDailyWorkingTime(event.siteName, event.date, event.context))
         yield state;
-    } else if (event is DailyChartBarRodSelection)
+    } else if (event is SelectDailyChartBarRod)
       await for (var state in _handleBarSelectionOnTime(event)) yield state;
   }
 
@@ -62,7 +62,7 @@ class DailyWorkingTimeChartBloc
   }
 
   Stream<DailyWorkingTimeState> _handleBarSelectionOnTime(
-      DailyChartBarRodSelection event) {
+      SelectDailyChartBarRod event) {
     dailyChartConverter
         .convertToDateTime(event.date, event.groupId, event.rodId)
         .let((time) => workZoneMapBloc

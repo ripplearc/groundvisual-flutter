@@ -1,14 +1,11 @@
 part of 'trend_working_time_chart_bloc.dart';
 
+/// State that reflects the loading of the trend working time.
 abstract class TrendWorkingTimeChartState extends Equatable {
   const TrendWorkingTimeChartState();
 }
 
-class TrendWorkingTimeChartInitial extends TrendWorkingTimeChartState {
-  @override
-  List<Object> get props => [];
-}
-
+/// Indicating the loading in progress of the trend working time.
 class TrendWorkingTimeDataLoading extends TrendWorkingTimeChartState {
   final TrendPeriod period;
 
@@ -18,6 +15,7 @@ class TrendWorkingTimeDataLoading extends TrendWorkingTimeChartState {
   List<Object> get props => [period];
 }
 
+/// Finish loading the trend working time data.
 class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
   final WorkingTimeChartData chartData;
   final String siteName;
