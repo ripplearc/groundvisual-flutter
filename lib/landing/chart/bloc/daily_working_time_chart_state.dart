@@ -23,13 +23,18 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   List<Object> get props => [chartData, siteName, date];
 }
 
+class SiteSnapShotLoading extends DailyWorkingTimeState {
+  @override
+  List<Object> get props => [];
+}
+
 /// Showing thumbnail image corresponding to the selected rod bar.
-class SiteSnapShotThumbnail extends DailyWorkingTimeState {
+class SiteSnapShotThumbnailLoaded extends DailyWorkingTimeState {
   final int groupId;
   final int rodId;
   final String assetName;
 
-  SiteSnapShotThumbnail(this.groupId, this.rodId, this.assetName);
+  SiteSnapShotThumbnailLoaded(this.groupId, this.rodId, this.assetName);
 
   @override
   List<Object> get props => [this.groupId, this.rodId, this.assetName];

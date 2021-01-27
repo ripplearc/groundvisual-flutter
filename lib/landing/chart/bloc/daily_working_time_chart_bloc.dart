@@ -68,12 +68,13 @@ class DailyWorkingTimeChartBloc
         .let((time) => workZoneMapBloc
             .add(SelectWorkZoneAtTime(event.siteName, time, event.context)));
 
-    final thumbnailFuture = Future.value(SiteSnapShotThumbnail(
+    final thumbnailFuture = Future.value(SiteSnapShotThumbnailLoaded(
             event.groupId,
             event.rodId,
             'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'))
         .then((value) => Future.delayed(Duration(seconds: 1), () => value));
 
-    return Stream.fromFutures([thumbnailFuture]);
+    return Stream.fromFutures(
+        [Future.value(SiteSnapShotLoading()), thumbnailFuture]);
   }
 }

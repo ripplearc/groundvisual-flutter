@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
@@ -20,16 +21,19 @@ class WorkingTimeDailyChart extends StatelessWidget {
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
-        buildWhen: (previous, current) => current is SiteSnapShotThumbnail,
+        buildWhen: (previous, current) =>
+            current is SiteSnapShotThumbnailLoaded ||
+            current is SiteSnapShotLoading,
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
-          child: _buildThumbnailImageUponTouch(state),
+          child: _buildThumbnailImageUponTouch(state, context),
         ),
       );
 
-  Widget _buildThumbnailImageUponTouch(DailyWorkingTimeState state) {
-    if (state is SiteSnapShotThumbnail) {
+  Widget _buildThumbnailImageUponTouch(
+      DailyWorkingTimeState state, BuildContext context) {
+    if (state is SiteSnapShotThumbnailLoaded) {
       return Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 6.0),
           child: Image.asset(
@@ -38,6 +42,16 @@ class WorkingTimeDailyChart extends StatelessWidget {
             height: 96,
             fit: BoxFit.cover,
           ));
+    } else if (state is SiteSnapShotLoading) {
+      return Shimmer.fromColors(
+          baseColor: Theme.of(context).colorScheme.surface,
+          highlightColor: Theme.of(context).colorScheme.onSurface,
+          child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, right: 6.0),
+              child: Container(
+                  width: 96,
+                  height: 96,
+                  color: Theme.of(context).colorScheme.background)));
     } else {
       return Container();
     }
@@ -111,9 +125,10 @@ class _BarChartState extends State<_BarChart> {
               show: false,
             ),
             groupsSpace: 1.8,
-            barGroups:
-                BarRodMagnifier(context, _touchedBarGroupIndex, _touchedRodDataIndex)
-                    .highlightSelectedGroupIfAny(barChartDataAtDate.chartData.bars)),
+            barGroups: BarRodMagnifier(
+                    context, _touchedBarGroupIndex, _touchedRodDataIndex)
+                .highlightSelectedGroupIfAny(
+                    barChartDataAtDate.chartData.bars)),
       );
 
   void _uponSelectingBarRod(BarTouchResponse barTouchResponse) {
