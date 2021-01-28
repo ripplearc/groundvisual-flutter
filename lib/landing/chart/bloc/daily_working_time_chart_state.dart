@@ -16,11 +16,28 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   final WorkingTimeChartData chartData;
   final String siteName;
   final DateTime date;
+  final Stream<Tuple2<int, int>> highlightRodBarStream;
 
-  DailyWorkingTimeDataLoaded(this.chartData, this.siteName, this.date);
+  DailyWorkingTimeDataLoaded(
+      this.chartData, this.siteName, this.date, this.highlightRodBarStream);
 
   @override
   List<Object> get props => [chartData, siteName, date];
+}
+
+class DailyWorkingTimeBarRodHighlighted extends DailyWorkingTimeState {
+  final int groupId;
+  final int rodId;
+
+  final WorkingTimeChartData chartData;
+  final String siteName;
+  final DateTime date;
+
+  DailyWorkingTimeBarRodHighlighted(
+      this.groupId, this.rodId, this.chartData, this.siteName, this.date);
+
+  @override
+  List<Object> get props => [groupId, rodId, chartData, siteName, date];
 }
 
 class SiteSnapShotLoading extends DailyWorkingTimeState {

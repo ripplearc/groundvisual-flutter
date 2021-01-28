@@ -5,6 +5,7 @@ import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart
 import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyChart extends StatelessWidget {
@@ -78,25 +79,24 @@ class WorkingTimeDailyChart extends StatelessWidget {
                       }))));
 }
 
-class _BarChart extends StatefulWidget {
+class _BarChart extends StatelessWidget {
   final DailyWorkingTimeDataLoaded barChartDataAtDate;
 
   const _BarChart({Key key, this.barChartDataAtDate}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BarChartState(barChartDataAtDate);
-}
+  Widget build(BuildContext context) => StreamBuilder<Tuple2<int, int>>(
+      stream: barChartDataAtDate.highlightRodBarStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _genBarChart(context, snapshot.data);
+        } else {
+          return _genBarChart(context, Tuple2(-1, -1));
+        }
+      });
 
-class _BarChartState extends State<_BarChart> {
-  final DailyWorkingTimeDataLoaded barChartDataAtDate;
-
-  _BarChartState(this.barChartDataAtDate);
-
-  int _touchedBarGroupIndex = -1;
-  int _touchedRodDataIndex = -1;
-
-  @override
-  Widget build(BuildContext context) => BarChart(
+  BarChart _genBarChart(BuildContext context, Tuple2<int, int> highlight) =>
+      BarChart(
         BarChartData(
             alignment: BarChartAlignment.center,
             barTouchData: BarTouchData(
@@ -105,7 +105,8 @@ class _BarChartState extends State<_BarChart> {
                     getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                         barChartDataAtDate.chartData.tooltips[groupIndex]
                             [rodIndex]),
-                touchCallback: (response) => _uponSelectingBarRod(response)),
+                touchCallback: (response) =>
+                    _uponSelectingBarRod(response, context)),
             titlesData: FlTitlesData(
               show: true,
               bottomTitles: SideTitles(
@@ -126,21 +127,23 @@ class _BarChartState extends State<_BarChart> {
             ),
             groupsSpace: 1.8,
             barGroups: BarRodMagnifier(
-                    context, _touchedBarGroupIndex, _touchedRodDataIndex)
+                    context, highlight.item1, highlight.item2,
+                    horizontalMagnifier: 3, verticalMagnifier: 1.2)
                 .highlightSelectedGroupIfAny(
                     barChartDataAtDate.chartData.bars)),
       );
 
-  void _uponSelectingBarRod(BarTouchResponse barTouchResponse) {
+  void _uponSelectingBarRod(
+      BarTouchResponse barTouchResponse, BuildContext context) {
     if (barTouchResponse.spot != null &&
         barTouchResponse.touchInput is! FlPanEnd &&
         barTouchResponse.touchInput is! FlLongPressEnd) {
-      _highlightSelectedBar(barTouchResponse);
-      _signalDateTimeSelection(barTouchResponse);
+      _signalDateTimeSelection(barTouchResponse, context);
     }
   }
 
-  void _signalDateTimeSelection(BarTouchResponse barTouchResponse) =>
+  void _signalDateTimeSelection(
+          BarTouchResponse barTouchResponse, BuildContext context) =>
       BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
           SelectDailyChartBarRod(
               barTouchResponse.spot.touchedBarGroupIndex,
@@ -148,11 +151,4 @@ class _BarChartState extends State<_BarChart> {
               barChartDataAtDate.siteName,
               barChartDataAtDate.date,
               context));
-
-  void _highlightSelectedBar(BarTouchResponse barTouchResponse) {
-    setState(() {
-      _touchedBarGroupIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      _touchedRodDataIndex = barTouchResponse.spot.touchedRodDataIndex;
-    });
-  }
 }

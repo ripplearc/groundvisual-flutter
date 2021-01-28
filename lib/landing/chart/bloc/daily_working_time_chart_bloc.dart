@@ -11,6 +11,7 @@ import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
 part 'daily_working_time_chart_event.dart';
 
@@ -25,6 +26,9 @@ class DailyWorkingTimeChartBloc
   final DailyChartBarConverter dailyChartConverter;
   final WorkZoneMapBloc workZoneMapBloc;
 
+  final StreamController<Tuple2<int, int>> _highlightController =
+      StreamController.broadcast();
+
   DailyWorkingTimeChartBloc(this.dailyChartConverter, this.workZoneMapBloc,
       this.workingTimeDailyChartViewModel)
       : super(DailyWorkingTimeDataLoading());
@@ -33,9 +37,7 @@ class DailyWorkingTimeChartBloc
   Stream<Transition<DailyWorkingTimeChartEvent, DailyWorkingTimeState>>
       transformEvents(
               Stream<DailyWorkingTimeChartEvent> events, transitionFn) =>
-          events
-              .debounceTime(Duration(milliseconds: 100))
-              .switchMap((transitionFn));
+          events.switchMap((transitionFn));
 
   @override
   Stream<DailyWorkingTimeState> mapEventToState(
@@ -52,29 +54,34 @@ class DailyWorkingTimeChartBloc
   Stream _yieldDailyWorkingTime(
       String siteName, DateTime date, BuildContext context) {
     final loadingFuture = Future.value(DailyWorkingTimeDataLoading());
-    final dailyWithChartFuture = Future.delayed(
-        Duration(seconds: 2),
-        () =>
-            workingTimeDailyChartViewModel.dailyWorkingTime(context)).then(
-        (dailyChart) => DailyWorkingTimeDataLoaded(dailyChart, siteName, date));
+    final dailyWithChartFuture = Future.delayed(Duration(seconds: 2),
+            () => workingTimeDailyChartViewModel.dailyWorkingTime(context))
+        .then((dailyChart) => DailyWorkingTimeDataLoaded(
+            dailyChart, siteName, date, _highlightController.stream));
 
     return Stream.fromFutures([loadingFuture, dailyWithChartFuture]);
   }
 
   Stream<DailyWorkingTimeState> _handleBarSelectionOnTime(
       SelectDailyChartBarRod event) {
+    _highlightController.sink.add(Tuple2(event.groupId, event.rodId));
+
     dailyChartConverter
         .convertToDateTime(event.date, event.groupId, event.rodId)
         .let((time) => workZoneMapBloc
             .add(SelectWorkZoneAtTime(event.siteName, time, event.context)));
 
-    final thumbnailFuture = Future.value(SiteSnapShotThumbnailLoaded(
-            event.groupId,
-            event.rodId,
-            'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'))
-        .then((value) => Future.delayed(Duration(seconds: 1), () => value));
+    final thumbnailFuture = Future.delayed(Duration(milliseconds: 200)).then(
+        (_) => SiteSnapShotThumbnailLoaded(event.groupId, event.rodId,
+            'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'));
 
     return Stream.fromFutures(
         [Future.value(SiteSnapShotLoading()), thumbnailFuture]);
+  }
+
+  @override
+  Future<void> close() {
+    _highlightController.close();
+    return super.close();
   }
 }
