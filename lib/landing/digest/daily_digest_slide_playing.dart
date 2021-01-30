@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
+import 'package:groundvisual_flutter/landing/digest/daily_digest_viewmodel.dart';
 
 /// Animate sliding in the next digest image, and pause when touching anywhere on the image.
 class DailyDigestSlidePlaying extends StatelessWidget {
@@ -19,7 +20,8 @@ class DailyDigestSlidePlaying extends StatelessWidget {
         if (state is PlayDigestShowImage) {
           return GestureDetector(
               onTap: () {
-                BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestPause());
+                BlocProvider.of<PlayDigestBloc>(context)
+                    .add(PlayDigestPause(context, state.siteName, state.date));
               },
               child: _genAnimatedSlide(state.images));
         } else {
@@ -27,16 +29,16 @@ class DailyDigestSlidePlaying extends StatelessWidget {
         }
       });
 
-  Padding _genAnimatedSlide(List<String> images) => Padding(
+  Padding _genAnimatedSlide(DigestImageModel images) => Padding(
       padding: EdgeInsets.all(padding),
       child: LayoutBuilder(builder: (context, constraints) {
         final Size imageSize = constraints.biggest;
         final beginRect = _getRandomBeginRect(imageSize);
         return Stack(
           children: [
-            images.length > 1 ? _genStaticImage(images.last) : Container(),
-            images.length > 0
-                ? _genAnimatedImage(images.first ?? '', beginRect, imageSize)
+            images.currentImage != null ? _genStaticImage(images.currentImage) : Container(),
+            images.nextImage != null
+                ? _genAnimatedImage(images.nextImage ?? '', beginRect, imageSize)
                 : Container()
           ],
         );

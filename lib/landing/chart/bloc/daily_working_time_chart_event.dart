@@ -25,11 +25,13 @@ class SelectDailyChartBarRod extends DailyWorkingTimeChartEvent {
   final int rodId;
   final String siteName;
   final DateTime date;
+  final bool showThumbnail;
 
   final BuildContext context;
 
   SelectDailyChartBarRod(
-      this.groupId, this.rodId, this.siteName, this.date, this.context);
+      this.groupId, this.rodId, this.siteName, this.date, this.context,
+      {this.showThumbnail = true});
 
   @override
   List<Object> get props => [groupId, rodId];

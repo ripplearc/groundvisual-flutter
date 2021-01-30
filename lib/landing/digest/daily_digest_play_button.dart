@@ -11,7 +11,7 @@ class DailyDigestPlayButton extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<PlayDigestBloc, PlayDigestState>(builder: (context, state) {
         if (state is PlayDigestPausePlaying) {
-          return _genPlayButton(context);
+          return _genPlayButton(context, state);
         } else if (state is PlayDigestBuffering) {
           return CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
@@ -22,15 +22,18 @@ class DailyDigestPlayButton extends StatelessWidget {
         }
       });
 
-  Container _genPlayButton(BuildContext context) => Container(
-      width: 80,
-      height: 80,
-      child: IconButton(
-          onPressed: () =>
-              BlocProvider.of<PlayDigestBloc>(context).add(PlayDigestResume()),
-          icon: Icon(
-            Icons.play_arrow_sharp,
-            size: 65,
-            color: Theme.of(context).colorScheme.primary,
-          )));
+  Container _genPlayButton(
+          BuildContext context, PlayDigestPausePlaying pausePlaying) =>
+      Container(
+          width: 80,
+          height: 80,
+          child: IconButton(
+              onPressed: () => BlocProvider.of<PlayDigestBloc>(context).add(
+                  PlayDigestResume(
+                      context, pausePlaying.siteName, pausePlaying.date)),
+              icon: Icon(
+                Icons.play_arrow_sharp,
+                size: 65,
+                color: Theme.of(context).colorScheme.primary,
+              )));
 }

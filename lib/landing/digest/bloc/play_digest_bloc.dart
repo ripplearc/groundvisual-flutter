@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_viewmodel.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
@@ -13,10 +15,14 @@ part 'play_digest_event.dart';
 part 'play_digest_state.dart';
 
 /// Bloc for playing the digested images with certain interval
-@injectable
+@LazySingleton()
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
-  PlayDigestBloc(this.dailyDigestViewModel) : super(PlayDigestPausePlaying([]));
+  PlayDigestBloc(this.dailyDigestViewModel, this.dailyWorkingTimeChartBloc,
+      this.dailyChartBarConverter)
+      : super(PlayDigestInit());
   final DailyDigestViewModel dailyDigestViewModel;
+  final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  final DailyChartBarConverter dailyChartBarConverter;
 
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
@@ -41,29 +47,43 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   Stream<PlayDigestState> mapEventToState(PlayDigestEvent event) async* {
     switch (event.runtimeType) {
       case PlayDigestInitPlayer:
+        await dailyDigestViewModel.preloadImages(event.siteName, event.date);
+        yield await _getCoverImages(event);
+        return;
       case PlayDigestPause:
-        yield await _getCoverImages();
+        yield await _getCoverImages(event);
         return;
       case PlayDigestResume:
         yield PlayDigestBuffering();
-        await Future.delayed(Duration(milliseconds: 50));
-        final images =
-            await dailyDigestViewModel.incrementCurrentDigestImageCursor();
-        yield PlayDigestShowImage(images);
-        _pauseWhenReachTheEnd(images);
+
+        final digestModel = await dailyDigestViewModel
+            .incrementDigestImageCursor(event.siteName, event.date);
+        _signalDailyChartBar(digestModel, event);
+
+        yield PlayDigestShowImage(digestModel, event.siteName, event.date);
+        _pauseWhenReachTheEnd(digestModel, event);
         return;
       default:
         return;
     }
   }
 
-  void _pauseWhenReachTheEnd(List<String> images) {
-    if (images.length == 0) {
-      add(PlayDigestPause());
+  void _signalDailyChartBar(
+      DigestImageModel digestModel, PlayDigestEvent event) {
+    final indices = dailyChartBarConverter.convertToIndices(digestModel.time);
+    dailyWorkingTimeChartBloc.add(SelectDailyChartBarRod(
+        indices.item1, indices.item2, event.siteName, event.date, event.context,
+        showThumbnail: false));
+  }
+
+  void _pauseWhenReachTheEnd(DigestImageModel model, PlayDigestEvent event) {
+    if (model.currentImage == null && model.nextImage == null) {
+      add(PlayDigestPause(event.context, event.siteName, event.date));
     }
   }
 
-  Future<PlayDigestPausePlaying> _getCoverImages() =>
-      dailyDigestViewModel.coverImages
-          .then((images) => PlayDigestPausePlaying(images));
+  Future<PlayDigestPausePlaying> _getCoverImages(PlayDigestEvent event) =>
+      dailyDigestViewModel.coverImages(event.siteName, event.date).then(
+          (images) =>
+              PlayDigestPausePlaying(images, event.siteName, event.date));
 }

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/services.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/models/site_work_records.dart';
 import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:injectable/injectable.dart';
-import 'package:dart_date/dart_date.dart';
 
 /// Network service to get the work zone for a specific time, date or over a period.
 abstract class SiteWorkZoneService {
@@ -54,7 +54,8 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
           .then((value) => json.decode(value))
           .then((decoded) => SiteConstructionZone.fromJson(decoded)
               .records
-              .firstWhere((element) => period.seconds() == element.durationInSeconds,
+              .firstWhere(
+                  (element) => period.seconds() == element.durationInSeconds,
                   orElse: (() => UnitConstructionZone(
                       Date.startOfToday, 900, ConstructionZone([].toList()))))
               .zone);

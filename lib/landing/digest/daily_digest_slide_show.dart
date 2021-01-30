@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/di/di.dart';
-import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_collage_cover.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_play_button.dart';
 import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_playing.dart';
@@ -24,18 +21,14 @@ class DailyDigestSlideShow extends StatelessWidget {
             ),
             AspectRatio(
               aspectRatio: 336 / 190,
-              child: BlocProvider(
-                create: (_) =>
-                    getIt<PlayDigestBloc>()..add(PlayDigestInitPlayer()),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    DailyDigestCollageCover(),
-                    DailyDigestSlidePlaying(),
-                    DailyDigestPlayButton()
-                  ],
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  DailyDigestCollageCover(),
+                  DailyDigestSlidePlaying(),
+                  DailyDigestPlayButton()
+                ],
               ),
-            )
+            ),
           ]));
 }

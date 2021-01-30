@@ -65,9 +65,9 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   Future<WorkZoneMapState> _handleSelectWorkZoneAtTime(
       SelectWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtDate(
+      workZoneMapViewModel.getPolygonAtTime(
           event.site, event.time, event.context),
-      workZoneMapViewModel.getCameraPositionAtDate(event.site, event.time)
+      workZoneMapViewModel.getCameraPositionAtTime(event.site, event.time)
     ]);
     return WorkZoneMapPolygons(result[0], result[1]);
   }
