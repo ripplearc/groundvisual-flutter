@@ -10,16 +10,12 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 /// increments the cursor after an image retrieval.
 @injectable
 class DailyDigestViewModel {
-  final int _numberOfImages = 5;
-  _Cursor _cursor;
-  final random = Random();
+  static const int _NumberOfImages = 5;
+  final _Cursor _cursor = _Cursor(_NumberOfImages);
+  final _random = Random();
 
   final _imageListOfSiteAtDate =
       Map<Tuple2<String, DateTime>, List<Tuple2<String, DateTime>>>();
-
-  DailyDigestViewModel() {
-    _cursor = _Cursor(_numberOfImages);
-  }
 
   Future<List<String>> coverImages(String siteName, DateTime date) =>
       Future.value(List.generate(
@@ -27,41 +23,50 @@ class DailyDigestViewModel {
 
   Future<List<Tuple2<String, DateTime>>> get digestImages =>
       Future.value(List.generate(
-          _numberOfImages,
+          _NumberOfImages,
           (index) => Tuple2(
               'images/digest/summary_${index + 1}.jpg',
               Date.startOfToday
                   .addHours(6 + index * 2)
-                  .addMinutes(random.nextInt(4)*15))));
+                  .addMinutes(_random.nextInt(4) * 15))));
 
   Future<void> preloadImages(String siteName, DateTime date) async {
-    _imageListOfSiteAtDate[Tuple2(siteName, date)] = await digestImages;
+    await digestImages.then((value) => _imageListOfSiteAtDate.putIfAbsent(
+        Tuple2(siteName, date), () => value));
     return;
   }
 
-  Future<DigestImageModel> incrementDigestImageCursor(
+  Future<DigestImageModel> fetchNextImage(
       String siteName, DateTime date) async {
     final images = _imageListOfSiteAtDate[Tuple2(siteName, date)];
     DigestImageModel model = _cursor.let((it) {
-      if (images == null || _cursor.atEnding()) {
+      if (images == null) {
         return DigestImageModel(null, null, date.startOfDay);
-      } else if (_cursor.atBeginning()) {
-        final element = images.elementAt(_cursor.position);
+      } else if (_cursor.atBeginning) {
+        final element = images.elementAt(_cursor.next);
         return DigestImageModel(null, element.item1, element.item2);
       } else {
         return _getCurrentAndNextImages(images);
       }
     });
-    _cursor.incrementOrReset();
+    _cursor.increment();
     return model;
+  }
+
+  bool shouldRewind() {
+    if (_cursor.atEnd) {
+      _cursor._reset();
+      return true;
+    }
+    return false;
   }
 
   DigestImageModel _getCurrentAndNextImages(
           List<Tuple2<String, DateTime>> images) =>
       DigestImageModel(
-        images.elementAt(_cursor.prev).item1,
         images.elementAt(_cursor.position).item1,
-        images.elementAt(_cursor.position).item2,
+        images.elementAt(_cursor.next).item1,
+        images.elementAt(_cursor.next).item2,
       );
 }
 
@@ -83,23 +88,20 @@ class _Cursor {
   int _currentPosition;
 
   _Cursor(this.numberOfImages) {
-    _currentPosition = 0;
+    _currentPosition = -1;
   }
 
-  incrementOrReset() {
-    final newPosition = _currentPosition++;
-    if (newPosition == numberOfImages) _reset();
-  }
+  increment() => _currentPosition++;
 
   _reset() {
-    _currentPosition = 0;
+    _currentPosition = -1;
   }
 
-  bool atEnding() => _currentPosition >= numberOfImages;
+  bool get atBeginning => _currentPosition == -1;
 
-  bool atBeginning() => _currentPosition <= 0;
+  bool get atEnd => position == next;
 
   int get position => _currentPosition;
 
-  int get prev => max(_currentPosition - 1, 0);
+  int get next => min(_currentPosition + 1, numberOfImages - 1);
 }

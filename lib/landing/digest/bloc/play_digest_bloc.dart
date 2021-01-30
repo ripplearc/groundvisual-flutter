@@ -23,6 +23,7 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   final DailyDigestViewModel dailyDigestViewModel;
   final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
   final DailyChartBarConverter dailyChartBarConverter;
+  static const int SlideAnimationSpeed = 4;
 
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
@@ -35,7 +36,7 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
     if (event is PlayDigestPause || event is PlayDigestInitPlayer) {
       return Stream.value(event);
     } else if (event is PlayDigestResume) {
-      return Stream.periodic(Duration(seconds: 4))
+      return Stream.periodic(Duration(seconds: SlideAnimationSpeed))
           .startWith(null)
           .map((__) => event);
     } else {
@@ -54,17 +55,24 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
         yield await _getCoverImages(event);
         return;
       case PlayDigestResume:
-        yield PlayDigestBuffering();
-
-        final digestModel = await dailyDigestViewModel
-            .incrementDigestImageCursor(event.siteName, event.date);
-        _signalDailyChartBar(digestModel, event);
-
-        yield PlayDigestShowImage(digestModel, event.siteName, event.date);
-        _pauseWhenReachTheEnd(digestModel, event);
+        await for (var state in _resumeOrRewind(event)) yield state;
         return;
       default:
         return;
+    }
+  }
+
+  Stream<PlayDigestState> _resumeOrRewind(PlayDigestEvent event) async* {
+    if (dailyDigestViewModel.shouldRewind()) {
+      yield PlayDigestShowImage(
+          DigestImageModel(null, null, event.date), event.siteName, event.date);
+      add(PlayDigestPause(event.context, event.siteName, event.date));
+    } else {
+      yield PlayDigestBuffering();
+      final digestModel = await dailyDigestViewModel.fetchNextImage(
+          event.siteName, event.date);
+      _signalDailyChartBar(digestModel, event);
+      yield PlayDigestShowImage(digestModel, event.siteName, event.date);
     }
   }
 
@@ -74,12 +82,6 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
     dailyWorkingTimeChartBloc.add(SelectDailyChartBarRod(
         indices.item1, indices.item2, event.siteName, event.date, event.context,
         showThumbnail: false));
-  }
-
-  void _pauseWhenReachTheEnd(DigestImageModel model, PlayDigestEvent event) {
-    if (model.currentImage == null && model.nextImage == null) {
-      add(PlayDigestPause(event.context, event.siteName, event.date));
-    }
   }
 
   Future<PlayDigestPausePlaying> _getCoverImages(PlayDigestEvent event) =>

@@ -14,20 +14,20 @@ class DailyDigestSlidePlaying extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<PlayDigestBloc, PlayDigestState>(buildWhen: (prev, curr) {
-        return curr is PlayDigestShowImage;
-      }, builder: (context, state) {
-        if (state is PlayDigestShowImage) {
-          return GestureDetector(
-              onTap: () {
-                BlocProvider.of<PlayDigestBloc>(context)
-                    .add(PlayDigestPause(context, state.siteName, state.date));
-              },
-              child: _genAnimatedSlide(state.images));
-        } else {
-          return Container();
-        }
-      });
+      BlocBuilder<PlayDigestBloc, PlayDigestState>(
+          buildWhen: (prev, curr) => curr is PlayDigestShowImage,
+          builder: (context, state) {
+            if (state is PlayDigestShowImage) {
+              return GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<PlayDigestBloc>(context).add(
+                        PlayDigestPause(context, state.siteName, state.date));
+                  },
+                  child: _genAnimatedSlide(state.images));
+            } else {
+              return Container();
+            }
+          });
 
   Padding _genAnimatedSlide(DigestImageModel images) => Padding(
       padding: EdgeInsets.all(padding),
@@ -36,9 +36,12 @@ class DailyDigestSlidePlaying extends StatelessWidget {
         final beginRect = _getRandomBeginRect(imageSize);
         return Stack(
           children: [
-            images.currentImage != null ? _genStaticImage(images.currentImage) : Container(),
+            images.currentImage != null
+                ? _genStaticImage(images.currentImage)
+                : Container(),
             images.nextImage != null
-                ? _genAnimatedImage(images.nextImage ?? '', beginRect, imageSize)
+                ? _genAnimatedImage(
+                    images.nextImage ?? '', beginRect, imageSize)
                 : Container()
           ],
         );
