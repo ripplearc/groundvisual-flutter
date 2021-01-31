@@ -71,7 +71,7 @@ class DailyWorkingTimeChartBloc
     dailyChartConverter
         .convertToDateTime(event.date, event.groupId, event.rodId)
         .let((time) {
-      if (event.unSelect) {
+      if (event.unselected) {
         workZoneMapBloc.add(SearchWorkZoneOnDate(
             event.siteName, time.startOfDay, event.context));
       } else {

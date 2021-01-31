@@ -22,7 +22,7 @@ class DailyDigestViewModel {
       Future.value(List.generate(
           5, (index) => 'images/digest/summary_${index + 1}.jpg'));
 
-  Future<List<Tuple2<String, DateTime>>> get digestImages =>
+  Future<List<Tuple2<String, DateTime>>> get _digestImages =>
       Future.value(List.generate(
           _NumberOfImages,
           (index) => Tuple2(
@@ -32,7 +32,7 @@ class DailyDigestViewModel {
                   .addMinutes(_random.nextInt(4) * 15))));
 
   Future<void> preloadImages(String siteName, DateTime date) async {
-    await digestImages.then((value) => _imageListOfSiteAtDate.putIfAbsent(
+    await _digestImages.then((value) => _imageListOfSiteAtDate.putIfAbsent(
         Tuple2(siteName, date), () => value));
     return;
   }

@@ -29,23 +29,23 @@ class WorkingTimeDailyChart extends StatelessWidget {
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
-          child: _buildThumbnailImageUponTouch(state, context),
+          child: _genThumbnailImageUponTouch(state, context),
         ),
       );
 
-  Widget _buildThumbnailImageUponTouch(
+  Widget _genThumbnailImageUponTouch(
       DailyWorkingTimeState state, BuildContext context) {
     if (state is SiteSnapShotThumbnailLoaded) {
-      return Padding(
-          padding: const EdgeInsets.only(top: 10.0, right: 6.0),
-          child: Image.asset(
-            state.assetName,
-            width: 96,
-            height: 96,
-            fit: BoxFit.cover,
-          ));
+      return _loadImageAsset(state);
     } else if (state is SiteSnapShotLoading) {
-      return Shimmer.fromColors(
+      return _shimmingWhileLoadingAsset(context);
+    } else {
+      return Container();
+    }
+  }
+
+  Shimmer _shimmingWhileLoadingAsset(BuildContext context) =>
+      Shimmer.fromColors(
           baseColor: Theme.of(context).colorScheme.surface,
           highlightColor: Theme.of(context).colorScheme.onSurface,
           child: Padding(
@@ -54,10 +54,15 @@ class WorkingTimeDailyChart extends StatelessWidget {
                   width: 96,
                   height: 96,
                   color: Theme.of(context).colorScheme.background)));
-    } else {
-      return Container();
-    }
-  }
+
+  Padding _loadImageAsset(SiteSnapShotThumbnailLoaded state) => Padding(
+      padding: const EdgeInsets.only(top: 10.0, right: 6.0),
+      child: Image.asset(
+        state.assetName,
+        width: 96,
+        height: 96,
+        fit: BoxFit.cover,
+      ));
 
   Positioned _buildBarChartCard(BuildContext context) => Positioned.fill(
       child: Card(
