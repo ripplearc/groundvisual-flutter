@@ -82,7 +82,7 @@ class SelectedSiteBloc
 
   void _signalOtherBlocsOnTrendSelected(String siteName, TrendSelected event) {
     machineStatusBloc.add(SearchMachineStatueOnTrend(siteName, event.period));
-    workZoneMapBloc.add(SelectWorkZoneAtPeriod(
+    workZoneMapBloc.add(SearchWorkZoneAtPeriod(
         siteName, Date.startOfToday, event.period, event.context));
     trendWorkingTimeChartBloc
         .add(SearchWorkingTimeOnTrend(siteName, event.period, event.context));

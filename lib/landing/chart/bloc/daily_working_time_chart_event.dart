@@ -33,6 +33,8 @@ class SelectDailyChartBarRod extends DailyWorkingTimeChartEvent {
       this.groupId, this.rodId, this.siteName, this.date, this.context,
       {this.showThumbnail = true});
 
+  bool get unSelect => groupId == -1 && rodId == -1;
+
   @override
   List<Object> get props => [groupId, rodId];
 }

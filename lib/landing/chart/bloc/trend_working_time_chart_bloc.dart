@@ -74,5 +74,5 @@ class TrendWorkingTimeChartBloc
           .convertToDateTime(
               event.range, event.period, event.groupId, event.rodId)
           .let((time) => workZoneMapBloc
-              .add(SelectWorkZoneAtTime(event.siteName, time, event.context)));
+              .add(SearchWorkZoneAtTime(event.siteName, time, event.context)));
 }

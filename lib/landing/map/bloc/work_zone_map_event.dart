@@ -4,12 +4,12 @@ part of 'work_zone_map_bloc.dart';
 abstract class WorkZoneMapEvent extends Equatable {}
 
 /// Select a time interval of 15 mins to query the work zone.
-class SelectWorkZoneAtTime extends WorkZoneMapEvent {
+class SearchWorkZoneAtTime extends WorkZoneMapEvent {
   final String site;
   final DateTime time;
   final BuildContext context;
 
-  SelectWorkZoneAtTime(this.site, this.time, this.context);
+  SearchWorkZoneAtTime(this.site, this.time, this.context);
 
   @override
   List<Object> get props => [site, time];
@@ -28,13 +28,13 @@ class SearchWorkZoneOnDate extends WorkZoneMapEvent {
 }
 
 /// Select a period to query the work zone.
-class SelectWorkZoneAtPeriod extends WorkZoneMapEvent {
+class SearchWorkZoneAtPeriod extends WorkZoneMapEvent {
   final String site;
   final DateTime date;
   final TrendPeriod period;
   final BuildContext context;
 
-  SelectWorkZoneAtPeriod(this.site, this.date, this.period, this.context);
+  SearchWorkZoneAtPeriod(this.site, this.date, this.period, this.context);
 
   @override
   List<Object> get props => [site, date, period];

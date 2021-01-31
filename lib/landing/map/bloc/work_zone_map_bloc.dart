@@ -32,17 +32,17 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   Stream<WorkZoneMapState> mapEventToState(
     WorkZoneMapEvent event,
   ) async* {
-    if (event is SelectWorkZoneAtTime) {
+    if (event is SearchWorkZoneAtTime) {
       yield await _handleSelectWorkZoneAtTime(event);
     } else if (event is SearchWorkZoneOnDate) {
       yield await _handleSelectWorkZoneAtDate(event);
-    } else if (event is SelectWorkZoneAtPeriod) {
+    } else if (event is SearchWorkZoneAtPeriod) {
       yield await _handleSelectWorkZoneAtPeriod(event);
     }
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtPeriod(
-      SelectWorkZoneAtPeriod event) async {
+      SearchWorkZoneAtPeriod event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtPeriod(
           event.site, event.date, event.period, event.context),
@@ -63,7 +63,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtTime(
-      SelectWorkZoneAtTime event) async {
+      SearchWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtTime(
           event.site, event.time, event.context),

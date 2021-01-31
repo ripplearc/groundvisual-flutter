@@ -24,7 +24,8 @@ class WorkingTimeDailyChart extends StatelessWidget {
       BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
         buildWhen: (previous, current) =>
             current is SiteSnapShotThumbnailLoaded ||
-            current is SiteSnapShotLoading,
+            current is SiteSnapShotLoading ||
+            current is SiteSnapShotHiding,
         builder: (context, state) => Positioned(
           top: 0.0,
           right: 0.0,
