@@ -9,7 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../work_zone_map_viewmodel.dart';
+import 'work_zone_map_viewmodel.dart';
 
 part 'work_zone_map_event.dart';
 
@@ -32,17 +32,17 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   Stream<WorkZoneMapState> mapEventToState(
     WorkZoneMapEvent event,
   ) async* {
-    if (event is SelectWorkZoneAtTime) {
+    if (event is SearchWorkZoneAtTime) {
       yield await _handleSelectWorkZoneAtTime(event);
-    } else if (event is SelectWorkZoneAtDate) {
+    } else if (event is SearchWorkZoneOnDate) {
       yield await _handleSelectWorkZoneAtDate(event);
-    } else if (event is SelectWorkZoneAtPeriod) {
+    } else if (event is SearchWorkZoneAtPeriod) {
       yield await _handleSelectWorkZoneAtPeriod(event);
     }
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtPeriod(
-      SelectWorkZoneAtPeriod event) async {
+      SearchWorkZoneAtPeriod event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtPeriod(
           event.site, event.date, event.period, event.context),
@@ -53,7 +53,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtDate(
-      SelectWorkZoneAtDate event) async {
+      SearchWorkZoneOnDate event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtDate(
           event.site, event.date, event.context),
@@ -63,11 +63,11 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   Future<WorkZoneMapState> _handleSelectWorkZoneAtTime(
-      SelectWorkZoneAtTime event) async {
+      SearchWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtDate(
+      workZoneMapViewModel.getPolygonAtTime(
           event.site, event.time, event.context),
-      workZoneMapViewModel.getCameraPositionAtDate(event.site, event.time)
+      workZoneMapViewModel.getCameraPositionAtTime(event.site, event.time)
     ]);
     return WorkZoneMapPolygons(result[0], result[1]);
   }

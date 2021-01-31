@@ -4,10 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
+import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
@@ -25,15 +26,17 @@ class SelectedSiteBloc
   final CurrentSelectedSite selectedSitePreference;
   final MachineStatusBloc machineStatusBloc;
   final WorkZoneMapBloc workZoneMapBloc;
-  final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
-  final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
+  final PlayDigestBloc playDigestBloc;
+  final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  final TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
 
   SelectedSiteBloc(
       this.selectedSitePreference,
-      this.workingTimeDailyChartViewModel,
-      this.workingTimeTrendChartViewModel,
       this.machineStatusBloc,
-      this.workZoneMapBloc)
+      this.workZoneMapBloc,
+      this.dailyWorkingTimeChartBloc,
+      this.trendWorkingTimeChartBloc,
+      this.playDigestBloc)
       : super(
           selectedSitePreference.value().isEmpty
               ? SelectedSiteEmpty()
@@ -55,86 +58,65 @@ class SelectedSiteBloc
     if (event is SelectedSiteInit) {
       final siteName = await selectedSitePreference.site().first;
       _signalOtherBlocsOnInit(siteName, event);
-      await for (var state
-          in _yieldDailyWorkingTime(siteName, Date.startOfToday, event.context))
-        yield state;
+      yield SelectedSiteAtDate(siteName, Date.startOfToday);
     } else if (event is SiteSelected) {
-      _signalOtherBLocsOnSiteSelected(event);
+      _signalOtherBlocsOnSiteSelected(event);
       selectedSitePreference.setSelectedSite(event.siteName);
-      await for (var state in _yieldDailyWorkingTime(
-          event.siteName, Date.startOfToday, event.context)) yield state;
+      yield SelectedSiteAtDate(event.siteName, Date.startOfToday);
     } else if (event is DateSelected) {
       final siteName = await selectedSitePreference.site().first;
       _signalOtherBlocsOnDateSelected(siteName, event);
-      await for (var state
-          in _yieldDailyWorkingTime(siteName, event.date, event.context))
-        yield state;
+      yield SelectedSiteAtDate(siteName, event.date);
     } else if (event is TrendSelected) {
       final siteName = await selectedSitePreference.site().first;
       _signalOtherBlocsOnTrendSelected(siteName, event);
-      await for (var state in _yieldTrendWorkingTime(siteName, event))
-        yield state;
+      yield SelectedSiteAtTrend(
+          siteName,
+          DateTimeRange(
+              start: Date.endOfToday,
+              end: Date.endOfToday
+                  .subtract(Duration(days: event.period.days()))),
+          event.period);
     }
   }
 
   void _signalOtherBlocsOnTrendSelected(String siteName, TrendSelected event) {
-     machineStatusBloc.add(SearchMachineStatueOnTrend(siteName, event.period));
-    workZoneMapBloc.add(SelectWorkZoneAtPeriod(
+    machineStatusBloc.add(SearchMachineStatueOnTrend(siteName, event.period));
+    workZoneMapBloc.add(SearchWorkZoneAtPeriod(
         siteName, Date.startOfToday, event.period, event.context));
+    trendWorkingTimeChartBloc
+        .add(SearchWorkingTimeOnTrend(siteName, event.period, event.context));
   }
 
   void _signalOtherBlocsOnDateSelected(String siteName, DateSelected event) {
-      machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
+    dailyWorkingTimeChartBloc
+        .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
+    machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
     workZoneMapBloc
-        .add(SelectWorkZoneAtDate(siteName, event.date, event.context));
+        .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
+    playDigestBloc
+        .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
   }
 
-  void _signalOtherBLocsOnSiteSelected(SiteSelected event) {
+  void _signalOtherBlocsOnSiteSelected(SiteSelected event) {
     machineStatusBloc
         .add(SearchMachineStatusOnDate(event.siteName, Date.startOfToday));
-    workZoneMapBloc.add(SelectWorkZoneAtDate(
+    workZoneMapBloc.add(
+        SearchWorkZoneOnDate(event.siteName, Date.startOfToday, event.context));
+    dailyWorkingTimeChartBloc.add(SearchWorkingTimeOnDate(
         event.siteName, Date.startOfToday, event.context));
+    playDigestBloc.add(
+        PlayDigestInitPlayer(event.context, event.siteName, Date.startOfToday));
   }
 
   void _signalOtherBlocsOnInit(String siteName, SelectedSiteInit event) {
-     machineStatusBloc
+    machineStatusBloc
         .add(SearchMachineStatusOnDate(siteName, Date.startOfToday));
-    workZoneMapBloc.add(
-        SelectWorkZoneAtDate(siteName, Date.startOfToday, event.context));
-  }
-
-  Stream _yieldTrendWorkingTime(String siteName, TrendSelected event) {
-    final trendFuture = Future.value(SelectedSiteAtTrend(
-        siteName,
-        DateTimeRange(
-          start: Date.startOfToday - Duration(days: event.period.days()),
-          end: Date.startOfToday,
-        ),
-        event.period));
-
-    final trendWithChartFuture = Future(() async => await Future.delayed(
-        Duration(seconds: 2),
-        () => workingTimeTrendChartViewModel.trendWorkingTime(
-            event.context, event.period)).then((chart) => SelectedSiteAtTrend(
-        siteName,
-        DateTimeRange(
-          start: Date.startOfToday - Duration(days: event.period.days()),
-          end: Date.startOfToday,
-        ),
-        event.period,
-        chartData: chart)));
-    return Stream.fromFutures([trendFuture, trendWithChartFuture]);
-  }
-
-  Stream _yieldDailyWorkingTime(
-      String siteName, DateTime date, BuildContext context) {
-    final dailyFuture = Future.value(SelectedSiteAtDate(siteName, date));
-    final dailyWithChartFuture = Future(() async => await Future.delayed(
-            Duration(seconds: 2),
-            () => workingTimeDailyChartViewModel.dailyWorkingTime(context))
-        .then((dailyChart) =>
-            SelectedSiteAtDate(siteName, date, chartData: dailyChart)));
-
-    return Stream.fromFutures([dailyFuture, dailyWithChartFuture]);
+    workZoneMapBloc
+        .add(SearchWorkZoneOnDate(siteName, Date.startOfToday, event.context));
+    dailyWorkingTimeChartBloc.add(
+        SearchWorkingTimeOnDate(siteName, Date.startOfToday, event.context));
+    playDigestBloc
+        .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
   }
 }

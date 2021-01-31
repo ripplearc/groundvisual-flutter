@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_show.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_working_time_list.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_show.dart';
+import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_card.dart';
 
 /// the body of the landing page consists of a few widgets.

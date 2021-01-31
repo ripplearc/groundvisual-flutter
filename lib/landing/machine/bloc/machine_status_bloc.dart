@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/machine/machine_status_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_viewmodel.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:injectable/injectable.dart';
