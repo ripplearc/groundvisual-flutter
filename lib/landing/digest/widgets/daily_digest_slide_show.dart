@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_collage_cover.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_play_button.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_slide_playing.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_collage_cover.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_play_button.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_playing.dart';
 
 /// Display the digest of daily activity with animation.
 class DailyDigestSlideShow extends StatelessWidget {

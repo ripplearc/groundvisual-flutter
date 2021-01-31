@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tuple/tuple.dart';
 import 'package:dart_date/dart_date.dart';
@@ -68,18 +69,6 @@ class DailyDigestViewModel {
         images.elementAt(_cursor.next).item1,
         images.elementAt(_cursor.next).item2,
       );
-}
-
-class DigestImageModel {
-  final String currentImage;
-  final String nextImage;
-  final DateTime time;
-
-  DigestImageModel(this.currentImage, this.nextImage, this.time);
-
-  @override
-  String toString() =>
-      "CurrentImage: $currentImage; NextImage: $nextImage; Time: $time";
 }
 
 /// Maintains the position of the current image position and reset after reaching the end.

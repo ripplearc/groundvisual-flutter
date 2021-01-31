@@ -9,7 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../work_zone_map_viewmodel.dart';
+import 'work_zone_map_viewmodel.dart';
 
 part 'work_zone_map_event.dart';
 

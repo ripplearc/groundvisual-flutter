@@ -5,13 +5,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
-import 'package:groundvisual_flutter/landing/digest/daily_digest_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/daily_digest_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'play_digest_event.dart';
-
 part 'play_digest_state.dart';
 
 /// Bloc for playing the digested images with certain interval
