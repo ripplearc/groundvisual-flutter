@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_collage_cover.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_play_button.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_playing.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/stagger_demo.dart';
 
 /// Display the digest of daily activity with animation.
 class DailyDigestSlideShow extends StatelessWidget {
@@ -24,6 +25,7 @@ class DailyDigestSlideShow extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  // StaggerDemo()
                   DailyDigestCollageCover(),
                   DailyDigestSlidePlaying(),
                   DailyDigestPlayButton()
