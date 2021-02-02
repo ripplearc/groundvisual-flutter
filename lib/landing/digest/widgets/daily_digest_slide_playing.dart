@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_animation.dart';
+
+import 'daily_digest_slide_stagger_animation.dart';
 
 /// Animate sliding in the next digest image, and pause when touching anywhere on the image.
 class DailyDigestSlidePlaying extends StatelessWidget {
@@ -38,13 +38,11 @@ class DailyDigestSlidePlaying extends StatelessWidget {
             images.currentImage != null
                 ? _genStaticImage(images.currentImage)
                 : Container(),
-            // images.nextImage != null
-            //     ? _genAnimatedImage(
-            //         images.nextImage ?? '', beginRect, imageSize)
-            //     : Container()
             images.nextImage != null
-                ? DailyDigestSlideAnimation(
-                    image: images.nextImage, imageSize: imageSize)
+                ? DailyDigestSlideAnimation2(
+                    key: Key(images.nextImage),
+                    image: images.nextImage,
+                    imageSize: imageSize)
                 : Container()
           ],
         );
