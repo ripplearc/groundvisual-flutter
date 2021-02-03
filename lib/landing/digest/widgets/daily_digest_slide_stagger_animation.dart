@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
 
-import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DailyDigestSlideAnimation2 extends StatefulWidget {
   final String image;
@@ -38,77 +39,70 @@ class _DailyDigestSlideAnimation2State extends State<DailyDigestSlideAnimation2>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return _DailyDigestSlideStaggerAnimation(
-        controller: _controller.view, image: image, imageSize: imageSize);
-  }
+  Widget build(BuildContext context) => _DailyDigestSlideStaggerAnimation(
+      controller: _controller.view, image: image, imageSize: imageSize);
 }
 
 class _DailyDigestSlideStaggerAnimation extends StatelessWidget {
-  static const zoomLevel = 1.04;
-
-  _DailyDigestSlideStaggerAnimation(
-      {Key key, this.controller, this.image, this.imageSize})
-      : _relativeRect = RelativeRectTween(
-          begin: RelativeRect.fromSize(
-              Rect.fromLTWH(
-                  0, -imageSize.height, imageSize.width, imageSize.height),
-              imageSize),
-          end: RelativeRect.fromSize(
-              Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
-              imageSize),
-        ).animate(CurvedAnimation(
-            parent: controller,
-            curve: Interval(0.0, 0.3, curve: Curves.easeInOutCubic))),
-        _size = TweenSequence(<TweenSequenceItem<Size>>[
-          TweenSequenceItem<Size>(
-              tween: Tween<Size>(
-                begin: imageSize,
-                end: imageSize * zoomLevel,
-              ),
-              weight: 900),
-          TweenSequenceItem<Size>(
-              tween: Tween<Size>(
-                begin: imageSize * zoomLevel,
-                end: imageSize,
-              ),
-              weight: 100),
-        ]).animate(CurvedAnimation(
-            parent: controller,
-            curve: Interval(0.3, 0.9, curve: Curves.easeInOutCubic))),
-        super(key: key);
-
   final AnimationController controller;
   final Animation<RelativeRect> _relativeRect;
-  final Animation<Size> _size;
 
   final String image;
   final Size imageSize;
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      builder: _buildAnimation,
-      animation: controller,
-    );
-  }
+  _DailyDigestSlideStaggerAnimation(
+      {Key key, this.controller, this.image, this.imageSize})
+      : _relativeRect = rectSequence(imageSize).animate(CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.0, 0.9, curve: Curves.easeInOutCubic))),
+        super(key: key);
 
-  // This function is called each time the controller "ticks" a new frame.
-  // When it runs, all of the animation's values will have been
-  // updated to reflect the controller's current value.
-  Widget _buildAnimation(BuildContext context, Widget child) {
-    return Positioned.fromRect(
-        rect: _relativeRect.value
-            .toRect(Rect.fromLTWH(0, 0, imageSize.width, imageSize.height))
-            .let((rect) {
-          Offset offset = (_size.value - imageSize);
-          if (offset != Offset.zero) {
-            return Rect.fromLTWH(-offset.dx / 2, -offset.dy / 2,
-                _size.value.width, _size.value.height);
-          } else {
-            return rect;
-          }
-        }),
-        child: Image.asset(image, fit: BoxFit.cover));
-  }
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: controller,
+        builder: _buildAnimation,
+      );
+
+  Widget _buildAnimation(BuildContext context, Widget child) =>
+      Positioned.fromRect(
+          rect: _relativeRect.value.toRect(imageRect(imageSize)),
+          child: Image.asset(image, fit: BoxFit.cover));
+
+  static const zoomLevel = 1.04;
+
+  static Rect imageRect(Size size) =>
+      Rect.fromLTWH(0, 0, size.width, size.height);
+
+  static RelativeRect _start(Size size) => RelativeRect.fromSize(
+      _getRandomStartRect(size), size);
+
+  static Rect _getRandomStartRect(Size size) => [
+    Rect.fromLTWH(0, -size.height, size.width, size.height),
+    Rect.fromLTWH(0, size.height, size.width, size.height),
+    Rect.fromLTWH(size.width, 0, size.width, size.height),
+    Rect.fromLTWH(-size.width, 0, size.width, size.height),
+  ].elementAt(Random().nextInt(4));
+
+  static RelativeRect _end(Size size) =>
+      RelativeRect.fromSize(imageRect(size), size);
+
+  static RelativeRect zoomInRect(Size size) => RelativeRect.fromSize(
+      Rect.fromLTWH(
+          -size.width * (zoomLevel - 1) / 2,
+          -size.height * (zoomLevel - 1) / 2,
+          size.width * zoomLevel,
+          size.height * zoomLevel),
+      size);
+
+  static TweenSequence<RelativeRect> rectSequence(Size size) => TweenSequence([
+        TweenSequenceItem(
+            tween: RelativeRectTween(begin: _start(size), end: _end(size)),
+            weight: 50),
+        TweenSequenceItem(
+            tween: RelativeRectTween(begin: _end(size), end: zoomInRect(size)),
+            weight: 800),
+        TweenSequenceItem(
+            tween: RelativeRectTween(begin: zoomInRect(size), end: _end(size)),
+            weight: 50)
+      ]);
 }
