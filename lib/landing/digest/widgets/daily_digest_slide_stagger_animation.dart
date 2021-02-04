@@ -3,26 +3,25 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DailyDigestSlideAnimation2 extends StatefulWidget {
-  final String image;
-  final Size imageSize;
+class DailyDigestAnimationController extends StatefulWidget {
+  final Function animatedWidgetBuilder;
 
-  const DailyDigestSlideAnimation2({Key key, this.image, this.imageSize})
+  const DailyDigestAnimationController({Key key, this.animatedWidgetBuilder})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
-      _DailyDigestSlideAnimation2State(image, imageSize);
+      _DailyDigestAnimationControllerState(animatedWidgetBuilder);
 }
 
-class _DailyDigestSlideAnimation2State extends State<DailyDigestSlideAnimation2>
+class _DailyDigestAnimationControllerState
+    extends State<DailyDigestAnimationController>
     with TickerProviderStateMixin {
   AnimationController _controller;
 
-  final String image;
-  final Size imageSize;
+  final Function buildAnimatedWidget;
 
-  _DailyDigestSlideAnimation2State(this.image, this.imageSize);
+  _DailyDigestAnimationControllerState(this.buildAnimatedWidget);
 
   @override
   void initState() {
@@ -33,24 +32,51 @@ class _DailyDigestSlideAnimation2State extends State<DailyDigestSlideAnimation2>
   }
 
   @override
+  Widget build(BuildContext context) => buildAnimatedWidget(_controller);
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
-  @override
-  Widget build(BuildContext context) => _DailyDigestSlideStaggerAnimation(
-      controller: _controller.view, image: image, imageSize: imageSize);
 }
 
-class _DailyDigestSlideStaggerAnimation extends StatelessWidget {
+class DailyDigestDecorationAnimation extends StatelessWidget {
+  final AnimationController controller;
+  final Animation<RelativeRect> _relativeRect;
+  final RelativeRectTween tween;
+  final Size imageSize;
+
+  DailyDigestDecorationAnimation(
+      {Key key, this.controller, this.imageSize, this.tween})
+      : _relativeRect = tween.animate(CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.0, 0.2, curve: Curves.easeInOutCubic))),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      AnimatedBuilder(animation: controller, builder: _buildAnimation);
+
+  Widget _buildAnimation(BuildContext context, Widget child) =>
+      Positioned.fromRect(
+          rect: _relativeRect.value.toRect(imageRect(imageSize)),
+          child: Container(
+            color: Theme.of(context).colorScheme.primary,
+          ));
+
+  static Rect imageRect(Size size) =>
+      Rect.fromLTWH(0, 0, size.width, size.height);
+}
+
+class DailyDigestSlideAnimation extends StatelessWidget {
   final AnimationController controller;
   final Animation<RelativeRect> _relativeRect;
 
   final String image;
   final Size imageSize;
 
-  _DailyDigestSlideStaggerAnimation(
+  DailyDigestSlideAnimation(
       {Key key, this.controller, this.image, this.imageSize})
       : _relativeRect = rectSequence(imageSize).animate(CurvedAnimation(
             parent: controller,
@@ -58,10 +84,8 @@ class _DailyDigestSlideStaggerAnimation extends StatelessWidget {
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: controller,
-        builder: _buildAnimation,
-      );
+  Widget build(BuildContext context) =>
+      AnimatedBuilder(animation: controller, builder: _buildAnimation);
 
   Widget _buildAnimation(BuildContext context, Widget child) =>
       Positioned.fromRect(
@@ -73,15 +97,15 @@ class _DailyDigestSlideStaggerAnimation extends StatelessWidget {
   static Rect imageRect(Size size) =>
       Rect.fromLTWH(0, 0, size.width, size.height);
 
-  static RelativeRect _start(Size size) => RelativeRect.fromSize(
-      _getRandomStartRect(size), size);
+  static RelativeRect _start(Size size) =>
+      RelativeRect.fromSize(_getRandomStartRect(size), size);
 
   static Rect _getRandomStartRect(Size size) => [
-    Rect.fromLTWH(0, -size.height, size.width, size.height),
-    Rect.fromLTWH(0, size.height, size.width, size.height),
-    Rect.fromLTWH(size.width, 0, size.width, size.height),
-    Rect.fromLTWH(-size.width, 0, size.width, size.height),
-  ].elementAt(Random().nextInt(4));
+        Rect.fromLTWH(0, -size.height, size.width, size.height),
+        Rect.fromLTWH(0, size.height, size.width, size.height),
+        Rect.fromLTWH(size.width, 0, size.width, size.height),
+        Rect.fromLTWH(-size.width, 0, size.width, size.height),
+      ].elementAt(Random().nextInt(4));
 
   static RelativeRect _end(Size size) =>
       RelativeRect.fromSize(imageRect(size), size);

@@ -3,12 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 
-class DailyDigestSlideAnimation extends StatelessWidget {
+class DailyDigestSlideAnimationDeprecated extends StatelessWidget {
   final String image;
   final Size imageSize;
   final Random random = Random();
 
-  DailyDigestSlideAnimation({Key key, this.image, this.imageSize})
+  DailyDigestSlideAnimationDeprecated({Key key, this.image, this.imageSize})
       : super(key: key);
 
   @override
