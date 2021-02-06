@@ -1,74 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DailyDigestAnimationController extends StatefulWidget {
-  final Function animatedWidgetBuilder;
-
-  const DailyDigestAnimationController({Key key, this.animatedWidgetBuilder})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() =>
-      _DailyDigestAnimationControllerState(animatedWidgetBuilder);
-}
-
-class _DailyDigestAnimationControllerState
-    extends State<DailyDigestAnimationController>
-    with TickerProviderStateMixin {
-  AnimationController _controller;
-
-  final Function buildAnimatedWidget;
-
-  _DailyDigestAnimationControllerState(this.buildAnimatedWidget);
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 4000), vsync: this)
-          ..forward();
-  }
-
-  @override
-  Widget build(BuildContext context) => buildAnimatedWidget(_controller);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
-
-class DailyDigestDecorationAnimation extends StatelessWidget {
-  final AnimationController controller;
-  final Animation<RelativeRect> _relativeRect;
-  final RelativeRectTween tween;
-  final Size imageSize;
-
-  DailyDigestDecorationAnimation(
-      {Key key, this.controller, this.imageSize, this.tween})
-      : _relativeRect = tween.animate(CurvedAnimation(
-            parent: controller,
-            curve: Interval(0.0, 0.2, curve: Curves.easeInOutCubic))),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) =>
-      AnimatedBuilder(animation: controller, builder: _buildAnimation);
-
-  Widget _buildAnimation(BuildContext context, Widget child) =>
-      Positioned.fromRect(
-          rect: _relativeRect.value.toRect(imageRect(imageSize)),
-          child: Container(
-            color: Theme.of(context).colorScheme.primary,
-          ));
-
-  static Rect imageRect(Size size) =>
-      Rect.fromLTWH(0, 0, size.width, size.height);
-}
-
+/// Animate the debut of the image slide.
 class DailyDigestSlideAnimation extends StatelessWidget {
   final AnimationController controller;
   final Animation<RelativeRect> _relativeRect;

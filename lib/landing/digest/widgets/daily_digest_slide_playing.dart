@@ -1,18 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/animation/daily_digest_decoration_planner.dart';
 
-import 'daily_digest_slide_stagger_animation.dart';
+import 'animation/dail_digest_animation_controller.dart';
+import 'animation/daily_digest_decoration_animation.dart';
+import 'animation/daily_digest_slide_animation.dart';
 
 /// Animate sliding in the next digest image, and pause when touching anywhere on the image.
 class DailyDigestSlidePlaying extends StatelessWidget {
-  final double padding;
+  final double padding = 1;
+  final DailyDigestDecorationPlanner dailyDigestDecorationPlanner;
 
-  DailyDigestSlidePlaying({Key key, this.padding = 1}) : super(key: key);
+  DailyDigestSlidePlaying(this.dailyDigestDecorationPlanner);
 
   @override
   Widget build(BuildContext context) =>
@@ -35,99 +36,48 @@ class DailyDigestSlidePlaying extends StatelessWidget {
       padding: EdgeInsets.all(padding),
       child: LayoutBuilder(builder: (context, constraints) {
         final Size size = constraints.biggest;
-        final Size decorationSize = _randomSize(size);
-        final Offset decorationOffset = _randomOffset(size);
+        final tweens = dailyDigestDecorationPlanner.getDecorationTweens(size);
         return Stack(
           children: [
-            images.currentImage != null
-                ? _genStaticImage(images.currentImage)
-                : Container(),
-            images.nextImage != null
-                ? DailyDigestAnimationController(
-                    key: Key(images.nextImage),
-                    animatedWidgetBuilder:
-                        _getSlideAnimationBuilder(images.nextImage, size))
-                : Container(),
-            images.nextImage != null
-                ? DailyDigestAnimationController(
-                    key: Key(images.nextImage + "_horizontal_decoration"),
-                    animatedWidgetBuilder: _getDecorationAnimationBuilder(
-                        size,
-                        _getHorizontalDecorationTween(
-                            size, decorationOffset, decorationSize.width)))
-                : Container(),
-            images.nextImage != null
-                ? DailyDigestAnimationController(
-                    key: Key(images.nextImage + "_vertical_decoration"),
-                    animatedWidgetBuilder: _getDecorationAnimationBuilder(
-                        size,
-                        _getVerticalDecorationTween(
-                            size, decorationOffset, decorationSize.height)))
-                : Container()
-          ],
+                _genCurrentImage(images),
+                _genNextImageWithAnimation(images, size)
+              ] +
+              tweens
+                  .asMap()
+                  .entries
+                  .map(
+                    (entry) => _genDecorationWithAnimation(
+                        images, size, entry.value, entry.key.toString()),
+                  )
+                  .toList(),
         );
       }));
+
+  Widget _genDecorationWithAnimation(DigestImageModel images,
+          Size benchmarkSize, Tween tween, String key) =>
+      images.nextImage != null
+          ? DailyDigestAnimationController(
+              key: Key(images.nextImage + key),
+              animatedWidgetBuilder:
+                  _getDecorationAnimationBuilder(benchmarkSize, tween))
+          : Container();
+
+  Widget _genNextImageWithAnimation(DigestImageModel images, Size size) =>
+      images.nextImage != null
+          ? DailyDigestAnimationController(
+              key: Key(images.nextImage),
+              animatedWidgetBuilder:
+                  _getSlideAnimationBuilder(images.nextImage, size))
+          : Container();
+
+  Widget _genCurrentImage(DigestImageModel images) =>
+      images.currentImage != null
+          ? _genStaticImage(images.currentImage)
+          : Container();
 
   Function _getSlideAnimationBuilder(String image, Size imageSize) =>
       (AnimationController controller) => DailyDigestSlideAnimation(
           controller: controller, image: image, imageSize: imageSize);
-
-  final double thickness = 2;
-
-  Tween _getHorizontalDecorationTween(
-          Size benchmarkSize, Offset offset, double length) =>
-      RelativeRectTween(
-          begin: RelativeRect.fromSize(
-              Rect.fromLTWH(-benchmarkSize.width, offset.dy, length, thickness),
-              benchmarkSize),
-          end: RelativeRect.fromSize(
-              Rect.fromLTWH(
-                  length < benchmarkSize.width &&
-                          offset.dx * 2 > benchmarkSize.width
-                      ? offset.dx
-                      : 0,
-                  offset.dy,
-                  length,
-                  thickness),
-              benchmarkSize));
-
-  Tween _getVerticalDecorationTween(
-          Size benchmarkSize, Offset offset, length) =>
-      RelativeRectTween(
-          begin: RelativeRect.fromSize(
-              Rect.fromLTWH(offset.dx, benchmarkSize.height, thickness, length),
-              benchmarkSize),
-          end: RelativeRect.fromSize(
-              Rect.fromLTWH(
-                  offset.dx,
-                  length < benchmarkSize.height &&
-                          offset.dy * 2 > benchmarkSize.height
-                      ? offset.dy
-                      : 0,
-                  thickness,
-                  length),
-              benchmarkSize));
-
-  final double xDecorationAnchor = 80;
-  final double yDecorationAnchor = 40;
-  final random = Random();
-
-  Offset _randomOffset(Size size) => Offset(
-      random.nextBool() ? xDecorationAnchor : size.width - xDecorationAnchor,
-      random.nextBool() ? yDecorationAnchor : size.height - yDecorationAnchor);
-
-  Size _randomSize(Size size) => random.nextInt(3).let((seed) {
-        switch (seed) {
-          case 0:
-            return size;
-          case 1:
-            return Size(size.width, yDecorationAnchor);
-          case 2:
-            return Size(xDecorationAnchor, size.height);
-          default:
-            return Size.zero;
-        }
-      });
 
   Function _getDecorationAnimationBuilder(Size size, Tween tween) =>
       (AnimationController controller) => DailyDigestDecorationAnimation(
