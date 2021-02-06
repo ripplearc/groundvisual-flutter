@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/digest/widgets/animation/daily_digest_decoration_planner.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_collage_cover.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_play_button.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_playing.dart';
@@ -25,7 +27,7 @@ class DailyDigestSlideShow extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   DailyDigestCollageCover(),
-                  DailyDigestSlidePlaying(),
+                  DailyDigestSlidePlaying(getIt<DailyDigestDecorationPlanner>()),
                   DailyDigestPlayButton()
                 ],
               ),

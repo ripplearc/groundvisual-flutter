@@ -32,5 +32,5 @@ class SelectTrendChartBarRod extends TrendWorkingTimeChartEvent {
       this.period, this.context);
 
   @override
-  List<Object> get props => [groupId, rodId];
+  List<Object> get props => [groupId, rodId, siteName, range, period];
 }
