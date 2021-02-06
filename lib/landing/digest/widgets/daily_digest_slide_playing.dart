@@ -4,7 +4,7 @@ import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/animation/daily_digest_decoration_planner.dart';
 
-import 'animation/dail_digest_animation_controller.dart';
+import 'animation/daily_digest_animation_controller.dart';
 import 'animation/daily_digest_decoration_animation.dart';
 import 'animation/daily_digest_slide_animation.dart';
 

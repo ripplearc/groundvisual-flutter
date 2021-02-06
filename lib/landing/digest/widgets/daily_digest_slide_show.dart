@@ -26,7 +26,6 @@ class DailyDigestSlideShow extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // StaggerDemo()
                   DailyDigestCollageCover(),
                   DailyDigestSlidePlaying(getIt<DailyDigestDecorationPlanner>()),
                   DailyDigestPlayButton()
