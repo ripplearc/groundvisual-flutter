@@ -48,3 +48,6 @@ lib/models/site_analysis_window.freezed.dart
 
 # flutter build run generated files
 *.g.dart
+android/app/src/main/res/drawable-*/ic_launcher_*.png
+android/app/src/main/res/mipmap-*/launcher_icon.*
+/ios/Runner/Assets.xcassets/AppIcon.appiconset/
