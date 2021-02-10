@@ -81,13 +81,6 @@ flutter:
     - assets/map_styles/
     - assets/mock_response/
 
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icon/app_icon.png"
-  adaptive_icon_background: "assets/icon/app_icon_background_432.png"
-  adaptive_icon_foreground: "assets/icon/app_icon_foreground_432.png"
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
