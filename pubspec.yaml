@@ -35,21 +35,21 @@ dependencies:
   json_annotation: ^3.0.1
   meta: ^1.1.8
   table_calendar: ^2.3.0
-  intl: ^0.16.1
   salomon_bottom_bar: ^2.0.0
   tuple: ^1.0.3
-  fluro: ^1.7.7
+  fluro: ^1.7.8
   fl_chart: ^0.12.0
   shimmer: ^1.1.2
   google_maps_flutter: ^1.0.6
   dart_date: ^1.0.8
   charts_flutter: ^0.9.0
-  device_preview: ^0.5.5
-
-
+#  device_preview: ^0.6.2-beta
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:
