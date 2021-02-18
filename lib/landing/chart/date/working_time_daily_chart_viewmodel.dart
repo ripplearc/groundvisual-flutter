@@ -40,7 +40,7 @@ class WorkingTimeDailyChartViewModel {
         List.generate(dailyChartBarConverter.groupsPerDay, (index) {
       int hour = index + 1;
       hour = hour % dailyChartBarConverter.groupsPerDay;
-      return (hour % 6 == 0) ? hour.toString() + ":00" : "";
+      return (hour % 6 == 0 && hour != 0) ? hour.toString() + ":00" : "";
     });
 
     return WorkingTimeChartData(bars, tooltips, 15, _space, bottomTitles);

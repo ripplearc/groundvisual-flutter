@@ -15,8 +15,8 @@ class WorkingTimeTrendChart extends StatelessWidget {
   WorkingTimeTrendChart(this.trendChartData);
 
   @override
-  Widget build(BuildContext context) => genChartSectionWithTitle(context,
-      AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context)), false);
+  Widget build(BuildContext context) => chartSectionWithTitleBuilder(context: context,
+      builder: AspectRatio(aspectRatio: 1.8, child: _buildBarChartCard(context)), compacted: false);
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,

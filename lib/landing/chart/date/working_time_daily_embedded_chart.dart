@@ -10,39 +10,77 @@ import 'package:tuple/tuple.dart';
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyEmbeddedChart extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      AspectRatio(aspectRatio: 3, child: _buildBarChartCard(context));
-
-  Widget _buildBackground() => Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.0, 0.4],
-                colors: [Colors.transparent, Colors.white])),
+  Widget build(BuildContext context) => AspectRatio(
+        aspectRatio: 2.618,
+        child: Stack(
+          children: [_buildBarChartCard(context), _buildThumbnailImage()],
+        ),
       );
 
-  Widget _buildBarChartCard(BuildContext context) => Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-      color: Colors.transparent,
-      child:
-          BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
-              buildWhen: (previous, current) =>
-                  current is DailyWorkingTimeDataLoaded,
-              builder: (context, state) {
-                if (state is DailyWorkingTimeDataLoaded) {
-                  return Stack(
-                    children: [
-                      Positioned.fill(child: _buildBackground()),
-                      Positioned.fill(
-                          child: _BarChart(barChartDataAtDate: state))
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              }));
+  BlocBuilder _buildThumbnailImage() =>
+      BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
+        buildWhen: (previous, current) =>
+            current is SiteSnapShotThumbnailLoaded ||
+            current is SiteSnapShotLoading ||
+            current is SiteSnapShotHiding,
+        builder: (context, state) => Positioned(
+          top: 0.0,
+          right: 0.0,
+          child: _genThumbnailImageUponTouch(state, context),
+        ),
+      );
+
+  Widget _genThumbnailImageUponTouch(
+      DailyWorkingTimeState state, BuildContext context) {
+    if (state is SiteSnapShotThumbnailLoaded) {
+      return _loadImageAsset(state);
+    } else if (state is SiteSnapShotLoading) {
+      return _shimmingWhileLoadingAsset(context);
+    } else {
+      return Container();
+    }
+  }
+
+  Shimmer _shimmingWhileLoadingAsset(BuildContext context) =>
+      Shimmer.fromColors(
+          baseColor: Theme.of(context).colorScheme.surface,
+          highlightColor: Theme.of(context).colorScheme.onSurface,
+          child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, right: 6.0),
+              child: Container(
+                  width: 96,
+                  height: 96,
+                  color: Theme.of(context).colorScheme.background)));
+
+  Padding _loadImageAsset(SiteSnapShotThumbnailLoaded state) => Padding(
+      padding: const EdgeInsets.only(top: 10.0, right: 6.0),
+      child: Image.asset(
+        state.assetName,
+        width: 96,
+        height: 96,
+        fit: BoxFit.cover,
+      ));
+
+  Positioned _buildBarChartCard(BuildContext context) => Positioned.fill(
+      child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          // color: Theme.of(context).colorScheme.background,
+          color: Colors.transparent,
+          child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 20.0, top: 22.0),
+              child:
+                  BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
+                      buildWhen: (previous, current) =>
+                          current is DailyWorkingTimeDataLoaded,
+                      builder: (context, state) {
+                        if (state is DailyWorkingTimeDataLoaded) {
+                          return _BarChart(barChartDataAtDate: state);
+                        } else {
+                          return Container();
+                        }
+                      }))));
 }
 
 class _BarChart extends StatelessWidget {
@@ -77,7 +115,7 @@ class _BarChart extends StatelessWidget {
               show: true,
               bottomTitles: SideTitles(
                 showTitles: true,
-                getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
+                getTextStyles: (value) => Theme.of(context).textTheme.caption,
                 margin: 2,
                 getTitles: (double index) =>
                     barChartDataAtDate.chartData.bottomTitles[index.toInt()],

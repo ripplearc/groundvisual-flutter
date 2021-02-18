@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-Widget genChartSectionWithTitle(
-        BuildContext context, Widget content, bool compacted) =>
+Widget chartSectionWithTitleBuilder(
+        {BuildContext context, Widget builder, bool compacted}) =>
     compacted
-        ? _genChartSectionWithTitleInCompactMode(context, content)
-        : _genChartSectionWithTitleInNormalMode(context, content);
+        ? _genChartSectionWithTitleInCompactMode(context, builder)
+        : _genChartSectionWithTitleInNormalMode(context, builder);
 
 Stack _genChartSectionWithTitleInCompactMode(
         BuildContext context, Widget content) =>
@@ -25,5 +25,5 @@ Column _genChartSectionWithTitleInNormalMode(
     );
 
 ListTile _genTitle(BuildContext context) => ListTile(
-      title: Text('Working Time', style: Theme.of(context).textTheme.headline5),
+      title: Text('Working Time', style: Theme.of(context).textTheme.subtitle1),
     );

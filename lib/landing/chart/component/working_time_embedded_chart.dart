@@ -9,31 +9,31 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 
 /// Displays the working time of a day or a period.
-class WorkingTimeChart extends StatelessWidget {
+class WorkingTimeEmbeddedChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           builder: (context, state) {
-        if (state is SelectedSiteAtDate) {
-          return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
-              builder: (context, state) {
-            return state is DailyWorkingTimeDataLoading
-                ? WorkingTimeDailyChartShimmer()
-                : WorkingTimeDailyEmbeddedChart();
-          });
-        } else if (state is SelectedSiteAtTrend) {
-          return BlocBuilder<TrendWorkingTimeChartBloc,
-              TrendWorkingTimeChartState>(builder: (context, state) {
-            if (state is TrendWorkingTimeDataLoading) {
-              return WorkingTimeTrendChartShimmer(period: state.period);
-            } else if (state is TrendWorkingTimeDataLoaded) {
-              return WorkingTimeTrendChart(state);
+            if (state is SelectedSiteAtDate) {
+              return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
+                  builder: (context, state) {
+                    return state is DailyWorkingTimeDataLoading
+                        ? WorkingTimeDailyChartShimmer()
+                        : WorkingTimeDailyEmbeddedChart();
+                  });
+            } else if (state is SelectedSiteAtTrend) {
+              return BlocBuilder<TrendWorkingTimeChartBloc,
+                  TrendWorkingTimeChartState>(builder: (context, state) {
+                if (state is TrendWorkingTimeDataLoading) {
+                  return WorkingTimeTrendChartShimmer(period: state.period);
+                } else if (state is TrendWorkingTimeDataLoaded) {
+                  return WorkingTimeTrendChart(state);
+                } else {
+                  return Container();
+                }
+              });
             } else {
               return Container();
             }
           });
-        } else {
-          return Container();
-        }
-      });
 }

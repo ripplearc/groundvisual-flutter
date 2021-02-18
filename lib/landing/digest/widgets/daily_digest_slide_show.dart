@@ -13,14 +13,15 @@ class DailyDigestSlideShow extends StatelessWidget {
       color: Theme.of(context).colorScheme.background,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      // margin: EdgeInsets.only(top: 20),
       child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title:
-                  Text('Digest', style: Theme.of(context).textTheme.headline5),
-            ),
+            // ListTile(
+            //   title:
+            //       Text('Digest', style: Theme.of(context).textTheme.headline5),
+            // ),
             AspectRatio(
               aspectRatio: 336 / 190,
               child: Stack(

@@ -13,9 +13,9 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
   const WorkingTimeTrendChartShimmer({Key key, this.period}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => genChartSectionWithTitle(
-      context,
-      AspectRatio(
+  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
+      context: context,
+      builder: AspectRatio(
           aspectRatio: 1.8,
           child: Card(
               elevation: 4,
@@ -23,7 +23,7 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6)),
               color: Theme.of(context).colorScheme.background,
               child: _buildShimmerContent(context))),
-      false);
+      compacted: false);
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();

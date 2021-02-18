@@ -7,9 +7,9 @@ import 'package:shimmer/shimmer.dart';
 /// Shimmer displayed when fetching data for the WorkingTimeDailyChart.
 class WorkingTimeDailyChartShimmer extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => genChartSectionWithTitle(
-      context,
-      AspectRatio(
+  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
+      context: context,
+      builder: AspectRatio(
           aspectRatio: 1.8,
           child: Card(
               elevation: 4,
@@ -17,7 +17,7 @@ class WorkingTimeDailyChartShimmer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6)),
               color: Theme.of(context).colorScheme.background,
               child: _buildShimmerContent(context))),
-      true);
+      compacted: true);
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();
