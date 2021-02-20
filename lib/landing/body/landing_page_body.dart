@@ -60,7 +60,6 @@ class LandingHomePageBody extends StatelessWidget {
       }
     });
   }
-
 }
 
 /// Build the slivers based on the current SelectedSiteState, and animate
@@ -86,7 +85,7 @@ class _SliverBuilder {
   Widget _getItemAtDateMode(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return DailyDigestSlideShow();
+        return DailyDigestSlideShow(aspectRatio: 336 / 190);
       case 1:
         return WorkingTimeChart();
       case 2:

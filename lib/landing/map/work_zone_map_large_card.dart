@@ -11,15 +11,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'bloc/work_zone_map_bloc.dart';
 
 class WorkZoneMapLargeCard extends StatefulWidget {
+  final double bottomPadding;
+
+  const WorkZoneMapLargeCard({Key key, @required this.bottomPadding})
+      : super(key: key);
+
   @override
-  State<WorkZoneMapLargeCard> createState() => WorkZoneMapLargeCardState();
+  State<WorkZoneMapLargeCard> createState() =>
+      WorkZoneMapLargeCardState(bottomPadding);
 }
 
 class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
     with WidgetsBindingObserver {
+  final double bottomPadding;
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
+
+  WorkZoneMapLargeCardState(this.bottomPadding);
 
   void initState() {
     super.initState();
@@ -58,26 +67,17 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
           color: Theme.of(context).colorScheme.background,
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          child: _genMapContent(context, cameraPosition, workZone));
+          child: _buildGoogleMap(cameraPosition, workZone));
 
-  Padding _genMapContent(BuildContext context, CameraPosition cameraPosition,
-          Set<Polygon> workZone) =>
-      Padding(
-          padding: const EdgeInsets.all(0.0),
-          // child: AspectRatio(
-          //     aspectRatio: 0.8,
-          child: _genGoogleMap(cameraPosition, workZone));
-
-  GoogleMap _genGoogleMap(
+  GoogleMap _buildGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workZone) =>
       GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: cameraPosition,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
-          setState(() {});
         },
-        padding: EdgeInsets.only(bottom: 200),
+        padding: EdgeInsets.only(bottom: bottomPadding),
         zoomControlsEnabled: false,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
           Factory<OneSequenceGestureRecognizer>(

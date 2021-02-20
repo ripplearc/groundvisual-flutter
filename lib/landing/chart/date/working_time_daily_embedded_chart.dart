@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time on a certain date.
-class WorkingTimeDailyEmbeddedChart extends StatelessWidget {
+class WorkingTimeDailyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AspectRatio(
         aspectRatio: 2.618,

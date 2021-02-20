@@ -10,6 +10,9 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 
 /// Displays the working time of a day or a period.
 class WorkingTimeEmbeddedChart extends StatelessWidget {
+  final double aspectRatio;
+
+  const WorkingTimeEmbeddedChart({Key key, @required this.aspectRatio}) : super(key: key);
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
@@ -19,7 +22,7 @@ class WorkingTimeEmbeddedChart extends StatelessWidget {
                   builder: (context, state) {
                     return state is DailyWorkingTimeDataLoading
                         ? WorkingTimeDailyChartShimmer()
-                        : WorkingTimeDailyEmbeddedChart();
+                        : WorkingTimeDailyEmbeddedChart(aspectRatio: aspectRatio);
                   });
             } else if (state is SelectedSiteAtTrend) {
               return BlocBuilder<TrendWorkingTimeChartBloc,

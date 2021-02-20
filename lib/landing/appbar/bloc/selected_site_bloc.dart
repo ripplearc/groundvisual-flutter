@@ -88,14 +88,17 @@ class SelectedSiteBloc
         .add(SearchWorkingTimeOnTrend(siteName, event.period, event.context));
   }
 
-  void _signalOtherBlocsOnDateSelected(String siteName, DateSelected event) {
+  Future<void> _signalOtherBlocsOnDateSelected(String siteName, DateSelected event) async {
     dailyWorkingTimeChartBloc
         .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
     machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
-    workZoneMapBloc
-        .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
     playDigestBloc
         .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
+    workZoneMapBloc
+        .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
+    // await Future.delayed(Duration(seconds: 1));
+    // workZoneMapBloc
+    //     .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
   }
 
   void _signalOtherBlocsOnSiteSelected(SiteSelected event) {

@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
-import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time on a certain date.
 class WorkingTimeDailyEmbeddedChart extends StatelessWidget {
+  final double aspectRatio;
+
+  const WorkingTimeDailyEmbeddedChart({Key key, @required this.aspectRatio}) : super(key: key);
   @override
   Widget build(BuildContext context) =>
-      AspectRatio(aspectRatio: 3, child: _buildBarChartCard(context));
+      AspectRatio(aspectRatio: aspectRatio, child: _buildBarChartCard(context));
 
   Widget _buildBackground(BuildContext context) => Container(
         decoration: BoxDecoration(
