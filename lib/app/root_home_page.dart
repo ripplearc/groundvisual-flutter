@@ -1,12 +1,12 @@
+import 'package:dart_date/dart_date.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/components/calendar_page.dart';
 import 'package:groundvisual_flutter/document/document_home_page.dart';
-import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
-
-import 'package:dart_date/dart_date.dart';
 
 class RootHomePage extends StatefulWidget {
   @override
@@ -16,13 +16,13 @@ class RootHomePage extends StatefulWidget {
 class _RootHomePageState extends State<RootHomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    LandingHomePage(),
-    MyHomePage(title: "Fleet"),
-    // PlaceholderWidget(
-    //   "Fleet Page Under Construction",
-    //   tab: SelectedTab.fleet,
-    // ),
+    // LandingHomePage(),
     DocumentHomePage(),
+    MyHomePage(title: "Fleet"),
+    PlaceholderWidget(
+      "Fleet Page Under Construction",
+      tab: SelectedTab.fleet,
+    ),
     PlaceholderWidget(
       "Account Page Under Construction",
       tab: SelectedTab.account,
@@ -31,13 +31,15 @@ class _RootHomePageState extends State<RootHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: _children[_currentIndex],
-        bottomNavigationBar: BottomNavigation(action: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        }));
+    return DevicePreview(
+        enabled: !kReleaseMode && MediaQuery.of(context).size.width > 600,
+        builder: (context) => Scaffold(
+            body: _children[_currentIndex],
+            bottomNavigationBar: BottomNavigation(action: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            })));
   }
 }
 

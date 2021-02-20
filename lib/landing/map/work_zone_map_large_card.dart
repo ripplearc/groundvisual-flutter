@@ -75,7 +75,9 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
         initialCameraPosition: cameraPosition,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
+          setState(() {});
         },
+        padding: EdgeInsets.only(bottom: 200),
         zoomControlsEnabled: false,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
           Factory<OneSequenceGestureRecognizer>(

@@ -5,12 +5,10 @@ import 'package:groundvisual_flutter/components/theme/app_theme.dart';
 
 class GroundVisualApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ground Visual',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      home: RootHomePage(),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Ground Visual',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        home: RootHomePage(),
+      );
 }

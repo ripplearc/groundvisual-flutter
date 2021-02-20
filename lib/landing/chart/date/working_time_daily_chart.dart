@@ -13,13 +13,13 @@ class WorkingTimeDailyEmbeddedChart extends StatelessWidget {
   Widget build(BuildContext context) =>
       AspectRatio(aspectRatio: 3, child: _buildBarChartCard(context));
 
-  Widget _buildBackground() => Container(
+  Widget _buildBackground(BuildContext context) => Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [0.0, 0.4],
-                colors: [Colors.transparent, Colors.white])),
+                colors: [Colors.transparent, Theme.of(context).colorScheme.background])),
       );
 
   Widget _buildBarChartCard(BuildContext context) => Card(
@@ -34,7 +34,7 @@ class WorkingTimeDailyEmbeddedChart extends StatelessWidget {
                 if (state is DailyWorkingTimeDataLoaded) {
                   return Stack(
                     children: [
-                      Positioned.fill(child: _buildBackground()),
+                      Positioned.fill(child: _buildBackground(context)),
                       Positioned.fill(
                           child: _BarChart(barChartDataAtDate: state))
                     ],
