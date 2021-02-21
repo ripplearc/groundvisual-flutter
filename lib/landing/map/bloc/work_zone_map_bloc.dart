@@ -71,4 +71,5 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
     ]);
     return WorkZoneMapPolygons(result[0], result[1]);
   }
+
 }

@@ -1,5 +1,4 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,17 +29,13 @@ class _RootHomePageState extends State<RootHomePage> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return DevicePreview(
-        enabled: !kReleaseMode && MediaQuery.of(context).size.width > 600,
-        builder: (context) => Scaffold(
-            body: _children[_currentIndex],
-            bottomNavigationBar: BottomNavigation(action: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            })));
-  }
+  Widget build(BuildContext context) => Scaffold(
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigation(action: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      }));
 }
 
 class MyHomePage extends StatefulWidget {
@@ -78,10 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _showMaterialDialog() {
-    // showDialog(
-    //   context: context,
-    //   builder: (_) => CalendarPage(),
-    // );
     showDialog(
         context: context,
         builder: (ctx) => SimpleDialog(

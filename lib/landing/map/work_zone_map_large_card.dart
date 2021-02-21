@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:injectable/injectable.dart';
 
 import 'bloc/work_zone_map_bloc.dart';
 
@@ -17,8 +19,8 @@ class WorkZoneMapLargeCard extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<WorkZoneMapLargeCard> createState() =>
-      WorkZoneMapLargeCardState(bottomPadding);
+  State<WorkZoneMapLargeCard> createState() => WorkZoneMapLargeCardState(
+      bottomPadding, getIt<CameraAnimationController>());
 }
 
 class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
@@ -27,8 +29,10 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
+  final CameraAnimationController _cameraAnimationController;
 
-  WorkZoneMapLargeCardState(this.bottomPadding);
+  WorkZoneMapLargeCardState(
+      this.bottomPadding, this._cameraAnimationController);
 
   void initState() {
     super.initState();
@@ -41,27 +45,32 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
   Widget build(BuildContext context) =>
       BlocConsumer<WorkZoneMapBloc, WorkZoneMapState>(
           listener: (context, state) async {
-        final controller = await _controller.future;
-        if (state is WorkZoneMapPolygons) {
-          controller.animateCamera(
-            CameraUpdate.newCameraPosition(state.cameraPosition),
-          );
-        } else if (state is WorkZoneMapInitial) {
-          controller.animateCamera(
-            CameraUpdate.newCameraPosition(state.cameraPosition),
-          );
-        }
-      }, builder: (context, state) {
-        if (state is WorkZoneMapPolygons) {
-          return _genMapCard(context, state.cameraPosition, state.workZone);
-        } else if (state is WorkZoneMapInitial) {
-          return _genMapCard(context, state.cameraPosition, Set());
-        } else {
-          return Container();
-        }
-      });
+            final controller = await _controller.future;
+            _animateCameraPosition(state, controller);
+          },
+          builder: (context, state) => _buildMapCardWithPolygons(state));
 
-  Card _genMapCard(BuildContext context, CameraPosition cameraPosition,
+  StatelessWidget _buildMapCardWithPolygons(WorkZoneMapState state) {
+    if (state is WorkZoneMapPolygons) {
+      return _buildMapCard(context, state.cameraPosition, state.workZone);
+    } else if (state is WorkZoneMapInitial) {
+      return _buildMapCard(context, state.cameraPosition, Set());
+    } else {
+      return Container();
+    }
+  }
+
+  void _animateCameraPosition(
+      WorkZoneMapState state, GoogleMapController controller) {
+    if (state is WorkZoneMapPolygons) {
+      _cameraAnimationController
+          .executeAnimation(() => controller.animateCamera(
+                CameraUpdate.newCameraPosition(state.cameraPosition),
+              ));
+    }
+  }
+
+  Card _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
       Card(
           color: Theme.of(context).colorScheme.background,
@@ -76,6 +85,7 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
         initialCameraPosition: cameraPosition,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
+          setState(() {});
         },
         padding: EdgeInsets.only(bottom: bottomPadding),
         zoomControlsEnabled: false,
@@ -111,5 +121,22 @@ class WorkZoneMapLargeCardState extends State<WorkZoneMapLargeCard>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+}
+
+@injectable
+class CameraAnimationController {
+  bool _initialized = false;
+
+  executeAnimation(Function f) async {
+    await _delayInitialAnimationForPaddingTakesEffect();
+    f();
+  }
+
+  Future _delayInitialAnimationForPaddingTakesEffect() async {
+    if (!_initialized) {
+      await Future.delayed(Duration(seconds: 1));
+      _initialized = true;
+    }
   }
 }

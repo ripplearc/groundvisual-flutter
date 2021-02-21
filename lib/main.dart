@@ -9,6 +9,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureInjection();
   return runApp(
-    GroundVisualApp(),
+    DevicePreview(
+        enabled: !kReleaseMode, builder: (context) => GroundVisualApp()),
   );
 }

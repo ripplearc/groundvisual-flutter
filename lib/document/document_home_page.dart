@@ -4,7 +4,6 @@ import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/document/document_home_page_body.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/landing_page_header.dart';
-import 'package:groundvisual_flutter/landing/body/landing_page_body.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
