@@ -15,11 +15,12 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 part 'daily_working_time_chart_event.dart';
+
 part 'daily_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the date chart,
 /// and emits state of corresponding images, group and rod id.
-@LazySingleton()
+@injectable
 class DailyWorkingTimeChartBloc
     extends Bloc<DailyWorkingTimeChartEvent, DailyWorkingTimeState> {
   final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
@@ -29,8 +30,8 @@ class DailyWorkingTimeChartBloc
   final StreamController<Tuple2<int, int>> _highlightController =
       StreamController.broadcast();
 
-  DailyWorkingTimeChartBloc(this.dailyChartConverter, this.workZoneMapBloc,
-      this.workingTimeDailyChartViewModel)
+  DailyWorkingTimeChartBloc(this.dailyChartConverter,
+      this.workingTimeDailyChartViewModel, @factoryParam this.workZoneMapBloc)
       : super(DailyWorkingTimeDataLoading());
 
   @override

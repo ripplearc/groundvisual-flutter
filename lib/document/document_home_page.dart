@@ -9,21 +9,57 @@ import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart
 import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
+import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class DocumentHomePage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
-      providers: [
-        BlocProvider(
-            create: (_) =>
-            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context))),
-        BlocProvider(create: (_) => getIt<DailyWorkingTimeChartBloc>()),
-        BlocProvider(create: (_) => getIt<TrendWorkingTimeChartBloc>()),
-        BlocProvider(create: (_) => getIt<MachineStatusBloc>()),
-        BlocProvider(create: (_) => getIt<WorkZoneMapBloc>()),
-        BlocProvider(create: (_) => getIt<PlayDigestBloc>())
-      ],
-      child: CustomScrollView(
-        slivers: <Widget>[LandingHomePageHeader(), DocumentHomePageBody()],
-      ));
+  Widget build(BuildContext context) {
+    final DocumentHomePageBlocComponent component =
+        getIt<DocumentHomePageBlocComponent>();
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<MachineStatusBloc>(
+              create: (_) => component.machineStatusBloc),
+          BlocProvider<WorkZoneMapBloc>(
+              create: (_) => component.workZoneMapBloc),
+          BlocProvider<DailyWorkingTimeChartBloc>(
+              create: (_) => component.dailyWorkingTimeChartBloc),
+          BlocProvider<TrendWorkingTimeChartBloc>(
+              create: (_) => component.trendWorkingTimeChartBloc),
+          BlocProvider<PlayDigestBloc>(create: (_) => component.playDigestBloc),
+          BlocProvider<SelectedSiteBloc>(
+              create: (_) => component.selectedSiteBloc..add(SelectedSiteInit(context))),
+        ],
+        child: CustomScrollView(
+          slivers: <Widget>[LandingHomePageHeader(), DocumentHomePageBody()],
+        ));
+  }
+}
+
+@injectable
+class DocumentHomePageBlocComponent {
+  final MachineStatusBloc machineStatusBloc;
+  final WorkZoneMapBloc workZoneMapBloc;
+  TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
+  DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  PlayDigestBloc playDigestBloc;
+  SelectedSiteBloc selectedSiteBloc;
+
+  DocumentHomePageBlocComponent(this.machineStatusBloc, this.workZoneMapBloc) {
+    this.trendWorkingTimeChartBloc =
+        getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
+    this.dailyWorkingTimeChartBloc =
+        getIt<DailyWorkingTimeChartBloc>(param1: workZoneMapBloc);
+    this.playDigestBloc =
+        getIt<PlayDigestBloc>(param1: dailyWorkingTimeChartBloc);
+    this.selectedSiteBloc = SelectedSiteBloc(
+        getIt<CurrentSelectedSite>(),
+        machineStatusBloc,
+        workZoneMapBloc,
+        dailyWorkingTimeChartBloc,
+        trendWorkingTimeChartBloc,
+        playDigestBloc);
+  }
 }

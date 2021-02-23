@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/components/calendar_page.dart';
+import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/document/document_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
