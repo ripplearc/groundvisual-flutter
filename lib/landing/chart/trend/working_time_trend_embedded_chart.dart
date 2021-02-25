@@ -9,19 +9,16 @@ import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time during a certain period.
-class WorkingTimeTrendChart extends StatelessWidget {
+class WorkingTimeTrendEmbeddedChart extends StatelessWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
   final double aspectRatio;
 
-  WorkingTimeTrendChart(
+  WorkingTimeTrendEmbeddedChart(
       {@required this.trendChartData, this.aspectRatio = 1.8});
 
   @override
-  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
-      context: context,
-      builder: AspectRatio(
-          aspectRatio: aspectRatio, child: _buildBarChartCard(context)),
-      compacted: false);
+  Widget build(BuildContext context) =>
+      AspectRatio(aspectRatio: aspectRatio, child: _buildBarChartCard(context));
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,

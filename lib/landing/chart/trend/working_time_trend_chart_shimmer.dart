@@ -9,39 +9,50 @@ import 'package:shimmer/shimmer.dart';
 /// depends on the period.
 class WorkingTimeTrendChartShimmer extends StatelessWidget {
   final TrendPeriod period;
+  final double aspectRatio;
+  final bool showTitle;
 
-  const WorkingTimeTrendChartShimmer({Key key, this.period}) : super(key: key);
+  const WorkingTimeTrendChartShimmer(
+      {Key key,
+      this.period = TrendPeriod.oneWeek,
+      this.aspectRatio = 1.8,
+      this.showTitle = true})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
-      context: context,
-      builder: AspectRatio(
-          aspectRatio: 1.8,
-          child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              color: Theme.of(context).colorScheme.background,
-              child: _buildShimmerContent(context))),
-      compacted: false);
+  Widget build(BuildContext context) => showTitle
+      ? chartSectionWithTitleBuilder(
+          context: context, builder: _buildShimmer(context), compacted: false)
+      : _buildShimmer(context);
+
+  AspectRatio _buildShimmer(BuildContext context) {
+    return AspectRatio(
+        aspectRatio: 1.8,
+        child: Card(
+            elevation: 4,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            color: Theme.of(context).colorScheme.background,
+            child: _buildShimmerContent(context)));
+  }
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 16.0),
-      child:  Shimmer.fromColors(
-            baseColor: Theme.of(context).colorScheme.surface,
-            highlightColor: Theme.of(context).colorScheme.onSurface,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List<Container>.generate(
-                    period.days(),
-                    (index) => Container(
-                          width: 24 / (period.days() / 7),
-                          height: 96 * random.nextDouble(),
-                          color: Theme.of(context).colorScheme.background,
-                        )).toList(growable: true)),
+      child: Shimmer.fromColors(
+        baseColor: Theme.of(context).colorScheme.surface,
+        highlightColor: Theme.of(context).colorScheme.onSurface,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List<Container>.generate(
+                period.days(),
+                (index) => Container(
+                      width: 24 / (period.days() / 7),
+                      height: 96 * random.nextDouble(),
+                      color: Theme.of(context).colorScheme.background,
+                    )).toList(growable: true)),
       ),
     );
   }

@@ -4,12 +4,22 @@ import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_s
 import 'package:groundvisual_flutter/landing/map/work_zone_map_large_card.dart';
 
 class WorkZoneCompositeCard extends StatelessWidget {
-  final double mapAspectRatio = 0.75;
-  final double digestCardAspectRatio = 336 / 190;
-  final double digestCardBottomPadding = 80;
-  final double cardSidePadding = 10;
-  final double chartBottomPadding = 10;
-  final double chartCardAspectRatio = 3;
+  final double mapAspectRatio;
+  final double digestCardAspectRatio;
+  final double digestCardBottomPadding;
+  final double cardSidePadding;
+  final double chartBottomPadding;
+  final double chartCardAspectRatio;
+
+  const WorkZoneCompositeCard(
+      {Key key,
+      this.mapAspectRatio = 0.75,
+      this.digestCardAspectRatio = 336 / 190,
+      this.digestCardBottomPadding = 80,
+      this.cardSidePadding = 10,
+      this.chartBottomPadding = 10,
+      this.chartCardAspectRatio = 3})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => AspectRatio(

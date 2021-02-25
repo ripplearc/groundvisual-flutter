@@ -42,9 +42,13 @@ class DocumentHomePage extends StatelessWidget {
 class DocumentHomePageBlocComponent {
   final MachineStatusBloc machineStatusBloc;
   final WorkZoneMapBloc workZoneMapBloc;
+  // ignore: close_sinks
   TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
+  // ignore: close_sinks
   DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  // ignore: close_sinks
   PlayDigestBloc playDigestBloc;
+  // ignore: close_sinks
   SelectedSiteBloc selectedSiteBloc;
 
   DocumentHomePageBlocComponent(this.machineStatusBloc, this.workZoneMapBloc) {

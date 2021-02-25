@@ -4,7 +4,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_embedded_chart.dart';
+import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_shimmer.dart';
 
@@ -18,8 +18,8 @@ class WorkingTimeChart extends StatelessWidget {
           return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
               builder: (context, state) {
             return state is DailyWorkingTimeDataLoading
-                ? WorkingTimeDailyChartShimmer()
-                : WorkingTimeDailyChart();
+                ? WorkingTimeDailyChartShimmer(aspectRatio: 2.618)
+                : WorkingTimeDailyChart(aspectRatio: 2.618);
           });
         } else if (state is SelectedSiteAtTrend) {
           return BlocBuilder<TrendWorkingTimeChartBloc,
@@ -27,7 +27,7 @@ class WorkingTimeChart extends StatelessWidget {
             if (state is TrendWorkingTimeDataLoading) {
               return WorkingTimeTrendChartShimmer(period: state.period);
             } else if (state is TrendWorkingTimeDataLoaded) {
-              return WorkingTimeTrendChart(state);
+              return WorkingTimeTrendChart(trendChartData: state);
             } else {
               return Container();
             }

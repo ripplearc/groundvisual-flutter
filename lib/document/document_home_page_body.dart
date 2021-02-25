@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/document/work_zone_composite_card.dart';
+import 'package:groundvisual_flutter/document/work_zone_composite_card_2.dart';
+import 'package:groundvisual_flutter/document/work_zone_daily_embedded_content.dart';
+import 'package:groundvisual_flutter/document/work_zone_trend_embedded_content.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
@@ -55,14 +58,16 @@ class _SliverBuilder {
   int get numberOfWidgetsAtDate => 2;
 
   Widget getItem(Type type, int index, BuildContext context) =>
-      type == SelectedSiteAtDate
+      type != SelectedSiteAtDate
           ? _getItemAtDateMode(index, context)
           : _getItemAtTrendMode(index, context);
 
   Widget _getItemAtDateMode(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return WorkZoneCompositeCard();
+        return WorkZoneCompositeCardTwo(
+            key: Key("WorkZoneDailyCompositeCardTwo"),
+            embeddedContent: WorkZoneDailyEmbeddedContent());
       case 1:
         return MachineWorkingTimeList();
       default:
@@ -73,13 +78,27 @@ class _SliverBuilder {
   Widget _getItemAtTrendMode(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return WorkZoneMapCard();
+        return WorkZoneCompositeCardTwo(
+            key: Key("WorkZoneTrendCompositeCardTwo"),
+            embeddedContentAspectRatio: 1.8,
+            embeddedContent:
+                WorkZoneTrendEmbeddedContent(chartCardAspectRatio: 1.8));
       case 1:
-        return WorkingTimeChart();
-      case 2:
         return MachineWorkingTimeList();
       default:
         return Container();
     }
   }
+// Widget _getItemAtTrendMode(int index, BuildContext context) {
+//   switch (index) {
+//     case 0:
+//       return WorkZoneMapCard();
+//     case 1:
+//       return WorkingTimeChart();
+//     case 2:
+//       return MachineWorkingTimeList();
+//     default:
+//       return Container();
+//   }
+// }
 }
