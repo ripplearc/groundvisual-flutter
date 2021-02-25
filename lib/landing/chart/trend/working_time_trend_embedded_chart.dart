@@ -5,7 +5,6 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
-import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time during a certain period.

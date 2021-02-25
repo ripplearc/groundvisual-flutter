@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_large_card.dart';
 
-class WorkZoneCompositeCardTwo extends StatelessWidget {
+class WorkZoneCompositeCard extends StatelessWidget {
   final double mapAspectRatio;
   final double embeddedContentAspectRatio;
   final double embeddedContentSidePadding;
   final double embeddedContentBottomPadding;
   final Widget embeddedContent;
 
-  const WorkZoneCompositeCardTwo({
+  const WorkZoneCompositeCard({
     Key key,
     this.mapAspectRatio = 0.75,
     this.embeddedContentAspectRatio = 1.3,
