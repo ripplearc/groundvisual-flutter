@@ -20,7 +20,7 @@ class WorkingTimeDailyChartShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => showTitle
       ? chartSectionWithTitleBuilder(
-          context: context, builder: _buildShimmer(context), compacted: true)
+          context: context, builder: _buildShimmer(context), compacted: false)
       : _buildShimmer(context);
 
   AspectRatio _buildShimmer(BuildContext context) => AspectRatio(

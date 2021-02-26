@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_bar_chart.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -8,15 +9,19 @@ import 'package:shimmer/shimmer.dart';
 class WorkingTimeDailyChart extends StatelessWidget {
   final double aspectRatio;
 
-  const WorkingTimeDailyChart({Key key, this.aspectRatio}) : super(key: key);
+  const WorkingTimeDailyChart({Key key, @required this.aspectRatio})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
+  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
+      context: context,
+      builder: AspectRatio(
         aspectRatio: aspectRatio,
         child: Stack(
           children: [_buildBarChartCard(context), _buildThumbnailImage()],
         ),
-      );
+      ),
+      compacted: false);
 
   BlocBuilder _buildThumbnailImage() =>
       BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
@@ -66,8 +71,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
       child: Card(
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          // color: Theme.of(context).colorScheme.background,
-          color: Colors.transparent,
+          color: Theme.of(context).colorScheme.background,
           child: Padding(
               padding:
                   const EdgeInsets.only(left: 10.0, right: 20.0, top: 22.0),
@@ -77,10 +81,10 @@ class WorkingTimeDailyChart extends StatelessWidget {
                           current is DailyWorkingTimeDataLoaded,
                       builder: (context, state) {
                         if (state is DailyWorkingTimeDataLoaded) {
-                          return WorkingTimeDailyBarChart(barChartDataAtDate: state);
+                          return WorkingTimeDailyBarChart(
+                              barChartDataAtDate: state);
                         } else {
                           return Container();
                         }
                       }))));
 }
-

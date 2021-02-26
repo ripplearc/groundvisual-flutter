@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/body/work_zone_composite_card.dart';
+import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/work_zone_daily_embedded_content.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/work_zone_trend_embedded_content.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
@@ -21,7 +22,7 @@ class LandingHomePageBody extends StatelessWidget {
               key: _key,
               initialItemCount: builder.numberOfWidgets,
               itemBuilder: (BuildContext context, int index,
-                  Animation<double> animation) =>
+                      Animation<double> animation) =>
                   builder.buildItem(
                       animation, state.runtimeType, index, context)));
 
@@ -31,7 +32,7 @@ class LandingHomePageBody extends StatelessWidget {
     TransitionType transitionType = TransitionType.native;
     hexCode = "#F76F00";
     message =
-    "This screen should have appeared using the default flutter animation for the current OS";
+        "This screen should have appeared using the default flutter animation for the current OS";
     transitionType = TransitionType.inFromRight;
 
     String route = "/site/detail?message=$message&color_hex=$hexCode";
@@ -46,15 +47,14 @@ class LandingHomePageBody extends StatelessWidget {
   }
 }
 
-/// Build the slivers based on the current SelectedSiteState, and animate
-/// the removal or insertion of the widget.
+/// Build the slivers based on the current SelectedSiteState
 class _SliverBuilder {
   final double embeddedTrendContentAspectRatio = 1.8;
   final double embeddedDailyContentAspectRatio = 1.3;
-  final int numberOfWidgets = 2;
+  final int numberOfWidgets = 3;
 
   Widget buildItem(
-      Animation animation, Type type, int index, BuildContext context) =>
+          Animation animation, Type type, int index, BuildContext context) =>
       SlideTransition(
           position: animation
               .drive(CurveTween(curve: Curves.easeIn))
@@ -74,6 +74,8 @@ class _SliverBuilder {
             embeddedContent: WorkZoneDailyEmbeddedContent());
       case 1:
         return MachineWorkingTimeList();
+      case 2:
+        return WorkingTimeChart();
       default:
         return Container();
     }
@@ -88,6 +90,8 @@ class _SliverBuilder {
                 chartCardAspectRatio: embeddedTrendContentAspectRatio));
       case 1:
         return MachineWorkingTimeList();
+      case 2:
+        return WorkingTimeChart();
       default:
         return Container();
     }

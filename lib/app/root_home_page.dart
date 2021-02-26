@@ -16,7 +16,7 @@ class _RootHomePageState extends State<RootHomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     LandingHomePage(),
-    MyHomePage(title: "Fleet"),
+    DocumentHomePage(title: "Fleet"),
     PlaceholderWidget(
       "Fleet Page Under Construction",
       tab: SelectedTab.fleet,
@@ -37,39 +37,26 @@ class _RootHomePageState extends State<RootHomePage> {
       }));
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class DocumentHomePage extends StatefulWidget {
+  DocumentHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _DocumentHomePageState createState() => _DocumentHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _DocumentHomePageState extends State<DocumentHomePage> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              child: Text('Show Material Dialog'),
-              onPressed: _showMaterialDialog,
-            ),
-            RaisedButton(
-              child: Text('Show Cupertino Dialog'),
-              onPressed: _showCupertinoDialog,
-            ),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: Center(
+          child: RaisedButton(
+            child: Text('Show Calendar Dialog'),
+            onPressed: _showMaterialDialog,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   _showMaterialDialog() {
     showDialog(
@@ -94,21 +81,4 @@ class _MyHomePageState extends State<MyHomePage> {
             confirmSelectedDateAction: action,
             initialSelectedDate: initialSelectedDate),
       );
-
-  _showCupertinoDialog() {
-    showDialog(
-        context: context,
-        builder: (_) => new CupertinoAlertDialog(
-              title: new Text("Cupertino Dialog"),
-              content: new Text("Hey! I'm Coflutter!"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Close me!'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ));
-  }
 }

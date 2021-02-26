@@ -88,8 +88,7 @@ class SelectedSiteBloc
         .add(SearchWorkingTimeOnTrend(siteName, event.period, event.context));
   }
 
-  Future<void> _signalOtherBlocsOnDateSelected(
-      String siteName, DateSelected event) async {
+  void _signalOtherBlocsOnDateSelected(String siteName, DateSelected event) {
     dailyWorkingTimeChartBloc
         .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
     machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
