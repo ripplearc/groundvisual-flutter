@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/body/work_zone_composite_card.dart';
+import 'package:groundvisual_flutter/landing/body/composite/work_zone_composite_card.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
-import 'package:groundvisual_flutter/landing/chart/date/work_zone_daily_embedded_content.dart';
-import 'package:groundvisual_flutter/landing/chart/trend/work_zone_trend_embedded_content.dart';
+import 'package:groundvisual_flutter/landing/body/composite/work_zone_daily_embedded_content.dart';
+import 'package:groundvisual_flutter/landing/body/composite/work_zone_trend_embedded_content.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
 
 /// the body of the landing page consists of a few widgets.

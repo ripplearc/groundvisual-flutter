@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_embedded_chart.dart';
 
+/// Widget that embeds the trend chart inside the map chart.
 class WorkZoneTrendEmbeddedContent extends StatelessWidget {
   final double chartCardAspectRatio;
 
@@ -10,9 +11,6 @@ class WorkZoneTrendEmbeddedContent extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _buildChartCard();
-
-  Widget _buildChartCard() => Positioned.fill(
-        child: WorkingTimeEmbeddedChart(aspectRatio: chartCardAspectRatio),
-      );
+  Widget build(BuildContext context) =>
+      WorkingTimeEmbeddedChart(aspectRatio: chartCardAspectRatio);
 }

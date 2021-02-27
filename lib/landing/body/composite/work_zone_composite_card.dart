@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:groundvisual_flutter/landing/map/work_zone_map_large_card.dart';
+import 'package:groundvisual_flutter/landing/map/work_zone_map_card.dart';
 
 /// The composite widget has map as the background, and host another embedded widget at its bottom.
 /// It adds bottom padding based on the height of the embedded widget, so that the center of
@@ -36,7 +36,8 @@ class WorkZoneCompositeCard extends StatelessWidget {
       embeddedContentBottomPadding;
 
   Widget _buildMapCard(double bottomPadding) => Positioned.fill(
-      child: WorkZoneMapLargeCard(bottomPadding: bottomPadding));
+      child:
+          WorkZoneMapCard(bottomPadding: bottomPadding, showTitle: false));
 
   Widget _buildEmbeddedContent() => Positioned.fill(
       bottom: embeddedContentBottomPadding,

@@ -6,6 +6,7 @@ import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart
 import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
 import 'package:tuple/tuple.dart';
 
+/// BarChart that updates itself with the data stream.
 class WorkingTimeDailyBarChart extends StatelessWidget {
   final DailyWorkingTimeDataLoaded barChartDataAtDate;
 

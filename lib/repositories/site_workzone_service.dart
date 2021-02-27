@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/services.dart';
@@ -35,21 +34,12 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
                       Date.startOfToday, 900, ConstructionZone([].toList()))))
               .zone);
 
-  String _getDailyWorkZoneAsset(String siteName) {
-    switch (siteName) {
-      case "Penton Rise":
-        return 'assets/mock_response/penton_date_work_zone.json';
-      case "M51":
-        return 'assets/mock_response/m51_date_work_zone.json';
-      case "Kensington":
-        return 'assets/mock_response/kensington_date_work_zone.json';
-      case "Cresent Blvd":
-        return 'assets/mock_response/cresent_date_work_zone.json';
-      default:
-        throw FileSystemException(
-            "Cannot find daily work zone asset for site $siteName");
-    }
-  }
+  String _getDailyWorkZoneAsset(String siteName) => {
+        'Penton Rise': 'assets/mock_response/penton_date_work_zone.json',
+        'M51': 'assets/mock_response/m51_date_work_zone.json',
+        'Kensington': 'assets/mock_response/kensington_date_work_zone.json',
+        'Cresent Blvd': 'assets/mock_response/cresent_date_work_zone.json'
+      }[siteName];
 
   @override
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>

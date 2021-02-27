@@ -25,16 +25,13 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
           context: context, builder: _buildShimmer(context), compacted: false)
       : _buildShimmer(context);
 
-  AspectRatio _buildShimmer(BuildContext context) {
-    return AspectRatio(
-        aspectRatio: 1.8,
-        child: Card(
-            elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            color: Theme.of(context).colorScheme.background,
-            child: _buildShimmerContent(context)));
-  }
+  AspectRatio _buildShimmer(BuildContext context) => AspectRatio(
+      aspectRatio: aspectRatio,
+      child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: Theme.of(context).colorScheme.background,
+          child: _buildShimmerContent(context)));
 
   Container _buildShimmerContent(BuildContext context) {
     Random random = new Random();

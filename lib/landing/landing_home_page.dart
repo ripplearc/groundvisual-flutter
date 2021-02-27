@@ -13,6 +13,7 @@ import 'digest/bloc/play_digest_bloc.dart';
 import 'machine/bloc/machine_status_bloc.dart';
 import 'map/bloc/work_zone_map_bloc.dart';
 
+/// It orchestrates the creation of the Blocs used for widgets on this page
 class LandingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

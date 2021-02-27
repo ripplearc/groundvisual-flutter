@@ -12,16 +12,23 @@ import 'package:tuple/tuple.dart';
 class WorkingTimeTrendChart extends StatelessWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
   final double aspectRatio;
+  final bool showTitle;
 
   WorkingTimeTrendChart(
-      {@required this.trendChartData, this.aspectRatio = 1.8});
+      {@required this.trendChartData,
+      this.aspectRatio = 1.8,
+      this.showTitle = true});
 
   @override
-  Widget build(BuildContext context) => chartSectionWithTitleBuilder(
-      context: context,
-      builder: AspectRatio(
-          aspectRatio: aspectRatio, child: _buildBarChartCard(context)),
-      compacted: false);
+  Widget build(BuildContext context) => showTitle
+      ? chartSectionWithTitleBuilder(
+          context: context,
+          builder: _buildCardContent(context),
+          compacted: false)
+      : _buildCardContent(context);
+
+  AspectRatio _buildCardContent(BuildContext context) =>
+      AspectRatio(aspectRatio: aspectRatio, child: _buildBarChartCard(context));
 
   Card _buildBarChartCard(BuildContext context) => Card(
         elevation: 4,

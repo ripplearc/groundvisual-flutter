@@ -7,18 +7,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:injectable/injectable.dart';
 
-/// Widget displaying the work zone with polygon.
+import 'bloc/work_zone_map_bloc.dart';
+
+/// Google map shat shows the work zone at date or period.
 class WorkZoneMapCard extends StatefulWidget {
+  final double bottomPadding;
+  final bool showTitle;
+
+  WorkZoneMapCard(
+      {Key key, @required this.bottomPadding, this.showTitle = true})
+      : super(key: key);
+
   @override
-  State<WorkZoneMapCard> createState() => WorkZoneMapCardState();
+  State<WorkZoneMapCard> createState() => WorkZoneMapCardState(
+      bottomPadding, showTitle, getIt<CameraAnimationController>());
 }
 
-class WorkZoneMapCardState extends State<WorkZoneMapCard> with WidgetsBindingObserver {
+class WorkZoneMapCardState extends State<WorkZoneMapCard>
+    with WidgetsBindingObserver {
+  final double bottomPadding;
+  final bool showTitle;
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
+  final CameraAnimationController _cameraAnimationController;
+
+  WorkZoneMapCardState(
+      this.bottomPadding, this.showTitle, this._cameraAnimationController);
 
   void initState() {
     super.initState();
@@ -32,48 +50,47 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> with WidgetsBindingObs
       BlocConsumer<WorkZoneMapBloc, WorkZoneMapState>(
           listener: (context, state) async {
             final controller = await _controller.future;
-            if (state is WorkZoneMapPolygons) {
-              controller.animateCamera(
-                CameraUpdate.newCameraPosition(state.cameraPosition),
-              );
-            } else if (state is WorkZoneMapInitial) {
-              controller.animateCamera(
-                CameraUpdate.newCameraPosition(state.cameraPosition),
-              );
-            }
+            _animateCameraPosition(state, controller);
           },
-          builder: (context, state) {
-            if (state is WorkZoneMapPolygons) {
-              return _genMapCard(context, state.cameraPosition, state.workZone);
-            } else if (state is WorkZoneMapInitial) {
-              return _genMapCard(context, state.cameraPosition, Set());
-            } else {
-              return Container();
-            }
-          });
+          builder: (context, state) => _buildMapCardWithPolygons(state));
 
-  Card _genMapCard(BuildContext context, CameraPosition cameraPosition,
+  StatelessWidget _buildMapCardWithPolygons(WorkZoneMapState state) {
+    if (state is WorkZoneMapPolygons) {
+      return _buildMapCard(context, state.cameraPosition, state.workZone);
+    } else if (state is WorkZoneMapInitial) {
+      return _buildMapCard(context, state.cameraPosition, Set());
+    } else {
+      return Container();
+    }
+  }
+
+  void _animateCameraPosition(
+      WorkZoneMapState state, GoogleMapController controller) {
+    if (state is WorkZoneMapPolygons) {
+      _cameraAnimationController
+          .executeAnimation(() => controller.animateCamera(
+                CameraUpdate.newCameraPosition(state.cameraPosition),
+              ));
+    }
+  }
+
+  Card _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
       Card(
           color: Theme.of(context).colorScheme.background,
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            ListTile(
-              title: Text('Work Zone',
-                  style: Theme.of(context).textTheme.subtitle1),
-            ),
-            _genMapContent(context, cameraPosition, workZone)
-          ]));
+          child: showTitle
+              ? Column(mainAxisSize: MainAxisSize.max, children: [
+                  _buildTitle(context),
+                  _buildGoogleMap(cameraPosition, workZone)
+                ])
+              : _buildGoogleMap(cameraPosition, workZone));
 
-  Padding _genMapContent(BuildContext context, CameraPosition cameraPosition,
-          Set<Polygon> workZone) =>
-      Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: AspectRatio(
-              aspectRatio: 3, child: _genGoogleMap(cameraPosition, workZone)));
+  ListTile _buildTitle(BuildContext context) => ListTile(
+      title: Text('Work Zone', style: Theme.of(context).textTheme.subtitle1));
 
-  GoogleMap _genGoogleMap(
+  GoogleMap _buildGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workZone) =>
       GoogleMap(
         mapType: MapType.normal,
@@ -81,6 +98,7 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> with WidgetsBindingObs
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        padding: EdgeInsets.only(bottom: bottomPadding),
         zoomControlsEnabled: false,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
           Factory<OneSequenceGestureRecognizer>(
@@ -114,5 +132,24 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> with WidgetsBindingObs
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+}
+
+/// Delay the initial camera animation to wait after the Google map padding
+/// to take effect.
+@injectable
+class CameraAnimationController {
+  bool _initialized = false;
+
+  executeAnimation(Function f) async {
+    await _delayInitialAnimationForPaddingTakesEffect();
+    f();
+  }
+
+  Future _delayInitialAnimationForPaddingTakesEffect() async {
+    if (!_initialized) {
+      await Future.delayed(Duration(seconds: 1));
+      _initialized = true;
+    }
   }
 }

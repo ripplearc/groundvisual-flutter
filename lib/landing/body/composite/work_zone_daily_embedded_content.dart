@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_embedded_chart.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_show.dart';
 
+/// Widget that embeds digest and chart inside the map card.
+/// It puts the digest at the top portion of the embedded content,
+/// and puts the chart at the bottom portion.
 class WorkZoneDailyEmbeddedContent extends StatelessWidget {
   final double digestCardAspectRatio;
   final double chartCardAspectRatio;

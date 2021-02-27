@@ -15,8 +15,8 @@ abstract class SiteWorkZoneRepository {
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time);
 
   /// Get the work zone for a period .
-  Future<ConstructionZone> getWorkZoneAtPeriod(String siteName, DateTime date,
-      TrendPeriod period);
+  Future<ConstructionZone> getWorkZoneAtPeriod(
+      String siteName, DateTime date, TrendPeriod period);
 }
 
 @LazySingleton(as: SiteWorkZoneRepository)
@@ -26,27 +26,19 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
   SiteWorkZoneRepositoryImpl(this.siteWorkZoneService);
 
   @override
-  Future<ConstructionZone> getWorkZoneAtPeriod(String siteName, DateTime date,
-      TrendPeriod period) =>
+  Future<ConstructionZone> getWorkZoneAtPeriod(
+          String siteName, DateTime date, TrendPeriod period) =>
       {
         "M51": _getM51Zone,
         "Cresent Blvd": _getCresentZone,
         "Kensington": _getKensingtonZoneAtDate,
         "Penton Rise":
-        siteWorkZoneService.getWorkZoneAtPeriod(siteName, date, period)
+            siteWorkZoneService.getWorkZoneAtPeriod(siteName, date, period)
       }[siteName];
 
   @override
-  Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) {
-    // switch (siteName) {
-    //   case "Cresent Blvd":
-    //     return _getCresentZone;
-    //   case "Kensington":
-    //     return _getKensingtonZoneAtDate;
-    //   default:
-        return siteWorkZoneService.getWorkZoneAtDate(siteName, time);
-    // }
-  }
+  Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>
+      siteWorkZoneService.getWorkZoneAtDate(siteName, time);
 
   @override
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) {
@@ -62,8 +54,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
     }
   }
 
-  Future<ConstructionZone> get _getM51Zone async =>
-      Future.value([
+  Future<ConstructionZone> get _getM51Zone async => Future.value([
         [
           LatLng(42.626985, -82.982993),
           LatLng(42.627034, -82.982821),
@@ -80,8 +71,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         ].toList().toRegion()
       ].toList().toZone());
 
-  Future<ConstructionZone> get _getCresentZone async =>
-      Future.value(<LatLng>[
+  Future<ConstructionZone> get _getCresentZone async => Future.value(<LatLng>[
         LatLng(42.485215, -83.472516),
         LatLng(42.485116, -83.472060),
         LatLng(42.484998, -83.472248),
@@ -89,8 +79,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         LatLng(42.485180, -83.473279)
       ].toRegion().toZone());
 
-  Future<ConstructionZone> get _getKensingtonZoneAtTime async =>
-      Future.value([
+  Future<ConstructionZone> get _getKensingtonZoneAtTime async => Future.value([
         [
           LatLng(42.517211, -83.688453),
           LatLng(42.517591, -83.685812),
@@ -100,8 +89,7 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         ].toList().toRegion()
       ].toList().toZone());
 
-  Future<ConstructionZone> get _getKensingtonZoneAtDate async =>
-      Future.value([
+  Future<ConstructionZone> get _getKensingtonZoneAtDate async => Future.value([
         [
           LatLng(42.516714, -83.694909),
           LatLng(42.516398, -83.685805),
