@@ -8,6 +8,10 @@ import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_p
 
 /// Display the digest of daily activity with animation.
 class DailyDigestSlideShow extends StatelessWidget {
+  final double aspectRatio;
+
+  const DailyDigestSlideShow({Key key, @required this.aspectRatio}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Card(
       color: Theme.of(context).colorScheme.background,
@@ -17,17 +21,14 @@ class DailyDigestSlideShow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title:
-                  Text('Digest', style: Theme.of(context).textTheme.headline5),
-            ),
             AspectRatio(
-              aspectRatio: 336 / 190,
+              aspectRatio: aspectRatio,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   DailyDigestCollageCover(),
-                  DailyDigestSlidePlaying(getIt<DailyDigestDecorationPlanner>()),
+                  DailyDigestSlidePlaying(
+                      getIt<DailyDigestDecorationPlanner>()),
                   DailyDigestPlayButton()
                 ],
               ),

@@ -92,10 +92,10 @@ class SelectedSiteBloc
     dailyWorkingTimeChartBloc
         .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
     machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
-    workZoneMapBloc
-        .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
     playDigestBloc
         .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
+    workZoneMapBloc
+        .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
   }
 
   void _signalOtherBlocsOnSiteSelected(SiteSelected event) {

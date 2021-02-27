@@ -16,7 +16,7 @@ class PlayDigestPausePlaying extends PlayDigestState {
   PlayDigestPausePlaying(this.coverImages, this.siteName, this.date);
 
   @override
-  List<Object> get props => [coverImages];
+  List<Object> get props => [coverImages, siteName, date];
 }
 
 /// Indicating the progress of downloading images.

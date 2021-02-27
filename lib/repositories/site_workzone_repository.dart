@@ -38,21 +38,21 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
 
   @override
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>
-      {
-        "M51": _getM51Zone,
-        "Cresent Blvd": _getCresentZone,
-        "Kensington": _getKensingtonZoneAtDate,
-        "Penton Rise": siteWorkZoneService.getWorkZoneAtDate(siteName, time)
-      }[siteName];
+      siteWorkZoneService.getWorkZoneAtDate(siteName, time);
 
   @override
-  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>
-      {
-        "M51": _getM51Zone,
-        "Cresent Blvd": _getCresentZone,
-        "Kensington": _getKensingtonZoneAtTime,
-        "Penton Rise": siteWorkZoneService.getWorkZoneAtTime(siteName, time)
-      }[siteName];
+  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) {
+    switch (siteName) {
+      case "M51":
+        return _getM51Zone;
+      case "Cresent Blvd":
+        return _getCresentZone;
+      case "Kensington":
+        return _getKensingtonZoneAtTime;
+      default:
+        return siteWorkZoneService.getWorkZoneAtTime("Penton Rise", time);
+    }
+  }
 
   Future<ConstructionZone> get _getM51Zone async => Future.value([
         [

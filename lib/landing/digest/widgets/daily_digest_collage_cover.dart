@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,7 @@ import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 class DailyDigestCollageCover extends StatelessWidget {
   final double padding;
 
-  DailyDigestCollageCover({Key key, this.padding = 1}) : super(key: key);
+  DailyDigestCollageCover({Key key, this.padding = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
@@ -25,13 +24,9 @@ class DailyDigestCollageCover extends StatelessWidget {
   StatelessWidget _genCollageLayout(List<String> coverImages) => {
         4: _DailyDigestCollageCoverWithFourPhotos(
             padding: padding, coverImages: coverImages),
-        5: dailyDigestCollageCoverLayoutWithFivePhotos(coverImages)
+        5: _DailyDigestCollageCoverWithFivePhotos(
+            padding: padding, coverImages: coverImages)
       }[coverImages.length];
-
-  _DailyDigestCollageCoverLayoutWithFourPhotos dailyDigestCollageCoverLayoutWithFivePhotos(List<String> coverImages) {
-    return _DailyDigestCollageCoverLayoutWithFourPhotos(
-          padding: padding, coverImages: coverImages);
-  }
 }
 
 class _DailyDigestCollageCoverWithFourPhotos extends StatelessWidget {
@@ -57,11 +52,11 @@ class _DailyDigestCollageCoverWithFourPhotos extends StatelessWidget {
       );
 }
 
-class _DailyDigestCollageCoverLayoutWithFourPhotos extends StatelessWidget {
+class _DailyDigestCollageCoverWithFivePhotos extends StatelessWidget {
   final double padding;
   final List<String> coverImages;
 
-  const _DailyDigestCollageCoverLayoutWithFourPhotos(
+  const _DailyDigestCollageCoverWithFivePhotos(
       {Key key, this.padding, this.coverImages})
       : super(key: key);
 
@@ -102,7 +97,7 @@ Widget _layoutImagesVertically(List<String> images) => Column(
 Widget _paddedImage(String image, int flex) => Expanded(
     flex: flex,
     child: Padding(
-        padding: EdgeInsets.all(1),
+        padding: EdgeInsets.all(0.2),
         child: Image.asset(
           image,
           fit: BoxFit.cover,

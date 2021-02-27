@@ -25,7 +25,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
   @override
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>
       rootBundle
-          .loadString('assets/mock_response/penton_date_work_zone.json')
+          .loadString(_getDailyWorkZoneAsset(siteName))
           .then((value) => json.decode(value))
           .then((decoded) => SiteConstructionZone.fromJson(decoded)
               .records
@@ -33,6 +33,13 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
                   orElse: (() => UnitConstructionZone(
                       Date.startOfToday, 900, ConstructionZone([].toList()))))
               .zone);
+
+  String _getDailyWorkZoneAsset(String siteName) => {
+        'Penton Rise': 'assets/mock_response/penton_date_work_zone.json',
+        'M51': 'assets/mock_response/m51_date_work_zone.json',
+        'Kensington': 'assets/mock_response/kensington_date_work_zone.json',
+        'Cresent Blvd': 'assets/mock_response/cresent_date_work_zone.json'
+      }[siteName];
 
   @override
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>

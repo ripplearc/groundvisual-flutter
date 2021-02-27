@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
@@ -10,18 +11,16 @@ import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dar
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:dart_date/dart_date.dart';
 import 'package:tuple/tuple.dart';
 
 part 'play_digest_event.dart';
-
 part 'play_digest_state.dart';
 
 /// Bloc for playing the digested images with certain interval
-@LazySingleton()
+@injectable
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
-  PlayDigestBloc(this.dailyDigestViewModel, this.dailyWorkingTimeChartBloc,
-      this.dailyChartBarConverter)
+  PlayDigestBloc(this.dailyDigestViewModel, this.dailyChartBarConverter,
+      @factoryParam this.dailyWorkingTimeChartBloc)
       : super(PlayDigestInit());
   final DailyDigestViewModel dailyDigestViewModel;
   final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;

@@ -28,7 +28,7 @@ class DailyDigestSlideAnimation extends StatelessWidget {
 
   static const zoomLevel = 1.04;
 
-  Rect imageRect(Size size) => Rect.fromLTWH(0, 0, size.width, size.height);
+  static Rect imageRect(Size size) => Rect.fromLTWH(0, 0, size.width, size.height);
 
   static RelativeRect _start(Size size) =>
       RelativeRect.fromSize(_getRandomStartRect(size), size);
