@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import 'appbar/bloc/selected_site_bloc.dart';
 import 'appbar/landing_page_header.dart';
-import 'body/landing_page_body.dart';
+import 'body/phone/landing_page_body.dart';
 import 'chart/bloc/daily_working_time_chart_bloc.dart';
 import 'chart/bloc/trend_working_time_chart_bloc.dart';
 import 'digest/bloc/play_digest_bloc.dart';
@@ -18,7 +21,7 @@ class LandingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LandingHomePageBlocComponent component =
-    getIt<LandingHomePageBlocComponent>();
+        getIt<LandingHomePageBlocComponent>();
     return MultiBlocProvider(
         providers: [
           BlocProvider<MachineStatusBloc>(
@@ -31,10 +34,19 @@ class LandingHomePage extends StatelessWidget {
               create: (_) => component.trendWorkingTimeChartBloc),
           BlocProvider<PlayDigestBloc>(create: (_) => component.playDigestBloc),
           BlocProvider<SelectedSiteBloc>(
-              create: (_) => component.selectedSiteBloc..add(SelectedSiteInit(context))),
+              create: (_) =>
+                  component.selectedSiteBloc..add(SelectedSiteInit(context))),
         ],
-        child: CustomScrollView(
-          slivers: <Widget>[LandingHomePageHeader(), LandingHomePageBody()],
+        child: ScreenTypeLayout.builder(
+          mobile: (BuildContext context) => CustomScrollView(
+            slivers: <Widget>[
+              LandingHomePageHeader(),
+              LandingHomePageMobileBody()
+            ],
+          ),
+          tablet: (BuildContext context) => LandingHomePageTabletBody(),
+          desktop: (BuildContext context) => Container(color: Colors.red),
+          watch: (BuildContext context) => Container(color: Colors.purple),
         ));
   }
 }
@@ -43,12 +55,16 @@ class LandingHomePage extends StatelessWidget {
 class LandingHomePageBlocComponent {
   final MachineStatusBloc machineStatusBloc;
   final WorkZoneMapBloc workZoneMapBloc;
+
   // ignore: close_sinks
   TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
+
   // ignore: close_sinks
   DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+
   // ignore: close_sinks
   PlayDigestBloc playDigestBloc;
+
   // ignore: close_sinks
   SelectedSiteBloc selectedSiteBloc;
 

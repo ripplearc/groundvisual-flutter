@@ -7,12 +7,12 @@ import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 
-class RootHomePage extends StatefulWidget {
+class RootHomeTabletPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RootHomePageState();
+  State<StatefulWidget> createState() => _RootHomeTabletPageState();
 }
 
-class _RootHomePageState extends State<RootHomePage> {
+class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     LandingHomePage(),
@@ -29,12 +29,16 @@ class _RootHomePageState extends State<RootHomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        title: Text('Cresent Blvd', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+      ),
       body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigation(action: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      }));
+      bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
+
+  void _setCurrentIndex(int index) => setState(() {
+        _currentIndex = index;
+      });
 }
 
 class DocumentHomePage extends StatefulWidget {
