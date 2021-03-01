@@ -2,7 +2,8 @@ import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/components/calendar_page.dart';
+import 'package:groundvisual_flutter/component/calendar_page.dart';
+import 'package:groundvisual_flutter/landing/appbar/tablet/landing_page_tablet_header.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
@@ -29,10 +30,9 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text('Cresent Blvd', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-      ),
+      appBar:
+
+      buildLandingHomePageTabletHeader(),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
 

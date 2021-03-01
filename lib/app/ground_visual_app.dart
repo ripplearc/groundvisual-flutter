@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
 import 'package:groundvisual_flutter/app/tablet/root_home_tablet_page.dart';
-import 'package:groundvisual_flutter/components/theme/app_theme.dart';
+import 'package:groundvisual_flutter/component/theme/app_theme.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class GroundVisualApp extends StatelessWidget {

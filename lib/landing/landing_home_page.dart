@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'appbar/bloc/selected_site_bloc.dart';
-import 'appbar/landing_page_header.dart';
+import 'appbar/mobile/landing_page_mobile_header.dart';
 import 'body/phone/landing_page_body.dart';
 import 'chart/bloc/daily_working_time_chart_bloc.dart';
 import 'chart/bloc/trend_working_time_chart_bloc.dart';
@@ -40,7 +40,7 @@ class LandingHomePage extends StatelessWidget {
         child: ScreenTypeLayout.builder(
           mobile: (BuildContext context) => CustomScrollView(
             slivers: <Widget>[
-              LandingHomePageHeader(),
+              LandingHomePageMobileHeader(),
               LandingHomePageMobileBody()
             ],
           ),
@@ -82,5 +82,6 @@ class LandingHomePageBlocComponent {
         dailyWorkingTimeChartBloc,
         trendWorkingTimeChartBloc,
         playDigestBloc);
+
   }
 }
