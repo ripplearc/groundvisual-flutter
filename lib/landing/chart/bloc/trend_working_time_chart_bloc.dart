@@ -5,17 +5,15 @@ import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
-import 'package:groundvisual_flutter/landing/map/bloc/work_zone_map_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 part 'trend_working_time_chart_event.dart';
-
 part 'trend_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the trend chart,
@@ -25,10 +23,11 @@ class TrendWorkingTimeChartBloc
     extends Bloc<TrendWorkingTimeChartEvent, TrendWorkingTimeChartState> {
   final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
   final TrendChartBarConverter trendChartConverter;
-  final WorkZoneMapBloc workZoneMapBloc;
 
-  TrendWorkingTimeChartBloc(this.trendChartConverter,
-      this.workingTimeTrendChartViewModel, @factoryParam this.workZoneMapBloc)
+  // final WorkZoneMapBloc workZoneMapBloc;
+
+  TrendWorkingTimeChartBloc(
+      this.trendChartConverter, this.workingTimeTrendChartViewModel)
       : super(TrendWorkingTimeDataLoading(TrendPeriod.oneWeek));
 
   @override
@@ -69,8 +68,11 @@ class TrendWorkingTimeChartBloc
     return Stream.fromFutures([loadingTrendFuture, trendWithChartFuture]);
   }
 
-  void _triggerWorkZoneBloc(SelectTrendChartBarRod event) => trendChartConverter
-      .convertToDateTime(event.range, event.period, event.groupId, event.rodId)
-      .let((time) => workZoneMapBloc
-          .add(SearchWorkZoneOnDate(event.siteName, time, event.context)));
+  Future<TrendWorkingTimeChartState> _triggerWorkZoneBloc(
+          SelectTrendChartBarRod event) =>
+      trendChartConverter
+          .convertToDateTime(
+              event.range, event.period, event.groupId, event.rodId)
+          .let((time) => Future.value(TrendWorkingTimeBarRodHighlighted(
+              event.siteName, time, event.context)));
 }

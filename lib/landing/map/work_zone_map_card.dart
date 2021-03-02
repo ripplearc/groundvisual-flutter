@@ -105,20 +105,22 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
   GoogleMap _buildGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workZone) =>
       GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: cameraPosition,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        padding: EdgeInsets.only(bottom: bottomPadding),
-        zoomControlsEnabled: false,
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-          Factory<OneSequenceGestureRecognizer>(
-            () => EagerGestureRecognizer(),
-          ),
-        ].toSet(),
-        polygons: workZone,
-      );
+          mapType: MapType.normal,
+          initialCameraPosition: cameraPosition,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          padding: EdgeInsets.only(bottom: bottomPadding),
+          zoomControlsEnabled: false,
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+            Factory<OneSequenceGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          ].toSet(),
+          polygons: workZone.map((p) => p.copyWith(
+                strokeColorParam: Theme.of(context).colorScheme.primaryVariant,
+                fillColorParam: Theme.of(context).colorScheme.primary,
+              )).toSet());
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');

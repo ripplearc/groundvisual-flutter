@@ -7,9 +7,8 @@ abstract class WorkZoneMapEvent extends Equatable {}
 class SearchWorkZoneAtTime extends WorkZoneMapEvent {
   final String site;
   final DateTime time;
-  final BuildContext context;
 
-  SearchWorkZoneAtTime(this.site, this.time, this.context);
+  SearchWorkZoneAtTime(this.site, this.time);
 
   @override
   List<Object> get props => [site, time];
@@ -19,9 +18,8 @@ class SearchWorkZoneAtTime extends WorkZoneMapEvent {
 class SearchWorkZoneOnDate extends WorkZoneMapEvent {
   final String site;
   final DateTime date;
-  final BuildContext context;
 
-  SearchWorkZoneOnDate(this.site, this.date, this.context);
+  SearchWorkZoneOnDate(this.site, this.date);
 
   @override
   List<Object> get props => [site, date];
@@ -32,9 +30,8 @@ class SearchWorkZoneAtPeriod extends WorkZoneMapEvent {
   final String site;
   final DateTime date;
   final TrendPeriod period;
-  final BuildContext context;
 
-  SearchWorkZoneAtPeriod(this.site, this.date, this.period, this.context);
+  SearchWorkZoneAtPeriod(this.site, this.date, this.period);
 
   @override
   List<Object> get props => [site, date, period];

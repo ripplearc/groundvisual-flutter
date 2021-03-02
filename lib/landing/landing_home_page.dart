@@ -15,13 +15,14 @@ import 'chart/bloc/trend_working_time_chart_bloc.dart';
 import 'digest/bloc/play_digest_bloc.dart';
 import 'machine/bloc/machine_status_bloc.dart';
 import 'map/bloc/work_zone_map_bloc.dart';
+import 'map/bloc/work_zone_map_viewmodel.dart';
 
 /// It orchestrates the creation of the Blocs used for widgets on this page
 class LandingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LandingHomePageBlocComponent component =
-        getIt<LandingHomePageBlocComponent>();
+    getIt<LandingHomePageBlocComponent>();
     return MultiBlocProvider(
         providers: [
           BlocProvider<MachineStatusBloc>(
@@ -35,15 +36,16 @@ class LandingHomePage extends StatelessWidget {
           BlocProvider<PlayDigestBloc>(create: (_) => component.playDigestBloc),
           BlocProvider<SelectedSiteBloc>(
               create: (_) =>
-                  component.selectedSiteBloc..add(SelectedSiteInit(context))),
+              component.selectedSiteBloc..add(SelectedSiteInit(context))),
         ],
         child: ScreenTypeLayout.builder(
-          mobile: (BuildContext context) => CustomScrollView(
-            slivers: <Widget>[
-              LandingHomePageMobileHeader(),
-              LandingHomePageMobileBody()
-            ],
-          ),
+          mobile: (BuildContext context) =>
+              CustomScrollView(
+                slivers: <Widget>[
+                  LandingHomePageMobileHeader(),
+                  LandingHomePageMobileBody()
+                ],
+              ),
           tablet: (BuildContext context) => LandingHomePageTabletBody(),
           desktop: (BuildContext context) => Container(color: Colors.red),
           watch: (BuildContext context) => Container(color: Colors.purple),
@@ -54,7 +56,9 @@ class LandingHomePage extends StatelessWidget {
 @injectable
 class LandingHomePageBlocComponent {
   final MachineStatusBloc machineStatusBloc;
-  final WorkZoneMapBloc workZoneMapBloc;
+
+  // ignore: close_sinks
+  WorkZoneMapBloc workZoneMapBloc;
 
   // ignore: close_sinks
   TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
@@ -68,20 +72,22 @@ class LandingHomePageBlocComponent {
   // ignore: close_sinks
   SelectedSiteBloc selectedSiteBloc;
 
-  LandingHomePageBlocComponent(this.machineStatusBloc, this.workZoneMapBloc) {
+  LandingHomePageBlocComponent(this.machineStatusBloc) {
     this.trendWorkingTimeChartBloc =
-        getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
-    this.dailyWorkingTimeChartBloc =
-        getIt<DailyWorkingTimeChartBloc>(param1: workZoneMapBloc);
+    // getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
+    getIt<TrendWorkingTimeChartBloc>();
+    this.dailyWorkingTimeChartBloc = getIt<DailyWorkingTimeChartBloc>();
     this.playDigestBloc =
         getIt<PlayDigestBloc>(param1: dailyWorkingTimeChartBloc);
     this.selectedSiteBloc = SelectedSiteBloc(
         getIt<CurrentSelectedSite>(),
         machineStatusBloc,
-        workZoneMapBloc,
         dailyWorkingTimeChartBloc,
         trendWorkingTimeChartBloc,
         playDigestBloc);
-
+    this.workZoneMapBloc = WorkZoneMapBloc(
+        getIt<WorkZoneMapViewModel>(), selectedSiteBloc: selectedSiteBloc,
+        dailyWorkingTimeChartBloc: dailyWorkingTimeChartBloc,
+        trendWorkingTimeChartBloc: trendWorkingTimeChartBloc);
   }
 }

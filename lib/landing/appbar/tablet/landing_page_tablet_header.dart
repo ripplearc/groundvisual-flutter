@@ -4,6 +4,6 @@ import 'package:groundvisual_flutter/landing/appbar/component/site/site_dropdown
 
 AppBar buildLandingHomePageTabletHeader() => AppBar(
       title: Text('Cresent Blvd', style: TextStyle(color: Colors.black)),
-      leading: SiteDropDownList(),
+      // leading: SiteDropDownList(),
       backgroundColor: Colors.white,
     );
