@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:tuple/tuple.dart';
 
 /// BarChart that updates itself with the data stream.
 class WorkingTimeDailyBarChart extends StatelessWidget {
   final DailyWorkingTimeDataLoaded barChartDataAtDate;
 
-  const WorkingTimeDailyBarChart({Key key, this.barChartDataAtDate})
+  const WorkingTimeDailyBarChart({Key key, @required this.barChartDataAtDate})
       : super(key: key);
 
   @override
@@ -32,8 +32,7 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
                 touchTooltipData: BarTouchTooltipData(
                     tooltipBgColor: Theme.of(context).colorScheme.background,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                        barChartDataAtDate.chartData.tooltips[groupIndex]
-                            [rodIndex]),
+                        _buildBarTooltipItem(groupIndex, rodIndex, context)),
                 touchCallback: (response) =>
                     _uponSelectingBarRod(response, context)),
             titlesData: FlTitlesData(
@@ -61,6 +60,15 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
                 .highlightSelectedGroupIfAny(
                     barChartDataAtDate.chartData.bars)),
       );
+
+  BarTooltipItem _buildBarTooltipItem(
+          int groupIndex, int rodIndex, BuildContext context) =>
+      BarTooltipItem(
+          barChartDataAtDate.chartData.tooltips[groupIndex][rodIndex],
+          Theme.of(context)
+              .textTheme
+              .caption
+              .apply(color: Theme.of(context).colorScheme.onBackground));
 
   void _uponSelectingBarRod(
       BarTouchResponse barTouchResponse, BuildContext context) {

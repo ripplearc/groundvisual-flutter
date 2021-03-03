@@ -18,10 +18,7 @@ class WorkingTimeDailyChartViewModel {
 
   WorkingTimeDailyChartViewModel(this.dailyChartBarConverter);
 
-  Future<WorkingTimeChartData> dailyWorkingTime(BuildContext context) async {
-    final Color dark = Theme.of(context).colorScheme.primary;
-    final Color light = Theme.of(context).colorScheme.onSurface;
-
+  Future<WorkingTimeChartData> dailyWorkingTime() async {
     final workingTime = _genWorkingTimes();
 
     final bars = List.generate(
@@ -29,12 +26,12 @@ class WorkingTimeDailyChartViewModel {
         (groundId) => BarChartGroupData(
             x: groundId,
             barsSpace: 1.6,
-            barRods: _genBarRods(dark, light, workingTime, groundId)));
+            barRods: _genBarRods(workingTime, groundId)));
 
     final tooltips = List.generate(
         dailyChartBarConverter.groupsPerDay,
         (groupId) => List.generate(dailyChartBarConverter.rodsPerGroup,
-            (rodId) => _genToolTip(groupId, rodId, workingTime, context)));
+            (rodId) => _genToolTip(groupId, rodId, workingTime)));
 
     final bottomTitles =
         List.generate(dailyChartBarConverter.groupsPerDay, (index) {
@@ -46,36 +43,31 @@ class WorkingTimeDailyChartViewModel {
     return WorkingTimeChartData(bars, tooltips, 15, _space, bottomTitles);
   }
 
-  List<BarChartRodData> _genBarRods(Color dark, Color light,
+  List<BarChartRodData> _genBarRods(
           List<UnitWorkingTime> workingTime, int groundId) =>
       List.generate(
         dailyChartBarConverter.rodsPerGroup,
         (rodId) => _genBarChartRodData(
-          dark,
-          light,
+          Colors.transparent,
+          Colors.transparent,
           workingTime.elementAt(
               rodId + groundId * dailyChartBarConverter.rodsPerGroup),
         ),
       );
 
-  BarTooltipItem _genToolTip(int groupId, int rodId,
-      List<UnitWorkingTime> workingTime, BuildContext context) {
+  String _genToolTip(
+      int groupId, int rodId, List<UnitWorkingTime> workingTime) {
     String starTimeStamp = groupId.toString() +
         (rodId == 0 ? ":0" : ":") +
         (rodId * 15).toString();
     final time = workingTime
         .elementAt(rodId + groupId * dailyChartBarConverter.rodsPerGroup);
-    return BarTooltipItem(
-        '$starTimeStamp\n' +
-            'work: ' +
-            time.workingInSeconds.toInt().toString() +
-            ' mins\nidle: ' +
-            time.idlingInSeconds.toInt().toString() +
-            " mins",
-        Theme.of(context)
-            .textTheme
-            .caption
-            .apply(color: Theme.of(context).colorScheme.onBackground));
+    return '$starTimeStamp\n' +
+        'work: ' +
+        time.workingInSeconds.toInt().toString() +
+        ' mins\nidle: ' +
+        time.idlingInSeconds.toInt().toString() +
+        " mins";
   }
 
   List<UnitWorkingTime> _genWorkingTimes() => List.generate(

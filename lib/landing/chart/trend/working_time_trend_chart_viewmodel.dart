@@ -56,14 +56,14 @@ class WorkingTimeTrendChartViewModel {
                 daysPerGroup, space)),
       );
 
-  List<List<BarTooltipItem>> _genToolTips(List<_WorkingTimePerRod> workingTime,
+  List<List<String>> _genToolTips(List<_WorkingTimePerRod> workingTime,
           BuildContext context, int numOfGroup, int daysPerGroup) =>
       List.generate(
         numOfGroup,
         (groupId) => List.generate(
                 daysPerGroup,
-                (rodId) => _genDateToolTip(
-                    groupId, rodId, workingTime, context, daysPerGroup))
+                (rodId) =>
+                    _genDateToolTip(groupId, rodId, workingTime, daysPerGroup))
             .reversed
             .toList(),
       ).reversed.toList();
@@ -102,27 +102,18 @@ class WorkingTimeTrendChartViewModel {
             workingTime.elementAt(rodId + groundId * daysPerGroup), space),
       );
 
-  BarTooltipItem _genDateToolTip(
-      int groupId,
-      int rodId,
-      List<_WorkingTimePerRod> workingTime,
-      BuildContext context,
-      int daysPerGroup) {
+  String _genDateToolTip(int groupId, int rodId,
+      List<_WorkingTimePerRod> workingTime, int daysPerGroup) {
     String date = DateFormat('MM/dd').format(
         DateTime.now() - Duration(days: groupId * daysPerGroup + rodId));
 
     final time = workingTime.elementAt(rodId + groupId * daysPerGroup);
-    return BarTooltipItem(
-        '$date\n' +
-            'work: ' +
-            time.workingHours.ceil().toString() +
-            ' hrs\nidle: ' +
-            time.idlingHours.ceil().toString() +
-            " hrs",
-        Theme.of(context)
-            .textTheme
-            .caption
-            .apply(color: Theme.of(context).colorScheme.onBackground));
+    return '$date\n' +
+        'work: ' +
+        time.workingHours.ceil().toString() +
+        ' hrs\nidle: ' +
+        time.idlingHours.ceil().toString() +
+        " hrs";
   }
 
   List<_WorkingTimePerRod> _genWorkingTimes(int numOfGroup, int daysPerGroup) =>

@@ -10,9 +10,8 @@ abstract class DailyWorkingTimeChartEvent extends Equatable {
 class SearchWorkingTimeOnDate extends DailyWorkingTimeChartEvent {
   final String siteName;
   final DateTime date;
-  final BuildContext context;
 
-  SearchWorkingTimeOnDate(this.siteName, this.date, this.context);
+  SearchWorkingTimeOnDate(this.siteName, this.date);
 
   @override
   List<Object> get props => [siteName, date];

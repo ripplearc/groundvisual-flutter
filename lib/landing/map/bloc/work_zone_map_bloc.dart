@@ -24,9 +24,9 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
   final TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
   final SelectedSiteBloc selectedSiteBloc;
-  StreamSubscription dailyChartSubscription;
-  StreamSubscription trendChartSubscription;
-  StreamSubscription selectedSiteSubscription;
+  StreamSubscription _dailyChartSubscription;
+  StreamSubscription _trendChartSubscription;
+  StreamSubscription _selectedSiteSubscription;
 
   WorkZoneMapBloc(this.workZoneMapViewModel,
       {this.selectedSiteBloc,
@@ -39,7 +39,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToSelectedSite() {
-    selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
       if (state is SelectedSiteAtDate) {
         add(SearchWorkZoneOnDate(state.siteName, state.date));
       } else if (state is SelectedSiteAtTrend) {
@@ -50,7 +50,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToTrendChartSelection() {
-    trendChartSubscription = trendWorkingTimeChartBloc?.listen((state) {
+    _trendChartSubscription = trendWorkingTimeChartBloc?.listen((state) {
       if (state is TrendWorkingTimeBarRodHighlighted) {
         add(SearchWorkZoneOnDate(state.siteName, state.time));
       }
@@ -58,7 +58,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToDailyChartSelection() {
-    dailyChartSubscription = dailyWorkingTimeChartBloc?.listen((state) {
+    _dailyChartSubscription = dailyWorkingTimeChartBloc?.listen((state) {
       if (state is DailyWorkingTimeBarRodHighlighted) {
         if (state.unselected) {
           add(SearchWorkZoneOnDate(state.siteName, state.time.startOfDay));
@@ -118,9 +118,9 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
 
   @override
   Future<void> close() {
-    selectedSiteSubscription.cancel();
-    dailyChartSubscription.cancel();
-    trendChartSubscription.cancel();
+    _selectedSiteSubscription.cancel();
+    _dailyChartSubscription.cancel();
+    _trendChartSubscription.cancel();
     return super.close();
   }
 }

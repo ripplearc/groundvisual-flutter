@@ -4,10 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
-import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
@@ -25,17 +23,18 @@ class SelectedSiteBloc
   final MachineStatusBloc machineStatusBloc;
 
   // final WorkZoneMapBloc workZoneMapBloc;
-  final PlayDigestBloc playDigestBloc;
-  final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  // final PlayDigestBloc playDigestBloc;
+  // final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
   final TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
 
   SelectedSiteBloc(
       this.selectedSitePreference,
       this.machineStatusBloc,
       // this.workZoneMapBloc,
-      this.dailyWorkingTimeChartBloc,
+      // this.dailyWorkingTimeChartBloc,
       this.trendWorkingTimeChartBloc,
-      this.playDigestBloc)
+      // this.playDigestBloc
+      )
       : super(
           selectedSitePreference.value().isEmpty
               ? SelectedSiteEmpty()
@@ -88,11 +87,11 @@ class SelectedSiteBloc
   }
 
   void _signalOtherBlocsOnDateSelected(String siteName, DateSelected event) {
-    dailyWorkingTimeChartBloc
-        .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
+    // dailyWorkingTimeChartBloc
+    //     .add(SearchWorkingTimeOnDate(siteName, event.date, event.context));
     machineStatusBloc.add(SearchMachineStatusOnDate(siteName, event.date));
-    playDigestBloc
-        .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
+    // playDigestBloc
+    //     .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
     // workZoneMapBloc
     //     .add(SearchWorkZoneOnDate(siteName, event.date, event.context));
   }
@@ -102,10 +101,10 @@ class SelectedSiteBloc
         .add(SearchMachineStatusOnDate(event.siteName, Date.startOfToday));
     // workZoneMapBloc.add(
     //     SearchWorkZoneOnDate(event.siteName, Date.startOfToday, event.context));
-    dailyWorkingTimeChartBloc.add(SearchWorkingTimeOnDate(
-        event.siteName, Date.startOfToday, event.context));
-    playDigestBloc.add(
-        PlayDigestInitPlayer(event.context, event.siteName, Date.startOfToday));
+    // dailyWorkingTimeChartBloc.add(SearchWorkingTimeOnDate(
+    //     event.siteName, Date.startOfToday, event.context));
+    // playDigestBloc.add(
+    //     PlayDigestInitPlayer(event.context, event.siteName, Date.startOfToday));
   }
 
   void _signalOtherBlocsOnInit(String siteName, SelectedSiteInit event) {
@@ -113,9 +112,9 @@ class SelectedSiteBloc
         .add(SearchMachineStatusOnDate(siteName, Date.startOfToday));
     // workZoneMapBloc
     //     .add(SearchWorkZoneOnDate(siteName, Date.startOfToday, event.context));
-    dailyWorkingTimeChartBloc.add(
-        SearchWorkingTimeOnDate(siteName, Date.startOfToday, event.context));
-    playDigestBloc
-        .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
+    // dailyWorkingTimeChartBloc.add(
+    //     SearchWorkingTimeOnDate(siteName, Date.startOfToday, event.context));
+    // playDigestBloc
+    //     .add(PlayDigestInitPlayer(event.context, siteName, Date.startOfToday));
   }
 }

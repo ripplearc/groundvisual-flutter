@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/component/BarRodMagnifier.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:tuple/tuple.dart';
 
@@ -66,7 +66,7 @@ class _BarChartState extends State<_BarChart> {
             touchTooltipData: BarTouchTooltipData(
                 tooltipBgColor: Theme.of(context).colorScheme.background,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                    trendChartData.chartData.tooltips[groupIndex][rodIndex]),
+                    _buildBarTooltipItem(groupIndex, rodIndex, context)),
             touchCallback: (barTouchResponse) => _uponSelectingBarRod(
               barTouchResponse,
             ),
@@ -98,6 +98,15 @@ class _BarChartState extends State<_BarChart> {
                   .highlightSelectedGroupIfAny(trendChartData.chartData.bars)),
         ),
       );
+
+  BarTooltipItem _buildBarTooltipItem(
+          int groupIndex, int rodIndex, BuildContext context) =>
+      BarTooltipItem(
+          trendChartData.chartData.tooltips[groupIndex][rodIndex],
+          Theme.of(context)
+              .textTheme
+              .caption
+              .apply(color: Theme.of(context).colorScheme.onBackground));
 
   Tuple2<double, double> magnifyValue(TrendPeriod period) {
     switch (period) {

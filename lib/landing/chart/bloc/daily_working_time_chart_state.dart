@@ -21,6 +21,17 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   DailyWorkingTimeDataLoaded(
       this.chartData, this.siteName, this.date, this.highlightRodBarStream);
 
+  DailyWorkingTimeDataLoaded copyWith(
+      {WorkingTimeChartData chartDataParam,
+      String siteNameParam,
+      DateTime dateParam,
+      Stream<Tuple2<int, int>> highlightRodBarStreamParam}) =>
+     DailyWorkingTimeDataLoaded(
+        chartDataParam ?? chartData,
+        siteNameParam ?? siteName,
+        dateParam ?? date,
+        highlightRodBarStreamParam ?? highlightRodBarStream);
+
   @override
   List<Object> get props => [chartData, siteName, date];
 }
