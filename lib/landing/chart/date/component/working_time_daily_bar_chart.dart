@@ -86,6 +86,5 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
               barChartDataAtDate.siteName,
-              barChartDataAtDate.date,
-              context));
+              barChartDataAtDate.date));
 }

@@ -22,42 +22,32 @@ class WorkingTimeTrendChartViewModel {
 
   WorkingTimeTrendChartViewModel(this.trendChartBarConverter);
 
-  Future<WorkingTimeChartData> trendWorkingTime(
-      BuildContext context, TrendPeriod period) async {
+  Future<WorkingTimeChartData> trendWorkingTime(TrendPeriod period) async {
     final numOfGroup = trendChartBarConverter.numOfGroup(period);
     final daysPerGroup = trendChartBarConverter.daysPerGroup(period);
     double space = 20 / (numOfGroup * daysPerGroup / 7.0);
-    final Color dark = Theme.of(context).colorScheme.primary;
-    final Color light = Theme.of(context).colorScheme.onSurface;
 
     final workingTime = _genWorkingTimes(numOfGroup, daysPerGroup);
-    final bars =
-        _genRodBars(dark, light, workingTime, numOfGroup, daysPerGroup, space);
-    final tooltips =
-        _genToolTips(workingTime, context, numOfGroup, daysPerGroup);
+    final bars = _genRodBars(workingTime, numOfGroup, daysPerGroup, space);
+    final tooltips = _genToolTips(workingTime, numOfGroup, daysPerGroup);
     final bottomTitles = _genBottomTitles(numOfGroup, daysPerGroup);
 
     return WorkingTimeChartData(bars, tooltips, 4.0, space, bottomTitles);
   }
 
-  List<BarChartGroupData> _genRodBars(
-          Color dark,
-          Color light,
-          List<_WorkingTimePerRod> workingTime,
-          int numOfGroup,
-          int daysPerGroup,
-          double space) =>
+  List<BarChartGroupData> _genRodBars(List<_WorkingTimePerRod> workingTime,
+          int numOfGroup, int daysPerGroup, double space) =>
       List.generate(
         numOfGroup,
         (groundId) => BarChartGroupData(
             x: groundId,
             barsSpace: space,
-            barRods: _genBarRods(dark, light, workingTime, groundId, numOfGroup,
-                daysPerGroup, space)),
+            barRods: _genBarRods(
+                workingTime, groundId, numOfGroup, daysPerGroup, space)),
       );
 
   List<List<String>> _genToolTips(List<_WorkingTimePerRod> workingTime,
-          BuildContext context, int numOfGroup, int daysPerGroup) =>
+          int numOfGroup, int daysPerGroup) =>
       List.generate(
         numOfGroup,
         (groupId) => List.generate(
@@ -88,17 +78,11 @@ class WorkingTimeTrendChartViewModel {
           .reversed
           .toList();
 
-  List<BarChartRodData> _genBarRods(
-          Color dark,
-          Color light,
-          List<_WorkingTimePerRod> workingTime,
-          int groundId,
-          int numOfGroup,
-          int daysPerGroup,
-          double space) =>
+  List<BarChartRodData> _genBarRods(List<_WorkingTimePerRod> workingTime,
+          int groundId, int numOfGroup, int daysPerGroup, double space) =>
       List.generate(
         daysPerGroup,
-        (rodId) => _genBarChartRodData(dark, light,
+        (rodId) => _genBarChartRodData(
             workingTime.elementAt(rodId + groundId * daysPerGroup), space),
       );
 
@@ -130,15 +114,16 @@ class WorkingTimeTrendChartViewModel {
         randomMinutes * randomPert);
   }
 
-  BarChartRodData _genBarChartRodData(Color dark, Color light,
+  BarChartRodData _genBarChartRodData(
           _WorkingTimePerRod workingTime, double space) =>
       BarChartRodData(
           y: workingTime.totalHours,
           width: space,
           rodStackItems: [
-            BarChartRodStackItem(0, workingTime.workingHours, dark),
             BarChartRodStackItem(
-                workingTime.workingHours, workingTime.totalHours, light),
+                0, workingTime.workingHours, Colors.transparent),
+            BarChartRodStackItem(workingTime.workingHours,
+                workingTime.totalHours, Colors.transparent),
           ],
           borderRadius: const BorderRadius.all(Radius.zero));
 }

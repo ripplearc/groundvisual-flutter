@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,7 +26,9 @@ class DailyWorkingTimeChartBloc
   final WorkingTimeDailyChartViewModel workingTimeDailyChartViewModel;
   final DailyChartBarConverter dailyChartConverter;
   final SelectedSiteBloc selectedSiteBloc;
+  final PlayDigestBloc playDigestBloc;
   StreamSubscription _selectedSiteSubscription;
+  StreamSubscription _playDigestSubscription;
 
   final StreamController<Tuple2<int, int>> _highlightController =
       StreamController.broadcast();
@@ -33,9 +36,11 @@ class DailyWorkingTimeChartBloc
   DailyWorkingTimeChartBloc(
     this.dailyChartConverter,
     this.workingTimeDailyChartViewModel,
-    this.selectedSiteBloc,
+    @factoryParam this.selectedSiteBloc,
+    @factoryParam this.playDigestBloc,
   ) : super(DailyWorkingTimeDataLoading()) {
     _listenToSelectedSite();
+    _listenToPlayDigest();
   }
 
   @override
@@ -49,10 +54,19 @@ class DailyWorkingTimeChartBloc
       if (state is SelectedSiteAtDate) {
         add(SearchWorkingTimeOnDate(state.siteName, state.date));
       }
-      // else if (state is SelectedSiteAtTrend) {
-      //   add(SearchWorkZoneAtPeriod(
-      //       state.siteName, Date.startOfToday, state.period));
-      // }
+    });
+  }
+
+  void _listenToPlayDigest() {
+    _playDigestSubscription = playDigestBloc?.listen((state) {
+      if (state is PlayDigestShowImage) {
+        final indices = state.images.isEmpty
+            ? Tuple2(-1, -1)
+            : dailyChartConverter.convertToIndices(state.images.time);
+        add(SelectDailyChartBarRod(
+            indices.item1, indices.item2, state.siteName, state.date,
+            showThumbnail: false));
+      }
     });
   }
 
@@ -84,11 +98,7 @@ class DailyWorkingTimeChartBloc
         dailyChartConverter
             .convertToDateTime(event.date, event.groupId, event.rodId)
             .let((time) => Future.value(DailyWorkingTimeBarRodHighlighted(
-                event.groupId,
-                event.rodId,
-                event.siteName,
-                time,
-                event.context)));
+                event.groupId, event.rodId, event.siteName, time)));
 
     final thumbnailFuture = Future.delayed(Duration(milliseconds: 200)).then(
         (_) => SiteSnapShotThumbnailLoaded(event.groupId, event.rodId,
@@ -100,13 +110,17 @@ class DailyWorkingTimeChartBloc
             Future.value(SiteSnapShotLoading()),
             thumbnailFuture
           ])
-        : Stream.value(SiteSnapShotHiding());
+        : Stream.fromFutures([
+            highlightFuture,
+            Future.value(SiteSnapShotHiding()),
+          ]);
   }
 
   @override
   Future<void> close() {
     _highlightController.close();
     _selectedSiteSubscription.cancel();
+    _playDigestSubscription.cancel();
     return super.close();
   }
 }

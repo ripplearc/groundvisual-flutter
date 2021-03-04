@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'trend_working_time_chart_event.dart';
+
 part 'trend_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the trend chart,
@@ -23,12 +24,22 @@ class TrendWorkingTimeChartBloc
     extends Bloc<TrendWorkingTimeChartEvent, TrendWorkingTimeChartState> {
   final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
   final TrendChartBarConverter trendChartConverter;
+  final SelectedSiteBloc selectedSiteBloc;
+  StreamSubscription _selectedSiteSubscription;
 
-  // final WorkZoneMapBloc workZoneMapBloc;
+  TrendWorkingTimeChartBloc(this.trendChartConverter,
+      this.workingTimeTrendChartViewModel, @factoryParam this.selectedSiteBloc)
+      : super(TrendWorkingTimeDataLoading(TrendPeriod.oneWeek)) {
+    _listenToSelectedSite();
+  }
 
-  TrendWorkingTimeChartBloc(
-      this.trendChartConverter, this.workingTimeTrendChartViewModel)
-      : super(TrendWorkingTimeDataLoading(TrendPeriod.oneWeek));
+  void _listenToSelectedSite() {
+    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+      if (state is SelectedSiteAtTrend) {
+        add(SearchWorkingTimeOnTrend(state.siteName, state.period));
+      }
+    });
+  }
 
   @override
   Stream<Transition<TrendWorkingTimeChartEvent, TrendWorkingTimeChartState>>
@@ -41,38 +52,43 @@ class TrendWorkingTimeChartBloc
     TrendWorkingTimeChartEvent event,
   ) async* {
     if (event is SearchWorkingTimeOnTrend) {
-      await for (var state in _yieldTrendWorkingTime(
-          event.siteName, event.period, event.context)) yield state;
+      await for (var state
+          in _yieldTrendWorkingTime(event.siteName, event.period)) yield state;
     } else if (event is SelectTrendChartBarRod) {
-      _triggerWorkZoneBloc(event);
+      yield await _handleBarSelectionOnDate(event);
     }
   }
 
-  Stream _yieldTrendWorkingTime(
-      String siteName, TrendPeriod period, BuildContext context) {
+  Stream _yieldTrendWorkingTime(String siteName, TrendPeriod period) {
     final loadingTrendFuture =
         Future.value(TrendWorkingTimeDataLoading(period));
 
     final trendWithChartFuture = Future(() async => await Future.delayed(
-        Duration(seconds: 2),
-        () => workingTimeTrendChartViewModel.trendWorkingTime(
-            context, period)).then((chart) => TrendWorkingTimeDataLoaded(
-          chart,
-          siteName,
-          period,
-          DateTimeRange(
-            start: Date.startOfToday - Duration(days: period.days()),
-            end: Date.startOfToday,
-          ),
-        )));
+            Duration(seconds: 2),
+            () => workingTimeTrendChartViewModel.trendWorkingTime(period))
+        .then((chart) => TrendWorkingTimeDataLoaded(
+              chart,
+              siteName,
+              period,
+              DateTimeRange(
+                start: Date.startOfToday - Duration(days: period.days()),
+                end: Date.startOfToday,
+              ),
+            )));
     return Stream.fromFutures([loadingTrendFuture, trendWithChartFuture]);
   }
 
-  Future<TrendWorkingTimeChartState> _triggerWorkZoneBloc(
+  Future<TrendWorkingTimeChartState> _handleBarSelectionOnDate(
           SelectTrendChartBarRod event) =>
       trendChartConverter
           .convertToDateTime(
               event.range, event.period, event.groupId, event.rodId)
           .let((time) => Future.value(TrendWorkingTimeBarRodHighlighted(
               event.siteName, time, event.context)));
+
+  @override
+  Future<void> close() {
+    _selectedSiteSubscription.cancel();
+    return super.close();
+  }
 }

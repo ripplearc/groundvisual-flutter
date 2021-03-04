@@ -5,6 +5,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:tuple/tuple.dart';
 
@@ -36,7 +37,9 @@ class WorkingTimeTrendChart extends StatelessWidget {
         color: Theme.of(context).colorScheme.background,
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-          child: _BarChart(trendChartData: trendChartData),
+          child: _BarChart(
+              trendChartData:
+                  BarRodPalette(context).colorTrendBarChart(trendChartData)),
         ),
       );
 }

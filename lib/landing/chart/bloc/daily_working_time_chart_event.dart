@@ -26,10 +26,7 @@ class SelectDailyChartBarRod extends DailyWorkingTimeChartEvent {
   final DateTime date;
   final bool showThumbnail;
 
-  final BuildContext context;
-
-  SelectDailyChartBarRod(
-      this.groupId, this.rodId, this.siteName, this.date, this.context,
+  SelectDailyChartBarRod(this.groupId, this.rodId, this.siteName, this.date,
       {this.showThumbnail = true});
 
   bool get unselected => groupId == -1 && rodId == -1;

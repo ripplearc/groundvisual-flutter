@@ -23,8 +23,8 @@ class DailyDigestSlidePlaying extends StatelessWidget {
             if (state is PlayDigestShowImage) {
               return GestureDetector(
                   onTap: () {
-                    BlocProvider.of<PlayDigestBloc>(context).add(
-                        PlayDigestPause(context, state.siteName, state.date));
+                    BlocProvider.of<PlayDigestBloc>(context)
+                        .add(PlayDigestPause(state.siteName, state.date));
                   },
                   child: _genAnimatedSlide(state.images));
             } else {

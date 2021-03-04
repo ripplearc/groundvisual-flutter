@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 
 /// Color the bar rod stack item with dark and light.
 class BarRodPalette {
@@ -13,7 +14,14 @@ class BarRodPalette {
     _light = Theme.of(context).colorScheme.onSurface;
   }
 
-  DailyWorkingTimeDataLoaded colorBarChart(DailyWorkingTimeDataLoaded state) =>
+  DailyWorkingTimeDataLoaded colorDailyBarChart(
+          DailyWorkingTimeDataLoaded state) =>
+      state.copyWith(
+          chartDataParam: state.chartData
+              .copyWith(barsParam: _colorBarGroup(state.chartData.bars)));
+
+  TrendWorkingTimeDataLoaded colorTrendBarChart(
+          TrendWorkingTimeDataLoaded state) =>
       state.copyWith(
           chartDataParam: state.chartData
               .copyWith(barsParam: _colorBarGroup(state.chartData.bars)));

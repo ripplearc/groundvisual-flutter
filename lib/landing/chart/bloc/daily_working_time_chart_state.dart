@@ -22,15 +22,15 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
       this.chartData, this.siteName, this.date, this.highlightRodBarStream);
 
   DailyWorkingTimeDataLoaded copyWith(
-      {WorkingTimeChartData chartDataParam,
-      String siteNameParam,
-      DateTime dateParam,
-      Stream<Tuple2<int, int>> highlightRodBarStreamParam}) =>
-     DailyWorkingTimeDataLoaded(
-        chartDataParam ?? chartData,
-        siteNameParam ?? siteName,
-        dateParam ?? date,
-        highlightRodBarStreamParam ?? highlightRodBarStream);
+          {WorkingTimeChartData chartDataParam,
+          String siteNameParam,
+          DateTime dateParam,
+          Stream<Tuple2<int, int>> highlightRodBarStreamParam}) =>
+      DailyWorkingTimeDataLoaded(
+          chartDataParam ?? chartData,
+          siteNameParam ?? siteName,
+          dateParam ?? date,
+          highlightRodBarStreamParam ?? highlightRodBarStream);
 
   @override
   List<Object> get props => [chartData, siteName, date];
@@ -42,10 +42,9 @@ class DailyWorkingTimeBarRodHighlighted extends DailyWorkingTimeState {
 
   final String siteName;
   final DateTime time;
-  final BuildContext context;
 
   DailyWorkingTimeBarRodHighlighted(
-      this._groupId, this._rodId, this.siteName, this.time, this.context);
+      this._groupId, this._rodId, this.siteName, this.time);
 
   bool get unselected => _groupId == -1 && _rodId == -1;
 

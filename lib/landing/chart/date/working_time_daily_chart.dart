@@ -53,7 +53,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
                     Positioned.fill(
                         child: WorkingTimeDailyBarChart(
                             barChartDataAtDate:
-                                BarRodPalette(context).colorBarChart(state))),
+                                BarRodPalette(context).colorDailyBarChart(state))),
                     _buildThumbnail()
                   ],
                 )

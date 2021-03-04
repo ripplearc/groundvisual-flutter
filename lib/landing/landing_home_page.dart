@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
-import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
-import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
-import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:injectable/injectable.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -56,7 +53,8 @@ class LandingHomePage extends StatelessWidget {
 
 @injectable
 class LandingHomePageBlocComponent {
-  final MachineStatusBloc machineStatusBloc;
+  // ignore: close_sinks
+  MachineStatusBloc machineStatusBloc;
 
   // ignore: close_sinks
   WorkZoneMapBloc workZoneMapBloc;
@@ -73,27 +71,20 @@ class LandingHomePageBlocComponent {
   // ignore: close_sinks
   SelectedSiteBloc selectedSiteBloc;
 
-  LandingHomePageBlocComponent(this.machineStatusBloc) {
+  LandingHomePageBlocComponent(this.selectedSiteBloc) {
+    this.machineStatusBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+
+    this.playDigestBloc = getIt<PlayDigestBloc>(param1: selectedSiteBloc);
+
+    this.dailyWorkingTimeChartBloc = getIt<DailyWorkingTimeChartBloc>(
+        param1: selectedSiteBloc, param2: playDigestBloc);
+
     this.trendWorkingTimeChartBloc =
-        // getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
-        getIt<TrendWorkingTimeChartBloc>();
-    this.selectedSiteBloc = SelectedSiteBloc(
-      getIt<CurrentSelectedSite>(),
-      machineStatusBloc,
-      // dailyWorkingTimeChartBloc,
-      trendWorkingTimeChartBloc,
-      // playDigestBloc
-    );
+        getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
+
     this.workZoneMapBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
         selectedSiteBloc: selectedSiteBloc,
         dailyWorkingTimeChartBloc: dailyWorkingTimeChartBloc,
         trendWorkingTimeChartBloc: trendWorkingTimeChartBloc);
-
-    this.dailyWorkingTimeChartBloc
-        // getIt<DailyWorkingTimeChartBloc>(param1: selectedSiteBloc);
-        = DailyWorkingTimeChartBloc(getIt<DailyChartBarConverter>(),
-            getIt<WorkingTimeDailyChartViewModel>(), selectedSiteBloc);
-    this.playDigestBloc =
-        getIt<PlayDigestBloc>(param1: dailyWorkingTimeChartBloc);
   }
 }

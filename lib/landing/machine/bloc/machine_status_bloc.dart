@@ -19,9 +19,24 @@ part 'machine_status_state.dart';
 /// we have to make sure the copy receives events and the copy provided in the BlocBuilder is the same.
 @injectable
 class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
-  MachineStatusBloc(this.machineStatusViewModel)
-      : super(MachineStatusInitial());
+  MachineStatusBloc(this.machineStatusViewModel, @factoryParam this.selectedSiteBloc)
+      : super(MachineStatusInitial()) {
+    _listenToSelectedSite();
+  }
+
   final MachineStatusViewModel machineStatusViewModel;
+  final SelectedSiteBloc selectedSiteBloc;
+  StreamSubscription _selectedSiteSubscription;
+
+  void _listenToSelectedSite() {
+    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+      if (state is SelectedSiteAtDate) {
+        add(SearchMachineStatusOnDate(state.siteName, state.date));
+      } else if (state is SelectedSiteAtTrend) {
+        add(SearchMachineStatueOnTrend(state.siteName, state.period));
+      }
+    });
+  }
 
   @override
   Stream<Transition<MachineStatusEvent, MachineStatusState>> transformEvents(
@@ -57,5 +72,11 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
         machineStatusViewModel.getMachineStatusAtPeriod(siteName, period);
 
     return Stream.fromFutures([machineInitialFuture, machineStatusFuture]);
+  }
+
+  @override
+  Future<void> close() {
+    _selectedSiteSubscription.cancel();
+    return super.close();
   }
 }

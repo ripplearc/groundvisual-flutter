@@ -4,14 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/daily_digest_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tuple/tuple.dart';
 
 part 'play_digest_event.dart';
 part 'play_digest_state.dart';
@@ -19,13 +17,25 @@ part 'play_digest_state.dart';
 /// Bloc for playing the digested images with certain interval
 @injectable
 class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
-  PlayDigestBloc(this.dailyDigestViewModel, this.dailyChartBarConverter,
-      @factoryParam this.dailyWorkingTimeChartBloc)
-      : super(PlayDigestInit());
+  PlayDigestBloc(this.dailyDigestViewModel, @factoryParam this.selectedSiteBloc)
+      : super(PlayDigestInit()) {
+    _listenToSelectedSite();
+  }
   final DailyDigestViewModel dailyDigestViewModel;
-  final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
-  final DailyChartBarConverter dailyChartBarConverter;
+
+  final SelectedSiteBloc selectedSiteBloc;
+   StreamSubscription _selectedSiteSubscription;
   static const int SlideAnimationSpeed = 4;
+
+  void _listenToSelectedSite() {
+    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+      if (state is SelectedSiteAtDate) {
+        add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
+      } else if (state is SelectedSiteAtTrend) {
+        add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
+      }
+    });
+  }
 
   @override
   Stream<Transition<PlayDigestEvent, PlayDigestState>> transformEvents(
@@ -69,7 +79,7 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
       final emptyImage = DigestImageModel(null, null, event.date.startOfDay);
       yield PlayDigestShowImage(emptyImage, event.siteName, event.date);
       _signalDailyChartBar(emptyImage, event);
-      add(PlayDigestPause(event.context, event.siteName, event.date));
+      add(PlayDigestPause( event.siteName, event.date));
     } else {
       yield PlayDigestBuffering();
       final digestModel =
@@ -80,17 +90,16 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
   }
 
   void _signalDailyChartBar(
-      DigestImageModel digestModel, PlayDigestEvent event) {
-    final indices = digestModel.isEmpty
-        ? Tuple2(-1, -1)
-        : dailyChartBarConverter.convertToIndices(digestModel.time);
-    dailyWorkingTimeChartBloc.add(SelectDailyChartBarRod(
-        indices.item1, indices.item2, event.siteName, event.date, event.context,
-        showThumbnail: false));
-  }
+      DigestImageModel digestModel, PlayDigestEvent event) {}
 
   Future<PlayDigestPausePlaying> _getCoverImages(PlayDigestEvent event) =>
       dailyDigestViewModel.coverImages(event.siteName, event.date).then(
           (images) =>
               PlayDigestPausePlaying(images, event.siteName, event.date));
+
+  @override
+  Future<void> close() {
+    _selectedSiteSubscription.cancel();
+    return super.close();
+  }
 }
