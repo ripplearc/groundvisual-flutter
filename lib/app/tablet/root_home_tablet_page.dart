@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/calendar_page.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/tablet/landing_page_tablet_header.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
@@ -15,24 +17,36 @@ class RootHomeTabletPage extends StatefulWidget {
 
 class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   int _currentIndex = 0;
-  final List<Function> _children = [
-    () => LandingHomePage(),
+  final List<Function> _tabPages = [
+    (SelectedSiteBloc selectedSiteBloc) =>
+        LandingHomePage(selectedSiteBloc: selectedSiteBloc),
     () => DocumentHomePage(title: "Fleet"),
     () => PlaceholderWidget(
-      "Fleet Page Under Construction",
-      tab: SelectedTab.fleet,
-    ),
+          "Fleet Page Under Construction",
+          tab: SelectedTab.fleet,
+        ),
     () => PlaceholderWidget(
-      "Account Page Under Construction",
-      tab: SelectedTab.account,
-    )
+          "Account Page Under Construction",
+          tab: SelectedTab.account,
+        )
+  ];
+
+  final List<Function> _tabHeaders = [
+    (SelectedSiteBloc selectedSiteBloc) =>
+        buildLandingHomePageTabletHeader(selectedSiteBloc),
+    (SelectedSiteBloc selectedSiteBloc) =>
+        buildLandingHomePageTabletHeader(selectedSiteBloc)
   ];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: buildLandingHomePageTabletHeader(),
-      body: _children[_currentIndex](),
-      bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    SelectedSiteBloc selectedSiteBloc = getIt<SelectedSiteBloc>();
+    return Scaffold(
+        appBar: _tabHeaders[_currentIndex](selectedSiteBloc),
+        body: _tabPages[_currentIndex](selectedSiteBloc),
+        bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
+  }
 
   void _setCurrentIndex(int index) => setState(() {
         _currentIndex = index;

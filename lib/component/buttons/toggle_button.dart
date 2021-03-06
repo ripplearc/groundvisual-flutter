@@ -6,18 +6,25 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 class ToggleButton extends StatelessWidget {
   final int initialIndex;
   final labels;
+  final double widthPercent;
+  final double height;
 
   final Function(int index) toggleAction;
 
   const ToggleButton(
-      {Key key, this.initialIndex, this.toggleAction, this.labels})
+      {Key key,
+      this.initialIndex,
+      this.toggleAction,
+      this.labels,
+      @required this.widthPercent,
+      @required this.height})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => FlutterToggleTab(
-      width: 30,
+      width: widthPercent,
       borderRadius: 30,
-      height: 20,
+      height: height,
       initialIndex: initialIndex,
       selectedBackgroundColors: [Theme.of(context).colorScheme.primary],
       unSelectedBackgroundColors: [Theme.of(context).colorScheme.surface],

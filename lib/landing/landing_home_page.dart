@@ -30,6 +30,8 @@ class LandingHomePage extends StatelessWidget {
         getIt<LandingHomePageBlocComponent>();
     return MultiBlocProvider(
         providers: [
+          BlocProvider<SelectedSiteBloc>(
+              create: (_) => selectedSiteBloc..add(SelectedSiteInit(context))),
           BlocProvider<MachineStatusBloc>(
               create: (_) => component.getMachineStatusBloc(selectedSiteBloc)),
           BlocProvider<WorkZoneMapBloc>(
@@ -42,8 +44,6 @@ class LandingHomePage extends StatelessWidget {
                   component.getTrendWorkingTimeChartBloc(selectedSiteBloc)),
           BlocProvider<PlayDigestBloc>(
               create: (_) => component.getPlayDigestBloc(selectedSiteBloc)),
-          BlocProvider<SelectedSiteBloc>(
-              create: (_) => selectedSiteBloc..add(SelectedSiteInit(context))),
         ],
         child: ScreenTypeLayout.builder(
           mobile: (BuildContext context) => CustomScrollView(
