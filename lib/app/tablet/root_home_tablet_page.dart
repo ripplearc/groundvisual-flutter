@@ -15,14 +15,14 @@ class RootHomeTabletPage extends StatefulWidget {
 
 class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    LandingHomePage(),
-    DocumentHomePage(title: "Fleet"),
-    PlaceholderWidget(
+  final List<Function> _children = [
+    () => LandingHomePage(),
+    () => DocumentHomePage(title: "Fleet"),
+    () => PlaceholderWidget(
       "Fleet Page Under Construction",
       tab: SelectedTab.fleet,
     ),
-    PlaceholderWidget(
+    () => PlaceholderWidget(
       "Account Page Under Construction",
       tab: SelectedTab.account,
     )
@@ -30,10 +30,8 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar:
-
-      buildLandingHomePageTabletHeader(),
-      body: _children[_currentIndex],
+      appBar: buildLandingHomePageTabletHeader(),
+      body: _children[_currentIndex](),
       bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
 
   void _setCurrentIndex(int index) => setState(() {

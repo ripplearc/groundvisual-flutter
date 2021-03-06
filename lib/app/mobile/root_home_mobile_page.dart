@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/calendar_page.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
@@ -14,22 +16,22 @@ class RootHomeMobilePage extends StatefulWidget {
 
 class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    LandingHomePage(),
-    DocumentHomePage(title: "Fleet"),
-    PlaceholderWidget(
-      "Fleet Page Under Construction",
-      tab: SelectedTab.fleet,
-    ),
-    PlaceholderWidget(
-      "Account Page Under Construction",
-      tab: SelectedTab.account,
-    )
+  final List<Function> _children = [
+    () => LandingHomePage(selectedSiteBloc: getIt<SelectedSiteBloc>()),
+    () => DocumentHomePage(title: "Fleet"),
+    () => PlaceholderWidget(
+          "Fleet Page Under Construction",
+          tab: SelectedTab.fleet,
+        ),
+    () => PlaceholderWidget(
+          "Account Page Under Construction",
+          tab: SelectedTab.account,
+        )
   ];
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: _children[_currentIndex],
+      body: _children[_currentIndex](),
       bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
 
   void _setCurrentIndex(int index) => setState(() {

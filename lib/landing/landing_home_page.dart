@@ -18,6 +18,12 @@ import 'map/bloc/work_zone_map_viewmodel.dart';
 
 /// It orchestrates the creation of the Blocs used for widgets on this page
 class LandingHomePage extends StatelessWidget {
+  // ignore: close_sinks
+  final SelectedSiteBloc selectedSiteBloc;
+
+  const LandingHomePage({Key key, @required this.selectedSiteBloc})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final LandingHomePageBlocComponent component =
@@ -25,17 +31,19 @@ class LandingHomePage extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<MachineStatusBloc>(
-              create: (_) => component.machineStatusBloc),
+              create: (_) => component.getMachineStatusBloc(selectedSiteBloc)),
           BlocProvider<WorkZoneMapBloc>(
-              create: (_) => component.workZoneMapBloc),
+              create: (_) => component.getWorkZoneMapBloc(selectedSiteBloc)),
           BlocProvider<DailyWorkingTimeChartBloc>(
-              create: (_) => component.dailyWorkingTimeChartBloc),
-          BlocProvider<TrendWorkingTimeChartBloc>(
-              create: (_) => component.trendWorkingTimeChartBloc),
-          BlocProvider<PlayDigestBloc>(create: (_) => component.playDigestBloc),
-          BlocProvider<SelectedSiteBloc>(
               create: (_) =>
-                  component.selectedSiteBloc..add(SelectedSiteInit(context))),
+                  component.getDailyWorkingTimeChartBloc(selectedSiteBloc)),
+          BlocProvider<TrendWorkingTimeChartBloc>(
+              create: (_) =>
+                  component.getTrendWorkingTimeChartBloc(selectedSiteBloc)),
+          BlocProvider<PlayDigestBloc>(
+              create: (_) => component.getPlayDigestBloc(selectedSiteBloc)),
+          BlocProvider<SelectedSiteBloc>(
+              create: (_) => selectedSiteBloc..add(SelectedSiteInit(context))),
         ],
         child: ScreenTypeLayout.builder(
           mobile: (BuildContext context) => CustomScrollView(
@@ -54,37 +62,62 @@ class LandingHomePage extends StatelessWidget {
 @injectable
 class LandingHomePageBlocComponent {
   // ignore: close_sinks
-  MachineStatusBloc machineStatusBloc;
+  MachineStatusBloc _machineStatusBloc;
 
   // ignore: close_sinks
-  WorkZoneMapBloc workZoneMapBloc;
+  WorkZoneMapBloc _workZoneMapBloc;
 
   // ignore: close_sinks
-  TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
+  TrendWorkingTimeChartBloc _trendWorkingTimeChartBloc;
 
   // ignore: close_sinks
-  DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
+  DailyWorkingTimeChartBloc _dailyWorkingTimeChartBloc;
 
   // ignore: close_sinks
-  PlayDigestBloc playDigestBloc;
+  PlayDigestBloc _playDigestBloc;
 
-  // ignore: close_sinks
-  SelectedSiteBloc selectedSiteBloc;
+  MachineStatusBloc getMachineStatusBloc(SelectedSiteBloc selectedSiteBloc) {
+    if (_machineStatusBloc == null) {
+      _machineStatusBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+    }
+    return _machineStatusBloc;
+  }
 
-  LandingHomePageBlocComponent(this.selectedSiteBloc) {
-    this.machineStatusBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+  PlayDigestBloc getPlayDigestBloc(SelectedSiteBloc selectedSiteBloc) {
+    if (_playDigestBloc == null) {
+      _playDigestBloc = getIt<PlayDigestBloc>(param1: selectedSiteBloc);
+    }
+    return _playDigestBloc;
+  }
 
-    this.playDigestBloc = getIt<PlayDigestBloc>(param1: selectedSiteBloc);
+  DailyWorkingTimeChartBloc getDailyWorkingTimeChartBloc(
+      SelectedSiteBloc selectedSiteBloc) {
+    if (_dailyWorkingTimeChartBloc == null) {
+      this._dailyWorkingTimeChartBloc = getIt<DailyWorkingTimeChartBloc>(
+          param1: selectedSiteBloc,
+          param2: getPlayDigestBloc((selectedSiteBloc)));
+    }
+    return _dailyWorkingTimeChartBloc;
+  }
 
-    this.dailyWorkingTimeChartBloc = getIt<DailyWorkingTimeChartBloc>(
-        param1: selectedSiteBloc, param2: playDigestBloc);
+  TrendWorkingTimeChartBloc getTrendWorkingTimeChartBloc(
+      SelectedSiteBloc selectedSiteBloc) {
+    if (_trendWorkingTimeChartBloc == null) {
+      this._trendWorkingTimeChartBloc =
+          getIt<TrendWorkingTimeChartBloc>(param1: selectedSiteBloc);
+    }
+    return _trendWorkingTimeChartBloc;
+  }
 
-    this.trendWorkingTimeChartBloc =
-        getIt<TrendWorkingTimeChartBloc>(param1: workZoneMapBloc);
-
-    this.workZoneMapBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
-        selectedSiteBloc: selectedSiteBloc,
-        dailyWorkingTimeChartBloc: dailyWorkingTimeChartBloc,
-        trendWorkingTimeChartBloc: trendWorkingTimeChartBloc);
+  WorkZoneMapBloc getWorkZoneMapBloc(SelectedSiteBloc selectedSiteBloc) {
+    if (_workZoneMapBloc == null) {
+      this._workZoneMapBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
+          selectedSiteBloc: selectedSiteBloc,
+          dailyWorkingTimeChartBloc:
+              getDailyWorkingTimeChartBloc(selectedSiteBloc),
+          trendWorkingTimeChartBloc:
+              getTrendWorkingTimeChartBloc(selectedSiteBloc));
+    }
+    return _workZoneMapBloc;
   }
 }
