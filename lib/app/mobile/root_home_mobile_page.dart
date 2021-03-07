@@ -2,6 +2,7 @@ import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/calendar_page.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
@@ -17,7 +18,7 @@ class RootHomeMobilePage extends StatefulWidget {
 class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
   int _currentIndex = 0;
   final List<Function> _children = [
-    () => LandingHomePage(selectedSiteBloc: getIt<SelectedSiteBloc>()),
+    () => LandingHomePage(),
     () => DocumentHomePage(title: "Fleet"),
     () => PlaceholderWidget(
           "Fleet Page Under Construction",
@@ -30,9 +31,11 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
   ];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body: _children[_currentIndex](),
-      bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
+  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
+      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+      child: Scaffold(
+          body: _children[_currentIndex](),
+          bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
 
   void _setCurrentIndex(int index) => setState(() {
         _currentIndex = index;

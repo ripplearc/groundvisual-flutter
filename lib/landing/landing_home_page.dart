@@ -18,32 +18,29 @@ import 'map/bloc/work_zone_map_viewmodel.dart';
 
 /// It orchestrates the creation of the Blocs used for widgets on this page
 class LandingHomePage extends StatelessWidget {
-  // ignore: close_sinks
-  final SelectedSiteBloc selectedSiteBloc;
-
-  const LandingHomePage({Key key, @required this.selectedSiteBloc})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final LandingHomePageBlocComponent component =
         getIt<LandingHomePageBlocComponent>();
+
+    var selectedSiteBloc = BlocProvider.of<SelectedSiteBloc>(context);
     return MultiBlocProvider(
         providers: [
-          BlocProvider<SelectedSiteBloc>(
-              create: (_) => selectedSiteBloc..add(SelectedSiteInit(context))),
           BlocProvider<MachineStatusBloc>(
-              create: (_) => component.getMachineStatusBloc(selectedSiteBloc)),
+              create: (_) =>
+                  component.getMachineStatusBloc(selectedSiteBloc)),
           BlocProvider<WorkZoneMapBloc>(
-              create: (_) => component.getWorkZoneMapBloc(selectedSiteBloc)),
+              create: (_) =>
+                  component.getWorkZoneMapBloc(selectedSiteBloc)),
           BlocProvider<DailyWorkingTimeChartBloc>(
-              create: (_) =>
-                  component.getDailyWorkingTimeChartBloc(selectedSiteBloc)),
+              create: (_) => component
+                  .getDailyWorkingTimeChartBloc(selectedSiteBloc)),
           BlocProvider<TrendWorkingTimeChartBloc>(
-              create: (_) =>
-                  component.getTrendWorkingTimeChartBloc(selectedSiteBloc)),
+              create: (_) => component
+                  .getTrendWorkingTimeChartBloc(selectedSiteBloc)),
           BlocProvider<PlayDigestBloc>(
-              create: (_) => component.getPlayDigestBloc(selectedSiteBloc)),
+              create: (_) =>
+                  component.getPlayDigestBloc(selectedSiteBloc)),
         ],
         child: ScreenTypeLayout.builder(
           mobile: (BuildContext context) => CustomScrollView(

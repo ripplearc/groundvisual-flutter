@@ -2,6 +2,7 @@ import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/calendar_page.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
@@ -17,9 +18,9 @@ class RootHomeTabletPage extends StatefulWidget {
 
 class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   int _currentIndex = 0;
+
   final List<Function> _tabPages = [
-    (SelectedSiteBloc selectedSiteBloc) =>
-        LandingHomePage(selectedSiteBloc: selectedSiteBloc),
+    () => LandingHomePage(),
     () => DocumentHomePage(title: "Fleet"),
     () => PlaceholderWidget(
           "Fleet Page Under Construction",
@@ -32,20 +33,22 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   ];
 
   final List<Function> _tabHeaders = [
-    (SelectedSiteBloc selectedSiteBloc) =>
-        buildLandingHomePageTabletHeader(selectedSiteBloc),
-    (SelectedSiteBloc selectedSiteBloc) =>
-        buildLandingHomePageTabletHeader(selectedSiteBloc)
+    () => buildLandingHomePageTabletHeader(),
+    () => buildLandingHomePageTabletHeader(),
+    () => AppBar(title: Text("fleet")),
+    () => AppBar(title: Text("doc")),
+    () => AppBar(title: Text("account")),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    SelectedSiteBloc selectedSiteBloc = getIt<SelectedSiteBloc>();
-    return Scaffold(
-        appBar: _tabHeaders[_currentIndex](selectedSiteBloc),
-        body: _tabPages[_currentIndex](selectedSiteBloc),
-        bottomNavigationBar: BottomNavigation(action: _setCurrentIndex));
+    return BlocProvider<SelectedSiteBloc>(
+        create: (_) =>
+            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+        child: Scaffold(
+            appBar: _tabHeaders[_currentIndex](),
+            body: _tabPages[_currentIndex](),
+            bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
   }
 
   void _setCurrentIndex(int index) => setState(() {
