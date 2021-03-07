@@ -50,11 +50,16 @@ class DailyWorkingTimeChartBloc
           events.switchMap((transitionFn));
 
   void _listenToSelectedSite() {
+    _processSelectedSiteState(selectedSiteBloc?.state);
     _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
-      if (state is SelectedSiteAtDate) {
-        add(SearchWorkingTimeOnDate(state.siteName, state.date));
-      }
+      _processSelectedSiteState(state);
     });
+  }
+
+  void _processSelectedSiteState(SelectedSiteState state) {
+    if (state is SelectedSiteAtDate) {
+      add(SearchWorkingTimeOnDate(state.siteName, state.date));
+    }
   }
 
   void _listenToPlayDigest() {

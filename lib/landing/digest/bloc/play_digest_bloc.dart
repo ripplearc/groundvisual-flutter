@@ -12,6 +12,7 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'play_digest_event.dart';
+
 part 'play_digest_state.dart';
 
 /// Bloc for playing the digested images with certain interval
@@ -21,20 +22,26 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
       : super(PlayDigestInit()) {
     _listenToSelectedSite();
   }
+
   final DailyDigestViewModel dailyDigestViewModel;
 
   final SelectedSiteBloc selectedSiteBloc;
-   StreamSubscription _selectedSiteSubscription;
+  StreamSubscription _selectedSiteSubscription;
   static const int SlideAnimationSpeed = 4;
 
   void _listenToSelectedSite() {
+    _processSelectedSiteState(selectedSiteBloc.state);
     _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
-      if (state is SelectedSiteAtDate) {
-        add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
-      } else if (state is SelectedSiteAtTrend) {
-        add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
-      }
+      _processSelectedSiteState(state);
     });
+  }
+
+  void _processSelectedSiteState(SelectedSiteState state) {
+    if (state is SelectedSiteAtDate) {
+      add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
+    } else if (state is SelectedSiteAtTrend) {
+      add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
+    }
   }
 
   @override
@@ -79,7 +86,7 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
       final emptyImage = DigestImageModel(null, null, event.date.startOfDay);
       yield PlayDigestShowImage(emptyImage, event.siteName, event.date);
       _signalDailyChartBar(emptyImage, event);
-      add(PlayDigestPause( event.siteName, event.date));
+      add(PlayDigestPause(event.siteName, event.date));
     } else {
       yield PlayDigestBuffering();
       final digestModel =

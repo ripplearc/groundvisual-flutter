@@ -10,6 +10,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'selected_site_event.dart';
+
 part 'selected_site_state.dart';
 
 /// bloc to take events of selecting date or period, and notify listener about the
@@ -55,11 +56,5 @@ class SelectedSiteBloc
                   .subtract(Duration(days: event.period.days()))),
           event.period);
     }
-  }
-
-  @override
-  Future<void> close() {
-    // TODO: implement close
-    return super.close();
   }
 }

@@ -34,11 +34,16 @@ class TrendWorkingTimeChartBloc
   }
 
   void _listenToSelectedSite() {
+    _processSelectedSiteState(selectedSiteBloc.state);
     _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
-      if (state is SelectedSiteAtTrend) {
-        add(SearchWorkingTimeOnTrend(state.siteName, state.period));
-      }
+      _processSelectedSiteState(state);
     });
+  }
+
+  void _processSelectedSiteState(SelectedSiteState state) {
+    if (state is SelectedSiteAtTrend) {
+      add(SearchWorkingTimeOnTrend(state.siteName, state.period));
+    }
   }
 
   @override

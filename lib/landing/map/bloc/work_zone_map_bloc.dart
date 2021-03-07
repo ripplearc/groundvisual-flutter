@@ -39,14 +39,19 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToSelectedSite() {
+    _processSelectedSiteState(selectedSiteBloc.state);
     _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
-      if (state is SelectedSiteAtDate) {
-        add(SearchWorkZoneOnDate(state.siteName, state.date));
-      } else if (state is SelectedSiteAtTrend) {
-        add(SearchWorkZoneAtPeriod(
-            state.siteName, Date.startOfToday, state.period));
-      }
+      _processSelectedSiteState(state);
     });
+  }
+
+  void _processSelectedSiteState(SelectedSiteState state) {
+    if (state is SelectedSiteAtDate) {
+      add(SearchWorkZoneOnDate(state.siteName, state.date));
+    } else if (state is SelectedSiteAtTrend) {
+      add(SearchWorkZoneAtPeriod(
+          state.siteName, Date.startOfToday, state.period));
+    }
   }
 
   void _listenToTrendChartSelection() {
