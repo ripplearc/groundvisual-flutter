@@ -11,6 +11,7 @@ import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 
+/// Tablet layout of the root home page.
 class RootHomeTabletPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RootHomeTabletPageState();
@@ -34,22 +35,18 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
 
   final List<Function> _tabHeaders = [
     () => buildLandingHomePageTabletHeader(),
-    () => buildLandingHomePageTabletHeader(),
     () => AppBar(title: Text("fleet")),
     () => AppBar(title: Text("doc")),
     () => AppBar(title: Text("account")),
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<SelectedSiteBloc>(
-        create: (_) =>
-            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
-        child: Scaffold(
-            appBar: _tabHeaders[_currentIndex](),
-            body: _tabPages[_currentIndex](),
-            bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
-  }
+  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
+      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+      child: Scaffold(
+          appBar: _tabHeaders[_currentIndex](),
+          body: _tabPages[_currentIndex](),
+          bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
 
   void _setCurrentIndex(int index) => setState(() {
         _currentIndex = index;
@@ -67,15 +64,11 @@ class DocumentHomePage extends StatefulWidget {
 
 class _DocumentHomePageState extends State<DocumentHomePage> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: Center(
+  Widget build(BuildContext context) => Center(
           child: RaisedButton(
-            child: Text('Show Calendar Dialog'),
-            onPressed: _showMaterialDialog,
-          ),
-        ),
-      );
+        child: Text('Show Calendar Dialog'),
+        onPressed: _showMaterialDialog,
+      ));
 
   _showMaterialDialog() {
     showDialog(

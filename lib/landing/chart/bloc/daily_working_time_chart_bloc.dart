@@ -109,16 +109,13 @@ class DailyWorkingTimeChartBloc
         (_) => SiteSnapShotThumbnailLoaded(event.groupId, event.rodId,
             'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'));
 
-    return event.showThumbnail
-        ? Stream.fromFutures([
-            highlightFuture,
-            Future.value(SiteSnapShotLoading()),
-            thumbnailFuture
-          ])
-        : Stream.fromFutures([
-            highlightFuture,
-            Future.value(SiteSnapShotHiding()),
-          ]);
+    return Stream.fromFutures([
+      highlightFuture,
+      event.showThumbnail
+          ? Future.value(SiteSnapShotLoading())
+          : Future.value(),
+      event.showThumbnail ? thumbnailFuture : Future.value()
+    ]);
   }
 
   @override

@@ -45,9 +45,8 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
 class TrendWorkingTimeBarRodHighlighted extends TrendWorkingTimeChartState {
   final String siteName;
   final DateTime time;
-  final BuildContext context;
 
-  TrendWorkingTimeBarRodHighlighted(this.siteName, this.time, this.context);
+  TrendWorkingTimeBarRodHighlighted(this.siteName, this.time);
 
   @override
   List<Object> get props => [siteName, time];

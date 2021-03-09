@@ -54,6 +54,8 @@ class LandingHomePage extends StatelessWidget {
   }
 }
 
+/// Mimic the scoped component in Dagger. There is only one instance of the bloc
+/// in the component
 @injectable
 class LandingHomePageBlocComponent {
   // ignore: close_sinks

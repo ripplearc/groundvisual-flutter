@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/body/phone/composite/work_zone_daily_embedded_content.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_card.dart';
 
+
+/// The tablet version of the Landing Home Page body which devides itself horizontally
+/// to map zone and information zone.
 class LandingHomePageTabletBody extends StatelessWidget {
-  get bottomPadding => null;
 
   @override
   Widget build(BuildContext context) =>

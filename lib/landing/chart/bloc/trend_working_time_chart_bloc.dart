@@ -88,8 +88,8 @@ class TrendWorkingTimeChartBloc
       trendChartConverter
           .convertToDateTime(
               event.range, event.period, event.groupId, event.rodId)
-          .let((time) => Future.value(TrendWorkingTimeBarRodHighlighted(
-              event.siteName, time, event.context)));
+          .let((time) => Future.value(
+              TrendWorkingTimeBarRodHighlighted(event.siteName, time)));
 
   @override
   Future<void> close() {
