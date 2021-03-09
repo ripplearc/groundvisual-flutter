@@ -21,23 +21,35 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   DailyWorkingTimeDataLoaded(
       this.chartData, this.siteName, this.date, this.highlightRodBarStream);
 
+  DailyWorkingTimeDataLoaded copyWith(
+          {WorkingTimeChartData chartDataParam,
+          String siteNameParam,
+          DateTime dateParam,
+          Stream<Tuple2<int, int>> highlightRodBarStreamParam}) =>
+      DailyWorkingTimeDataLoaded(
+          chartDataParam ?? chartData,
+          siteNameParam ?? siteName,
+          dateParam ?? date,
+          highlightRodBarStreamParam ?? highlightRodBarStream);
+
   @override
   List<Object> get props => [chartData, siteName, date];
 }
 
 class DailyWorkingTimeBarRodHighlighted extends DailyWorkingTimeState {
-  final int groupId;
-  final int rodId;
+  final int _groupId;
+  final int _rodId;
 
-  final WorkingTimeChartData chartData;
   final String siteName;
-  final DateTime date;
+  final DateTime time;
 
   DailyWorkingTimeBarRodHighlighted(
-      this.groupId, this.rodId, this.chartData, this.siteName, this.date);
+      this._groupId, this._rodId, this.siteName, this.time);
+
+  bool get unselected => _groupId == -1 && _rodId == -1;
 
   @override
-  List<Object> get props => [groupId, rodId, chartData, siteName, date];
+  List<Object> get props => [_groupId, _rodId, siteName, time];
 }
 
 /// Indicate the thumbnail image loading is in progress.

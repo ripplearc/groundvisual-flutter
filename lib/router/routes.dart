@@ -1,8 +1,10 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/app/root_home_page.dart';
+import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
+import 'package:groundvisual_flutter/app/tablet/root_home_tablet_page.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 /// Register the route address and its destination
 class Routes {
@@ -21,7 +23,9 @@ class Routes {
 
   static var _rootHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return RootHomePage();
+    return ScreenTypeLayout.builder(
+        mobile: (_) => RootHomeMobilePage(),
+        tablet: (_) => RootHomeTabletPage());
   });
 
   static var _placeholderRouteHandler = Handler(

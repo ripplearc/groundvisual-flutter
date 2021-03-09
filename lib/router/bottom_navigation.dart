@@ -7,6 +7,7 @@ class BottomNavigation extends StatefulWidget {
   final Function(int index) action;
 
   const BottomNavigation({Key key, this.action}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _BottomNavigationState(action);
 }
@@ -29,14 +30,18 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) => SalomonBottomBar(
       currentIndex: SelectedTab.values.indexOf(_selectedTab),
       onTap: _handleIndexChanged,
-      items: SelectedTab.values.map((element) {
-        return SalomonBottomBarItem(
-          icon: element.icon(),
-          title: element.text(),
-          selectedColor: Theme.of(context).colorScheme.primary,
-          unselectedColor: Theme.of(context).colorScheme.onBackground,
-        );
-      }).toList());
+      items: SelectedTab.values
+          .map((element) => _buildBarItem(element, context))
+          .toList());
+
+  SalomonBottomBarItem _buildBarItem(
+          SelectedTab element, BuildContext context) =>
+      SalomonBottomBarItem(
+        icon: element.icon(),
+        title: element.text(),
+        selectedColor: Theme.of(context).colorScheme.primary,
+        unselectedColor: Theme.of(context).colorScheme.onBackground,
+      );
 }
 
 enum SelectedTab { site, fleet, doc, account }

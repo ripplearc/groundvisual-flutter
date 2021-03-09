@@ -25,6 +25,29 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
   TrendWorkingTimeDataLoaded(
       this.chartData, this.siteName, this.period, this.dateRange);
 
+  TrendWorkingTimeDataLoaded copyWith({
+    WorkingTimeChartData chartDataParam,
+    String siteNameParam,
+    TrendPeriod periodParam,
+    DateTimeRange dateRangeParam,
+  }) =>
+      TrendWorkingTimeDataLoaded(
+          chartDataParam ?? chartData,
+          siteNameParam ?? siteName,
+          periodParam ?? period,
+          dateRangeParam ?? dateRange);
+
   @override
   List<Object> get props => [chartData, siteName, period, dateRange];
+}
+
+/// Select a date in the trend chart
+class TrendWorkingTimeBarRodHighlighted extends TrendWorkingTimeChartState {
+  final String siteName;
+  final DateTime time;
+
+  TrendWorkingTimeBarRodHighlighted(this.siteName, this.time);
+
+  @override
+  List<Object> get props => [siteName, time];
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/components/buttons/cancel_button.dart';
-import 'package:groundvisual_flutter/components/buttons/confirm_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:dart_date/dart_date.dart';
+
+import 'buttons/cancel_button.dart';
+import 'buttons/confirm_button.dart';
 
 
 /// RDS Calendar page for selecting a certain date, and execute an action

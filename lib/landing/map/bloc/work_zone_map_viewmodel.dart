@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/map/cartographer.dart';
@@ -80,37 +79,32 @@ class WorkZoneMapViewModel {
       cartographer.determineRegionZoomLevel(
           zone.regions.expand((element) => element.points).toList().toRegion());
 
-  Future<Set<Polygon>> getPolygonAtTime(
-          String siteName, DateTime time, BuildContext context) async =>
+  Future<Set<Polygon>> getPolygonAtTime(String siteName, DateTime time) async =>
       siteWorkZoneRepository
           .getWorkZoneAtTime(siteName, time)
-          .then((zone) => _genPolygons(context, zone));
+          .then((zone) => _genPolygons(zone));
 
-  Future<Set<Polygon>> getPolygonAtDate(
-          String siteName, DateTime time, BuildContext context) async =>
+  Future<Set<Polygon>> getPolygonAtDate(String siteName, DateTime time) async =>
       siteWorkZoneRepository
           .getWorkZoneAtDate(siteName, time)
-          .then((zone) => _genPolygons(context, zone));
+          .then((zone) => _genPolygons(zone));
 
-  Future<Set<Polygon>> getPolygonAtPeriod(String siteName, DateTime date,
-          TrendPeriod period, BuildContext context) async =>
+  Future<Set<Polygon>> getPolygonAtPeriod(
+          String siteName, DateTime date, TrendPeriod period) async =>
       siteWorkZoneRepository
           .getWorkZoneAtPeriod(siteName, date, period)
-          .then((zone) => _genPolygons(context, zone));
+          .then((zone) => _genPolygons(zone));
 
-  Set<Polygon> _genPolygons(BuildContext context, ConstructionZone zone) =>
-      zone.regions
-          .asMap()
-          .map((index, region) => MapEntry(
-              index,
-              Polygon(
-                polygonId: PolygonId(index.toString()),
-                consumeTapEvents: true,
-                strokeColor: Theme.of(context).colorScheme.primaryVariant,
-                strokeWidth: 2,
-                fillColor: Theme.of(context).colorScheme.primary,
-                points: region.points,
-              )))
-          .values
-          .toSet();
+  Set<Polygon> _genPolygons(ConstructionZone zone) => zone.regions
+      .asMap()
+      .map((index, region) => MapEntry(
+          index,
+          Polygon(
+            polygonId: PolygonId(index.toString()),
+            consumeTapEvents: true,
+            strokeWidth: 2,
+            points: region.points,
+          )))
+      .values
+      .toSet();
 }

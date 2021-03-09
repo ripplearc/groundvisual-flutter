@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// Expand or collapse the app bar content when swipe down or up.
 class SliverAppBarContainer extends StatefulWidget {
   final Widget child;
   final bool shouldStayWhenCollapse;

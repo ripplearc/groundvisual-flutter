@@ -8,9 +8,8 @@ abstract class TrendWorkingTimeChartEvent extends Equatable {
 class SearchWorkingTimeOnTrend extends TrendWorkingTimeChartEvent {
   final String siteName;
   final TrendPeriod period;
-  final BuildContext context;
 
-  SearchWorkingTimeOnTrend(this.siteName, this.period, this.context);
+  SearchWorkingTimeOnTrend(this.siteName, this.period);
 
   @override
   List<Object> get props => [siteName, period];

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/appbar/sliver/sliver_appbar_body.dart';
-import 'package:groundvisual_flutter/landing/appbar/sliver/sliver_appbar_container.dart';
-import 'package:groundvisual_flutter/landing/appbar/title/sliver_appbar_title.dart';
+import 'package:groundvisual_flutter/landing/appbar/mobile/sliver/sliver_appbar_body.dart';
+import 'package:groundvisual_flutter/landing/appbar/mobile/sliver/sliver_appbar_container.dart';
+import 'package:groundvisual_flutter/landing/appbar/mobile/title/sliver_appbar_title.dart';
 
 
-class LandingHomePageHeader extends StatelessWidget {
+class LandingHomePageMobileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
      SliverAppBar(

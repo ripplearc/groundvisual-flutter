@@ -22,37 +22,41 @@ class WorkingTimeEmbeddedChart extends StatelessWidget {
           builder: (context, state) {
         if (state is SelectedSiteAtDate) {
           return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
-              builder: (context, state) {
-            return state is DailyWorkingTimeDataLoading
-                ? WorkingTimeDailyChartShimmer(
-                    aspectRatio: aspectRatio,
-                    embeddedBackground: WorkingTimeDailyEmbeddedBackground(),
-                    showTitle: false)
-                : WorkingTimeDailyChart(
-                    aspectRatio: aspectRatio,
-                    embeddedBackground: WorkingTimeDailyEmbeddedBackground(),
-                    showTitle: false,
-                  );
-          });
+              builder: (context, state) => _buildWorkingTimeDailyChart(state));
         } else if (state is SelectedSiteAtTrend) {
           return BlocBuilder<TrendWorkingTimeChartBloc,
-              TrendWorkingTimeChartState>(builder: (context, state) {
-            if (state is TrendWorkingTimeDataLoading) {
-              return WorkingTimeTrendChartShimmer(
-                  period: state.period,
-                  aspectRatio: aspectRatio,
-                  showTitle: false);
-            } else if (state is TrendWorkingTimeDataLoaded) {
-              return WorkingTimeTrendChart(
-                  trendChartData: state,
-                  aspectRatio: aspectRatio,
-                  showTitle: false);
-            } else {
-              return Container();
-            }
-          });
+                  TrendWorkingTimeChartState>(
+              buildWhen: (prev, curr) =>
+                  curr is TrendWorkingTimeDataLoaded ||
+                  curr is TrendWorkingTimeDataLoading,
+              builder: (context, state) => _buildWorkingTimeTrendChart(state));
         } else {
           return Container();
         }
       });
+
+  StatelessWidget _buildWorkingTimeDailyChart(DailyWorkingTimeState state) =>
+      state is DailyWorkingTimeDataLoading
+          ? WorkingTimeDailyChartShimmer(
+              aspectRatio: aspectRatio,
+              embeddedBackground: WorkingTimeDailyEmbeddedBackground(),
+              showTitle: false)
+          : WorkingTimeDailyChart(
+              aspectRatio: aspectRatio,
+              embeddedBackground: WorkingTimeDailyEmbeddedBackground(),
+              showTitle: false,
+            );
+
+  StatelessWidget _buildWorkingTimeTrendChart(
+      TrendWorkingTimeChartState state) {
+    if (state is TrendWorkingTimeDataLoading) {
+      return WorkingTimeTrendChartShimmer(
+          period: state.period, aspectRatio: aspectRatio, showTitle: false);
+    } else if (state is TrendWorkingTimeDataLoaded) {
+      return WorkingTimeTrendChart(
+          trendChartData: state, aspectRatio: aspectRatio, showTitle: false);
+    } else {
+      return Container();
+    }
+  }
 }

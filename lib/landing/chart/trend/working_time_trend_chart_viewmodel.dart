@@ -22,48 +22,38 @@ class WorkingTimeTrendChartViewModel {
 
   WorkingTimeTrendChartViewModel(this.trendChartBarConverter);
 
-  Future<WorkingTimeChartData> trendWorkingTime(
-      BuildContext context, TrendPeriod period) async {
+  Future<WorkingTimeChartData> trendWorkingTime(TrendPeriod period) async {
     final numOfGroup = trendChartBarConverter.numOfGroup(period);
     final daysPerGroup = trendChartBarConverter.daysPerGroup(period);
     double space = 20 / (numOfGroup * daysPerGroup / 7.0);
-    final Color dark = Theme.of(context).colorScheme.primary;
-    final Color light = Theme.of(context).colorScheme.onSurface;
 
     final workingTime = _genWorkingTimes(numOfGroup, daysPerGroup);
-    final bars =
-        _genRodBars(dark, light, workingTime, numOfGroup, daysPerGroup, space);
-    final tooltips =
-        _genToolTips(workingTime, context, numOfGroup, daysPerGroup);
+    final bars = _genRodBars(workingTime, numOfGroup, daysPerGroup, space);
+    final tooltips = _genToolTips(workingTime, numOfGroup, daysPerGroup);
     final bottomTitles = _genBottomTitles(numOfGroup, daysPerGroup);
 
     return WorkingTimeChartData(bars, tooltips, 4.0, space, bottomTitles);
   }
 
-  List<BarChartGroupData> _genRodBars(
-          Color dark,
-          Color light,
-          List<_WorkingTimePerRod> workingTime,
-          int numOfGroup,
-          int daysPerGroup,
-          double space) =>
+  List<BarChartGroupData> _genRodBars(List<_WorkingTimePerRod> workingTime,
+          int numOfGroup, int daysPerGroup, double space) =>
       List.generate(
         numOfGroup,
         (groundId) => BarChartGroupData(
             x: groundId,
             barsSpace: space,
-            barRods: _genBarRods(dark, light, workingTime, groundId, numOfGroup,
-                daysPerGroup, space)),
+            barRods: _genBarRods(
+                workingTime, groundId, numOfGroup, daysPerGroup, space)),
       );
 
-  List<List<BarTooltipItem>> _genToolTips(List<_WorkingTimePerRod> workingTime,
-          BuildContext context, int numOfGroup, int daysPerGroup) =>
+  List<List<String>> _genToolTips(List<_WorkingTimePerRod> workingTime,
+          int numOfGroup, int daysPerGroup) =>
       List.generate(
         numOfGroup,
         (groupId) => List.generate(
                 daysPerGroup,
-                (rodId) => _genDateToolTip(
-                    groupId, rodId, workingTime, context, daysPerGroup))
+                (rodId) =>
+                    _genDateToolTip(groupId, rodId, workingTime, daysPerGroup))
             .reversed
             .toList(),
       ).reversed.toList();
@@ -88,41 +78,26 @@ class WorkingTimeTrendChartViewModel {
           .reversed
           .toList();
 
-  List<BarChartRodData> _genBarRods(
-          Color dark,
-          Color light,
-          List<_WorkingTimePerRod> workingTime,
-          int groundId,
-          int numOfGroup,
-          int daysPerGroup,
-          double space) =>
+  List<BarChartRodData> _genBarRods(List<_WorkingTimePerRod> workingTime,
+          int groundId, int numOfGroup, int daysPerGroup, double space) =>
       List.generate(
         daysPerGroup,
-        (rodId) => _genBarChartRodData(dark, light,
+        (rodId) => _genBarChartRodData(
             workingTime.elementAt(rodId + groundId * daysPerGroup), space),
       );
 
-  BarTooltipItem _genDateToolTip(
-      int groupId,
-      int rodId,
-      List<_WorkingTimePerRod> workingTime,
-      BuildContext context,
-      int daysPerGroup) {
+  String _genDateToolTip(int groupId, int rodId,
+      List<_WorkingTimePerRod> workingTime, int daysPerGroup) {
     String date = DateFormat('MM/dd').format(
         DateTime.now() - Duration(days: groupId * daysPerGroup + rodId));
 
     final time = workingTime.elementAt(rodId + groupId * daysPerGroup);
-    return BarTooltipItem(
-        '$date\n' +
-            'work: ' +
-            time.workingHours.ceil().toString() +
-            ' hrs\nidle: ' +
-            time.idlingHours.ceil().toString() +
-            " hrs",
-        Theme.of(context)
-            .textTheme
-            .caption
-            .apply(color: Theme.of(context).colorScheme.onBackground));
+    return '$date\n' +
+        'work: ' +
+        time.workingHours.ceil().toString() +
+        ' hrs\nidle: ' +
+        time.idlingHours.ceil().toString() +
+        " hrs";
   }
 
   List<_WorkingTimePerRod> _genWorkingTimes(int numOfGroup, int daysPerGroup) =>
@@ -139,15 +114,16 @@ class WorkingTimeTrendChartViewModel {
         randomMinutes * randomPert);
   }
 
-  BarChartRodData _genBarChartRodData(Color dark, Color light,
+  BarChartRodData _genBarChartRodData(
           _WorkingTimePerRod workingTime, double space) =>
       BarChartRodData(
           y: workingTime.totalHours,
           width: space,
           rodStackItems: [
-            BarChartRodStackItem(0, workingTime.workingHours, dark),
             BarChartRodStackItem(
-                workingTime.workingHours, workingTime.totalHours, light),
+                0, workingTime.workingHours, Colors.transparent),
+            BarChartRodStackItem(workingTime.workingHours,
+                workingTime.totalHours, Colors.transparent),
           ],
           borderRadius: const BorderRadius.all(Radius.zero));
 }

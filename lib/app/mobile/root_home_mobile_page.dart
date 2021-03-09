@@ -2,39 +2,44 @@ import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/components/calendar_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/component/calendar_page.dart';
+import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 
-class RootHomePage extends StatefulWidget {
+class RootHomeMobilePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RootHomePageState();
+  State<StatefulWidget> createState() => _RootHomeMobilePageState();
 }
 
-class _RootHomePageState extends State<RootHomePage> {
+class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    LandingHomePage(),
-    DocumentHomePage(title: "Fleet"),
-    PlaceholderWidget(
-      "Fleet Page Under Construction",
-      tab: SelectedTab.fleet,
-    ),
-    PlaceholderWidget(
-      "Account Page Under Construction",
-      tab: SelectedTab.account,
-    )
+  final List<Function> _children = [
+    () => LandingHomePage(),
+    () => DocumentHomePage(title: "Fleet"),
+    () => PlaceholderWidget(
+          "Fleet Page Under Construction",
+          tab: SelectedTab.fleet,
+        ),
+    () => PlaceholderWidget(
+          "Account Page Under Construction",
+          tab: SelectedTab.account,
+        )
   ];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigation(action: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      }));
+  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
+      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+      child: Scaffold(
+          body: _children[_currentIndex](),
+          bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
+
+  void _setCurrentIndex(int index) => setState(() {
+        _currentIndex = index;
+      });
 }
 
 class DocumentHomePage extends StatefulWidget {

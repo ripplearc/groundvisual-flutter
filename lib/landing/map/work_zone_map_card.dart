@@ -16,27 +16,32 @@ import 'bloc/work_zone_map_bloc.dart';
 class WorkZoneMapCard extends StatefulWidget {
   final double bottomPadding;
   final bool showTitle;
+  final bool embedInCard;
 
   WorkZoneMapCard(
-      {Key key, @required this.bottomPadding, this.showTitle = true})
+      {Key key,
+      this.bottomPadding = 0,
+      this.showTitle = true,
+      this.embedInCard = true})
       : super(key: key);
 
   @override
-  State<WorkZoneMapCard> createState() => WorkZoneMapCardState(
-      bottomPadding, showTitle, getIt<CameraAnimationController>());
+  State<WorkZoneMapCard> createState() => WorkZoneMapCardState(bottomPadding,
+      showTitle, embedInCard, getIt<CameraAnimationController>());
 }
 
 class WorkZoneMapCardState extends State<WorkZoneMapCard>
     with WidgetsBindingObserver {
   final double bottomPadding;
   final bool showTitle;
+  final bool embedInCard;
   Completer<GoogleMapController> _controller = Completer();
   String _darkMapStyle;
   String _lightMapStyle;
   final CameraAnimationController _cameraAnimationController;
 
-  WorkZoneMapCardState(
-      this.bottomPadding, this.showTitle, this._cameraAnimationController);
+  WorkZoneMapCardState(this.bottomPadding, this.showTitle, this.embedInCard,
+      this._cameraAnimationController);
 
   void initState() {
     super.initState();
@@ -54,7 +59,7 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
           },
           builder: (context, state) => _buildMapCardWithPolygons(state));
 
-  StatelessWidget _buildMapCardWithPolygons(WorkZoneMapState state) {
+  Widget _buildMapCardWithPolygons(WorkZoneMapState state) {
     if (state is WorkZoneMapPolygons) {
       return _buildMapCard(context, state.cameraPosition, state.workZone);
     } else if (state is WorkZoneMapInitial) {
@@ -74,18 +79,25 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
     }
   }
 
-  Card _buildMapCard(BuildContext context, CameraPosition cameraPosition,
+  Widget _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
-      Card(
-          color: Theme.of(context).colorScheme.background,
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          child: showTitle
-              ? Column(mainAxisSize: MainAxisSize.max, children: [
-                  _buildTitle(context),
-                  _buildGoogleMap(cameraPosition, workZone)
-                ])
-              : _buildGoogleMap(cameraPosition, workZone));
+      embedInCard
+          ? Card(
+              color: Theme.of(context).colorScheme.background,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              child: _buildCardContent(context, cameraPosition, workZone))
+          : _buildCardContent(context, cameraPosition, workZone);
+
+  Widget _buildCardContent(BuildContext context, CameraPosition cameraPosition,
+          Set<Polygon> workZone) =>
+      showTitle
+          ? Column(mainAxisSize: MainAxisSize.max, children: [
+              _buildTitle(context),
+              _buildGoogleMap(cameraPosition, workZone)
+            ])
+          : _buildGoogleMap(cameraPosition, workZone);
 
   ListTile _buildTitle(BuildContext context) => ListTile(
       title: Text('Work Zone', style: Theme.of(context).textTheme.subtitle1));
@@ -93,20 +105,22 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
   GoogleMap _buildGoogleMap(
           CameraPosition cameraPosition, Set<Polygon> workZone) =>
       GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: cameraPosition,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        padding: EdgeInsets.only(bottom: bottomPadding),
-        zoomControlsEnabled: false,
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-          Factory<OneSequenceGestureRecognizer>(
-            () => EagerGestureRecognizer(),
-          ),
-        ].toSet(),
-        polygons: workZone,
-      );
+          mapType: MapType.normal,
+          initialCameraPosition: cameraPosition,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          padding: EdgeInsets.only(bottom: bottomPadding),
+          zoomControlsEnabled: false,
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+            Factory<OneSequenceGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          ].toSet(),
+          polygons: workZone.map((p) => p.copyWith(
+                strokeColorParam: Theme.of(context).colorScheme.primaryVariant,
+                fillColorParam: Theme.of(context).colorScheme.primary,
+              )).toSet());
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
