@@ -13,5 +13,6 @@ class GroundVisualApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       home: ScreenTypeLayout.builder(
           mobile: (_) => RootHomeMobilePage(),
-          tablet: (_) => RootHomeTabletPage()));
+          tablet: (_) => RootHomeTabletPage(),
+          desktop: (_) => RootHomeTabletPage()));
 }
