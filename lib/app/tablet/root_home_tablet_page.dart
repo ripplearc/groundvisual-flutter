@@ -65,7 +65,7 @@ class DocumentHomePage extends StatefulWidget {
 class _DocumentHomePageState extends State<DocumentHomePage> {
   @override
   Widget build(BuildContext context) => Center(
-          child: RaisedButton(
+          child: ElevatedButton(
         child: Text('Show Calendar Dialog'),
         onPressed: _showMaterialDialog,
       ));

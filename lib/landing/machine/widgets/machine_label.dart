@@ -7,12 +7,13 @@ class MachineLabel extends StatelessWidget {
   final Size labelSize;
   final Size shadowTopLeftOffset;
 
-  const MachineLabel({Key key, this.name, this.shadowTopLeftOffset, this.labelSize})
+  const MachineLabel(
+      {Key key, this.name, this.shadowTopLeftOffset, this.labelSize})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => Stack(
-        overflow: Overflow.visible,
+        clipBehavior: Clip.none,
         children: [
           _genShadow(context),
           _genForeground(context),

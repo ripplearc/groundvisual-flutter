@@ -21,21 +21,23 @@ class SliverAppBarBody extends StatelessWidget {
               ),
             ),
             Container(
-              height: 40.0,
+              height: 30.0,
               width: 130.0,
               child: SiteDropDownList(),
             ),
             Padding(padding: EdgeInsets.all(2.0)),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  DateTrendToggle(),
-                  Expanded(child: Container(width: double.infinity)),
-                  Container(height: 20, child: DayOrTrendSelectionButton())
-                ]),
-            Padding(padding: EdgeInsets.all(4.0)),
+            Container(
+              height: 30,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    DateTrendToggle(),
+                    Expanded(child: Container(width: double.infinity)),
+                    DayOrTrendSelectionButton()
+                  ]),
+            ),
           ],
         ),
       );
