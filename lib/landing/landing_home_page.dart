@@ -48,7 +48,7 @@ class LandingHomePage extends StatelessWidget {
             ],
           ),
           tablet: (BuildContext context) => LandingHomePageTabletBody(),
-          desktop: (BuildContext context) => Container(color: Colors.red),
+          desktop: (BuildContext context) => LandingHomePageTabletBody(),
           watch: (BuildContext context) => Container(color: Colors.purple),
         ));
   }

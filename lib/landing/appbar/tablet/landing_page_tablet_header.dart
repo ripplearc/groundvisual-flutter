@@ -4,7 +4,7 @@ import 'package:groundvisual_flutter/landing/appbar/component/site/site_dropdown
 import 'package:groundvisual_flutter/landing/appbar/component/toggle/day_trend_toggle.dart';
 
 /// Build the landing home page AppBar with site and date selections.
-AppBar buildLandingHomePageTabletHeader() => AppBar(
+AppBar buildLandingHomePageTabletHeader(BuildContext context) => AppBar(
       leadingWidth: 200,
       leading: Padding(
         padding: EdgeInsets.only(left: 20),
@@ -23,5 +23,5 @@ AppBar buildLandingHomePageTabletHeader() => AppBar(
             child: Container(height: 20, child: DayOrTrendSelectionButton()))
       ],
       elevation: 1,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
     );

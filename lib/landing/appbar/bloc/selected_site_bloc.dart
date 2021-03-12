@@ -51,9 +51,9 @@ class SelectedSiteBloc
       yield SelectedSiteAtTrend(
           siteName,
           DateTimeRange(
-              start: Date.endOfToday,
-              end: Date.endOfToday
-                  .subtract(Duration(days: event.period.days()))),
+              start:
+                  Date.endOfToday.subtract(Duration(days: event.period.days())),
+              end: Date.endOfToday),
           event.period);
     }
   }

@@ -117,10 +117,13 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
               () => EagerGestureRecognizer(),
             ),
           ].toSet(),
-          polygons: workZone.map((p) => p.copyWith(
-                strokeColorParam: Theme.of(context).colorScheme.primaryVariant,
-                fillColorParam: Theme.of(context).colorScheme.primary,
-              )).toSet());
+          polygons: workZone
+              .map((p) => p.copyWith(
+                    strokeColorParam:
+                        Theme.of(context).colorScheme.primaryVariant,
+                    fillColorParam: Theme.of(context).colorScheme.primary,
+                  ))
+              .toSet());
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
