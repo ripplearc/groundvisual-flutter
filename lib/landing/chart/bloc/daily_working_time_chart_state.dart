@@ -32,6 +32,11 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
           dateParam ?? date,
           highlightRodBarStreamParam ?? highlightRodBarStream);
 
+  DailyWorkingTimeDataLoaded transformBarChart(BarRodTransform transform) =>
+      copyWith(
+          chartDataParam: chartData.copyWith(
+              barsParam: chartData.bars.mapBarRod(transform)));
+
   @override
   List<Object> get props => [chartData, siteName, date];
 }

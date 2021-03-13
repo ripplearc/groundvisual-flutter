@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:tuple/tuple.dart';
 
 /// BarChart that updates itself with the data stream.
@@ -54,11 +55,19 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
               show: false,
             ),
             groupsSpace: 1.8,
-            barGroups: BarRodMagnifier(
+            barGroups:
+                /*BarRodMagnifier(
                     context, highlight.item1, highlight.item2,
                     horizontalMagnifier: 3, verticalMagnifier: 1.2)
                 .highlightSelectedGroupIfAny(
-                    barChartDataAtDate.chartData.bars)),
+                    barChartDataAtDate.chartData.bars)*/
+
+                // barChartDataAtDate.chartData.bars
+            barChartDataAtDate.chartData.bars.mapSelectedBarRod(
+                  highlight.item1,
+                  highlight.item2,
+                  BarRodMagnifier(3, 1.2, context).highlightBarRod),
+            ),
       );
 
   BarTooltipItem _buildBarTooltipItem(

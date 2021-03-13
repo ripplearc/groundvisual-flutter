@@ -25,7 +25,7 @@ class WorkingTimeTrendChartViewModel {
   Future<WorkingTimeChartData> trendWorkingTime(TrendPeriod period) async {
     final numOfGroup = trendChartBarConverter.numOfGroup(period);
     final daysPerGroup = trendChartBarConverter.daysPerGroup(period);
-    double space = 20 / (numOfGroup * daysPerGroup / 7.0);
+    double space = 30 / (numOfGroup * daysPerGroup / 7.0);
 
     final workingTime = _genWorkingTimes(numOfGroup, daysPerGroup);
     final bars = _genRodBars(workingTime, numOfGroup, daysPerGroup, space);
@@ -118,7 +118,7 @@ class WorkingTimeTrendChartViewModel {
           _WorkingTimePerRod workingTime, double space) =>
       BarChartRodData(
           y: workingTime.totalHours,
-          width: space,
+          width: 0.1,
           rodStackItems: [
             BarChartRodStackItem(
                 0, workingTime.workingHours, Colors.transparent),

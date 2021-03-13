@@ -10,43 +10,16 @@ class BarRodMagnifier {
   final double horizontalMagnifier;
   final double verticalMagnifier;
 
-  final touchedBarGroupIndex;
-  final touchedRodDataIndex;
-
   BarRodMagnifier(
-      this.context, this.touchedBarGroupIndex, this.touchedRodDataIndex,
-      {this.horizontalMagnifier = 2, this.verticalMagnifier = 1.1});
+      this.horizontalMagnifier, this.verticalMagnifier, this.context);
 
-  List<BarChartGroupData> highlightSelectedGroupIfAny(
-          List<BarChartGroupData> bars) =>
-      bars.asMap().entries.map((entry) {
-        if (entry.key == touchedBarGroupIndex) {
-          BarChartGroupData groupData = entry.value;
-          return BarChartGroupData(
-              x: groupData.x,
-              barsSpace: groupData.barsSpace,
-              barRods: _highlightSelectedBarRodIfAny(groupData));
-        } else {
-          return entry.value;
-        }
-      }).toList();
+  BarChartRodData highlightBarRod(BarChartRodData rodData) => rodData.copyWith(
+      y: rodData.y * verticalMagnifier,
+      width: rodData.width * horizontalMagnifier,
+      rodStackItems: _recolorStackItem(rodData, context));
 
-  List<BarChartRodData> _highlightSelectedBarRodIfAny(
-          BarChartGroupData groupData) =>
-      groupData.barRods.asMap().entries.map((entry) {
-        if (entry.key == touchedRodDataIndex) {
-          BarChartRodData rodData = entry.value;
-          return BarChartRodData(
-              y: rodData.y * verticalMagnifier,
-              width: rodData.width * horizontalMagnifier,
-              borderRadius: rodData.borderRadius,
-              rodStackItems: _recolorStackItem(rodData));
-        } else {
-          return entry.value;
-        }
-      }).toList();
-
-  List<BarChartRodStackItem> _recolorStackItem(BarChartRodData rodData) =>
+  List<BarChartRodStackItem> _recolorStackItem(
+          BarChartRodData rodData, BuildContext context) =>
       rodData.rodStackItems.asMap().entries.map((entry) {
         BarChartRodStackItem item = entry.value;
         if (entry.key == 0) {

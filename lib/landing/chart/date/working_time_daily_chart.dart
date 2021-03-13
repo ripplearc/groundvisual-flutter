@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import 'component/working_time_daily_bar_chart.dart';
 import 'component/working_time_daily_chart_thumbnail.dart';
@@ -52,12 +55,26 @@ class WorkingTimeDailyChart extends StatelessWidget {
                     _buildBackground(),
                     Positioned.fill(
                         child: WorkingTimeDailyBarChart(
-                            barChartDataAtDate:
-                                BarRodPalette(context).colorDailyBarChart(state))),
+                            barChartDataAtDate: state
+                                .transformBarChart(
+                                    BarRodPalette(context).colorBarRod)
+                                .transformBarChart(
+                                    getIt<DailyBarRodMeasurement>(
+                                            param1:
+                                                _totalWidthOfBarRods(context))
+                                        .setBarWidth))),
                     _buildThumbnail()
                   ],
                 )
               : Container()));
+
+  double _totalWidthOfBarRods(BuildContext context) =>
+      getValueForScreenType<double>(
+        context: context,
+        mobile: 200,
+        tablet: 400,
+        desktop: 600,
+      );
 
   Widget _buildBackground() => embeddedBackground != null
       ? Positioned.fill(child: embeddedBackground)

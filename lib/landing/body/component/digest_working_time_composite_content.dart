@@ -27,8 +27,9 @@ class DigestWorkingZoneCompositeContent extends StatelessWidget {
       ));
 
   Widget _buildChartCard() => Positioned.fill(
-          child: Align(
-        alignment: Alignment.bottomCenter,
-        child: WorkingTimeEmbeddedChart(aspectRatio: chartCardAspectRatio),
-      ));
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: WorkingTimeEmbeddedChart(aspectRatio: chartCardAspectRatio),
+        ),
+      );
 }

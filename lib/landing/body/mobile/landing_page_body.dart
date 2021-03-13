@@ -8,7 +8,7 @@ import 'package:groundvisual_flutter/landing/chart/component/working_time_embedd
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
 
 import 'composite/work_zone_composite_card.dart';
-import 'composite/digest_working_time_composite_content.dart';
+import '../component/digest_working_time_composite_content.dart';
 
 /// the body of the landing page consists of a few widgets.
 

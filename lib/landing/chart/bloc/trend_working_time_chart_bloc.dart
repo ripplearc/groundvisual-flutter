@@ -7,9 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -72,14 +74,13 @@ class TrendWorkingTimeChartBloc
             Duration(seconds: 2),
             () => workingTimeTrendChartViewModel.trendWorkingTime(period))
         .then((chart) => TrendWorkingTimeDataLoaded(
-              chart,
-              siteName,
-              period,
-              DateTimeRange(
-                start: Date.startOfToday - Duration(days: period.days()),
-                end: Date.startOfToday,
-              ),
-            )));
+            chart,
+            siteName,
+            period,
+            DateTimeRange(
+              start: Date.startOfToday - Duration(days: period.days()),
+              end: Date.startOfToday,
+            ))));
     return Stream.fromFutures([loadingTrendFuture, trendWithChartFuture]);
   }
 

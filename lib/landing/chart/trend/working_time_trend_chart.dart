@@ -1,12 +1,16 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time during a certain period.
@@ -36,11 +40,22 @@ class WorkingTimeTrendChart extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-          child: _BarChart(
-              trendChartData:
-                  BarRodPalette(context).colorTrendBarChart(trendChartData)),
-        ),
+            padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
+            child: _BarChart(
+                trendChartData: trendChartData
+                    .transformBarChart(BarRodPalette(context).colorBarRod)
+                    .transformBarChart(getIt<TrendBarRodMeasurement>(
+                            param1: _totalWidthOfBarRods(context),
+                            param2: trendChartData.period)
+                        .setBarWidth))),
+      );
+
+  double _totalWidthOfBarRods(BuildContext context) =>
+      getValueForScreenType<double>(
+        context: context,
+        mobile: 200,
+        tablet: 300,
+        desktop: 400,
       );
 }
 
@@ -62,45 +77,43 @@ class _BarChartState extends State<_BarChart> {
   int _touchedRodDataIndex = -1;
 
   @override
-  Widget build(BuildContext context) => BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.center,
-          barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: Theme.of(context).colorScheme.background,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) =>
-                    _buildBarTooltipItem(groupIndex, rodIndex, context)),
-            touchCallback: (barTouchResponse) => _uponSelectingBarRod(
-              barTouchResponse,
-            ),
+  Widget build(BuildContext context) => BarChart(BarChartData(
+        alignment: BarChartAlignment.center,
+        barTouchData: BarTouchData(
+          touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: Theme.of(context).colorScheme.background,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                  _buildBarTooltipItem(groupIndex, rodIndex, context)),
+          touchCallback: (barTouchResponse) => _uponSelectingBarRod(
+            barTouchResponse,
           ),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: SideTitles(
-              showTitles: true,
-              getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
-              margin: 2,
-              getTitles: (double index) =>
-                  trendChartData.chartData.bottomTitles[index.toInt()],
-            ),
-            leftTitles: SideTitles(
-              showTitles: true,
-              interval: trendChartData.chartData.leftTitleInterval,
-              getTextStyles: (value) => Theme.of(context).textTheme.caption,
-            ),
-          ),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          groupsSpace: trendChartData.chartData.space,
-          barGroups: magnifyValue(trendChartData.period).let((magnifying) =>
-              BarRodMagnifier(
-                      context, _touchedBarGroupIndex, _touchedRodDataIndex,
-                      horizontalMagnifier: magnifying.item1,
-                      verticalMagnifier: magnifying.item2)
-                  .highlightSelectedGroupIfAny(trendChartData.chartData.bars)),
         ),
-      );
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: SideTitles(
+            showTitles: true,
+            getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
+            margin: 2,
+            getTitles: (double index) =>
+                trendChartData.chartData.bottomTitles[index.toInt()],
+          ),
+          leftTitles: SideTitles(
+            showTitles: true,
+            interval: trendChartData.chartData.leftTitleInterval,
+            getTextStyles: (value) => Theme.of(context).textTheme.caption,
+          ),
+        ),
+        borderData: FlBorderData(
+          show: false,
+        ),
+        groupsSpace: trendChartData.chartData.space,
+        barGroups: magnifyValue(trendChartData.period).let((magnifying) =>
+            trendChartData.chartData.bars.mapSelectedBarRod(
+                _touchedBarGroupIndex,
+                _touchedRodDataIndex,
+                BarRodMagnifier(magnifying.item1, magnifying.item1, context)
+                    .highlightBarRod)),
+      ));
 
   BarTooltipItem _buildBarTooltipItem(
           int groupIndex, int rodIndex, BuildContext context) =>

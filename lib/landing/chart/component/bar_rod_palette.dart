@@ -1,8 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 
 /// Color the bar rod stack item with dark and light.
 class BarRodPalette {
@@ -14,36 +12,8 @@ class BarRodPalette {
     _light = Theme.of(context).colorScheme.onSurface;
   }
 
-  DailyWorkingTimeDataLoaded colorDailyBarChart(
-          DailyWorkingTimeDataLoaded state) =>
-      state.copyWith(
-          chartDataParam: state.chartData
-              .copyWith(barsParam: _colorBarGroup(state.chartData.bars)));
-
-  TrendWorkingTimeDataLoaded colorTrendBarChart(
-          TrendWorkingTimeDataLoaded state) =>
-      state.copyWith(
-          chartDataParam: state.chartData
-              .copyWith(barsParam: _colorBarGroup(state.chartData.bars)));
-
-  List<BarChartGroupData> _colorBarGroup(List<BarChartGroupData> bars) =>
-      bars.asMap().entries.map((entry) {
-        BarChartGroupData groupData = entry.value;
-        return BarChartGroupData(
-            x: groupData.x,
-            barsSpace: groupData.barsSpace,
-            barRods: _colorBarRod(groupData));
-      }).toList();
-
-  List<BarChartRodData> _colorBarRod(BarChartGroupData groupData) =>
-      groupData.barRods.asMap().entries.map((entry) {
-        BarChartRodData rodData = entry.value;
-        return BarChartRodData(
-            y: rodData.y,
-            width: rodData.width,
-            borderRadius: rodData.borderRadius,
-            rodStackItems: _colorStackItem(rodData));
-      }).toList();
+  BarChartRodData colorBarRod(BarChartRodData rodData) =>
+      rodData.copyWith(rodStackItems: _colorStackItem(rodData));
 
   List<BarChartRodStackItem> _colorStackItem(BarChartRodData rodData) =>
       rodData.rodStackItems.asMap().entries.map((entry) {
