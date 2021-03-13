@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/landing/body/phone/composite/work_zone_daily_embedded_content.dart';
+import 'package:groundvisual_flutter/landing/body/mobile/composite/digest_working_time_composite_content.dart';
 import 'package:groundvisual_flutter/landing/map/work_zone_map_card.dart';
 
 
@@ -22,7 +22,7 @@ class LandingHomePageTabletBody extends StatelessWidget {
                 padding: EdgeInsets.only(right: 5),
                 child: AspectRatio(
                   aspectRatio: 1.3,
-                  child: WorkZoneDailyEmbeddedContent(),
+                  child: DigestWorkingZoneCompositeContent(),
                 ))),
       ]);
 }

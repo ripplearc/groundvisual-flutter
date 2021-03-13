@@ -5,11 +5,11 @@ import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_s
 /// Widget that embeds digest and chart inside the map card.
 /// It puts the digest at the top portion of the embedded content,
 /// and puts the chart at the bottom portion.
-class WorkZoneDailyEmbeddedContent extends StatelessWidget {
+class DigestWorkingZoneCompositeContent extends StatelessWidget {
   final double digestCardAspectRatio;
   final double chartCardAspectRatio;
 
-  const WorkZoneDailyEmbeddedContent(
+  const DigestWorkingZoneCompositeContent(
       {Key key,
       this.digestCardAspectRatio = 336 / 190,
       this.chartCardAspectRatio = 3})
