@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/di/di.dart';
-import 'package:injectable/injectable.dart';
 
 import 'bloc/work_zone_map_bloc.dart';
 
@@ -26,22 +24,18 @@ class WorkZoneMapCard extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<WorkZoneMapCard> createState() => WorkZoneMapCardState(bottomPadding,
-      showTitle, embedInCard, getIt<CameraAnimationController>());
+  State<WorkZoneMapCard> createState() => WorkZoneMapCardState();
 }
 
 class WorkZoneMapCardState extends State<WorkZoneMapCard>
     with WidgetsBindingObserver {
-  final double bottomPadding;
-  final bool showTitle;
-  final bool embedInCard;
   Completer<GoogleMapController> _controller = Completer();
+  static const Duration delayInitialAnimationAndStylingAfterMapCreated =
+      Duration(milliseconds: 500);
   String _darkMapStyle;
   String _lightMapStyle;
-  final CameraAnimationController _cameraAnimationController;
 
-  WorkZoneMapCardState(this.bottomPadding, this.showTitle, this.embedInCard,
-      this._cameraAnimationController);
+  WorkZoneMapCardState();
 
   void initState() {
     super.initState();
@@ -72,16 +66,15 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
   void _animateCameraPosition(
       WorkZoneMapState state, GoogleMapController controller) {
     if (state is WorkZoneMapPolygons) {
-      _cameraAnimationController
-          .executeAnimation(() => controller.animateCamera(
-                CameraUpdate.newCameraPosition(state.cameraPosition),
-              ));
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(state.cameraPosition),
+      );
     }
   }
 
   Widget _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
-      embedInCard
+      widget.embedInCard
           ? Card(
               color: Theme.of(context).colorScheme.background,
               elevation: 4,
@@ -92,7 +85,7 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
 
   Widget _buildCardContent(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone) =>
-      showTitle
+      widget.showTitle
           ? Column(mainAxisSize: MainAxisSize.max, children: [
               _buildTitle(context),
               _buildGoogleMap(cameraPosition, workZone)
@@ -107,20 +100,25 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
       GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: cameraPosition,
-          onMapCreated: (GoogleMapController controller) {
+          onMapCreated: (GoogleMapController controller) async {
+            await Future.delayed(
+                delayInitialAnimationAndStylingAfterMapCreated);
             _controller.complete(controller);
           },
-          padding: EdgeInsets.only(bottom: bottomPadding),
+          padding: EdgeInsets.only(bottom: widget.bottomPadding),
           zoomControlsEnabled: false,
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
             Factory<OneSequenceGestureRecognizer>(
               () => EagerGestureRecognizer(),
             ),
           ].toSet(),
-          polygons: workZone.map((p) => p.copyWith(
-                strokeColorParam: Theme.of(context).colorScheme.primaryVariant,
-                fillColorParam: Theme.of(context).colorScheme.primary,
-              )).toSet());
+          polygons: workZone
+              .map((p) => p.copyWith(
+                    strokeColorParam:
+                        Theme.of(context).colorScheme.primaryVariant,
+                    fillColorParam: Theme.of(context).colorScheme.primary,
+                  ))
+              .toSet());
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');
@@ -146,24 +144,5 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-}
-
-/// Delay the initial camera animation to wait after the Google map padding
-/// to take effect.
-@injectable
-class CameraAnimationController {
-  bool _initialized = false;
-
-  executeAnimation(Function f) async {
-    await _delayInitialAnimationForPaddingTakesEffect();
-    f();
-  }
-
-  Future _delayInitialAnimationForPaddingTakesEffect() async {
-    if (!_initialized) {
-      await Future.delayed(Duration(seconds: 1));
-      _initialized = true;
-    }
   }
 }

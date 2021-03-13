@@ -6,7 +6,6 @@ import 'package:dart_date/dart_date.dart';
 import 'buttons/cancel_button.dart';
 import 'buttons/confirm_button.dart';
 
-
 /// RDS Calendar page for selecting a certain date, and execute an action
 /// upon the confirmation of date selection.
 class CalendarPage extends StatefulWidget {
@@ -115,13 +114,23 @@ class _CalendarPageState extends State<CalendarPage>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ConfirmButton(confirmAction: () {
-            _confirmSelectedDateAction(_selectedDate);
-            Navigator.pop(context);
-          }),
-          CancelButton(cancelAction: () {
-            Navigator.pop(context);
-          })
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: ConfirmButton(confirmAction: () {
+                _confirmSelectedDateAction(_selectedDate);
+                Navigator.pop(context);
+              }),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: CancelButton(cancelAction: () {
+                Navigator.pop(context);
+              }),
+            ),
+          )
         ],
       );
 }

@@ -34,17 +34,17 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage> {
   ];
 
   final List<Function> _tabHeaders = [
-    () => buildLandingHomePageTabletHeader(),
-    () => AppBar(title: Text("fleet")),
-    () => AppBar(title: Text("doc")),
-    () => AppBar(title: Text("account")),
+    (BuildContext context) => buildLandingHomePageTabletHeader(context),
+    (BuildContext context) => AppBar(title: Text("fleet")),
+    (BuildContext context) => AppBar(title: Text("doc")),
+    (BuildContext context) => AppBar(title: Text("account")),
   ];
 
   @override
   Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
       create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
       child: Scaffold(
-          appBar: _tabHeaders[_currentIndex](),
+          appBar: _tabHeaders[_currentIndex](context),
           body: _tabPages[_currentIndex](),
           bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
 
@@ -65,7 +65,7 @@ class DocumentHomePage extends StatefulWidget {
 class _DocumentHomePageState extends State<DocumentHomePage> {
   @override
   Widget build(BuildContext context) => Center(
-          child: RaisedButton(
+          child: ElevatedButton(
         child: Text('Show Calendar Dialog'),
         onPressed: _showMaterialDialog,
       ));

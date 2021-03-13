@@ -8,15 +8,13 @@ class ConfirmButton extends StatelessWidget {
   const ConfirmButton({Key key, this.confirmAction}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => FlatButton(
+  Widget build(BuildContext context) => TextButton(
         onPressed: confirmAction,
-        height: 40,
-        minWidth: 160,
-        color: Theme.of(context).colorScheme.primary,
-        child: Text('Confirm',
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .apply(color: Theme.of(context).colorScheme.background)),
+        child: Text('Confirm'),
+        style: TextButton.styleFrom(
+            primary: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            minimumSize: Size(160, 40),
+            textStyle: Theme.of(context).textTheme.subtitle1),
       );
 }

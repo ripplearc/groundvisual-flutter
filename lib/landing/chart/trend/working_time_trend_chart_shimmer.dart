@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
@@ -20,10 +21,14 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => showTitle
-      ? chartSectionWithTitleBuilder(
-          context: context, builder: _buildShimmer(context), compacted: false)
-      : _buildShimmer(context);
+  Widget build(BuildContext context) => kIsWeb
+      ? Container()
+      : showTitle
+          ? chartSectionWithTitleBuilder(
+              context: context,
+              builder: _buildShimmer(context),
+              compacted: false)
+          : _buildShimmer(context);
 
   AspectRatio _buildShimmer(BuildContext context) => AspectRatio(
       aspectRatio: aspectRatio,

@@ -56,7 +56,7 @@ class _DocumentHomePageState extends State<DocumentHomePage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         body: Center(
-          child: RaisedButton(
+          child: ElevatedButton(
             child: Text('Show Calendar Dialog'),
             onPressed: _showMaterialDialog,
           ),

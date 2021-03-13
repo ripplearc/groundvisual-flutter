@@ -12,7 +12,7 @@ class CancelButton extends StatelessWidget {
   Widget build(BuildContext context) => ButtonTheme(
         minWidth: 160.0,
         height: 40.0,
-        child: OutlineButton(
+        child: OutlinedButton(
             child: Text(
               'Cancel',
               style: Theme.of(context)
@@ -20,9 +20,8 @@ class CancelButton extends StatelessWidget {
                   .subtitle1
                   .apply(color: Theme.of(context).colorScheme.primary),
             ),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Theme.of(context).colorScheme.primary)),
             onPressed: cancelAction),
       );
 }
