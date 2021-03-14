@@ -14,7 +14,8 @@ import 'package:injectable/injectable.dart';
 @injectable
 class WorkingTimeDailyChartViewModel {
   final DailyChartBarConverter dailyChartBarConverter;
-  double _space = 1.4;
+
+  static const nominalSpace = 0.1;
 
   WorkingTimeDailyChartViewModel(this.dailyChartBarConverter);
 
@@ -25,7 +26,7 @@ class WorkingTimeDailyChartViewModel {
         dailyChartBarConverter.groupsPerDay,
         (groundId) => BarChartGroupData(
             x: groundId,
-            barsSpace: 1.6,
+            barsSpace: nominalSpace,
             barRods: _genBarRods(workingTime, groundId)));
 
     final tooltips = List.generate(
@@ -40,7 +41,7 @@ class WorkingTimeDailyChartViewModel {
       return (hour % 6 == 0 && hour != 0) ? hour.toString() + ":00" : "";
     });
 
-    return WorkingTimeChartData(bars, tooltips, 15, _space, bottomTitles);
+    return WorkingTimeChartData(bars, tooltips, 15, bottomTitles);
   }
 
   List<BarChartRodData> _genBarRods(
@@ -89,7 +90,7 @@ class WorkingTimeDailyChartViewModel {
           Color dark, Color light, UnitWorkingTime workingTime) =>
       BarChartRodData(
           y: workingTime.durationInSeconds.toDouble(),
-          width: 1.6,
+          width: nominalSpace,
           rodStackItems: [
             BarChartRodStackItem(
                 0, workingTime.workingInSeconds.toDouble(), dark),

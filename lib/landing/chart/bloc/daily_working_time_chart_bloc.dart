@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
@@ -15,7 +16,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 part 'daily_working_time_chart_event.dart';
-
 part 'daily_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the date chart,

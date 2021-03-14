@@ -8,7 +8,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import 'appbar/bloc/selected_site_bloc.dart';
 import 'appbar/mobile/landing_page_mobile_header.dart';
-import 'body/phone/landing_page_body.dart';
+import 'body/mobile/landing_page_body.dart';
 import 'chart/bloc/daily_working_time_chart_bloc.dart';
 import 'chart/bloc/trend_working_time_chart_bloc.dart';
 import 'digest/bloc/play_digest_bloc.dart';
@@ -49,7 +49,6 @@ class LandingHomePage extends StatelessWidget {
           ),
           tablet: (BuildContext context) => LandingHomePageTabletBody(),
           desktop: (BuildContext context) => LandingHomePageTabletBody(),
-          watch: (BuildContext context) => Container(color: Colors.purple),
         ));
   }
 }

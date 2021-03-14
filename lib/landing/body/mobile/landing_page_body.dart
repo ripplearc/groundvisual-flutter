@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
+import 'package:groundvisual_flutter/landing/chart/component/working_time_embedded_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
 
 import 'composite/work_zone_composite_card.dart';
-import 'composite/work_zone_daily_embedded_content.dart';
-import 'composite/work_zone_trend_embedded_content.dart';
+import '../component/digest_working_time_composite_content.dart';
 
 /// the body of the landing page consists of a few widgets.
 
@@ -72,7 +72,7 @@ class _SliverBuilder {
       case 0:
         return WorkZoneCompositeCard(
             embeddedContentAspectRatio: embeddedDailyContentAspectRatio,
-            embeddedContent: WorkZoneDailyEmbeddedContent());
+            embeddedContent: DigestWorkingZoneCompositeContent());
       case 1:
         return MachineWorkingTimeList();
       case 2:
@@ -87,8 +87,8 @@ class _SliverBuilder {
       case 0:
         return WorkZoneCompositeCard(
             embeddedContentAspectRatio: embeddedTrendContentAspectRatio,
-            embeddedContent: WorkZoneTrendEmbeddedContent(
-                chartCardAspectRatio: embeddedTrendContentAspectRatio));
+            embeddedContent: WorkingTimeEmbeddedChart(
+                aspectRatio: embeddedTrendContentAspectRatio));
       case 1:
         return MachineWorkingTimeList();
       case 2:

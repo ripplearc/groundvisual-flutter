@@ -37,6 +37,15 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
           periodParam ?? period,
           dateRangeParam ?? dateRange);
 
+  TrendWorkingTimeDataLoaded transformBarChart(BarRodTransform transform) =>
+      copyWith(
+          chartDataParam: chartData.copyWith(
+              barsParam: chartData.bars.mapBarRod(transform)));
+
+  TrendWorkingTimeDataLoaded transformBarGroup(BarGroupTransform transformer) =>
+      copyWith(
+          chartDataParam: chartData.copyWith(
+              barsParam: chartData.bars.mapBarGroup(transformer)));
   @override
   List<Object> get props => [chartData, siteName, period, dateRange];
 }

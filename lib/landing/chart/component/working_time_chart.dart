@@ -28,15 +28,19 @@ class WorkingTimeChart extends StatelessWidget {
           });
         } else if (state is SelectedSiteAtTrend) {
           return BlocBuilder<TrendWorkingTimeChartBloc,
-              TrendWorkingTimeChartState>(builder: (context, state) {
-            if (state is TrendWorkingTimeDataLoading) {
-              return WorkingTimeTrendChartShimmer(period: state.period);
-            } else if (state is TrendWorkingTimeDataLoaded) {
-              return WorkingTimeTrendChart(trendChartData: state);
-            } else {
-              return Container();
-            }
-          });
+                  TrendWorkingTimeChartState>(
+              buildWhen: (prev, curr) =>
+                  curr is TrendWorkingTimeDataLoading ||
+                  curr is TrendWorkingTimeDataLoaded,
+              builder: (context, state) {
+                if (state is TrendWorkingTimeDataLoading) {
+                  return WorkingTimeTrendChartShimmer(period: state.period);
+                } else if (state is TrendWorkingTimeDataLoaded) {
+                  return WorkingTimeTrendChart(trendChartData: state);
+                } else {
+                  return Container();
+                }
+              });
         } else {
           return Container();
         }
