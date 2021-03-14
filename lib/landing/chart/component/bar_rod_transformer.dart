@@ -1,10 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 
 typedef BarChartRodData BarRodTransform(BarChartRodData data);
+typedef BarChartGroupData BarGroupTransform(BarChartGroupData data);
 
 /// Extension of List<BarChartGroupData> to iterate through group and rod, and
 /// then apply the transformation to each or selected rod.
 extension Transformer on List<BarChartGroupData> {
+  List<BarChartGroupData> mapBarGroup(BarGroupTransform transform) =>
+      asMap().entries.map((entry) => transform(entry.value)).toList();
+
   List<BarChartGroupData> mapBarRod(BarRodTransform transform) =>
       asMap().entries.map((entry) {
         BarChartGroupData groupData = entry.value;

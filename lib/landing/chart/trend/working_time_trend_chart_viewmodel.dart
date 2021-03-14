@@ -17,6 +17,7 @@ import 'package:dart_date/dart_date.dart';
 @injectable
 class WorkingTimeTrendChartViewModel {
   final weekDays = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"];
+  static const nominalSpace = 0.1;
 
   final TrendChartBarConverter trendChartBarConverter;
 
@@ -25,25 +26,24 @@ class WorkingTimeTrendChartViewModel {
   Future<WorkingTimeChartData> trendWorkingTime(TrendPeriod period) async {
     final numOfGroup = trendChartBarConverter.numOfGroup(period);
     final daysPerGroup = trendChartBarConverter.daysPerGroup(period);
-    double space = 30 / (numOfGroup * daysPerGroup / 7.0);
 
     final workingTime = _genWorkingTimes(numOfGroup, daysPerGroup);
-    final bars = _genRodBars(workingTime, numOfGroup, daysPerGroup, space);
+    final bars = _genRodBars(workingTime, numOfGroup, daysPerGroup);
     final tooltips = _genToolTips(workingTime, numOfGroup, daysPerGroup);
     final bottomTitles = _genBottomTitles(numOfGroup, daysPerGroup);
 
-    return WorkingTimeChartData(bars, tooltips, 4.0, space, bottomTitles);
+    return WorkingTimeChartData(bars, tooltips, 4.0, bottomTitles);
   }
 
   List<BarChartGroupData> _genRodBars(List<_WorkingTimePerRod> workingTime,
-          int numOfGroup, int daysPerGroup, double space) =>
+          int numOfGroup, int daysPerGroup) =>
       List.generate(
         numOfGroup,
         (groundId) => BarChartGroupData(
             x: groundId,
-            barsSpace: space,
-            barRods: _genBarRods(
-                workingTime, groundId, numOfGroup, daysPerGroup, space)),
+            barsSpace: nominalSpace,
+            barRods:
+                _genBarRods(workingTime, groundId, numOfGroup, daysPerGroup)),
       );
 
   List<List<String>> _genToolTips(List<_WorkingTimePerRod> workingTime,
@@ -79,11 +79,11 @@ class WorkingTimeTrendChartViewModel {
           .toList();
 
   List<BarChartRodData> _genBarRods(List<_WorkingTimePerRod> workingTime,
-          int groundId, int numOfGroup, int daysPerGroup, double space) =>
+          int groundId, int numOfGroup, int daysPerGroup) =>
       List.generate(
         daysPerGroup,
         (rodId) => _genBarChartRodData(
-            workingTime.elementAt(rodId + groundId * daysPerGroup), space),
+            workingTime.elementAt(rodId + groundId * daysPerGroup)),
       );
 
   String _genDateToolTip(int groupId, int rodId,
@@ -114,11 +114,10 @@ class WorkingTimeTrendChartViewModel {
         randomMinutes * randomPert);
   }
 
-  BarChartRodData _genBarChartRodData(
-          _WorkingTimePerRod workingTime, double space) =>
+  BarChartRodData _genBarChartRodData(_WorkingTimePerRod workingTime) =>
       BarChartRodData(
           y: workingTime.totalHours,
-          width: 0.1,
+          width: nominalSpace,
           rodStackItems: [
             BarChartRodStackItem(
                 0, workingTime.workingHours, Colors.transparent),

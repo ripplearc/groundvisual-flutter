@@ -6,11 +6,10 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
-import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
-import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
-import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';
+import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
+import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 import 'package:tuple/tuple.dart';
 
 /// Widget displays the working and idling time during a certain period.
@@ -41,28 +40,24 @@ class WorkingTimeTrendChart extends StatelessWidget {
         color: Theme.of(context).colorScheme.background,
         child: Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-            child: _BarChart(
-                trendChartData: trendChartData
-                    .transformBarChart(BarRodPalette(context).colorBarRod)
-                    .transformBarChart(getIt<TrendBarRodMeasurement>(
-                            param1: _totalWidthOfBarRods(context),
-                            param2: trendChartData.period)
-                        .setBarWidth))),
-      );
-
-  double _totalWidthOfBarRods(BuildContext context) =>
-      getValueForScreenType<double>(
-        context: context,
-        mobile: 200,
-        tablet: 300,
-        desktop: 400,
+            child: getIt<TrendBarRodMeasurement>(
+                    param1: context, param2: trendChartData.period)
+                .let((ruler) => _BarChart(
+                    ruler: ruler,
+                    trendChartData: trendChartData
+                        .transformBarChart(BarRodPalette(context).colorBarRod)
+                        .transformBarChart(ruler.setBarWidth)
+                        .transformBarGroup(ruler.setBarSpace)))),
       );
 }
 
 class _BarChart extends StatefulWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
+  final TrendBarRodMeasurement ruler;
 
-  const _BarChart({Key key, this.trendChartData}) : super(key: key);
+  const _BarChart(
+      {Key key, @required this.trendChartData, @required this.ruler})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BarChartState(trendChartData);
@@ -106,7 +101,7 @@ class _BarChartState extends State<_BarChart> {
         borderData: FlBorderData(
           show: false,
         ),
-        groupsSpace: trendChartData.chartData.space,
+        groupsSpace: widget.ruler.groupSpace,
         barGroups: magnifyValue(trendChartData.period).let((magnifying) =>
             trendChartData.chartData.bars.mapSelectedBarRod(
                 _touchedBarGroupIndex,
