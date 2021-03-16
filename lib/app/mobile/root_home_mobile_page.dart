@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/component/calendar_page.dart';
+import 'package:groundvisual_flutter/component/calendar_sheet.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
@@ -82,7 +82,7 @@ class _DocumentHomePageState extends State<DocumentHomePage> {
       Container(
         height: 600,
         width: 500,
-        child: CalendarPage(
+        child: CalendarSheet(
             confirmSelectedDateAction: action,
             initialSelectedDate: initialSelectedDate),
       );

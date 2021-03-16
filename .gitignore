@@ -58,3 +58,4 @@ android/app/src/release/res/mipmap-*/launcher_icon.*
 /ios/Runner/Assets.xcassets/AppIcon.appiconset/
 /ios/Runner/Assets.xcassets/AppIcon-debug.appiconset/
 /ios/Runner/Assets.xcassets/AppIcon-release.appiconset/
+local.properties

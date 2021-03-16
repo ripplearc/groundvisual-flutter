@@ -6,22 +6,24 @@ import 'package:dart_date/dart_date.dart';
 import 'buttons/cancel_button.dart';
 import 'buttons/confirm_button.dart';
 
-/// RDS Calendar page for selecting a certain date, and execute an action
+typedef ConfirmSelectedDateAction(DateTime t);
+
+/// RDS Calendar sheet for selecting a certain date, and execute an action
 /// upon the confirmation of date selection.
-class CalendarPage extends StatefulWidget {
-  CalendarPage(
+class CalendarSheet extends StatefulWidget {
+  CalendarSheet(
       {Key key, this.confirmSelectedDateAction, this.initialSelectedDate})
       : super(key: key);
 
-  final Function(DateTime t) confirmSelectedDateAction;
   final DateTime initialSelectedDate;
+  final ConfirmSelectedDateAction confirmSelectedDateAction;
 
   @override
-  _CalendarPageState createState() =>
-      _CalendarPageState(confirmSelectedDateAction, initialSelectedDate);
+  _CalendarSheetState createState() =>
+      _CalendarSheetState(confirmSelectedDateAction, initialSelectedDate);
 }
 
-class _CalendarPageState extends State<CalendarPage>
+class _CalendarSheetState extends State<CalendarSheet>
     with TickerProviderStateMixin {
   AnimationController _animationController;
   CalendarController _calendarController;
@@ -29,7 +31,7 @@ class _CalendarPageState extends State<CalendarPage>
 
   final Function(DateTime t) _confirmSelectedDateAction;
 
-  _CalendarPageState(this._confirmSelectedDateAction, this._selectedDate);
+  _CalendarSheetState(this._confirmSelectedDateAction, this._selectedDate);
 
   @override
   void initState() {

@@ -16,5 +16,11 @@ install_release_build:
 	flutter build apk --split-per-abi
 	flutter install
 
+## install_web_build    : build web version and then run the server
+install_web_build:
+	$(info  Build and Run Web Build 🎭🎭🎭)
+	flutter build web
+	flutter pub global run dhttpd --path ~/Documents/rc/Software/groundvisual_flutter/build/web
+
 help: Makefile
 	sed -n "s/^##//p" $<

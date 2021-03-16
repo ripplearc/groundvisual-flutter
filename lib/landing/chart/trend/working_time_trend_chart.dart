@@ -106,7 +106,7 @@ class _BarChartState extends State<_BarChart> {
             trendChartData.chartData.bars.mapSelectedBarRod(
                 _touchedBarGroupIndex,
                 _touchedRodDataIndex,
-                BarRodMagnifier(magnifying.item1, magnifying.item1, context)
+                BarRodMagnifier(magnifying.item1, magnifying.item2, context)
                     .highlightBarRod)),
       ));
 
