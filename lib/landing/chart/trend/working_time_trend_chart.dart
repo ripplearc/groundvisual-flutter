@@ -40,34 +40,32 @@ class WorkingTimeTrendChart extends StatelessWidget {
         color: Theme.of(context).colorScheme.background,
         child: Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 20.0, top: 72.0),
-            child: getIt<TrendBarRodMeasurement>(
-                    param1: context, param2: trendChartData.period)
-                .let((ruler) => _BarChart(
-                    ruler: ruler,
-                    trendChartData: trendChartData
-                        .transformBarChart(BarRodPalette(context).colorBarRod)
-                        .transformBarChart(ruler.setBarWidth)
-                        .transformBarGroup(ruler.setBarSpace)))),
+            child: _buildChartContent()),
       );
+
+  LayoutBuilder _buildChartContent() => LayoutBuilder(
+      builder: (context, constraints) => (getIt<TrendBarRodMeasurement>(
+              param1: constraints.biggest.width, param2: trendChartData.period))
+          .let((ruler) => _BarChart(
+              ruler: ruler,
+              trendChartData: trendChartData
+                  .transformBarChart(BarRodPalette(context).colorBarRod)
+                  .transformBarChart(ruler.setBarWidth)
+                  .transformBarGroup(ruler.setBarSpace))));
 }
 
 class _BarChart extends StatefulWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
   final TrendBarRodMeasurement ruler;
 
-  const _BarChart(
-      {Key key, @required this.trendChartData, @required this.ruler})
+  _BarChart({Key key, @required this.trendChartData, @required this.ruler})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BarChartState(trendChartData);
+  State<StatefulWidget> createState() => _BarChartState();
 }
 
 class _BarChartState extends State<_BarChart> {
-  final TrendWorkingTimeDataLoaded trendChartData;
-
-  _BarChartState(this.trendChartData);
-
   int _touchedBarGroupIndex = -1;
   int _touchedRodDataIndex = -1;
 
@@ -90,11 +88,11 @@ class _BarChartState extends State<_BarChart> {
             getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
             margin: 2,
             getTitles: (double index) =>
-                trendChartData.chartData.bottomTitles[index.toInt()],
+                widget.trendChartData.chartData.bottomTitles[index.toInt()],
           ),
           leftTitles: SideTitles(
             showTitles: true,
-            interval: trendChartData.chartData.leftTitleInterval,
+            interval: widget.trendChartData.chartData.leftTitleInterval,
             getTextStyles: (value) => Theme.of(context).textTheme.caption,
           ),
         ),
@@ -102,18 +100,19 @@ class _BarChartState extends State<_BarChart> {
           show: false,
         ),
         groupsSpace: widget.ruler.groupSpace,
-        barGroups: magnifyValue(trendChartData.period).let((magnifying) =>
-            trendChartData.chartData.bars.mapSelectedBarRod(
-                _touchedBarGroupIndex,
-                _touchedRodDataIndex,
-                BarRodMagnifier(magnifying.item1, magnifying.item2, context)
-                    .highlightBarRod)),
+        barGroups: magnifyValue(widget.trendChartData.period).let(
+            (magnifying) => widget.trendChartData.chartData.bars
+                .mapSelectedBarRod(
+                    _touchedBarGroupIndex,
+                    _touchedRodDataIndex,
+                    BarRodMagnifier(magnifying.item1, magnifying.item2, context)
+                        .highlightBarRod)),
       ));
 
   BarTooltipItem _buildBarTooltipItem(
           int groupIndex, int rodIndex, BuildContext context) =>
       BarTooltipItem(
-          trendChartData.chartData.tooltips[groupIndex][rodIndex],
+          widget.trendChartData.chartData.tooltips[groupIndex][rodIndex],
           Theme.of(context)
               .textTheme
               .caption
@@ -151,9 +150,9 @@ class _BarChartState extends State<_BarChart> {
           SelectTrendChartBarRod(
               barTouchResponse.spot.touchedBarGroupIndex,
               barTouchResponse.spot.touchedRodDataIndex,
-              trendChartData.siteName,
-              trendChartData.dateRange,
-              trendChartData.period,
+              widget.trendChartData.siteName,
+              widget.trendChartData.dateRange,
+              widget.trendChartData.period,
               context));
     }
   }

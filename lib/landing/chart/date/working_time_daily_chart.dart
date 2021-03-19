@@ -53,19 +53,23 @@ class WorkingTimeDailyChart extends StatelessWidget {
               ? Stack(
                   children: [
                     _buildBackground(),
-                    Positioned.fill(
-                        child: getIt<DailyBarRodMeasurement>(param1: context)
-                            .let((ruler) => WorkingTimeDailyBarChart(
-                                ruler: ruler,
-                                barChartDataAtDate: state
-                                    .transformBarRod(
-                                        BarRodPalette(context).colorBarRod)
-                                    .transformBarRod(ruler.setBarWidth)
-                                    .transformBarGroup(ruler.setBarSpace)))),
+                    _buildForeground(state),
                     _buildThumbnail()
                   ],
                 )
               : Container()));
+
+  Positioned _buildForeground(DailyWorkingTimeDataLoaded state) =>
+      Positioned.fill(
+          child: LayoutBuilder(
+              builder: (context, constraints) => getIt<DailyBarRodMeasurement>(
+                      param1: constraints.biggest.width)
+                  .let((ruler) => WorkingTimeDailyBarChart(
+                      ruler: ruler,
+                      barChartDataAtDate: state
+                          .transformBarRod(BarRodPalette(context).colorBarRod)
+                          .transformBarRod(ruler.setBarWidth)
+                          .transformBarGroup(ruler.setBarSpace)))));
 
   Widget _buildBackground() => embeddedBackground != null
       ? Positioned.fill(child: embeddedBackground)
