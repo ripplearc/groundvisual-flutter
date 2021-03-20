@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/mode/portrait_mode_mixin.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
@@ -15,7 +16,8 @@ class RootHomeMobilePage extends StatefulWidget {
   State<StatefulWidget> createState() => _RootHomeMobilePageState();
 }
 
-class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
+class _RootHomeMobilePageState extends State<RootHomeMobilePage>
+    with PortraitStatefulModeMixin<RootHomeMobilePage> {
   int _currentIndex = 0;
   final List<Function> _children = [
     () => LandingHomePage(),
@@ -31,11 +33,15 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage> {
   ];
 
   @override
-  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
-      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
-      child: Scaffold(
-          body: _children[_currentIndex](),
-          bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
+  Widget build(BuildContext context) {
+    super.build(context);
+    return BlocProvider<SelectedSiteBloc>(
+        create: (_) =>
+            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+        child: Scaffold(
+            body: _children[_currentIndex](),
+            bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
+  }
 
   void _setCurrentIndex(int index) => setState(() {
         _currentIndex = index;
@@ -86,4 +92,9 @@ class _DocumentHomePageState extends State<DocumentHomePage> {
             confirmSelectedDateAction: action,
             initialSelectedDate: initialSelectedDate),
       );
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
