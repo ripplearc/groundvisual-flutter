@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dart';

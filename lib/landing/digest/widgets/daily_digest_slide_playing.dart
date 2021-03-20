@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/digest/bloc/play_digest_bloc.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/animation/daily_digest_decoration_planner.dart';
 

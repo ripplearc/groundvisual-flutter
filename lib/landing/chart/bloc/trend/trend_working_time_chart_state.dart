@@ -1,5 +1,6 @@
 part of 'trend_working_time_chart_bloc.dart';
 
+
 /// State that reflects the loading of the trend working time.
 abstract class TrendWorkingTimeChartState extends Equatable {
   const TrendWorkingTimeChartState();

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Thumbnail image shown based on timestamp of the selected bar rod.
