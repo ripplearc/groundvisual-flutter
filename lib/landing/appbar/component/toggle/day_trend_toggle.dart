@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:groundvisual_flutter/component/buttons/toggle_button.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 /// Toggle between date or trend for information about a site. Date option displays
 /// the information on a certain date, while trend option displays information within
@@ -15,6 +16,13 @@ class DateTrendToggle extends StatelessWidget {
   const DateTrendToggle({Key key, this.widthPercent = 30, this.height = 20})
       : super(key: key);
 
+  double _widthPercent(BuildContext context) => getValueForScreenType<double>(
+        context: context,
+        mobile: 30,
+        tablet: 20,
+        desktop: 15,
+      );
+
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
@@ -24,7 +32,7 @@ class DateTrendToggle extends StatelessWidget {
             key: UniqueKey(),
             initialIndex: index,
             labels: ["Date", "Trend"],
-            widthPercent: widthPercent,
+            widthPercent: _widthPercent(context),
             height: height,
             toggleAction: (index) {
               _triggerSelectSiteDateTimeEvent(index, context);

@@ -17,9 +17,11 @@ class WorkingTimeEmbeddedChart extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
-          builder: (context, state) {
+  Widget build(BuildContext context) => BlocBuilder<SelectedSiteBloc,
+          SelectedSiteState>(
+      buildWhen: (prev, curr) =>
+          curr is SelectedSiteAtDate || curr is SelectedSiteAtTrend,
+      builder: (context, state) {
         if (state is SelectedSiteAtDate) {
           return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
               builder: (context, state) => _buildWorkingTimeDailyChart(state));
