@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'daily_timeline.dart';
+
 class TimelineCursor extends StatefulWidget {
+  final MoveTimelineCursor moveTimelineCursor;
+
+  const TimelineCursor({Key key, this.moveTimelineCursor}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => TimelineCursorState();
 }
@@ -15,8 +21,10 @@ class TimelineCursorState extends State<TimelineCursor> {
           setState(() {
             timestamp = value;
           });
+          widget.moveTimelineCursor(value);
         },
         min: 0,
-        max: 100,
+        max: 9,
+        divisions: 10,
       );
 }
