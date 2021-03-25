@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +8,10 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_embedded_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
+import 'package:groundvisual_flutter/landing/timeline/widget/daily_timeline.dart';
 
-import 'composite/work_zone_composite_card.dart';
 import '../component/digest_working_time_composite_content.dart';
+import 'composite/work_zone_composite_card.dart';
 
 /// the body of the landing page consists of a few widgets.
 
@@ -52,7 +55,7 @@ class LandingHomePageMobileBody extends StatelessWidget {
 class _SliverBuilder {
   final double embeddedTrendContentAspectRatio = 1.8;
   final double embeddedDailyContentAspectRatio = 1.3;
-  final int numberOfWidgets = 3;
+  final int numberOfWidgets = 4;
 
   Widget buildItem(
           Animation animation, Type type, int index, BuildContext context) =>
@@ -74,8 +77,10 @@ class _SliverBuilder {
             embeddedContentAspectRatio: embeddedDailyContentAspectRatio,
             embeddedContent: DigestWorkingZoneCompositeContent());
       case 1:
-        return MachineWorkingTimeList();
+        return DailyTimeline();
       case 2:
+        return MachineWorkingTimeList();
+      case 3:
         return WorkingTimeChart();
       default:
         return Container();
