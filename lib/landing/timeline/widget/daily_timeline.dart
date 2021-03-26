@@ -5,7 +5,12 @@ import 'package:groundvisual_flutter/landing/timeline/widget/timeline_images.dar
 
 typedef MoveTimelineCursor(double index);
 
-class DailyTimeline extends StatelessWidget {
+class DailyTimeline extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _DailyTimelineState();
+}
+
+class _DailyTimelineState extends State<DailyTimeline> {
   final _scrollController = ScrollController();
 
   void _scrollToIndex(index) {
@@ -25,6 +30,11 @@ class DailyTimeline extends StatelessWidget {
                 title: Text('Working Time',
                     style: Theme.of(context).textTheme.headline6)),
             TimelineImages(scrollController: _scrollController),
-            TimelineCursor(moveTimelineCursor: _scrollToIndex)
+            TimelineCursor(
+              moveTimelineCursor: _scrollToIndex,
+              scrollController: _scrollController,
+              unitWidth: 216,
+              numberOfUnits: 10,
+            )
           ]));
 }

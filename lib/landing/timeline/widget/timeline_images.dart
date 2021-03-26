@@ -24,7 +24,7 @@ class TimelineImages extends StatelessWidget {
                         width: 200,
                         fit: BoxFit.contain,
                       )),
-                  Text('3:00 ~ 3:15',
+                  Text('$index:00 ~ $index:15',
                       style: Theme.of(context).textTheme.headline6)
                 ],
               ))));
