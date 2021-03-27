@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,7 +54,7 @@ class LandingHomePageMobileBody extends StatelessWidget {
 class _SliverBuilder {
   final double embeddedTrendContentAspectRatio = 1.8;
   final double embeddedDailyContentAspectRatio = 1.3;
-  final int numberOfWidgets = 4;
+  final int numberOfWidgets = 3;
 
   Widget buildItem(
           Animation animation, Type type, int index, BuildContext context) =>
@@ -80,8 +79,6 @@ class _SliverBuilder {
         return DailyTimeline();
       case 2:
         return MachineWorkingTimeList();
-      case 3:
-        return WorkingTimeChart();
       default:
         return Container();
     }

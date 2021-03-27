@@ -46,6 +46,7 @@ dependencies:
   dart_date: ^1.0.8
   charts_flutter: ^0.9.0
   responsive_builder:
+  flutter_svg: ^0.19.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -81,6 +82,7 @@ flutter:
     - assets/
     - assets/map_styles/
     - assets/mock_response/
+    - assets/icon/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

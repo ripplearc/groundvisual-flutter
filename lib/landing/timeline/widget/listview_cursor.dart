@@ -1,39 +1,42 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'daily_timeline.dart';
 
-class TimelineCursor extends StatefulWidget {
+/// The slider that can control the movement of the timelapse ListView as well as listens
+/// to the movement and reflect that movement.
+class ListViewCursor extends StatefulWidget {
   final MoveTimelineCursor moveTimelineCursor;
   final ScrollController scrollController;
-  final double unitWidth;
+  final double cellWidth;
   final int numberOfUnits;
 
-  const TimelineCursor(
+  const ListViewCursor(
       {Key key,
       this.moveTimelineCursor,
       this.scrollController,
-      this.unitWidth,
+      this.cellWidth,
       this.numberOfUnits})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => TimelineCursorState();
+  State<StatefulWidget> createState() => ListViewCursorState();
 }
 
-class TimelineCursorState extends State<TimelineCursor> {
+class ListViewCursorState extends State<ListViewCursor> {
   double _timestamp = 0;
   BehaviorSubject _suspendListenerSubject = BehaviorSubject<bool>();
   StreamSubscription _subscription;
   VoidCallback _scrollLambda;
 
-  TimelineCursorState() {
+  ListViewCursorState() {
     _scrollLambda = () {
       setState(() {
         _timestamp =
-            (widget.scrollController.offset / widget.unitWidth).roundToDouble();
+            (widget.scrollController.offset / widget.cellWidth).roundToDouble();
       });
     };
   }
@@ -76,6 +79,6 @@ class TimelineCursorState extends State<TimelineCursor> {
         widget.moveTimelineCursor(value);
       },
       min: 0,
-      max: widget.numberOfUnits.toDouble() - 1,
-      divisions: widget.numberOfUnits - 1);
+      max: max(0, widget.numberOfUnits.toDouble() - 1),
+      divisions: max(1, widget.numberOfUnits - 1));
 }
