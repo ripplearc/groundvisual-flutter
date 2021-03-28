@@ -11,6 +11,7 @@ import 'daily_timeline.dart';
 class ListViewCursor extends StatefulWidget {
   final MoveTimelineCursor moveTimelineCursor;
   final ScrollController scrollController;
+  final int animationDuration;
   final double cellWidth;
   final int numberOfUnits;
 
@@ -19,7 +20,8 @@ class ListViewCursor extends StatefulWidget {
       this.moveTimelineCursor,
       this.scrollController,
       this.cellWidth,
-      this.numberOfUnits})
+      this.numberOfUnits,
+      this.animationDuration})
       : super(key: key);
 
   @override
@@ -53,7 +55,8 @@ class ListViewCursorState extends State<ListViewCursor> {
       if (isSuspended)
         return Stream.value(isSuspended);
       else
-        return Stream.value(isSuspended).delay(Duration(seconds: 1));
+        return Stream.value(isSuspended)
+            .delay(Duration(seconds: widget.animationDuration));
     }).listen((isSuspended) => isSuspended
         ? widget.scrollController.removeListener(_scrollLambda)
         : widget.scrollController.addListener(_scrollLambda));

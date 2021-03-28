@@ -8,7 +8,6 @@ import 'package:groundvisual_flutter/landing/timeline/widget/timeline_images.dar
 
 typedef MoveTimelineCursor(double index);
 
-
 /// Show the sampled timelapse images within a day.
 class DailyTimeline extends StatefulWidget {
   @override
@@ -18,22 +17,26 @@ class DailyTimeline extends StatefulWidget {
 class _DailyTimelineState extends State<DailyTimeline> {
   final _scrollController = ScrollController();
   final double cellWidth = 216;
+  final int animationDuration = 1;
 
   void _scrollToIndex(index) {
     _scrollController.animateTo(216 * index,
-        duration: Duration(seconds: 1), curve: Curves.easeOut);
+        duration: Duration(seconds: animationDuration), curve: Curves.easeOut);
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<DailyTimelineBloc, DailyTimelineState>(
+  Widget build(BuildContext context) => Card(
+      color: Theme.of(context).colorScheme.background,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      child: BlocBuilder<DailyTimelineBloc, DailyTimelineState>(
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
           builder: (context, state) {
             if (state is DailyTimelineImagesLoaded)
               return _buildTimelineContent(context, state.images);
             else
               return _buildTimelineContent(context, []);
-          });
+          }));
 
   Container _buildTimelineContent(
           BuildContext context, List<DailyTimelineImageModel> images) =>
@@ -58,6 +61,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
                   scrollController: _scrollController,
                   cellWidth: cellWidth,
                   numberOfUnits: images.length,
+                  animationDuration: animationDuration,
                 )
               ]));
 }
