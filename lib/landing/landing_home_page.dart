@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
+import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'appbar/bloc/selected_site_bloc.dart';
 import 'appbar/mobile/landing_page_mobile_header.dart';
 import 'body/mobile/landing_page_body.dart';
-import 'chart/bloc/daily_working_time_chart_bloc.dart';
-import 'chart/bloc/trend_working_time_chart_bloc.dart';
-import 'digest/bloc/play_digest_bloc.dart';
+import 'chart/bloc/daily/daily_working_time_chart_bloc.dart';
+import 'chart/bloc/trend/trend_working_time_chart_bloc.dart';
+import 'digest/bloc/play/play_digest_bloc.dart';
 import 'machine/bloc/machine_status_bloc.dart';
 import 'map/bloc/work_zone_map_bloc.dart';
 import 'map/bloc/work_zone_map_viewmodel.dart';
@@ -39,6 +40,8 @@ class LandingHomePage extends StatelessWidget {
                   component.getTrendWorkingTimeChartBloc(selectedSiteBloc)),
           BlocProvider<PlayDigestBloc>(
               create: (_) => component.getPlayDigestBloc(selectedSiteBloc)),
+          BlocProvider<DailyTimelineBloc>(
+              create: (_) => component.getDailyTimelineBloc(selectedSiteBloc)),
         ],
         child: ScreenTypeLayout.builder(
           mobile: (BuildContext context) => CustomScrollView(
@@ -71,6 +74,9 @@ class LandingHomePageBlocComponent {
 
   // ignore: close_sinks
   PlayDigestBloc _playDigestBloc;
+
+  // ignore: close_sinks
+  DailyTimelineBloc _dailyTimelineBloc;
 
   MachineStatusBloc getMachineStatusBloc(SelectedSiteBloc selectedSiteBloc) {
     if (_machineStatusBloc == null) {
@@ -115,5 +121,12 @@ class LandingHomePageBlocComponent {
               getTrendWorkingTimeChartBloc(selectedSiteBloc));
     }
     return _workZoneMapBloc;
+  }
+
+  DailyTimelineBloc getDailyTimelineBloc(SelectedSiteBloc selectedSiteBloc) {
+    if (_dailyTimelineBloc == null) {
+      _dailyTimelineBloc = getIt<DailyTimelineBloc>(param1: selectedSiteBloc);
+    }
+    return _dailyTimelineBloc;
   }
 }

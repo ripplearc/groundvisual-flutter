@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/play_digest_bloc.dart';
+import '../bloc/play/play_digest_bloc.dart';
 
 /// Play or pause the digest stream, and show progressive indication
 /// when downloading the image.

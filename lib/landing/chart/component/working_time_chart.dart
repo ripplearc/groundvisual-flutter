@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/trend_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/date/component/working_time_daily_chart_thumbnail.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
@@ -17,15 +17,13 @@ class WorkingTimeChart extends StatelessWidget {
           builder: (context, state) {
         if (state is SelectedSiteAtDate) {
           return BlocBuilder<DailyWorkingTimeChartBloc, DailyWorkingTimeState>(
-              builder: (context, state) {
-            return state is DailyWorkingTimeDataLoading
-                ? WorkingTimeDailyChartShimmer(aspectRatio: 2)
-                : WorkingTimeDailyChart(
-                    aspectRatio: 2,
-                    thumbnail: WorkingTimeDailyChartThumbnail(),
-                    showTitle: true,
-                  );
-          });
+              builder: (context, state) => state is DailyWorkingTimeDataLoading
+                  ? WorkingTimeDailyChartShimmer(aspectRatio: 2)
+                  : WorkingTimeDailyChart(
+                      aspectRatio: 2,
+                      thumbnail: WorkingTimeDailyChartThumbnail(),
+                      showTitle: true,
+                    ));
         } else if (state is SelectedSiteAtTrend) {
           return BlocBuilder<TrendWorkingTimeChartBloc,
                   TrendWorkingTimeChartState>(

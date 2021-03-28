@@ -5,7 +5,7 @@ import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/digest/bloc/daily_digest_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/digest/bloc/play/daily_digest_viewmodel.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';

@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/bloc/daily_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
