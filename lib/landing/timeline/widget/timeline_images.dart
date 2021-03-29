@@ -28,32 +28,55 @@ class TimelineImages extends StatelessWidget {
           controller: scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
-          itemBuilder: (_, index) {
-            if (index == 0)
-              return _buildImageCell('assets/icon/excavator.svg',
-                  '$index:00 ~ $index:15', context);
-            else
-              return _buildImageCell(images[index].imageName,
-                  _buildAnnotation(images[index]), context);
-          }));
+          itemBuilder: (_, index) => _buildImageCell(
+              images[index].imageName ?? 'assets/icon/excavator.svg',
+              _buildAnnotation(images[index]),
+              context,
+              images[index].status)));
 
-  Padding _buildImageCell(
-          String imageName, String annotation, BuildContext context) =>
+  Padding _buildImageCell(String imageName, String annotation,
+          BuildContext context, MachineStatus status) =>
       Padding(
           padding: EdgeInsets.all(padding),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Container(
-                      width: cellWidth - 2 * padding,
-                      height: 120,
-                      child: _buildImage(imageName, context)),
-                ),
+                Stack(children: [
+                  _buildImageWithCorner(imageName, context),
+                  _buildLabelIfNeeded(status, context)
+                ]),
                 Text(annotation, style: Theme.of(context).textTheme.headline6)
               ]));
+
+  ClipRRect _buildImageWithCorner(String imageName, BuildContext context) =>
+      ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: Container(
+            width: cellWidth - 2 * padding,
+            height: 120,
+            child: _buildImage(imageName, context)),
+      );
+
+  Widget _buildLabelIfNeeded(MachineStatus status, BuildContext context) =>
+      status == MachineStatus.working
+          ? Container()
+          : Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 10, left: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.all(Radius.circular(4))),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Text(
+                        status.value().toUpperCase(),
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                    ),
+                  )));
 
   Widget _buildImage(String imageName, BuildContext context) {
     if (imageName.contains(".svg"))
