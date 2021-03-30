@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
 
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget {
@@ -87,10 +88,7 @@ class TimelineImages extends StatelessWidget {
 
   String _buildAnnotation(DailyTimelineImageModel image) =>
       [image.startTime, image.endTime]
-          .map((time) =>
-              time.hour.toString() +
-              (time.minute == 0 ? ":0" : ":") +
-              time.minute.toString())
+          .map((time) => time.toHourMinuteString())
           .reduce((value, element) => value + " ~ " + element);
 
   SvgPicture _buildSvg(String imageName, BuildContext context) =>

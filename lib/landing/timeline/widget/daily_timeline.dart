@@ -5,8 +5,10 @@ import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.d
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/widget/listview_cursor.dart';
 import 'package:groundvisual_flutter/landing/timeline/widget/timeline_images.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
 
 typedef MoveTimelineCursor(double index);
+typedef String GetTimestamp(int index);
 
 /// Show the sampled timelapse images within a day.
 class DailyTimeline extends StatefulWidget {
@@ -58,6 +60,8 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 ),
                 ListViewCursor(
                   moveTimelineCursor: _scrollToIndex,
+                  getTimestamp: (index) =>
+                      images[index].startTime.toHourMinuteString(),
                   scrollController: _scrollController,
                   cellWidth: cellWidth,
                   numberOfUnits: images.length,
