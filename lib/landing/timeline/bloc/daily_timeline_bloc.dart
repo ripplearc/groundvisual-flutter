@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image
 import 'package:injectable/injectable.dart';
 
 part 'daily_timeline_event.dart';
+
 part 'daily_timeline_state.dart';
 
 /// Control the logic of displaying the timelapse photos in a day.
@@ -44,10 +45,20 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
       yield DailyTimelineImagesLoaded(List.generate(
           50,
           (index) => DailyTimelineImageModel(
-              'images/thumbnails/${index + 1}.jpg',
+              index == 4 ? null : 'images/thumbnails/${index + 1}.jpg',
               Date.startOfToday.add(Duration(minutes: index * 15)),
               Date.startOfToday.add(Duration(minutes: index * 15 + 15)),
-              MachineStatus.working)));
+              _getMachineStatus(index))));
+    }
+  }
+
+  MachineStatus _getMachineStatus(int index) {
+    if (index == 3) {
+      return MachineStatus.idling;
+    } else if (index == 4) {
+      return MachineStatus.stationary;
+    } else {
+      return MachineStatus.working;
     }
   }
 

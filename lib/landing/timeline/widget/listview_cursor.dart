@@ -10,26 +10,28 @@ import 'daily_timeline.dart';
 /// to the movement and reflect that movement.
 class ListViewCursor extends StatefulWidget {
   final MoveTimelineCursor moveTimelineCursor;
+  final GetTimestamp getTimestamp;
   final ScrollController scrollController;
   final int animationDuration;
   final double cellWidth;
   final int numberOfUnits;
 
-  const ListViewCursor(
-      {Key key,
-      this.moveTimelineCursor,
-      this.scrollController,
-      this.cellWidth,
-      this.numberOfUnits,
-      this.animationDuration})
-      : super(key: key);
+  const ListViewCursor({
+    Key key,
+    this.moveTimelineCursor,
+    this.getTimestamp,
+    this.scrollController,
+    this.cellWidth,
+    this.numberOfUnits,
+    this.animationDuration,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ListViewCursorState();
 }
 
 class ListViewCursorState extends State<ListViewCursor> {
-  double _timestamp = 0;
+  double _currentIndex = 0;
   BehaviorSubject _suspendListenerSubject = BehaviorSubject<bool>();
   StreamSubscription _subscription;
   VoidCallback _scrollLambda;
@@ -37,7 +39,7 @@ class ListViewCursorState extends State<ListViewCursor> {
   ListViewCursorState() {
     _scrollLambda = () {
       setState(() {
-        _timestamp =
+        _currentIndex =
             (widget.scrollController.offset / widget.cellWidth).roundToDouble();
       });
     };
@@ -71,17 +73,41 @@ class ListViewCursorState extends State<ListViewCursor> {
   }
 
   @override
-  Widget build(BuildContext context) => Slider(
-      value: _timestamp,
-      onChangeStart: (_) => _suspendListenerSubject.add(true),
-      onChangeEnd: (_) => _suspendListenerSubject.add(false),
-      onChanged: (value) {
-        setState(() {
-          _timestamp = value;
-        });
-        widget.moveTimelineCursor(value);
-      },
-      min: 0,
-      max: max(0, widget.numberOfUnits.toDouble() - 1),
-      divisions: max(1, widget.numberOfUnits - 1));
+  Widget build(BuildContext context) => SliderTheme(
+      data: _buildSliderTheme(context),
+      child: Slider(
+        value: _currentIndex,
+        onChangeStart: (_) => _suspendListenerSubject.add(true),
+        onChangeEnd: (_) => _suspendListenerSubject.add(false),
+        onChanged: (value) {
+          setState(() {
+            _currentIndex = value;
+          });
+          widget.moveTimelineCursor(value);
+        },
+        min: 0,
+        max: max(0, widget.numberOfUnits.toDouble() - 1),
+        divisions: max(1, widget.numberOfUnits - 1),
+        label: widget.getTimestamp(_currentIndex.round()),
+      ));
+
+  SliderThemeData _buildSliderTheme(BuildContext context) =>
+      SliderTheme.of(context).copyWith(
+        activeTrackColor: Theme.of(context).colorScheme.primary,
+        inactiveTrackColor: Theme.of(context).colorScheme.onSurface,
+        trackShape: RoundedRectSliderTrackShape(),
+        trackHeight: 4.0,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        thumbColor: Theme.of(context).colorScheme.primary,
+        overlayColor: Theme.of(context).colorScheme.surface.withAlpha(128),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
+        tickMarkShape: RoundSliderTickMarkShape(),
+        activeTickMarkColor: Theme.of(context).colorScheme.primary,
+        inactiveTickMarkColor: Theme.of(context).colorScheme.onSurface,
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: Theme.of(context).colorScheme.secondary,
+        valueIndicatorTextStyle: TextStyle(
+          color: Theme.of(context).colorScheme.background,
+        ),
+      );
 }
