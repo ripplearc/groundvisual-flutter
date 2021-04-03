@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
-import 'package:groundvisual_flutter/landing/timeline/widget/listview_cursor.dart';
-import 'package:groundvisual_flutter/landing/timeline/widget/timeline_images.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
+
+import 'listview_cursor.dart';
 
 typedef MoveTimelineCursor(double index);
 typedef String GetTimestamp(int index);
@@ -60,8 +61,9 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 ),
                 ListViewCursor(
                   moveTimelineCursor: _scrollToIndex,
-                  getTimestamp: (index) =>
-                      images[index].startTime.toHourMinuteString(),
+                  getTimestamp: (index) => images.isEmpty
+                      ? "??:??"
+                      : images[index].startTime.toHourMinuteString(),
                   scrollController: _scrollController,
                   cellWidth: cellWidth,
                   numberOfUnits: images.length,

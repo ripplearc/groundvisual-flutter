@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
-import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
