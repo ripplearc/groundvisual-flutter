@@ -37,18 +37,26 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
   }
 
   @override
-  Stream<DailyTimelineState> mapEventToState(
-    DailyTimelineEvent event,
-  ) async* {
-    await Future.delayed(Duration(seconds: 2));
+  Stream<DailyTimelineState> mapEventToState(DailyTimelineEvent event,) async* {
     if (event is SearchDailyTimelineOnDate) {
+      await Future.delayed(Duration(seconds: 2));
       yield DailyTimelineImagesLoaded(List.generate(
           50,
-          (index) => DailyTimelineImageModel(
-              index == 4 ? null : 'images/thumbnails/${index + 1}.jpg',
-              Date.startOfToday.add(Duration(minutes: index * 15)),
-              Date.startOfToday.add(Duration(minutes: index * 15 + 15)),
-              _getMachineStatus(index))));
+              (index) =>
+              DailyTimelineImageModel(
+                  index == 4 ? null : 'images/thumbnails/${index + 1}.jpg',
+                  Date.startOfToday.add(Duration(minutes: index * 15)),
+                  Date.startOfToday.add(Duration(minutes: index * 15 + 15)),
+                  _getMachineStatus(index))), event.date);
+    } else if (event is TapDailyTimelineCell) {
+      int initialIndex = state.images
+          .indexWhere((image) => image.startTime == event.startTime);
+      if (initialIndex == -1) {
+        return;
+      } else {
+        yield DailyTimelineNavigateToDetailPage(
+            state.images, state.date, initialIndex);
+      }
     }
   }
 

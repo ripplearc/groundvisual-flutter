@@ -1,10 +1,12 @@
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:groundvisual_flutter/landing/timeline/detail/daily_timeline_detail.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:groundvisual_flutter/extensions/date.dart';
 
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget {
@@ -33,43 +35,17 @@ class TimelineImages extends StatelessWidget {
           itemBuilder: (_, index) => _buildImageCell(
               images[index].imageName ?? 'assets/icon/excavator.svg',
               _buildAnnotation(images[index]),
+              images[index].startTime ?? Date.startOfToday,
               context,
               images[index].status)));
 
   Padding _buildImageCell(String imageName, String annotation,
-          BuildContext context, MachineStatus status) =>
+          DateTime timestamp, BuildContext context, MachineStatus status) =>
       Padding(
           padding: EdgeInsets.all(padding),
           child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    fullscreenDialog: true,
-                    transitionDuration: Duration(milliseconds: 500),
-                    pageBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation) {
-                      return DailyTimelineDetail(
-                          heroType: HeroType(
-                              title: annotation,
-                              subTitle: status.toString(),
-                              image: imageName,
-                              materialColor:
-                                  Theme.of(context).colorScheme.primary));
-                    },
-                    transitionsBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child) {
-                      return FadeTransition(
-                        opacity: animation,
-                        // CurvedAnimation(parent: animation, curve: Curves.elasticInOut),
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
+              onTap: () => BlocProvider.of<DailyTimelineBloc>(context)
+                  .add(TapDailyTimelineCell(timestamp)),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,

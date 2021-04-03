@@ -15,3 +15,13 @@ class SearchDailyTimelineOnDate extends DailyTimelineEvent {
   @override
   List<Object> get props => [siteName, date];
 }
+
+/// Tap on a timestamp cell
+class TapDailyTimelineCell extends DailyTimelineEvent {
+  final DateTime startTime;
+
+  TapDailyTimelineCell(this.startTime);
+
+  @override
+  List<Object> get props => [startTime];
+}
