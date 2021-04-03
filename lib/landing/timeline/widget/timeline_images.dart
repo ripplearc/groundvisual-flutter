@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:groundvisual_flutter/landing/timeline/detail/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
@@ -39,24 +40,57 @@ class TimelineImages extends StatelessWidget {
           BuildContext context, MachineStatus status) =>
       Padding(
           padding: EdgeInsets.all(padding),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(children: [
-                  _buildImageWithCorner(imageName, context),
-                  _buildLabelIfNeeded(status, context)
-                ]),
-                Text(annotation, style: Theme.of(context).textTheme.headline6)
-              ]));
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    fullscreenDialog: true,
+                    transitionDuration: Duration(milliseconds: 500),
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation) {
+                      return DailyTimelineDetail(
+                          heroType: HeroType(
+                              title: annotation,
+                              subTitle: status.toString(),
+                              image: imageName,
+                              materialColor:
+                                  Theme.of(context).colorScheme.primary));
+                    },
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        // CurvedAnimation(parent: animation, curve: Curves.elasticInOut),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(children: [
+                      _buildImageWithCorner(imageName, context),
+                      _buildLabelIfNeeded(status, context)
+                    ]),
+                    Text(annotation,
+                        style: Theme.of(context).textTheme.headline6)
+                  ])));
 
   ClipRRect _buildImageWithCorner(String imageName, BuildContext context) =>
       ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
-            width: cellWidth - 2 * padding,
-            height: 120,
-            child: _buildImage(imageName, context)),
+          width: cellWidth - 2 * padding,
+          height: 120,
+          child: Hero(
+              tag: "image" + imageName, child: _buildImage(imageName, context)),
+        ),
       );
 
   Widget _buildLabelIfNeeded(MachineStatus status, BuildContext context) =>
