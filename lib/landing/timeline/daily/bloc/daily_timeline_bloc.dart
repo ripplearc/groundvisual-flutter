@@ -55,7 +55,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
         return;
       } else {
         yield DailyTimelineNavigateToDetailPage(
-            state.images, state.date, initialIndex);
+            state.images, state.date, initialIndex, DateTime.now());
       }
     }
   }

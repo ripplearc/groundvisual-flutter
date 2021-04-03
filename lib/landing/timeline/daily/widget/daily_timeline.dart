@@ -38,7 +38,9 @@ class _DailyTimelineState extends State<DailyTimeline> {
           listener: (context, state) {
             if (state is DailyTimelineNavigateToDetailPage) {
               _navigateToDetailPage(
-                  context, state.images[state.initialImageIndex].imageName);
+                  context,
+                  state.images.map((e) => e.imageName).toList(),
+                  state.initialImageIndex);
             }
           },
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
@@ -79,7 +81,8 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 )
               ]));
 
-  void _navigateToDetailPage(BuildContext context, String imageName) {
+  void _navigateToDetailPage(
+      BuildContext context, List<String> images, int initialImageIndex) {
     Navigator.of(context).push(
       PageRouteBuilder(
         fullscreenDialog: true,
@@ -90,7 +93,8 @@ class _DailyTimelineState extends State<DailyTimeline> {
               heroType: HeroType(
                   title: "3:00 PM ~ 3:15 PM",
                   subTitle: "Working",
-                  image: imageName,
+                  images: images,
+                  initialImageIndex: initialImageIndex,
                   materialColor: Theme.of(context).colorScheme.primary));
         },
         transitionsBuilder: (BuildContext context, Animation<double> animation,

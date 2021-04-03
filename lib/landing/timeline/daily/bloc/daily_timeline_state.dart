@@ -25,11 +25,12 @@ class DailyTimelineImagesLoaded extends DailyTimelineState {
 /// Navigate to the timeline detail page and start with the image being tapped
 class DailyTimelineNavigateToDetailPage extends DailyTimelineState {
   final int initialImageIndex;
+  final DateTime timestamp;
 
   DailyTimelineNavigateToDetailPage(List<DailyTimelineImageModel> images,
-      DateTime date, this.initialImageIndex)
+      DateTime date, this.initialImageIndex, this.timestamp)
       : super(images, date);
 
   @override
-  List<Object> get props => [images, date, initialImageIndex];
+  List<Object> get props => [images, date, initialImageIndex, timestamp];
 }
