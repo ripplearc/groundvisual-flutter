@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
@@ -133,23 +134,25 @@ class _BarChartState extends State<_BarChart> {
     }
   }
 
-  void _uponSelectingBarRod(BarTouchResponse barTouchResponse) {
-    if (barTouchResponse.spot != null &&
-        barTouchResponse.touchInput is! FlPanEnd &&
-        barTouchResponse.touchInput is! FlLongPressEnd) {
-      _highlightSelectedBar(barTouchResponse);
-      _signalDateTimeSelection(barTouchResponse);
+  void _uponSelectingBarRod(BarTouchResponse touchResponse) {
+    if (touchResponse.spot != null &&
+        (touchResponse.touchInput is PointerDownEvent ||
+            touchResponse.touchInput is PointerMoveEvent ||
+            touchResponse.touchInput is PointerHoverEvent)) {
+      _highlightSelectedBar(touchResponse);
+      _signalDateTimeSelection(touchResponse);
     }
   }
 
-  void _signalDateTimeSelection(BarTouchResponse barTouchResponse) {
-    if (barTouchResponse.spot != null &&
-        barTouchResponse.touchInput is! FlPanEnd &&
-        barTouchResponse.touchInput is! FlLongPressEnd) {
+  void _signalDateTimeSelection(BarTouchResponse touchResponse) {
+    if (touchResponse.spot != null &&
+        (touchResponse.touchInput is PointerDownEvent ||
+            touchResponse.touchInput is PointerMoveEvent ||
+            touchResponse.touchInput is PointerHoverEvent)) {
       BlocProvider.of<TrendWorkingTimeChartBloc>(context).add(
           SelectTrendChartBarRod(
-              barTouchResponse.spot.touchedBarGroupIndex,
-              barTouchResponse.spot.touchedRodDataIndex,
+              touchResponse.spot.touchedBarGroupIndex,
+              touchResponse.spot.touchedRodDataIndex,
               widget.trendChartData.siteName,
               widget.trendChartData.dateRange,
               widget.trendChartData.period,

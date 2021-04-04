@@ -51,7 +51,7 @@ class DailyWorkingTimeChartBloc
 
   void _listenToSelectedSite() {
     _processSelectedSiteState(selectedSiteBloc?.state);
-    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
       _processSelectedSiteState(state);
     });
   }
@@ -63,7 +63,7 @@ class DailyWorkingTimeChartBloc
   }
 
   void _listenToPlayDigest() {
-    _playDigestSubscription = playDigestBloc?.listen((state) {
+    _playDigestSubscription = playDigestBloc?.stream?.listen((state) {
       if (state is PlayDigestShowImage) {
         final indices = state.images.isEmpty
             ? Tuple2(-1, -1)

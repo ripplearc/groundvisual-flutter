@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
@@ -75,11 +76,12 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
               .apply(color: Theme.of(context).colorScheme.onBackground));
 
   void _uponSelectingBarRod(
-      BarTouchResponse barTouchResponse, BuildContext context) {
-    if (barTouchResponse.spot != null &&
-        barTouchResponse.touchInput is! FlPanEnd &&
-        barTouchResponse.touchInput is! FlLongPressEnd) {
-      _signalDateTimeSelection(barTouchResponse, context);
+      BarTouchResponse touchResponse, BuildContext context) {
+    if (touchResponse.spot != null &&
+        (touchResponse.touchInput is PointerDownEvent ||
+            touchResponse.touchInput is PointerMoveEvent ||
+            touchResponse.touchInput is PointerHoverEvent)) {
+      _signalDateTimeSelection(touchResponse, context);
     }
   }
 

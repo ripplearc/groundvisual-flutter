@@ -25,7 +25,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
 
   void _listenToSelectedSite() {
     _processSelectedSiteState(selectedSiteBloc?.state);
-    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
       _processSelectedSiteState(state);
     });
   }
