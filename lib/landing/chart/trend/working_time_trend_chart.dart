@@ -20,7 +20,7 @@ class WorkingTimeTrendChart extends StatelessWidget {
   final bool showTitle;
 
   WorkingTimeTrendChart(
-      {@required this.trendChartData,
+      {required this.trendChartData,
       this.aspectRatio = 1.8,
       this.showTitle = true});
 
@@ -59,7 +59,7 @@ class _BarChart extends StatefulWidget {
   final TrendWorkingTimeDataLoaded trendChartData;
   final TrendBarRodMeasurement ruler;
 
-  _BarChart({Key key, @required this.trendChartData, @required this.ruler})
+  _BarChart({Key? key, required this.trendChartData, required this.ruler})
       : super(key: key);
 
   @override
@@ -86,7 +86,8 @@ class _BarChartState extends State<_BarChart> {
           show: true,
           bottomTitles: SideTitles(
             showTitles: true,
-            getTextStyles: (value) => Theme.of(context).textTheme.bodyText2,
+            getTextStyles: (value) =>
+                Theme.of(context).textTheme.bodyText2 ?? TextStyle(),
             margin: 2,
             getTitles: (double index) =>
                 widget.trendChartData.chartData.bottomTitles[index.toInt()],
@@ -94,7 +95,8 @@ class _BarChartState extends State<_BarChart> {
           leftTitles: SideTitles(
             showTitles: true,
             interval: widget.trendChartData.chartData.leftTitleInterval,
-            getTextStyles: (value) => Theme.of(context).textTheme.caption,
+            getTextStyles: (value) =>
+                Theme.of(context).textTheme.caption ?? TextStyle(),
           ),
         ),
         borderData: FlBorderData(
@@ -110,14 +112,15 @@ class _BarChartState extends State<_BarChart> {
                         .highlightBarRod)),
       ));
 
-  BarTooltipItem _buildBarTooltipItem(
+  BarTooltipItem? _buildBarTooltipItem(
           int groupIndex, int rodIndex, BuildContext context) =>
-      BarTooltipItem(
-          widget.trendChartData.chartData.tooltips[groupIndex][rodIndex],
-          Theme.of(context)
-              .textTheme
-              .caption
-              .apply(color: Theme.of(context).colorScheme.onBackground));
+      Theme.of(context)
+          .textTheme
+          .caption
+          ?.apply(color: Theme.of(context).colorScheme.onBackground)
+          .let((textStyle) => BarTooltipItem(
+              widget.trendChartData.chartData.tooltips[groupIndex][rodIndex],
+              textStyle));
 
   Tuple2<double, double> magnifyValue(TrendPeriod period) {
     switch (period) {
@@ -149,21 +152,24 @@ class _BarChartState extends State<_BarChart> {
         (touchResponse.touchInput is PointerDownEvent ||
             touchResponse.touchInput is PointerMoveEvent ||
             touchResponse.touchInput is PointerHoverEvent)) {
-      BlocProvider.of<TrendWorkingTimeChartBloc>(context).add(
-          SelectTrendChartBarRod(
-              touchResponse.spot.touchedBarGroupIndex,
-              touchResponse.spot.touchedRodDataIndex,
-              widget.trendChartData.siteName,
-              widget.trendChartData.dateRange,
-              widget.trendChartData.period,
-              context));
+      BlocProvider.of<TrendWorkingTimeChartBloc>(context)
+          .add(SelectTrendChartBarRod(
+        widget.trendChartData.siteName,
+        widget.trendChartData.dateRange,
+        widget.trendChartData.period,
+        context,
+        touchResponse.spot?.touchedBarGroupIndex ??
+            SelectTrendChartBarRod.UnSelectedGroupId,
+        touchResponse.spot?.touchedRodDataIndex ??
+            SelectTrendChartBarRod.UnSelectedRodId,
+      ));
     }
   }
 
   void _highlightSelectedBar(BarTouchResponse barTouchResponse) {
     setState(() {
-      _touchedBarGroupIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      _touchedRodDataIndex = barTouchResponse.spot.touchedRodDataIndex;
+      _touchedBarGroupIndex = barTouchResponse.spot?.touchedBarGroupIndex ?? -1;
+      _touchedRodDataIndex = barTouchResponse.spot?.touchedRodDataIndex ?? -1;
     });
   }
 }

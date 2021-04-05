@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:groundvisual_flutter/extensions/null_aware.dart';
 
 class HeroType {
   String title;
   String subTitle;
-  List<String> images;
+  List<String?> images;
   int initialImageIndex;
   Color materialColor;
 
   HeroType(
-      {this.title,
-      this.subTitle,
-      this.images,
-      this.initialImageIndex,
-      this.materialColor});
+      {required this.title,
+      required this.subTitle,
+      required this.images,
+      required this.initialImageIndex,
+      required this.materialColor});
 }
 
 class DailyTimelineDetail extends StatefulWidget {
   final HeroType heroType;
 
-  const DailyTimelineDetail({Key key, this.heroType}) : super(key: key);
+  const DailyTimelineDetail({Key? key, required this.heroType})
+      : super(key: key);
 
   @override
   _DailyTimelineDetailState createState() => _DailyTimelineDetailState();
 }
 
 class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
-  double _screenWidth;
+  late double _screenWidth;
 
   @override
   void initState() {
@@ -95,7 +97,8 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
 
   Hero _buildImageAppBarContent(BuildContext context) {
     return Hero(
-      tag: 'image' + widget.heroType.images[widget.heroType.initialImageIndex],
+      tag: 'image' +
+          widget.heroType.images.getOrNull(widget.heroType.initialImageIndex),
       child: Container(
           width: _screenWidth,
           height: 230.0,
@@ -108,7 +111,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
               itemBuilder: (_, index) => Container(
                     width: _screenWidth,
                     child: _buildImage(
-                        widget.heroType.images[index] ??
+                        widget.heroType.images.getOrNull(index) ??
                             'assets/icon/excavator.svg',
                         context),
                   ))),

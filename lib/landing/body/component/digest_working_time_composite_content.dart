@@ -10,7 +10,7 @@ class DigestWorkingZoneCompositeContent extends StatelessWidget {
   final double chartCardAspectRatio;
 
   const DigestWorkingZoneCompositeContent(
-      {Key key,
+      {Key? key,
       this.digestCardAspectRatio = 336 / 190,
       this.chartCardAspectRatio = 3})
       : super(key: key);

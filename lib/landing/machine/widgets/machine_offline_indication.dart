@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 /// Offline indication with warning message for how long the machine has been offline.
 class MachineOfflineIndication extends StatelessWidget {
-  final Size offset;
-  final String warning;
+  final Size? offset;
+  final String? warning;
 
-  const MachineOfflineIndication({Key key, this.offset, this.warning})
+  const MachineOfflineIndication({Key? key, this.offset, this.warning})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => Positioned(
-      right: offset.width,
-      bottom: offset.height,
+      right: offset?.width ?? 0,
+      bottom: offset?.height ?? 0,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -29,13 +29,14 @@ class MachineOfflineIndication extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.all(Radius.circular(7))),
         child: Text(
-          warning,
+          warning ?? "",
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context)
-              .textTheme
-              .overline
-              .apply(color: Theme.of(context).colorScheme.error),
+                  .textTheme
+                  .overline
+                  ?.apply(color: Theme.of(context).colorScheme.error) ??
+              TextStyle(color: Theme.of(context).colorScheme.error),
         ),
       );
 

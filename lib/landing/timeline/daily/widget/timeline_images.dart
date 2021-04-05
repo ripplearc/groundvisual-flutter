@@ -1,22 +1,25 @@
-import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final double cellWidth;
   final List<DailyTimelineImageModel> images;
   final double padding = 8;
 
   const TimelineImages(
-      {Key key, this.scrollController, this.cellWidth, this.images})
+      {Key? key,
+      required this.cellWidth,
+      required this.images,
+      this.scrollController})
       : super(key: key);
 
   Widget build(BuildContext context) {
@@ -32,12 +35,13 @@ class TimelineImages extends StatelessWidget {
           controller: scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
-          itemBuilder: (_, index) => _buildImageCell(
-              images[index].imageName ?? 'assets/icon/excavator.svg',
-              _buildAnnotation(images[index]),
-              images[index].startTime ?? Date.startOfToday,
-              context,
-              images[index].status)));
+          itemBuilder: (_, index) => images.elementAt(index).let((image) =>
+              _buildImageCell(
+                  image.imageName ?? 'assets/icon/excavator.svg',
+                  _buildAnnotation(image),
+                  image.startTime,
+                  context,
+                  image.status))));
 
   Padding _buildImageCell(String imageName, String annotation,
           DateTime timestamp, BuildContext context, MachineStatus status) =>

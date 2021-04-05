@@ -34,7 +34,8 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
         "Kensington": _getKensingtonZoneAtDate,
         "Penton Rise":
             siteWorkZoneService.getWorkZoneAtPeriod(siteName, date, period)
-      }[siteName];
+      }[siteName] ??
+      siteWorkZoneService.getWorkZoneAtPeriod(siteName, date, period);
 
   @override
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>

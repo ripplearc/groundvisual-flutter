@@ -8,7 +8,10 @@ class DailyDigestDecorationAnimation extends StatelessWidget {
   final Size imageSize;
 
   DailyDigestDecorationAnimation(
-      {Key key, this.controller, this.imageSize, this.tween})
+      {Key? key,
+      required this.controller,
+      required this.imageSize,
+      required this.tween})
       : _relativeRect = tween.animate(CurvedAnimation(
             parent: controller,
             curve: Interval(0.0, 0.2, curve: Curves.easeInOutCubic))),
@@ -18,7 +21,7 @@ class DailyDigestDecorationAnimation extends StatelessWidget {
   Widget build(BuildContext context) =>
       AnimatedBuilder(animation: controller, builder: _buildAnimation);
 
-  Widget _buildAnimation(BuildContext context, Widget child) =>
+  Widget _buildAnimation(BuildContext context, Widget? child) =>
       Positioned.fromRect(
           rect: _relativeRect.value.toRect(imageRect(imageSize)),
           child: Container(

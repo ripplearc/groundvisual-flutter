@@ -15,6 +15,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'trend_working_time_chart_event.dart';
+
 part 'trend_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the trend chart,
@@ -24,8 +25,8 @@ class TrendWorkingTimeChartBloc
     extends Bloc<TrendWorkingTimeChartEvent, TrendWorkingTimeChartState> {
   final WorkingTimeTrendChartViewModel workingTimeTrendChartViewModel;
   final TrendChartBarConverter trendChartConverter;
-  final SelectedSiteBloc selectedSiteBloc;
-  StreamSubscription _selectedSiteSubscription;
+  final SelectedSiteBloc? selectedSiteBloc;
+  StreamSubscription? _selectedSiteSubscription;
 
   TrendWorkingTimeChartBloc(this.trendChartConverter,
       this.workingTimeTrendChartViewModel, @factoryParam this.selectedSiteBloc)
@@ -34,13 +35,13 @@ class TrendWorkingTimeChartBloc
   }
 
   void _listenToSelectedSite() {
-    _processSelectedSiteState(selectedSiteBloc.state);
-    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
+    _processSelectedSiteState(selectedSiteBloc?.state);
+    _selectedSiteSubscription = selectedSiteBloc?.stream.listen((state) {
       _processSelectedSiteState(state);
     });
   }
 
-  void _processSelectedSiteState(SelectedSiteState state) {
+  void _processSelectedSiteState(SelectedSiteState? state) {
     if (state is SelectedSiteAtTrend) {
       add(SearchWorkingTimeOnTrend(state.siteName, state.period));
     }
@@ -64,7 +65,8 @@ class TrendWorkingTimeChartBloc
     }
   }
 
-  Stream _yieldTrendWorkingTime(String siteName, TrendPeriod period) {
+  Stream<TrendWorkingTimeChartState> _yieldTrendWorkingTime(
+      String siteName, TrendPeriod period) {
     final loadingTrendFuture =
         Future.value(TrendWorkingTimeDataLoading(period));
 
@@ -92,7 +94,7 @@ class TrendWorkingTimeChartBloc
 
   @override
   Future<void> close() {
-    _selectedSiteSubscription.cancel();
+    _selectedSiteSubscription?.cancel();
     return super.close();
   }
 }

@@ -21,12 +21,12 @@ part 'work_zone_map_state.dart';
 /// Both SelectedSiteBloc and WorkingTimeChartTouchBloc signal events to WorkZoneMapBloc.
 class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
-  final DailyWorkingTimeChartBloc dailyWorkingTimeChartBloc;
-  final TrendWorkingTimeChartBloc trendWorkingTimeChartBloc;
-  final SelectedSiteBloc selectedSiteBloc;
-  StreamSubscription _dailyChartSubscription;
-  StreamSubscription _trendChartSubscription;
-  StreamSubscription _selectedSiteSubscription;
+  final DailyWorkingTimeChartBloc? dailyWorkingTimeChartBloc;
+  final TrendWorkingTimeChartBloc? trendWorkingTimeChartBloc;
+  final SelectedSiteBloc? selectedSiteBloc;
+  StreamSubscription? _dailyChartSubscription;
+  StreamSubscription? _trendChartSubscription;
+  StreamSubscription? _selectedSiteSubscription;
 
   WorkZoneMapBloc(this.workZoneMapViewModel,
       {this.selectedSiteBloc,
@@ -39,13 +39,13 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToSelectedSite() {
-    _processSelectedSiteState(selectedSiteBloc.state);
-    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
+    _processSelectedSiteState(selectedSiteBloc?.state);
+    _selectedSiteSubscription = selectedSiteBloc?.stream.listen((state) {
       _processSelectedSiteState(state);
     });
   }
 
-  void _processSelectedSiteState(SelectedSiteState state) {
+  void _processSelectedSiteState(SelectedSiteState? state) {
     if (state is SelectedSiteAtDate) {
       add(SearchWorkZoneOnDate(state.siteName, state.date));
     } else if (state is SelectedSiteAtTrend) {
@@ -55,7 +55,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToTrendChartSelection() {
-    _trendChartSubscription = trendWorkingTimeChartBloc?.stream?.listen((state) {
+    _trendChartSubscription = trendWorkingTimeChartBloc?.stream.listen((state) {
       if (state is TrendWorkingTimeBarRodHighlighted) {
         add(SearchWorkZoneOnDate(state.siteName, state.time));
       }
@@ -63,7 +63,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   void _listenToDailyChartSelection() {
-    _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream?.listen((state) {
+    _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream.listen((state) {
       if (state is DailyWorkingTimeBarRodHighlighted) {
         if (state.unselected) {
           add(SearchWorkZoneOnDate(state.siteName, state.time.startOfDay));
@@ -123,9 +123,9 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
 
   @override
   Future<void> close() {
-    _selectedSiteSubscription.cancel();
-    _dailyChartSubscription.cancel();
-    _trendChartSubscription.cancel();
+    _selectedSiteSubscription?.cancel();
+    _dailyChartSubscription?.cancel();
+    _trendChartSubscription?.cancel();
     return super.close();
   }
 }

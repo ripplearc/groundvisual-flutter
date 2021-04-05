@@ -25,18 +25,18 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
 
   final DailyDigestViewModel dailyDigestViewModel;
 
-  final SelectedSiteBloc selectedSiteBloc;
-  StreamSubscription _selectedSiteSubscription;
+  final SelectedSiteBloc? selectedSiteBloc;
+  StreamSubscription? _selectedSiteSubscription;
   static const int SlideAnimationSpeed = 4;
 
   void _listenToSelectedSite() {
-    _processSelectedSiteState(selectedSiteBloc.state);
-    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
+    _processSelectedSiteState(selectedSiteBloc?.state);
+    _selectedSiteSubscription = selectedSiteBloc?.stream.listen((state) {
       _processSelectedSiteState(state);
     });
   }
 
-  void _processSelectedSiteState(SelectedSiteState state) {
+  void _processSelectedSiteState(SelectedSiteState? state) {
     if (state is SelectedSiteAtDate) {
       add(PlayDigestInitPlayer(state.siteName, Date.startOfToday));
     } else if (state is SelectedSiteAtTrend) {
@@ -106,7 +106,7 @@ class PlayDigestBloc extends Bloc<PlayDigestEvent, PlayDigestState> {
 
   @override
   Future<void> close() {
-    _selectedSiteSubscription.cancel();
+    _selectedSiteSubscription?.cancel();
     return super.close();
   }
 }

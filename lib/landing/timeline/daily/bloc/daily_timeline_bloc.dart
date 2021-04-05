@@ -14,9 +14,9 @@ part 'daily_timeline_state.dart';
 /// Control the logic of displaying the timelapse photos in a day.
 @injectable
 class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
-  final SelectedSiteBloc selectedSiteBloc;
+  final SelectedSiteBloc? selectedSiteBloc;
 
-  StreamSubscription _selectedSiteSubscription;
+  StreamSubscription? _selectedSiteSubscription;
 
   DailyTimelineBloc(@factoryParam this.selectedSiteBloc)
       : super(DailyTimelineLoading()) {
@@ -25,12 +25,12 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
 
   void _listenToSelectedSite() {
     _processSelectedSiteState(selectedSiteBloc?.state);
-    _selectedSiteSubscription = selectedSiteBloc?.stream?.listen((state) {
+    _selectedSiteSubscription = selectedSiteBloc?.stream.listen((state) {
       _processSelectedSiteState(state);
     });
   }
 
-  void _processSelectedSiteState(SelectedSiteState state) {
+  void _processSelectedSiteState(SelectedSiteState? state) {
     if (state is SelectedSiteAtDate) {
       add(SearchDailyTimelineOnDate(state.siteName, state.date));
     }
@@ -72,7 +72,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
 
   @override
   Future<void> close() {
-    _selectedSiteSubscription.cancel();
+    _selectedSiteSubscription?.cancel();
     return super.close();
   }
 }

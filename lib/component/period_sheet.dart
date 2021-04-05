@@ -7,11 +7,11 @@ typedef OnSelectedTrendAction(TrendPeriod period);
 /// RDS Period sheet for selecting a certain period, and execute an action
 /// upon a period selection.
 class PeriodSheet extends StatelessWidget {
-  final TrendPeriod initialPeriod;
-  final OnSelectedTrendAction onSelectedTrendAction;
+  final TrendPeriod? initialPeriod;
+  final OnSelectedTrendAction? onSelectedTrendAction;
   final _leadingPadding = 10.0;
 
-  const PeriodSheet({Key key, this.initialPeriod, this.onSelectedTrendAction})
+  const PeriodSheet({Key? key, this.initialPeriod, this.onSelectedTrendAction})
       : super(key: key);
 
   @override
@@ -40,13 +40,12 @@ class PeriodSheet extends StatelessWidget {
       ListTile(
         title: Padding(
           padding: EdgeInsets.only(left: _leadingPadding),
-          child: Text(
-            item.value(),
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .apply(color: Theme.of(context).colorScheme.primary),
-          ),
+          child: Text(item.value(),
+              style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.apply(color: Theme.of(context).colorScheme.primary) ??
+                  TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
         trailing: Icon(
           Icons.check,
@@ -65,7 +64,7 @@ class PeriodSheet extends StatelessWidget {
               Text(item.value(), style: Theme.of(context).textTheme.subtitle1),
         ),
         onTap: () {
-          onSelectedTrendAction(item);
+          onSelectedTrendAction?.call(item);
           Navigator.of(context).pop();
         },
       );

@@ -27,10 +27,10 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
       this.chartData, this.siteName, this.period, this.dateRange);
 
   TrendWorkingTimeDataLoaded copyWith({
-    WorkingTimeChartData chartDataParam,
-    String siteNameParam,
-    TrendPeriod periodParam,
-    DateTimeRange dateRangeParam,
+    WorkingTimeChartData? chartDataParam,
+    String? siteNameParam,
+    TrendPeriod? periodParam,
+    DateTimeRange? dateRangeParam,
   }) =>
       TrendWorkingTimeDataLoaded(
           chartDataParam ?? chartData,

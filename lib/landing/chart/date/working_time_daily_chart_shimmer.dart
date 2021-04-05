@@ -8,12 +8,12 @@ import 'package:shimmer/shimmer.dart';
 /// Shimmer displayed when fetching data for the WorkingTimeDailyChart.
 class WorkingTimeDailyChartShimmer extends StatelessWidget {
   final double aspectRatio;
-  final Widget embeddedBackground;
+  final Widget? embeddedBackground;
   final bool showTitle;
 
   const WorkingTimeDailyChartShimmer(
-      {Key key,
-      this.aspectRatio,
+      {Key? key,
+      required this.aspectRatio,
       this.embeddedBackground,
       this.showTitle = true})
       : super(key: key);

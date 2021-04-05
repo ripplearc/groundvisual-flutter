@@ -4,23 +4,21 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 /// Display bottom navigation tabs. The action notifies about the selected tab.
 class BottomNavigation extends StatefulWidget {
-  final Function(int index) action;
+  final Function(int index)? action;
 
-  const BottomNavigation({Key key, this.action}) : super(key: key);
+  const BottomNavigation({Key? key, this.action}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BottomNavigationState(action);
+  State<StatefulWidget> createState() => _BottomNavigationState();
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
   var _selectedTab = SelectedTab.site;
 
-  final Function(int index) action;
-
-  _BottomNavigationState(this.action);
+  _BottomNavigationState();
 
   void _handleIndexChanged(int i) {
-    action(i);
+    widget.action?.call(i);
     setState(() {
       _selectedTab = SelectedTab.values[i];
     });
@@ -58,7 +56,6 @@ extension Value on SelectedTab {
       case SelectedTab.account:
         return Icon(Icons.person_outline);
     }
-    throw ArgumentError('$this is not a valid Trend Period');
   }
 
   Text text() {
@@ -72,6 +69,5 @@ extension Value on SelectedTab {
       case SelectedTab.account:
         return Text("Account");
     }
-    throw ArgumentError('$this is not a valid Trend Period');
   }
 }

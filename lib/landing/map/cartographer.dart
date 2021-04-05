@@ -8,9 +8,11 @@ import 'package:injectable/injectable.dart';
 @injectable
 class Cartographer {
   LatLng calcCentroid(Region region) => LatLng(
-      region.points.fold(0, (prev, point) => prev + point.latitude) /
+      region.points.fold(
+              0.0, (prev, point) => ((prev ?? 0.0) as double) + point.latitude) /
           region.points.length,
-      region.points.fold(0, (prev, point) => prev + point.longitude) /
+      region.points.fold(
+              0.0, (prev, point) => ((prev ?? 0.0) as double) + point.longitude) /
           region.points.length);
 
   double get minZoomLevel => 20;

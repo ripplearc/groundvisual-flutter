@@ -126,7 +126,10 @@ class MachineWorkingTimeList extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<MachineOnlineStatus> snapshot) {
                 if (snapshot.hasData) {
-                  return _genIndication(snapshot.data, context);
+                  return _genIndication(
+                      snapshot.data ??
+                          MachineOnlineStatus(OnlineStatus.unknown, null),
+                      context);
                 } else if (snapshot.hasError) {
                   return _genIndication(
                       MachineOnlineStatus(OnlineStatus.unknown, null), context);

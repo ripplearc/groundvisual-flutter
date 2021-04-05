@@ -15,7 +15,6 @@ class SearchWorkingTimeOnTrend extends TrendWorkingTimeChartEvent {
   List<Object> get props => [siteName, period];
 }
 
-
 /// Select a bar rod on the trend chart with group and rod information.
 /// It includes site, date range and period information to make it easy to search.
 class SelectTrendChartBarRod extends TrendWorkingTimeChartEvent {
@@ -26,9 +25,11 @@ class SelectTrendChartBarRod extends TrendWorkingTimeChartEvent {
   final TrendPeriod period;
 
   final BuildContext context;
+  static const int UnSelectedGroupId = -1;
+  static const int UnSelectedRodId = -1;
 
-  SelectTrendChartBarRod(this.groupId, this.rodId, this.siteName, this.range,
-      this.period, this.context);
+  SelectTrendChartBarRod(this.siteName, this.range, this.period, this.context,
+      this.groupId, this.rodId);
 
   @override
   List<Object> get props => [groupId, rodId, siteName, range, period];

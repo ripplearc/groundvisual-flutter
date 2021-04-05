@@ -54,7 +54,6 @@ extension Value on TrendPeriod {
       case TrendPeriod.twoMonths:
         return "Last 60 days";
     }
-    throw ArgumentError('$this is not a valid Trend Period');
   }
 
   int days() {
@@ -68,7 +67,6 @@ extension Value on TrendPeriod {
       case TrendPeriod.twoMonths:
         return 60;
     }
-    throw ArgumentError('$this is not a valid Trend Period');
   }
 
   int seconds() {
@@ -82,6 +80,5 @@ extension Value on TrendPeriod {
       case TrendPeriod.twoMonths:
         return 5184000;
     }
-    throw ArgumentError('$this is not a valid Trend Period');
   }
 }

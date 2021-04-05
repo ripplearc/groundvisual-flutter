@@ -13,7 +13,7 @@ import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_char
 class WorkingTimeEmbeddedChart extends StatelessWidget {
   final double aspectRatio;
 
-  const WorkingTimeEmbeddedChart({Key key, @required this.aspectRatio})
+  const WorkingTimeEmbeddedChart({Key? key, required this.aspectRatio})
       : super(key: key);
 
   @override

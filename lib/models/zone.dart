@@ -1,5 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:groundvisual_flutter/extensions/null_aware.dart';
 
 /// A list of LatLng that forms a convex hull to represent a work area.
 class Region {
@@ -8,7 +9,7 @@ class Region {
   Region(this.points);
 
   factory Region.fromJson(List<dynamic> json) =>
-      Region(json.map((e) => LatLng.fromJson(e)).toList());
+      Region(json.mapNotNull((e) => LatLng.fromJson(e)).toList());
 
   dynamic toJson() => points.map((e) => e.toJson());
 }

@@ -14,7 +14,7 @@ class WorkingTimeTrendChartShimmer extends StatelessWidget {
   final bool showTitle;
 
   const WorkingTimeTrendChartShimmer(
-      {Key key,
+      {Key? key,
       this.period = TrendPeriod.oneWeek,
       this.aspectRatio = 1.8,
       this.showTitle = true})

@@ -12,12 +12,12 @@ class WorkZoneCompositeCard extends StatelessWidget {
   final Widget embeddedContent;
 
   const WorkZoneCompositeCard({
-    Key key,
+    Key? key,
     this.mapAspectRatio = 0.75,
     this.embeddedContentAspectRatio = 1.3,
     this.embeddedContentSidePadding = 10,
     this.embeddedContentBottomPadding = 10,
-    @required this.embeddedContent,
+    required this.embeddedContent,
   }) : super(key: key);
 
   @override

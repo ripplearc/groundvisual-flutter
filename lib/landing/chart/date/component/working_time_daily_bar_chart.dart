@@ -7,6 +7,7 @@ import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:tuple/tuple.dart';
 
 /// BarChart that updates itself with the data stream.
@@ -15,7 +16,7 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
   final DailyBarRodMeasurement ruler;
 
   const WorkingTimeDailyBarChart(
-      {Key key, @required this.barChartDataAtDate, @required this.ruler})
+      {Key? key, required this.barChartDataAtDate, required this.ruler})
       : super(key: key);
 
   @override
@@ -23,9 +24,16 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
       stream: barChartDataAtDate.highlightRodBarStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _genBarChart(context, snapshot.data);
+          return _genBarChart(
+              context,
+              snapshot.data ??
+                  Tuple2(SelectDailyChartBarRod.UnSelectedGroupId,
+                      SelectDailyChartBarRod.UnSelectedRodId));
         } else {
-          return _genBarChart(context, Tuple2(-1, -1));
+          return _genBarChart(
+              context,
+              Tuple2(SelectDailyChartBarRod.UnSelectedGroupId,
+                  SelectDailyChartBarRod.UnSelectedRodId));
         }
       });
 
@@ -42,18 +50,24 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
                   _uponSelectingBarRod(response, context)),
           titlesData: FlTitlesData(
             show: true,
-            bottomTitles: SideTitles(
-              showTitles: true,
-              getTextStyles: (value) => Theme.of(context).textTheme.caption,
-              margin: 2,
-              getTitles: (double index) =>
-                  barChartDataAtDate.chartData.bottomTitles[index.toInt()],
-            ),
-            leftTitles: SideTitles(
-              showTitles: true,
-              interval: barChartDataAtDate.chartData.leftTitleInterval,
-              getTextStyles: (value) => Theme.of(context).textTheme.caption,
-            ),
+            bottomTitles: Theme.of(context)
+                .textTheme
+                .caption
+                ?.let((textStyle) => SideTitles(
+                      showTitles: true,
+                      getTextStyles: (value) => textStyle,
+                      margin: 2,
+                      getTitles: (double index) => barChartDataAtDate
+                          .chartData.bottomTitles[index.toInt()],
+                    )),
+            leftTitles: Theme.of(context)
+                .textTheme
+                .caption
+                ?.let((textStyle) => SideTitles(
+                      showTitles: true,
+                      interval: barChartDataAtDate.chartData.leftTitleInterval,
+                      getTextStyles: (value) => textStyle,
+                    )),
           ),
           borderData: FlBorderData(
             show: false,
@@ -66,14 +80,15 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
         ),
       );
 
-  BarTooltipItem _buildBarTooltipItem(
+  BarTooltipItem? _buildBarTooltipItem(
           int groupIndex, int rodIndex, BuildContext context) =>
-      BarTooltipItem(
-          barChartDataAtDate.chartData.tooltips[groupIndex][rodIndex],
-          Theme.of(context)
-              .textTheme
-              .caption
-              .apply(color: Theme.of(context).colorScheme.onBackground));
+      Theme.of(context)
+          .textTheme
+          .caption
+          ?.apply(color: Theme.of(context).colorScheme.onBackground)
+          .let((textStyle) => BarTooltipItem(
+              barChartDataAtDate.chartData.tooltips[groupIndex][rodIndex],
+              textStyle));
 
   void _uponSelectingBarRod(
       BarTouchResponse touchResponse, BuildContext context) {
@@ -89,8 +104,10 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
           BarTouchResponse barTouchResponse, BuildContext context) =>
       BlocProvider.of<DailyWorkingTimeChartBloc>(context).add(
           SelectDailyChartBarRod(
-              barTouchResponse.spot.touchedBarGroupIndex,
-              barTouchResponse.spot.touchedRodDataIndex,
+              barTouchResponse.spot?.touchedBarGroupIndex ??
+                  SelectDailyChartBarRod.UnSelectedGroupId,
+              barTouchResponse.spot?.touchedRodDataIndex ??
+                  SelectDailyChartBarRod.UnSelectedGroupId,
               barChartDataAtDate.siteName,
               barChartDataAtDate.date));
 }

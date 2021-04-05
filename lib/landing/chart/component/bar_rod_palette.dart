@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 /// Color the bar rod stack item with dark and light.
 class BarRodPalette {
-  Color _dark;
-  Color _light;
+  Color? _dark;
+  Color? _light;
 
   BarRodPalette(BuildContext context) {
     _dark = Theme.of(context).colorScheme.primary;
@@ -19,9 +19,11 @@ class BarRodPalette {
       rodData.rodStackItems.asMap().entries.map((entry) {
         BarChartRodStackItem item = entry.value;
         if (entry.key == 0) {
-          return BarChartRodStackItem(item.fromY, item.toY, _dark);
+          return BarChartRodStackItem(
+              item.fromY, item.toY, _dark ?? Colors.orange);
         } else if (entry.key == 1) {
-          return BarChartRodStackItem(item.fromY, item.toY, _light);
+          return BarChartRodStackItem(
+              item.fromY, item.toY, _light ?? Colors.grey);
         } else {
           return item;
         }

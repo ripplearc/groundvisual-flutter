@@ -8,13 +8,15 @@ import 'package:injectable/injectable.dart';
 @injectable
 class TrendBarRodMeasurement {
   final TrendChartBarConverter trendChartBarConverter;
-  final double parentWidth;
-  final TrendPeriod trendPeriod;
+  final double? parentWidth;
+  final TrendPeriod? trendPeriod;
 
   double get _width {
-    final numOfGroup = trendChartBarConverter.numOfGroup(trendPeriod);
-    final daysPerGroup = trendChartBarConverter.daysPerGroup(trendPeriod);
-    return parentWidth * 0.6 / (numOfGroup * daysPerGroup);
+    final numOfGroup =
+        trendChartBarConverter.numOfGroup(trendPeriod ?? TrendPeriod.oneWeek);
+    final daysPerGroup =
+        trendChartBarConverter.daysPerGroup(trendPeriod ?? TrendPeriod.oneWeek);
+    return (parentWidth ?? 480) * 0.6 / (numOfGroup * daysPerGroup);
   }
 
   TrendBarRodMeasurement(this.trendChartBarConverter,
@@ -33,14 +35,14 @@ class TrendBarRodMeasurement {
 @injectable
 class DailyBarRodMeasurement {
   final DailyChartBarConverter dailyChartBarConverter;
-  final double parentWidth;
-  double _width;
+  final double? parentWidth;
+  late double _width;
 
   DailyBarRodMeasurement(
       this.dailyChartBarConverter, @factoryParam this.parentWidth) {
     final numOfGroup = dailyChartBarConverter.groupsPerDay;
     final rodsPerGroup = dailyChartBarConverter.rodsPerGroup;
-    _width = parentWidth * 0.8 / (numOfGroup * rodsPerGroup);
+    _width = (parentWidth ?? 480) * 0.8 / (numOfGroup * rodsPerGroup);
   }
 
   BarChartRodData setBarWidth(BarChartRodData rodData) =>

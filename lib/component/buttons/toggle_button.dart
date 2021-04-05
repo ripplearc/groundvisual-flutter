@@ -12,12 +12,12 @@ class ToggleButton extends StatelessWidget {
   final Function(int index) toggleAction;
 
   const ToggleButton(
-      {Key key,
-      this.initialIndex,
-      this.toggleAction,
+      {Key? key,
+      this.initialIndex = 0,
+      required this.toggleAction,
       this.labels,
-      @required this.widthPercent,
-      @required this.height})
+      required this.widthPercent,
+      required this.height})
       : super(key: key);
 
   @override
@@ -29,13 +29,15 @@ class ToggleButton extends StatelessWidget {
       selectedBackgroundColors: [Theme.of(context).colorScheme.primary],
       unSelectedBackgroundColors: [Theme.of(context).colorScheme.surface],
       selectedTextStyle: Theme.of(context)
-          .textTheme
-          .caption
-          .apply(color: Theme.of(context).colorScheme.background),
+              .textTheme
+              .caption
+              ?.apply(color: Theme.of(context).colorScheme.background) ??
+          TextStyle(color: Theme.of(context).colorScheme.background),
       unSelectedTextStyle: Theme.of(context)
-          .textTheme
-          .caption
-          .apply(color: Theme.of(context).colorScheme.primary),
+              .textTheme
+              .caption
+              ?.apply(color: Theme.of(context).colorScheme.primary) ??
+          TextStyle(color: Theme.of(context).colorScheme.primary),
       labels: labels,
       selectedLabelIndex: toggleAction);
 }

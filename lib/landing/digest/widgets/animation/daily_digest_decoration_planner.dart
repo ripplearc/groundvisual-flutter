@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
@@ -13,10 +12,10 @@ class DailyDigestDecorationPlanner {
   final double yDecorationAnchor = 40;
   final random = Random();
 
-  List<Tween> getDecorationTweens(Size benchmarkSize) {
+  List<RelativeRectTween> getDecorationTweens(Size benchmarkSize) {
     final Size decorationSize = _randomSize(benchmarkSize);
     final Offset decorationOffset = _randomOffset(benchmarkSize);
-    return <Tween>[
+    return <RelativeRectTween>[
       _getHorizontalDecorationTween(
           benchmarkSize, decorationOffset, decorationSize.width),
       _getVerticalDecorationTween(
@@ -24,7 +23,7 @@ class DailyDigestDecorationPlanner {
     ];
   }
 
-  Tween _getHorizontalDecorationTween(
+  RelativeRectTween _getHorizontalDecorationTween(
           Size benchmarkSize, Offset offset, double length) =>
       RelativeRectTween(
           begin: RelativeRect.fromSize(
@@ -35,7 +34,7 @@ class DailyDigestDecorationPlanner {
                   offset.dy, length, thickness),
               benchmarkSize));
 
-  Tween _getVerticalDecorationTween(
+  RelativeRectTween _getVerticalDecorationTween(
           Size benchmarkSize, Offset offset, length) =>
       RelativeRectTween(
           begin: RelativeRect.fromSize(

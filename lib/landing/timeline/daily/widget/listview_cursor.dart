@@ -9,20 +9,20 @@ import 'daily_timeline.dart';
 /// The slider that can control the movement of the timelapse ListView as well as listens
 /// to the movement and reflect that movement.
 class ListViewCursor extends StatefulWidget {
-  final MoveTimelineCursor moveTimelineCursor;
-  final GetTimestamp getTimestamp;
-  final ScrollController scrollController;
-  final int animationDuration;
+  final MoveTimelineCursor? moveTimelineCursor;
+  final GetTimestamp? getTimestamp;
+  final ScrollController? scrollController;
+  final int? animationDuration;
   final double cellWidth;
   final int numberOfUnits;
 
   const ListViewCursor({
-    Key key,
+    Key? key,
+    required this.cellWidth,
+    required this.numberOfUnits,
     this.moveTimelineCursor,
     this.getTimestamp,
     this.scrollController,
-    this.cellWidth,
-    this.numberOfUnits,
     this.animationDuration,
   }) : super(key: key);
 
@@ -33,21 +33,22 @@ class ListViewCursor extends StatefulWidget {
 class ListViewCursorState extends State<ListViewCursor> {
   double _currentIndex = 0;
   BehaviorSubject _suspendListenerSubject = BehaviorSubject<bool>();
-  StreamSubscription _subscription;
-  VoidCallback _scrollLambda;
+  StreamSubscription? _subscription;
+  VoidCallback? _scrollLambda;
 
   ListViewCursorState() {
     _scrollLambda = () {
       setState(() {
         _currentIndex =
-            (widget.scrollController.offset / widget.cellWidth).roundToDouble();
+            (widget.scrollController?.offset ?? 0 / widget.cellWidth)
+                .roundToDouble();
       });
     };
   }
 
   @override
   void initState() {
-    widget.scrollController.addListener(_scrollLambda);
+    widget.scrollController?.addListener(_scrollLambda ?? () {});
     _suspendControllerListenerWhenSwipeSlider();
     super.initState();
   }
@@ -58,16 +59,16 @@ class ListViewCursorState extends State<ListViewCursor> {
         return Stream.value(isSuspended);
       else
         return Stream.value(isSuspended)
-            .delay(Duration(seconds: widget.animationDuration));
+            .delay(Duration(seconds: widget.animationDuration ?? 1));
     }).listen((isSuspended) => isSuspended
-        ? widget.scrollController.removeListener(_scrollLambda)
-        : widget.scrollController.addListener(_scrollLambda));
+        ? widget.scrollController?.removeListener(_scrollLambda ?? () {})
+        : widget.scrollController?.addListener(_scrollLambda ?? () {}));
   }
 
   @override
   void dispose() {
-    widget.scrollController.removeListener(_scrollLambda);
-    if (_subscription != null) _subscription.cancel();
+    widget.scrollController?.removeListener(_scrollLambda ?? () {});
+    if (_subscription != null) _subscription?.cancel();
     _suspendListenerSubject.close();
     super.dispose();
   }
@@ -83,12 +84,12 @@ class ListViewCursorState extends State<ListViewCursor> {
           setState(() {
             _currentIndex = value;
           });
-          widget.moveTimelineCursor(value);
+          widget.moveTimelineCursor?.call(value);
         },
         min: 0,
         max: max(0, widget.numberOfUnits.toDouble() - 1),
         divisions: max(1, widget.numberOfUnits - 1),
-        label: widget.getTimestamp(_currentIndex.round()),
+        label: widget.getTimestamp?.call(_currentIndex.round()),
       ));
 
   SliderThemeData _buildSliderTheme(BuildContext context) =>
