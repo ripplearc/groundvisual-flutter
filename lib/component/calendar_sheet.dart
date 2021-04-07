@@ -19,8 +19,7 @@ class CalendarSheet extends StatefulWidget {
 
   @override
   _CalendarSheetState createState() =>
-      _CalendarSheetState(/*initialSelectedDate ??*/
-          Date.startOfToday.subtract(Duration(days: 2)));
+      _CalendarSheetState(initialSelectedDate ?? Date.startOfToday);
 }
 
 class _CalendarSheetState extends State<CalendarSheet>
