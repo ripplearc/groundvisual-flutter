@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 /// RDS confirm button for executing an action.
 class ConfirmButton extends StatelessWidget {
-  final Function() confirmAction;
+  final Function()? confirmAction;
 
-  const ConfirmButton({Key key, this.confirmAction}) : super(key: key);
+  const ConfirmButton({Key? key, this.confirmAction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => TextButton(

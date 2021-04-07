@@ -10,7 +10,7 @@ import 'package:groundvisual_flutter/landing/digest/widgets/daily_digest_slide_p
 class DailyDigestSlideShow extends StatelessWidget {
   final double aspectRatio;
 
-  const DailyDigestSlideShow({Key key, @required this.aspectRatio}) : super(key: key);
+  const DailyDigestSlideShow({Key? key, required this.aspectRatio}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Card(

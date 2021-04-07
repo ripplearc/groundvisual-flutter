@@ -13,7 +13,7 @@ class DateTrendToggle extends StatelessWidget {
   final double widthPercent;
   final double height;
 
-  const DateTrendToggle({Key key, this.widthPercent = 30, this.height = 20})
+  const DateTrendToggle({Key? key, this.widthPercent = 30, this.height = 20})
       : super(key: key);
 
   double _widthPercent(BuildContext context) => getValueForScreenType<double>(

@@ -1,19 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:groundvisual_flutter/extensions/date.dart';
 
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final double cellWidth;
   final List<DailyTimelineImageModel> images;
   final double padding = 8;
 
   const TimelineImages(
-      {Key key, this.scrollController, this.cellWidth, this.images})
+      {Key? key,
+      required this.cellWidth,
+      required this.images,
+      this.scrollController})
       : super(key: key);
 
   Widget build(BuildContext context) {
@@ -29,34 +35,42 @@ class TimelineImages extends StatelessWidget {
           controller: scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
-          itemBuilder: (_, index) => _buildImageCell(
-              images[index].imageName ?? 'assets/icon/excavator.svg',
-              _buildAnnotation(images[index]),
-              context,
-              images[index].status)));
+          itemBuilder: (_, index) => images.elementAt(index).let((image) =>
+              _buildImageCell(
+                  image.imageName ?? 'assets/icon/excavator.svg',
+                  _buildAnnotation(image),
+                  image.startTime,
+                  context,
+                  image.status))));
 
   Padding _buildImageCell(String imageName, String annotation,
-          BuildContext context, MachineStatus status) =>
+          DateTime timestamp, BuildContext context, MachineStatus status) =>
       Padding(
           padding: EdgeInsets.all(padding),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(children: [
-                  _buildImageWithCorner(imageName, context),
-                  _buildLabelIfNeeded(status, context)
-                ]),
-                Text(annotation, style: Theme.of(context).textTheme.headline6)
-              ]));
+          child: GestureDetector(
+              onTap: () => BlocProvider.of<DailyTimelineBloc>(context)
+                  .add(TapDailyTimelineCell(timestamp)),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(children: [
+                      _buildImageWithCorner(imageName, context),
+                      _buildLabelIfNeeded(status, context)
+                    ]),
+                    Text(annotation,
+                        style: Theme.of(context).textTheme.headline6)
+                  ])));
 
   ClipRRect _buildImageWithCorner(String imageName, BuildContext context) =>
       ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
-            width: cellWidth - 2 * padding,
-            height: 120,
-            child: _buildImage(imageName, context)),
+          width: cellWidth - 2 * padding,
+          height: 120,
+          child: Hero(
+              tag: "image" + imageName, child: _buildImage(imageName, context)),
+        ),
       );
 
   Widget _buildLabelIfNeeded(MachineStatus status, BuildContext context) =>

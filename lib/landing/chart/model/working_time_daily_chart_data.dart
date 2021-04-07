@@ -7,22 +7,22 @@ class WorkingTimeChartData {
   double leftTitleInterval;
   List<String> bottomTitles;
 
-  WorkingTimeChartData(
-    this.bars,
-    this.tooltips,
-    this.leftTitleInterval,
-    this.bottomTitles,
-  );
+  WorkingTimeChartData({
+    this.bars = const [],
+    this.tooltips = const [],
+    this.leftTitleInterval = 0,
+    this.bottomTitles = const [],
+  });
 
   WorkingTimeChartData copyWith(
-          {List<BarChartGroupData> barsParam,
-          List<List<String>> tooltipsParam,
-          double leftTitleIntervalParam,
-          double spaceParam,
-          List<String> bottomTitlesParam}) =>
+          {List<BarChartGroupData>? barsParam,
+          List<List<String>>? tooltipsParam,
+          double? leftTitleIntervalParam,
+          double? spaceParam,
+          List<String>? bottomTitlesParam}) =>
       WorkingTimeChartData(
-          barsParam ?? bars,
-          tooltipsParam ?? tooltips,
-          leftTitleIntervalParam ?? leftTitleInterval,
-          bottomTitlesParam ?? bottomTitles);
+          bars: barsParam ?? bars,
+          tooltips: tooltipsParam ?? tooltips,
+          leftTitleInterval: leftTitleIntervalParam ?? leftTitleInterval,
+          bottomTitles: bottomTitlesParam ?? bottomTitles);
 }

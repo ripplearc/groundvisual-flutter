@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// another widget for selecting a widget or period.
 class DateButton extends StatelessWidget {
   final String dateText;
-  final Function() action;
+  final Function()? action;
 
-  const DateButton({Key key, this.dateText, this.action}) : super(key: key);
+  const DateButton({Key? key, required this.dateText, this.action}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => TextButton.icon(

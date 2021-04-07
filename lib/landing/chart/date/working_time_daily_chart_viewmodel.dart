@@ -41,7 +41,11 @@ class WorkingTimeDailyChartViewModel {
       return (hour % 6 == 0 && hour != 0) ? hour.toString() + ":00" : "";
     });
 
-    return WorkingTimeChartData(bars, tooltips, 15, bottomTitles);
+    return WorkingTimeChartData(
+        bars: bars,
+        tooltips: tooltips,
+        leftTitleInterval: 15,
+        bottomTitles: bottomTitles);
   }
 
   List<BarChartRodData> _genBarRods(
@@ -106,7 +110,7 @@ class WorkingTimeDailyChartViewModel {
     if ([].contains(time)) {
       return 0.1;
     } else {
-      return pow(distance / 96.0, 4);
+      return pow(distance / 96.0, 4) as double;
     }
   }
 }

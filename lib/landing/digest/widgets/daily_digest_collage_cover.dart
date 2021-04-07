@@ -7,7 +7,7 @@ import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.d
 class DailyDigestCollageCover extends StatelessWidget {
   final double padding;
 
-  DailyDigestCollageCover({Key key, this.padding = 0}) : super(key: key);
+  DailyDigestCollageCover({Key? key, this.padding = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
@@ -21,20 +21,22 @@ class DailyDigestCollageCover extends StatelessWidget {
                     )
                   : Container());
 
-  StatelessWidget _genCollageLayout(List<String> coverImages) => {
+  StatelessWidget _genCollageLayout(List<String> coverImages) =>
+      {
         4: _DailyDigestCollageCoverWithFourPhotos(
             padding: padding, coverImages: coverImages),
         5: _DailyDigestCollageCoverWithFivePhotos(
             padding: padding, coverImages: coverImages)
-      }[coverImages.length];
+      }[coverImages.length] ??
+      Container();
 }
 
 class _DailyDigestCollageCoverWithFourPhotos extends StatelessWidget {
-  final double padding;
   final List<String> coverImages;
+  final double padding;
 
   _DailyDigestCollageCoverWithFourPhotos(
-      {Key key, this.padding, this.coverImages})
+      {Key? key, required this.padding, required this.coverImages})
       : super(key: key);
 
   @override
@@ -57,7 +59,7 @@ class _DailyDigestCollageCoverWithFivePhotos extends StatelessWidget {
   final List<String> coverImages;
 
   const _DailyDigestCollageCoverWithFivePhotos(
-      {Key key, this.padding, this.coverImages})
+      {Key? key, required this.padding, required this.coverImages})
       : super(key: key);
 
   @override

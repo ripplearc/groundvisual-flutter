@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
-import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -61,72 +61,90 @@ class LandingHomePage extends StatelessWidget {
 @injectable
 class LandingHomePageBlocComponent {
   // ignore: close_sinks
-  MachineStatusBloc _machineStatusBloc;
+  MachineStatusBloc? _machineStatusBloc;
 
   // ignore: close_sinks
-  WorkZoneMapBloc _workZoneMapBloc;
+  WorkZoneMapBloc? _workZoneMapBloc;
 
   // ignore: close_sinks
-  TrendWorkingTimeChartBloc _trendWorkingTimeChartBloc;
+  TrendWorkingTimeChartBloc? _trendWorkingTimeChartBloc;
 
   // ignore: close_sinks
-  DailyWorkingTimeChartBloc _dailyWorkingTimeChartBloc;
+  DailyWorkingTimeChartBloc? _dailyWorkingTimeChartBloc;
 
   // ignore: close_sinks
-  PlayDigestBloc _playDigestBloc;
+  PlayDigestBloc? _playDigestBloc;
 
   // ignore: close_sinks
-  DailyTimelineBloc _dailyTimelineBloc;
+  DailyTimelineBloc? _dailyTimelineBloc;
 
   MachineStatusBloc getMachineStatusBloc(SelectedSiteBloc selectedSiteBloc) {
-    if (_machineStatusBloc == null) {
-      _machineStatusBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+    final bloc = _machineStatusBloc;
+    if (bloc == null) {
+       final newBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+       _machineStatusBloc = newBloc;
+       return newBloc;
     }
-    return _machineStatusBloc;
+    return bloc;
   }
 
   PlayDigestBloc getPlayDigestBloc(SelectedSiteBloc selectedSiteBloc) {
-    if (_playDigestBloc == null) {
-      _playDigestBloc = getIt<PlayDigestBloc>(param1: selectedSiteBloc);
+    final bloc = _playDigestBloc;
+    if (bloc == null) {
+      final newBloc = getIt<PlayDigestBloc>(param1: selectedSiteBloc);
+      _playDigestBloc = newBloc;
+      return newBloc;
     }
-    return _playDigestBloc;
+    return bloc;
   }
 
   DailyWorkingTimeChartBloc getDailyWorkingTimeChartBloc(
       SelectedSiteBloc selectedSiteBloc) {
-    if (_dailyWorkingTimeChartBloc == null) {
-      this._dailyWorkingTimeChartBloc = getIt<DailyWorkingTimeChartBloc>(
+    final bloc = _dailyWorkingTimeChartBloc;
+    if (bloc == null) {
+      final newBloc = getIt<DailyWorkingTimeChartBloc>(
           param1: selectedSiteBloc,
           param2: getPlayDigestBloc((selectedSiteBloc)));
+      _dailyWorkingTimeChartBloc = newBloc;
+      return newBloc;
     }
-    return _dailyWorkingTimeChartBloc;
+    return bloc;
   }
 
   TrendWorkingTimeChartBloc getTrendWorkingTimeChartBloc(
       SelectedSiteBloc selectedSiteBloc) {
-    if (_trendWorkingTimeChartBloc == null) {
-      this._trendWorkingTimeChartBloc =
+    final bloc = _trendWorkingTimeChartBloc;
+    if (bloc == null) {
+      final newBloc =
           getIt<TrendWorkingTimeChartBloc>(param1: selectedSiteBloc);
+      _trendWorkingTimeChartBloc = newBloc;
+      return newBloc;
     }
-    return _trendWorkingTimeChartBloc;
+    return bloc;
   }
 
   WorkZoneMapBloc getWorkZoneMapBloc(SelectedSiteBloc selectedSiteBloc) {
-    if (_workZoneMapBloc == null) {
-      this._workZoneMapBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
+    final bloc = _workZoneMapBloc;
+    if (bloc == null) {
+      final newBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
           selectedSiteBloc: selectedSiteBloc,
           dailyWorkingTimeChartBloc:
               getDailyWorkingTimeChartBloc(selectedSiteBloc),
           trendWorkingTimeChartBloc:
               getTrendWorkingTimeChartBloc(selectedSiteBloc));
+      _workZoneMapBloc = newBloc;
+      return newBloc;
     }
-    return _workZoneMapBloc;
+    return bloc;
   }
 
   DailyTimelineBloc getDailyTimelineBloc(SelectedSiteBloc selectedSiteBloc) {
-    if (_dailyTimelineBloc == null) {
-      _dailyTimelineBloc = getIt<DailyTimelineBloc>(param1: selectedSiteBloc);
+    final bloc = _dailyTimelineBloc;
+    if (bloc == null) {
+      final newBloc = getIt<DailyTimelineBloc>(param1: selectedSiteBloc);
+      _dailyTimelineBloc = newBloc;
+      return newBloc;
     }
-    return _dailyTimelineBloc;
+    return bloc;
   }
 }

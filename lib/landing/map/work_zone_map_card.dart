@@ -17,7 +17,7 @@ class WorkZoneMapCard extends StatefulWidget {
   final bool embedInCard;
 
   WorkZoneMapCard(
-      {Key key,
+      {Key? key,
       this.bottomPadding = 0,
       this.showTitle = true,
       this.embedInCard = true})
@@ -32,14 +32,14 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
   Completer<GoogleMapController> _controller = Completer();
   static const Duration delayInitialAnimationAndStylingAfterMapCreated =
       Duration(milliseconds: 500);
-  String _darkMapStyle;
-  String _lightMapStyle;
+  String? _darkMapStyle;
+  String? _lightMapStyle;
 
   WorkZoneMapCardState();
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
     _loadMapStyles();
     _setMapStyle();
   }
@@ -133,7 +133,7 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
 
   Future _setMapStyle() async {
     final controller = await _controller.future;
-    final theme = WidgetsBinding.instance.window.platformBrightness;
+    final theme = WidgetsBinding.instance?.window.platformBrightness;
     if (theme == Brightness.dark)
       controller.setMapStyle(_darkMapStyle);
     else
@@ -142,7 +142,7 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 }

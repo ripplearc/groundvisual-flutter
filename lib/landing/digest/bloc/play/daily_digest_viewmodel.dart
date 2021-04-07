@@ -74,11 +74,9 @@ class DailyDigestViewModel {
 /// Maintains the position of the current image position and reset after reaching the end.
 class _Cursor {
   final int numberOfImages;
-  int _currentPosition;
+  int _currentPosition = -1;
 
-  _Cursor(this.numberOfImages) {
-    _currentPosition = -1;
-  }
+  _Cursor(this.numberOfImages);
 
   increment() => _currentPosition++;
 

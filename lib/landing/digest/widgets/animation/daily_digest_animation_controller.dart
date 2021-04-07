@@ -5,24 +5,23 @@ class DailyDigestAnimationController extends StatefulWidget {
   final int durationInMilliSeconds;
 
   const DailyDigestAnimationController(
-      {Key key, this.animatedWidgetBuilder, this.durationInMilliSeconds = 4000})
+      {Key? key,
+      required this.animatedWidgetBuilder,
+      this.durationInMilliSeconds = 4000})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _DailyDigestAnimationControllerState(
-      animatedWidgetBuilder, durationInMilliSeconds);
+  State<StatefulWidget> createState() =>
+      _DailyDigestAnimationControllerState(durationInMilliSeconds);
 }
 
 class _DailyDigestAnimationControllerState
     extends State<DailyDigestAnimationController>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   final int durationInMilliSeconds;
 
-  final Function buildAnimatedWidget;
-
-  _DailyDigestAnimationControllerState(
-      this.buildAnimatedWidget, this.durationInMilliSeconds);
+  _DailyDigestAnimationControllerState(this.durationInMilliSeconds);
 
   @override
   void initState() {
@@ -33,7 +32,8 @@ class _DailyDigestAnimationControllerState
   }
 
   @override
-  Widget build(BuildContext context) => buildAnimatedWidget(_controller);
+  Widget build(BuildContext context) =>
+      widget.animatedWidgetBuilder(_controller);
 
   @override
   void dispose() {

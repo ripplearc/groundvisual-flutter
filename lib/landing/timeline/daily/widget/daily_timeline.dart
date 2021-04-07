@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
-import 'package:groundvisual_flutter/landing/timeline/widget/listview_cursor.dart';
-import 'package:groundvisual_flutter/landing/timeline/widget/timeline_images.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
+
+import 'listview_cursor.dart';
 
 typedef MoveTimelineCursor(double index);
 typedef String GetTimestamp(int index);
@@ -22,7 +24,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
   final int animationDuration = 1;
 
   void _scrollToIndex(index) {
-    _scrollController.animateTo(216 * index,
+    _scrollController.animateTo(216.0 * index,
         duration: Duration(seconds: animationDuration), curve: Curves.easeOut);
   }
 
@@ -31,7 +33,18 @@ class _DailyTimelineState extends State<DailyTimeline> {
       color: Theme.of(context).colorScheme.background,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: BlocBuilder<DailyTimelineBloc, DailyTimelineState>(
+      child: BlocConsumer<DailyTimelineBloc, DailyTimelineState>(
+          listenWhen: (prev, curr) => curr is DailyTimelineNavigateToDetailPage,
+          listener: (context, state) {
+            if (state is DailyTimelineNavigateToDetailPage) {
+              _navigateToDetailPage(
+                  context,
+                  state.images
+                      .map((e) => e.imageName)
+                      .toList(),
+                  state.initialImageIndex);
+            }
+          },
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
           builder: (context, state) {
             if (state is DailyTimelineImagesLoaded)
@@ -60,12 +73,41 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 ),
                 ListViewCursor(
                   moveTimelineCursor: _scrollToIndex,
-                  getTimestamp: (index) =>
-                      images[index].startTime.toHourMinuteString(),
+                  getTimestamp: (index) => images.isEmpty
+                      ? "??:??"
+                      : images[index].startTime.toHourMinuteString(),
                   scrollController: _scrollController,
                   cellWidth: cellWidth,
                   numberOfUnits: images.length,
                   animationDuration: animationDuration,
                 )
               ]));
+
+  void _navigateToDetailPage(
+      BuildContext context, List<String?> images, int initialImageIndex) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        fullscreenDialog: true,
+        transitionDuration: Duration(milliseconds: 500),
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return DailyTimelineDetail(
+              heroType: HeroType(
+                  title: "3:00 PM ~ 3:15 PM",
+                  subTitle: "Working",
+                  images: images,
+                  initialImageIndex: initialImageIndex,
+                  materialColor: Theme.of(context).colorScheme.primary));
+        },
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          return FadeTransition(
+            opacity: animation,
+            // CurvedAnimation(parent: animation, curve: Curves.elasticInOut),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 }

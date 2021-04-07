@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
   final List<charts.TickSpec<int>> scale;
   final UnitWorkingTime data;
 
-  const MachineWorkingTimeChart._({Key key, this.scale, this.data})
+  const MachineWorkingTimeChart._({Key? key, required this.scale, required this.data})
       : super(key: key);
 
   factory MachineWorkingTimeChart.withData(UnitWorkingTime data) => [

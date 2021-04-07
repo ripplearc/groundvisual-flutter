@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 class MachineLabel extends StatelessWidget {
   final String name;
   final Size labelSize;
-  final Size shadowTopLeftOffset;
+  final Size? shadowTopLeftOffset;
 
-  const MachineLabel(
-      {Key key, this.name, this.shadowTopLeftOffset, this.labelSize})
-      : super(key: key);
+  const MachineLabel({
+    Key? key,
+    required this.name,
+    required this.labelSize,
+    this.shadowTopLeftOffset,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -21,8 +24,8 @@ class MachineLabel extends StatelessWidget {
       );
 
   Positioned _genShadow(BuildContext context) => Positioned(
-      top: shadowTopLeftOffset.height,
-      left: shadowTopLeftOffset.width,
+      top: shadowTopLeftOffset?.height ?? 0,
+      left: shadowTopLeftOffset?.width ?? 0,
       child: ClipOval(
         child: Container(
           height: labelSize.height,
@@ -42,9 +45,10 @@ class MachineLabel extends StatelessWidget {
             name,
             textAlign: TextAlign.center,
             style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .apply(color: Theme.of(context).colorScheme.primary),
+                    .textTheme
+                    .bodyText1
+                    ?.apply(color: Theme.of(context).colorScheme.primary) ??
+                TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
       );

@@ -13,7 +13,7 @@ class Routes {
 
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
-        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       print("ROUTE WAS NOT FOUND !!!");
       return;
     });
@@ -22,15 +22,15 @@ class Routes {
   }
 
   static var _rootHandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return ScreenTypeLayout.builder(
         mobile: (_) => RootHomeMobilePage(),
         tablet: (_) => RootHomeTabletPage());
   });
 
   static var _placeholderRouteHandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    String message = params["message"]?.first;
-    return PlaceholderWidget(message);
+      handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    String? message = params["message"]?.first;
+    return PlaceholderWidget(pageTitle: message);
   });
 }

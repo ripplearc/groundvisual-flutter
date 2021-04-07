@@ -31,7 +31,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
               .records
               .firstWhere((element) => time.weekday == element.date.weekday,
                   orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone([].toList()))))
+                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
               .zone);
 
   String _getDailyWorkZoneAsset(String siteName) => {
@@ -39,7 +39,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
         'M51': 'assets/mock_response/m51_date_work_zone.json',
         'Kensington': 'assets/mock_response/kensington_date_work_zone.json',
         'Cresent Blvd': 'assets/mock_response/cresent_date_work_zone.json'
-      }[siteName];
+      }[siteName] ??  'assets/mock_response/penton_date_work_zone.json';
 
   @override
   Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>
@@ -50,7 +50,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
               .records
               .firstWhere((element) => time.minute == element.date.minute,
                   orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone([].toList()))))
+                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
               .zone);
 
   @override
@@ -64,6 +64,6 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
               .firstWhere(
                   (element) => period.seconds() == element.durationInSeconds,
                   orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone([].toList()))))
+                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
               .zone);
 }

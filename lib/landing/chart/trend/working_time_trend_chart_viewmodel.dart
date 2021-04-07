@@ -32,7 +32,11 @@ class WorkingTimeTrendChartViewModel {
     final tooltips = _genToolTips(workingTime, numOfGroup, daysPerGroup);
     final bottomTitles = _genBottomTitles(numOfGroup, daysPerGroup);
 
-    return WorkingTimeChartData(bars, tooltips, 4.0, bottomTitles);
+    return WorkingTimeChartData(
+        bars: bars,
+        tooltips: tooltips,
+        leftTitleInterval: 4.0,
+        bottomTitles: bottomTitles);
   }
 
   List<BarChartGroupData> _genRodBars(List<_WorkingTimePerRod> workingTime,

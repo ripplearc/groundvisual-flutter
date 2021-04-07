@@ -11,7 +11,10 @@ class DailyDigestSlideAnimation extends StatelessWidget {
   final Size imageSize;
 
   DailyDigestSlideAnimation(
-      {Key key, this.controller, this.image, this.imageSize})
+      {Key? key,
+      required this.controller,
+      required this.image,
+      required this.imageSize})
       : _relativeRect = rectSequence(imageSize).animate(CurvedAnimation(
             parent: controller,
             curve: Interval(0.0, 0.9, curve: Curves.easeInOutCubic))),
@@ -21,14 +24,15 @@ class DailyDigestSlideAnimation extends StatelessWidget {
   Widget build(BuildContext context) =>
       AnimatedBuilder(animation: controller, builder: _buildAnimation);
 
-  Widget _buildAnimation(BuildContext context, Widget child) =>
+  Widget _buildAnimation(BuildContext context, Widget? child) =>
       Positioned.fromRect(
           rect: _relativeRect.value.toRect(imageRect(imageSize)),
           child: Image.asset(image, fit: BoxFit.cover));
 
   static const zoomLevel = 1.04;
 
-  static Rect imageRect(Size size) => Rect.fromLTWH(0, 0, size.width, size.height);
+  static Rect imageRect(Size size) =>
+      Rect.fromLTWH(0, 0, size.width, size.height);
 
   static RelativeRect _start(Size size) =>
       RelativeRect.fromSize(_getRandomStartRect(size), size);

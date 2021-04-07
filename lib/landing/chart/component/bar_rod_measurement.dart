@@ -4,17 +4,23 @@ import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_con
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
 import 'package:injectable/injectable.dart';
 
+mixin _ParentWidgetWidth {
+  double get defaultWidth => 480;
+}
+
 /// Set the width of the bar rod of the trend bar chart.
 @injectable
-class TrendBarRodMeasurement {
+class TrendBarRodMeasurement with _ParentWidgetWidth {
   final TrendChartBarConverter trendChartBarConverter;
-  final double parentWidth;
-  final TrendPeriod trendPeriod;
+  final double? parentWidth;
+  final TrendPeriod? trendPeriod;
 
   double get _width {
-    final numOfGroup = trendChartBarConverter.numOfGroup(trendPeriod);
-    final daysPerGroup = trendChartBarConverter.daysPerGroup(trendPeriod);
-    return parentWidth * 0.6 / (numOfGroup * daysPerGroup);
+    final numOfGroup =
+        trendChartBarConverter.numOfGroup(trendPeriod ?? TrendPeriod.oneWeek);
+    final daysPerGroup =
+        trendChartBarConverter.daysPerGroup(trendPeriod ?? TrendPeriod.oneWeek);
+    return (parentWidth ?? defaultWidth) * 0.6 / (numOfGroup * daysPerGroup);
   }
 
   TrendBarRodMeasurement(this.trendChartBarConverter,
@@ -31,16 +37,16 @@ class TrendBarRodMeasurement {
 
 /// Set the width of the bar rod of the daily bar chart.
 @injectable
-class DailyBarRodMeasurement {
+class DailyBarRodMeasurement with _ParentWidgetWidth {
   final DailyChartBarConverter dailyChartBarConverter;
-  final double parentWidth;
-  double _width;
+  final double? parentWidth;
+  late double _width;
 
   DailyBarRodMeasurement(
       this.dailyChartBarConverter, @factoryParam this.parentWidth) {
     final numOfGroup = dailyChartBarConverter.groupsPerDay;
     final rodsPerGroup = dailyChartBarConverter.rodsPerGroup;
-    _width = parentWidth * 0.8 / (numOfGroup * rodsPerGroup);
+    _width = (parentWidth ?? defaultWidth) * 0.8 / (numOfGroup * rodsPerGroup);
   }
 
   BarChartRodData setBarWidth(BarChartRodData rodData) =>

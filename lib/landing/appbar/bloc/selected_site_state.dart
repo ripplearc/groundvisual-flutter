@@ -12,12 +12,12 @@ class SelectedSiteEmpty extends SelectedSiteState {}
 class SelectedSiteAtDate extends SelectedSiteState {
   final String siteName;
   final DateTime date;
-  final WorkingTimeChartData chartData;
+  final WorkingTimeChartData? chartData;
 
   const SelectedSiteAtDate(this.siteName, this.date, {this.chartData});
 
   @override
-  List<Object> get props => [siteName, date, chartData];
+  List<Object> get props => [siteName, date, chartData ?? WorkingTimeChartData()];
 
   @override
   String toString() =>

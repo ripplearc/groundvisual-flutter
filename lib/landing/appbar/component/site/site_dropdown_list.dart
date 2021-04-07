@@ -8,7 +8,12 @@ class SiteDropDownList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
       builder: (blocContext, state) {
-        final siteList = <String>['M51', 'Cresent Blvd', 'Kensington', 'Penton Rise'];
+        final siteList = <String>[
+          'M51',
+          'Cresent Blvd',
+          'Kensington',
+          'Penton Rise'
+        ];
         String siteName = 'M51';
         if (state is SelectedSiteAtDate && state.siteName.isNotEmpty) {
           siteName = state.siteName;
@@ -31,10 +36,10 @@ class SiteDropDownList extends StatelessWidget {
           dropdownColor: Theme.of(context).colorScheme.background,
           underline: Container(),
           value: siteName,
-          onChanged: (String newValue) {
+          onChanged: (String? newValue) {
             if (newValue != siteName) {
               BlocProvider.of<SelectedSiteBloc>(context)
-                  .add(SiteSelected(newValue, context));
+                  .add(SiteSelected(newValue ?? siteName, context));
             }
           },
           items: siteList.map<DropdownMenuItem<String>>((String value) {

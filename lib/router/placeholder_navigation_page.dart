@@ -4,10 +4,10 @@ import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 
 /// Placeholder for testing the router.
 class PlaceholderWidget extends StatelessWidget {
-  final String pageTitle;
-  final SelectedTab tab;
+  final String? pageTitle;
+  final SelectedTab? tab;
 
-  PlaceholderWidget(this.pageTitle, {this.tab});
+  PlaceholderWidget({this.pageTitle, this.tab});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -27,11 +27,11 @@ class PlaceholderWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        tab?.icon()?.icon ?? Icons.engineering,
+                        tab?.icon().icon ?? Icons.engineering,
                         size: 80,
                       ),
                       Text(
-                        pageTitle,
+                        pageTitle ?? "",
                         style: Theme.of(context).textTheme.headline4,
                       ),
                     ],

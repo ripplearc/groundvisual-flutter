@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/model/digest_image_model.dart';
 import 'package:groundvisual_flutter/landing/digest/widgets/animation/daily_digest_decoration_planner.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 import 'animation/daily_digest_animation_controller.dart';
 import 'animation/daily_digest_decoration_animation.dart';
@@ -54,32 +55,28 @@ class DailyDigestSlidePlaying extends StatelessWidget {
       }));
 
   Widget _genDecorationWithAnimation(DigestImageModel images,
-          Size benchmarkSize, Tween tween, String key) =>
-      images.nextImage != null
-          ? DailyDigestAnimationController(
-              key: Key(images.nextImage + key),
-              animatedWidgetBuilder:
-                  _getDecorationAnimationBuilder(benchmarkSize, tween))
-          : Container();
+          Size benchmarkSize, RelativeRectTween tween, String key) =>
+      images.nextImage?.let((image) => DailyDigestAnimationController(
+          key: Key(image + key),
+          animatedWidgetBuilder:
+              _getDecorationAnimationBuilder(benchmarkSize, tween))) ??
+      Container();
 
   Widget _genNextImageWithAnimation(DigestImageModel images, Size size) =>
-      images.nextImage != null
-          ? DailyDigestAnimationController(
-              key: Key(images.nextImage),
-              animatedWidgetBuilder:
-                  _getSlideAnimationBuilder(images.nextImage, size))
-          : Container();
+      images.nextImage?.let((image) => DailyDigestAnimationController(
+          key: Key(images.nextImage ?? "DailyDigestNextImage"),
+          animatedWidgetBuilder: _getSlideAnimationBuilder(image, size))) ??
+      Container();
 
   Widget _genCurrentImage(DigestImageModel images) =>
-      images.currentImage != null
-          ? _genStaticImage(images.currentImage)
-          : Container();
+      images.currentImage?.let((image) => _genStaticImage(image)) ??
+      Container();
 
   Function _getSlideAnimationBuilder(String image, Size imageSize) =>
       (AnimationController controller) => DailyDigestSlideAnimation(
           controller: controller, image: image, imageSize: imageSize);
 
-  Function _getDecorationAnimationBuilder(Size size, Tween tween) =>
+  Function _getDecorationAnimationBuilder(Size size, RelativeRectTween tween) =>
       (AnimationController controller) => DailyDigestDecorationAnimation(
           controller: controller, imageSize: size, tween: tween);
 

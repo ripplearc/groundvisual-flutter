@@ -23,11 +23,11 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage>
     () => LandingHomePage(),
     () => DocumentHomePage(title: "Fleet"),
     () => PlaceholderWidget(
-          "Fleet Page Under Construction",
+          pageTitle: "Fleet Page Under Construction",
           tab: SelectedTab.fleet,
         ),
     () => PlaceholderWidget(
-          "Account Page Under Construction",
+          pageTitle: "Account Page Under Construction",
           tab: SelectedTab.account,
         )
   ];
@@ -49,7 +49,7 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage>
 }
 
 class DocumentHomePage extends StatefulWidget {
-  DocumentHomePage({Key key, this.title}) : super(key: key);
+  DocumentHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 

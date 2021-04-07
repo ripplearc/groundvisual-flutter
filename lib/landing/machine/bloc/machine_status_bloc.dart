@@ -26,17 +26,17 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
   }
 
   final MachineStatusViewModel machineStatusViewModel;
-  final SelectedSiteBloc selectedSiteBloc;
-  StreamSubscription _selectedSiteSubscription;
+  final SelectedSiteBloc? selectedSiteBloc;
+  StreamSubscription? _selectedSiteSubscription;
 
   void _listenToSelectedSite() {
-    _processSelectedSiteState(selectedSiteBloc.state);
-    _selectedSiteSubscription = selectedSiteBloc?.listen((state) {
+    _processSelectedSiteState(selectedSiteBloc?.state);
+    _selectedSiteSubscription = selectedSiteBloc?.stream.listen((state) {
       _processSelectedSiteState(state);
     });
   }
 
-  void _processSelectedSiteState(SelectedSiteState state) {
+  void _processSelectedSiteState(SelectedSiteState? state) {
     if (state is SelectedSiteAtDate) {
       add(SearchMachineStatusOnDate(state.siteName, state.date));
     } else if (state is SelectedSiteAtTrend) {
@@ -82,7 +82,7 @@ class MachineStatusBloc extends Bloc<MachineStatusEvent, MachineStatusState> {
 
   @override
   Future<void> close() {
-    _selectedSiteSubscription.cancel();
+    _selectedSiteSubscription?.cancel();
     return super.close();
   }
 }

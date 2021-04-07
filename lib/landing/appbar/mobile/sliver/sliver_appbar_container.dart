@@ -7,7 +7,7 @@ class SliverAppBarContainer extends StatefulWidget {
   final bool shouldStayWhenCollapse;
 
   const SliverAppBarContainer(
-      {Key key, @required this.child, this.shouldStayWhenCollapse = false})
+      {Key? key, required this.child, this.shouldStayWhenCollapse = false})
       : super(key: key);
 
   @override
@@ -17,8 +17,8 @@ class SliverAppBarContainer extends StatefulWidget {
 }
 
 class _SliverAppBarContainerState extends State<SliverAppBarContainer> {
-  ScrollPosition _position;
-  bool _visible;
+  ScrollPosition? _position;
+  bool? _visible;
 
   @override
   void dispose() {
@@ -44,9 +44,9 @@ class _SliverAppBarContainerState extends State<SliverAppBarContainer> {
   }
 
   void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
+    final FlexibleSpaceBarSettings? settings =
         context.dependOnInheritedWidgetOfExactType();
-    print(settings.minExtent);
+    print(settings?.minExtent);
     bool visible = false;
     if (widget.shouldStayWhenCollapse) {
       visible =
@@ -66,7 +66,7 @@ class _SliverAppBarContainerState extends State<SliverAppBarContainer> {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       duration: Duration(milliseconds: 300),
-      opacity: _visible ? 1 : 0,
+      opacity: _visible ?? false ? 1 : 0,
       child: widget.child,
     );
   }

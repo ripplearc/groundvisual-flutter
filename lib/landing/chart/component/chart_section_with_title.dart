@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 Widget chartSectionWithTitleBuilder(
-        {BuildContext context, Widget builder, bool compacted}) =>
+        {required BuildContext context,
+        required Widget builder,
+        bool compacted = false}) =>
     compacted
         ? _genChartSectionWithTitleInCompactMode(context, builder)
         : _genChartSectionWithTitleInNormalMode(context, builder);

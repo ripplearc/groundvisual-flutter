@@ -15,13 +15,13 @@ import 'component/working_time_daily_chart_thumbnail.dart';
 
 class WorkingTimeDailyChart extends StatelessWidget {
   final double aspectRatio;
-  final Widget embeddedBackground;
-  final Widget thumbnail;
+  final Widget? embeddedBackground;
+  final Widget? thumbnail;
   final bool showTitle;
 
   const WorkingTimeDailyChart(
-      {Key key,
-      @required this.aspectRatio,
+      {Key? key,
+      required this.aspectRatio,
       this.embeddedBackground,
       this.thumbnail,
       this.showTitle = true})
@@ -71,15 +71,15 @@ class WorkingTimeDailyChart extends StatelessWidget {
                           .transformBarRod(ruler.setBarWidth)
                           .transformBarGroup(ruler.setBarSpace)))));
 
-  Widget _buildBackground() => embeddedBackground != null
-      ? Positioned.fill(child: embeddedBackground)
-      : Container();
+  Widget _buildBackground() =>
+      embeddedBackground?.let((embedded) => Positioned.fill(child: embedded)) ??
+      Container();
 
-  Widget _buildThumbnail() => thumbnail != null
-      ? Positioned.fill(
-          child: Align(
-          alignment: Alignment.topRight,
-          child: WorkingTimeDailyChartThumbnail(),
-        ))
-      : Container();
+  Widget _buildThumbnail() =>
+      thumbnail?.let((it) => Positioned.fill(
+              child: Align(
+            alignment: Alignment.topRight,
+            child: WorkingTimeDailyChartThumbnail(),
+          ))) ??
+      Container();
 }
