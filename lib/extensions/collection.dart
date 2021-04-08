@@ -19,4 +19,8 @@ extension NullAware<T> on Iterable<T> {
 
   Iterable<E> mapNotNull<E>(E? f(T t)) =>
       expand((t) => f(t)?.let((v) => [v]) ?? ([] as List<E>));
+
+  Iterable<E> mapWithIndex<E>(E Function(int i, T) callback) =>
+      Iterable.generate(
+          length, (index) => callback(index, this.elementAt(index)));
 }

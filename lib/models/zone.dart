@@ -1,6 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
-import 'package:groundvisual_flutter/extensions/null_aware.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
 
 /// A list of LatLng that forms a convex hull to represent a work area.
 class Region {

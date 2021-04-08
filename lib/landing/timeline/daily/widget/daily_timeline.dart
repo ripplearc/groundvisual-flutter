@@ -24,7 +24,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
   final int animationDuration = 1;
 
   void _scrollToIndex(index) {
-    _scrollController.animateTo(216.0 * index,
+    _scrollController.animateTo(cellWidth * index,
         duration: Duration(seconds: animationDuration), curve: Curves.easeOut);
   }
 

@@ -37,7 +37,7 @@ class TimelineImages extends StatelessWidget {
           itemCount: images.length,
           itemBuilder: (_, index) => images.elementAt(index).let((image) =>
               _buildImageCell(
-                  image.imageName ?? 'assets/icon/excavator.svg',
+                  image.imageName,
                   _buildAnnotation(image),
                   image.startTime,
                   context,

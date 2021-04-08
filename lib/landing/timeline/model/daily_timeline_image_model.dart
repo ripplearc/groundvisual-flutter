@@ -7,7 +7,7 @@ extension ParseToString on MachineStatus {
 
 /// Timestamp and working status of the image in that duration
 class DailyTimelineImageModel {
-  final String? imageName;
+  final String imageName;
   final DateTime startTime;
   final DateTime endTime;
   final MachineStatus status;
