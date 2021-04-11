@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/mobile/daily_detail_photo_mobile_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 
 class HeroType {
   String title;
@@ -31,6 +31,7 @@ class DailyTimelineDetail extends StatefulWidget {
 
 class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   late double _screenWidth;
+  late double _screenHeight;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
   }
 
   @override
@@ -49,7 +51,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            expandedHeight: 240,
+            expandedHeight: _screenHeight * (1 - 0.618),
             flexibleSpace: FlexibleSpaceBar(
               background: _buildImageAppBarContent(context),
             ),
@@ -103,7 +105,6 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
           widget.heroType.images.getOrNull(widget.heroType.initialImageIndex),
       child: Container(
           width: _screenWidth,
-          height: 230.0,
           child: PageView.builder(
               controller: PageController(
                   initialPage: widget.heroType.initialImageIndex),
@@ -123,13 +124,36 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
     );
   }
 
+  void openDialog(BuildContext context, final int index) => showDialog(
+      context: context,
+      builder: (_) => SimpleDialog(
+            backgroundColor: Colors.transparent,
+            // contentPadding: const EdgeInsets.all(0),
+            // insetPadding: const EdgeInsets.all(0),
+            children: [
+              DailyDetailPhotoMobileView(
+                galleryItems: widget.heroType.images
+                    .mapWithIndex((index, value) => GalleryItem(
+                        id: "tag$index",
+                        resource: value ?? "",
+                        isSvg: value?.contains(".svg") ?? false))
+                    .toList(),
+                backgroundDecoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                initialIndex: index,
+                scrollDirection: Axis.horizontal,
+              ),
+            ],
+          ));
+
   void open(BuildContext context, final int index) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GalleryPhotoViewWrapper(
+        builder: (context) => DailyDetailPhotoMobileView(
           galleryItems: widget.heroType.images
-              .mapWithIndex((index, value) => GalleryExampleItem(
+              .mapWithIndex((index, value) => GalleryItem(
                   id: "tag$index",
                   resource: value ?? "",
                   isSvg: value?.contains(".svg") ?? false))
@@ -160,115 +184,6 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
 
   Image _buildRaster(String imageName) => Image.asset(
         imageName,
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.cover,
       );
-}
-
-class GalleryPhotoViewWrapper extends StatefulWidget {
-  GalleryPhotoViewWrapper({
-    this.loadingBuilder,
-    this.backgroundDecoration,
-    this.minScale,
-    this.maxScale,
-    this.initialIndex = 0,
-    required this.galleryItems,
-    this.scrollDirection = Axis.horizontal,
-  }) : pageController = PageController(initialPage: initialIndex);
-
-  final LoadingBuilder? loadingBuilder;
-  final BoxDecoration? backgroundDecoration;
-  final dynamic minScale;
-  final dynamic maxScale;
-  final int initialIndex;
-  final PageController pageController;
-  final List<GalleryExampleItem> galleryItems;
-  final Axis scrollDirection;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _GalleryPhotoViewWrapperState();
-  }
-}
-
-class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
-  late int currentIndex = widget.initialIndex;
-
-  void onPageChanged(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: widget.backgroundDecoration,
-        constraints: BoxConstraints.expand(
-          height: MediaQuery.of(context).size.height,
-        ),
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: <Widget>[
-            PhotoViewGallery.builder(
-              scrollPhysics: const BouncingScrollPhysics(),
-              builder: _buildItem,
-              itemCount: widget.galleryItems.length,
-              loadingBuilder: widget.loadingBuilder,
-              backgroundDecoration: widget.backgroundDecoration,
-              pageController: widget.pageController,
-              onPageChanged: onPageChanged,
-              scrollDirection: widget.scrollDirection,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "Image ${currentIndex + 1}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17.0,
-                  decoration: null,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
-    final GalleryExampleItem item = widget.galleryItems[index];
-    return item.isSvg
-        ? PhotoViewGalleryPageOptions.customChild(
-            child: SvgPicture.asset(
-              item.resource,
-              color: Theme.of(context).colorScheme.primary,
-              fit: BoxFit.contain,
-            ),
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.covered * 4.1,
-            heroAttributes: PhotoViewHeroAttributes(tag: item.id),
-          )
-        : PhotoViewGalleryPageOptions(
-            imageProvider: AssetImage(item.resource),
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.covered * 4.1,
-            heroAttributes: PhotoViewHeroAttributes(tag: item.id),
-          );
-  }
-}
-
-class GalleryExampleItem {
-  GalleryExampleItem({
-    required this.id,
-    required this.resource,
-    this.isSvg = false,
-  });
-
-  final String id;
-  final String resource;
-  final bool isSvg;
 }
