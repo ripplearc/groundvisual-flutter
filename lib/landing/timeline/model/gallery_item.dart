@@ -1,12 +1,12 @@
-
 class GalleryItem {
-  GalleryItem({
-    required this.id,
-    required this.resource,
-    this.isSvg = false,
-  });
+  GalleryItem(
+      {required this.tag,
+      required this.resource,
+      this.isSvg = false,
+      this.statusLabel = ""});
 
-  final String id;
+  final String tag;
   final String resource;
   final bool isSvg;
+  final String statusLabel;
 }

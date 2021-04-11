@@ -39,9 +39,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
             if (state is DailyTimelineNavigateToDetailPage) {
               _navigateToDetailPage(
                   context,
-                  state.images
-                      .map((e) => e.imageName)
-                      .toList(),
+                  state.images,
                   state.initialImageIndex);
             }
           },
@@ -84,7 +82,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
               ]));
 
   void _navigateToDetailPage(
-      BuildContext context, List<String?> images, int initialImageIndex) {
+      BuildContext context, List<DailyTimelineImageModel> images, int initialImageIndex) {
     Navigator.of(context).push(
       PageRouteBuilder(
         fullscreenDialog: true,

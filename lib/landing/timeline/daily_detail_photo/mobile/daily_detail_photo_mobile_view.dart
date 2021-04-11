@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 /// Display the zoomable image in the full screen gallery.
 class DailyDetailPhotoMobileView extends StatefulWidget {
@@ -42,24 +43,40 @@ class _DailyDetailPhotoMobileViewState
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: widget.backgroundDecoration,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            _buildGallery(),
-            _buildIndexText(context),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: _buildTitle(context),
+        actions: _buildActions(),
+      ),
+      body: _buildGallery());
 
-  Container _buildIndexText(BuildContext context) => Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          "Image ${currentIndex + 1}",
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-      );
+  List<Widget> _buildActions() => [
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.favorite_border_outlined)),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Icon(Icons.share_outlined)),
+      ];
+
+  Flex _buildTitle(BuildContext context) => Flex(
+      direction: getValueForScreenType(
+        context: context,
+        mobile: Axis.vertical,
+        tablet: Axis.horizontal,
+        desktop: Axis.horizontal,
+      ),
+      children: widget.galleryItems
+              .getOrNull<GalleryItem>(currentIndex)
+              ?.let((item) => [
+                    Text(item.tag,
+                        style: Theme.of(context).textTheme.headline6),
+                    if (item.statusLabel.isNotEmpty)
+                      Text(item.statusLabel,
+                          style: Theme.of(context).textTheme.subtitle1)
+                  ]) ??
+          []);
 
   PhotoViewGallery _buildGallery() => PhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
@@ -88,7 +105,7 @@ class _DailyDetailPhotoMobileViewState
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.contained,
-        heroAttributes: PhotoViewHeroAttributes(tag: item.id),
+        heroAttributes: PhotoViewHeroAttributes(tag: item.tag),
       );
 
   PhotoViewGalleryPageOptions _buildImageAsset(GalleryItem item) =>
@@ -97,7 +114,7 @@ class _DailyDetailPhotoMobileViewState
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * ScaleFactor,
-        heroAttributes: PhotoViewHeroAttributes(tag: item.id),
+        heroAttributes: PhotoViewHeroAttributes(tag: item.tag),
       );
 
   PhotoViewGalleryPageOptions _buildDefaultItem() =>

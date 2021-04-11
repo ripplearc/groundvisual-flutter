@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/mobile/daily_detail_photo_mobile_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 class HeroType {
   String title;
   String subTitle;
-  List<String?> images;
+  List<DailyTimelineImageModel> images;
   int initialImageIndex;
   Color materialColor;
 
@@ -51,7 +53,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            expandedHeight: _screenHeight * (1 - 0.618),
+            expandedHeight: _screenHeight * 0.618,
             flexibleSpace: FlexibleSpaceBar(
               background: _buildImageAppBarContent(context),
             ),
@@ -99,30 +101,36 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
     );
   }
 
-  Hero _buildImageAppBarContent(BuildContext context) {
-    return Hero(
-      tag: 'image' +
-          widget.heroType.images.getOrNull(widget.heroType.initialImageIndex),
-      child: Container(
-          width: _screenWidth,
-          child: PageView.builder(
-              controller: PageController(
-                  initialPage: widget.heroType.initialImageIndex),
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.heroType.images.length,
-              itemBuilder: (_, index) => Container(
-                  width: _screenWidth,
-                  child: GestureDetector(
-                    onTap: () {
-                      open(context, index);
-                    },
-                    child: _buildImage(
-                        widget.heroType.images.getOrNull(index) ??
-                            'assets/icon/excavator.svg',
-                        context),
-                  )))),
-    );
-  }
+  Hero _buildImageAppBarContent(BuildContext context) => Hero(
+        tag: 'image' +
+            (widget.heroType.images
+                    .getOrNull<DailyTimelineImageModel>(
+                        widget.heroType.initialImageIndex)
+                    ?.imageName ??
+                ""),
+        child: Container(
+            width: _screenWidth,
+            child: PageView.builder(
+                controller: PageController(
+                    initialPage: widget.heroType.initialImageIndex),
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.heroType.images.length,
+                itemBuilder: (_, index) => Container(
+                    width: _screenWidth,
+                    child: GestureDetector(
+                      onTap: getValueForScreenType<GestureTapCallback>(
+                        context: context,
+                        mobile: () => open(context, index),
+                        tablet: () => open(context, index),
+                      ),
+                      child: _buildImage(
+                          widget.heroType.images
+                                  .getOrNull<DailyTimelineImageModel>(index)
+                                  ?.imageName ??
+                              'assets/icon/excavator.svg',
+                          context),
+                    )))),
+      );
 
   void openDialog(BuildContext context, final int index) => showDialog(
       context: context,
@@ -132,41 +140,32 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
             // insetPadding: const EdgeInsets.all(0),
             children: [
               DailyDetailPhotoMobileView(
-                galleryItems: widget.heroType.images
-                    .mapWithIndex((index, value) => GalleryItem(
-                        id: "tag$index",
-                        resource: value ?? "",
-                        isSvg: value?.contains(".svg") ?? false))
-                    .toList(),
-                backgroundDecoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
+                galleryItems: _getGalleryItems(),
                 initialIndex: index,
-                scrollDirection: Axis.horizontal,
               ),
             ],
           ));
 
-  void open(BuildContext context, final int index) {
-    Navigator.push(
+  List<GalleryItem> _getGalleryItems() => widget.heroType.images
+      .mapWithIndex((index, value) => GalleryItem(
+          tag: value.timeString,
+          statusLabel: [MachineStatus.idling, MachineStatus.stationary]
+                  .contains(value.status)
+              ? " [${value.status.value().toUpperCase()}]"
+              : "",
+          resource: value.imageName,
+          isSvg: value.imageName.contains(".svg")))
+      .toList();
+
+  void open(BuildContext context, final int index) => Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DailyDetailPhotoMobileView(
-          galleryItems: widget.heroType.images
-              .mapWithIndex((index, value) => GalleryItem(
-                  id: "tag$index",
-                  resource: value ?? "",
-                  isSvg: value?.contains(".svg") ?? false))
-              .toList(),
-          backgroundDecoration: const BoxDecoration(
-            color: Colors.black,
-          ),
-          initialIndex: index,
-          scrollDirection: Axis.horizontal,
-        ),
-      ),
-    );
-  }
+          builder: (context) => DailyDetailPhotoMobileView(
+                galleryItems: _getGalleryItems(),
+                initialIndex: index,
+                backgroundDecoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background),
+              )));
 
   Widget _buildImage(String imageName, BuildContext context) {
     if (imageName.contains(".svg"))

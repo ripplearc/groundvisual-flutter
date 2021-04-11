@@ -1,3 +1,5 @@
+import 'package:groundvisual_flutter/extensions/date.dart';
+
 /// Working status of the machine in the duration
 enum MachineStatus { working, idling, stationary }
 
@@ -14,4 +16,8 @@ class DailyTimelineImageModel {
 
   DailyTimelineImageModel(
       this.imageName, this.startTime, this.endTime, this.status);
+
+  String get timeString => [startTime, endTime]
+      .map((time) => time.toHourMinuteString())
+      .reduce((value, element) => value + " ~ " + element);
 }
