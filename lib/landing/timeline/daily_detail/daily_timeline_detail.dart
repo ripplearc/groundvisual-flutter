@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/mobile/daily_detail_photo_mobile_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/web/daily_detail_photo_web_view.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -119,10 +120,10 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                     width: _screenWidth,
                     child: GestureDetector(
                       onTap: getValueForScreenType<GestureTapCallback>(
-                        context: context,
-                        mobile: () => open(context, index),
-                        tablet: () => open(context, index),
-                      ),
+                          context: context,
+                          mobile: () => open(context, index),
+                          tablet: () => open(context, index),
+                          desktop: () => openDialog(context, index)),
                       child: _buildImage(
                           widget.heroType.images
                                   .getOrNull<DailyTimelineImageModel>(index)
@@ -131,20 +132,6 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                           context),
                     )))),
       );
-
-  void openDialog(BuildContext context, final int index) => showDialog(
-      context: context,
-      builder: (_) => SimpleDialog(
-            backgroundColor: Colors.transparent,
-            // contentPadding: const EdgeInsets.all(0),
-            // insetPadding: const EdgeInsets.all(0),
-            children: [
-              DailyDetailPhotoMobileView(
-                galleryItems: _getGalleryItems(),
-                initialIndex: index,
-              ),
-            ],
-          ));
 
   List<GalleryItem> _getGalleryItems() => widget.heroType.images
       .mapWithIndex((index, value) => GalleryItem(
@@ -166,6 +153,17 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                 backgroundDecoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.background),
               )));
+
+  void openDialog(BuildContext context, final int index) => showDialog(
+      context: context,
+      builder: (_) =>
+          SimpleDialog(backgroundColor: Colors.transparent, children: [
+            DailyDetailPhotoWebView(
+              galleryItems: _getGalleryItems(),
+              initialIndex: index,
+              backgroundDecoration: BoxDecoration(color: Colors.transparent),
+            )
+          ]));
 
   Widget _buildImage(String imageName, BuildContext context) {
     if (imageName.contains(".svg"))
