@@ -24,7 +24,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
   final int animationDuration = 1;
 
   void _scrollToIndex(index) {
-    _scrollController.animateTo(216.0 * index,
+    _scrollController.animateTo(cellWidth * index,
         duration: Duration(seconds: animationDuration), curve: Curves.easeOut);
   }
 
@@ -39,9 +39,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
             if (state is DailyTimelineNavigateToDetailPage) {
               _navigateToDetailPage(
                   context,
-                  state.images
-                      .map((e) => e.imageName)
-                      .toList(),
+                  state.images,
                   state.initialImageIndex);
             }
           },
@@ -84,7 +82,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
               ]));
 
   void _navigateToDetailPage(
-      BuildContext context, List<String?> images, int initialImageIndex) {
+      BuildContext context, List<DailyTimelineImageModel> images, int initialImageIndex) {
     Navigator.of(context).push(
       PageRouteBuilder(
         fullscreenDialog: true,

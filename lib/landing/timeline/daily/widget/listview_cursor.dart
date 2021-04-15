@@ -40,7 +40,7 @@ class ListViewCursorState extends State<ListViewCursor> {
     _scrollLambda = () {
       setState(() {
         _currentIndex =
-            (widget.scrollController?.offset ?? 0 / widget.cellWidth)
+            ((widget.scrollController?.offset ?? 0) / widget.cellWidth)
                 .roundToDouble();
       });
     };
