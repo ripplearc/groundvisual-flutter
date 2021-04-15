@@ -4,6 +4,8 @@ import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
+/// Helper functions to build the title and actions button for the gallery. The
+/// title indicates if the machine is in idling or stationary.
 mixin PhotoViewAccessories {
   List<Widget> buildActions(BuildContext context, {bool simplified = false}) =>
       simplified ? _buildIconsOnly() : _buildButtons(context);

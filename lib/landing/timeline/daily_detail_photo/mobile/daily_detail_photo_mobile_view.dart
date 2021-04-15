@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/daily_detail_photo_view_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';

@@ -1,3 +1,4 @@
+/// Model for displaying in the gallery.
 class GalleryItem {
   GalleryItem(
       {required this.tag,

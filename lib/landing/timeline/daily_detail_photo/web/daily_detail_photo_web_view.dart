@@ -7,8 +7,9 @@ import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
 
+/// Display the image in the full screen gallery, with optimization for Web. It is not zoomable
+/// and no amnimation from go from page to page.
 class DailyDetailPhotoWebView extends StatefulWidget {
   DailyDetailPhotoWebView({
     this.loadingBuilder,

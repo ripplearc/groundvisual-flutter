@@ -7,6 +7,8 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
+/// Build a photo item in the gallery. It is capable of building either a SVG
+/// or an image asset.
 mixin DailyDetailPhotoViewBuilder {
   static const double ScaleFactor = 3;
 
