@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
@@ -11,13 +10,13 @@ import 'package:shimmer/shimmer.dart';
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget with TimelineImageBuilder {
   final ScrollController? scrollController;
-  final double cellWidth;
+  final Size cellSize;
   final List<DailyTimelineImageModel> images;
   final double padding = 8;
 
   const TimelineImages(
       {Key? key,
-      required this.cellWidth,
+      required this.cellSize,
       required this.images,
       this.scrollController})
       : super(key: key);
@@ -36,13 +35,13 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
           itemBuilder: (_, index) => images.elementAt(index).let((image) =>
-              buildImageCell(image.imageName, context, cellWidth,
-                  annotation: image.timeString,
-                  onTap: (DateTime timestamp) =>
-                      BlocProvider.of<DailyTimelineBloc>(context)
-                          .add(TapDailyTimelineCell(timestamp)),
-                  status: image.status,
-                  padding: padding))));
+              Hero(
+                  tag: "image" + image.imageName,
+                  child: buildImageCell(image.imageName, context, cellSize,
+                      annotation: image.timeString, onTap: () {
+                    BlocProvider.of<DailyTimelineBloc>(context)
+                        .add(TapDailyTimelineCell(image.startTime));
+                  }, status: image.status, padding: padding)))));
 
   Padding _buildShimmerCell(BuildContext context) => Padding(
       padding: EdgeInsets.all(padding),
@@ -56,8 +55,8 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
                     baseColor: Theme.of(context).colorScheme.surface,
                     highlightColor: Theme.of(context).colorScheme.onSurface,
                     child: Container(
-                        width: cellWidth - 2 * padding,
-                        height: 120,
+                        width: cellSize.width - 2 * padding,
+                        height: cellSize.height,
                         color: Theme.of(context).colorScheme.background))),
             Shimmer.fromColors(
                 baseColor: Theme.of(context).colorScheme.surface,

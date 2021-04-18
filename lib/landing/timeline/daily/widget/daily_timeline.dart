@@ -7,7 +7,7 @@ import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timelin
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 
-import 'listview_cursor.dart';
+import '../../component/scrollable_view_cursor.dart';
 
 typedef MoveTimelineCursor(double index);
 typedef String GetTimestamp(int index);
@@ -38,9 +38,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
           listener: (context, state) {
             if (state is DailyTimelineNavigateToDetailPage) {
               _navigateToDetailPage(
-                  context,
-                  state.images,
-                  state.initialImageIndex);
+                  context, state.images, state.initialImageIndex);
             }
           },
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
@@ -66,10 +64,10 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 ),
                 TimelineImages(
                   scrollController: _scrollController,
-                  cellWidth: cellWidth,
+                  cellSize: Size(cellWidth, 120),
                   images: images,
                 ),
-                ListViewCursor(
+                ScrollableViewCursor(
                   moveTimelineCursor: _scrollToIndex,
                   getTimestamp: (index) => images.isEmpty
                       ? "??:??"
@@ -81,31 +79,25 @@ class _DailyTimelineState extends State<DailyTimeline> {
                 )
               ]));
 
-  void _navigateToDetailPage(
-      BuildContext context, List<DailyTimelineImageModel> images, int initialImageIndex) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
+  void _navigateToDetailPage(BuildContext context,
+      List<DailyTimelineImageModel> images, int initialImageIndex) {
+    Navigator.of(context).push(PageRouteBuilder(
         fullscreenDialog: true,
         transitionDuration: Duration(milliseconds: 500),
         pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation) {
-          return DailyTimelineDetail(
-              heroType: HeroType(
-                  title: "3:00 PM ~ 3:15 PM",
-                  subTitle: "Working",
-                  images: images,
-                  initialImageIndex: initialImageIndex,
-                  materialColor: Theme.of(context).colorScheme.primary));
-        },
+                Animation<double> secondaryAnimation) =>
+            DailyTimelineDetail(
+                heroType: HeroType(
+                    title: "3:00 PM ~ 3:15 PM",
+                    subTitle: "Working",
+                    images: images,
+                    initialImageIndex: initialImageIndex,
+                    materialColor: Theme.of(context).colorScheme.primary)),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation, Widget child) {
-          return FadeTransition(
-            opacity: animation,
-            // CurvedAnimation(parent: animation, curve: Curves.elasticInOut),
-            child: child,
-          );
-        },
-      ),
-    );
+                Animation<double> secondaryAnimation, Widget child) =>
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            )));
   }
 }

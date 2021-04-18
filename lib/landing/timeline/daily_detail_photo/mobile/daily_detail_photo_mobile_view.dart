@@ -67,5 +67,6 @@ class _DailyDetailPhotoMobileViewState extends State<DailyDetailPhotoMobileView>
         tablet: Axis.horizontal,
         desktop: Axis.horizontal,
       ),
+      mainAxisAlignment: MainAxisAlignment.center,
       children: buildTitleContent(widget.galleryItems, currentIndex, context));
 }
