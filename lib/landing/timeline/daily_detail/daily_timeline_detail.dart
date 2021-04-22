@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/mobile/daily_detail_photo_mobile_view.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/web/daily_detail_photo_web_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
+import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
@@ -35,7 +38,7 @@ class DailyTimelineDetail extends StatefulWidget {
 }
 
 class _DailyTimelineDetailState extends State<DailyTimelineDetail>
-    with TimelineImageBuilder {
+    with TimelineImageBuilder, PhotoViewAccessories {
   late double _screenWidth;
   static const double topPadding = 300;
   static const double headerHeight = 100;
@@ -99,8 +102,12 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
                 endIndent: _screenWidth * 0.43,
               ),
               Text(
-                "M51 April 21st 2021",
+                "M51",
                 style: Theme.of(context).textTheme.headline6,
+              ),
+              Text(
+                "April 21st 2021",
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               Divider(
                 thickness: 1,
@@ -117,17 +124,17 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
             return Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 300,
+                height: 350,
                 child: _buildImagePageView(context));
           else
             return Container(
               height: 50,
-              color: Colors.red,
+              color: Theme.of(context).colorScheme.background,
               alignment: Alignment.center,
               child: Text("$index"),
             );
         },
-        childCount: 20,
+        childCount: 1,
       ));
 
   Hero _buildImagePageView(BuildContext context) => Hero(
@@ -142,22 +149,43 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
               PageController(initialPage: widget.heroType.initialImageIndex),
           scrollDirection: Axis.horizontal,
           itemCount: widget.heroType.images.length,
-          itemBuilder: (_, index) =>
-              widget.heroType.images
-                  .getOrNull<DailyTimelineImageModel>(index)
-                  ?.let((image) => buildImageCell(
-                        image.imageName,
-                        context,
-                        Size(_screenWidth * 0.9, topPadding * 0.8),
-                        status: image.status,
-                        annotation: "3:00",
-                        onTap: () => getValueForScreenType<GestureTapCallback>(
-                            context: context,
-                            mobile: () => open(context, index),
-                            tablet: () => open(context, index),
-                            desktop: () => openDialog(context, index))(),
-                      )) ??
-              Container()));
+          itemBuilder: (_, index) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.heroType.images
+                          .getOrNull<DailyTimelineImageModel>(index)
+                          ?.let((image) => buildImageCell(
+                                image.imageName,
+                                context,
+                                Size(_screenWidth * 0.9, topPadding * 0.8),
+                                status: image.status,
+                                annotation: "3:00 ~ 3:15",
+                                actions:
+                                    buildActions(context, simplified: true),
+                                onTap: () =>
+                                    getValueForScreenType<GestureTapCallback>(
+                                        context: context,
+                                        mobile: () => open(context, index),
+                                        tablet: () => open(context, index),
+                                        desktop: () =>
+                                            openDialog(context, index))(),
+                              )) ??
+                      Container(),
+                  Row(
+                    children: [
+                      MachineAvatar(
+                          machineName: "321",
+                          onlineStatusStream: Stream<MachineOnlineStatus>.value(
+                              MachineOnlineStatus(OnlineStatus.unknown, null))),
+                      TextButton.icon(
+                          icon: Icon(Icons.download_outlined,
+                              color: Theme.of(context).colorScheme.primary),
+                          label: Text("[322 photos]"),
+                          onPressed: () {})
+                    ],
+                  )
+                ],
+              )));
 
   List<GalleryItem> _getGalleryItems() => widget.heroType.images
       .mapWithIndex((index, value) => GalleryItem(

@@ -38,7 +38,7 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
               Hero(
                   tag: "image" + image.imageName,
                   child: buildImageCell(image.imageName, context, cellSize,
-                      annotation: image.timeString, onTap: () {
+                      annotation: image.timeString, actions: [], onTap: () {
                     BlocProvider.of<DailyTimelineBloc>(context)
                         .add(TapDailyTimelineCell(image.startTime));
                   }, status: image.status, padding: padding)))));

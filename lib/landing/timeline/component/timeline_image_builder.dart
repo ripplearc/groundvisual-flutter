@@ -6,6 +6,7 @@ typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {
   Widget buildImageCell(String imageName, BuildContext context, Size cellSize,
           {String? annotation,
+          required List<Widget> actions,
           GestureTapCallback? onTap,
           MachineStatus? status,
           double padding = 0}) =>
@@ -22,9 +23,18 @@ mixin TimelineImageBuilder {
                       children: [
                         _buildImageWithLabelOnTop(
                             imageName, status, cellSize, padding, context),
-                        if (annotation != null)
-                          Text(annotation,
-                              style: Theme.of(context).textTheme.headline6)
+                        if (annotation != null || actions.isNotEmpty)
+                          Row(
+                            children: <Widget>[
+                                  if (annotation != null)
+                                    Text(annotation,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  Spacer()
+                                ] +
+                                actions,
+                          )
                       ]))));
 
   Stack _buildImageWithLabelOnTop(String imageName, MachineStatus? status,

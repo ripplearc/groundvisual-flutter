@@ -8,7 +8,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 /// title indicates if the machine is in idling or stationary.
 mixin PhotoViewAccessories {
   List<Widget> buildActions(BuildContext context, {bool simplified = false}) =>
-      simplified ? _buildIconsOnly() : _buildButtons(context);
+      simplified ? _buildIconsOnly(context) : _buildButtons(context);
 
   List<Widget> buildTitleContent(
           List<GalleryItem> galleryItems, int index, BuildContext context,
@@ -39,13 +39,15 @@ mixin PhotoViewAccessories {
                 onPressed: () {}))
       ];
 
-  List<Widget> _buildIconsOnly() => [
+  List<Widget> _buildIconsOnly(BuildContext context) => [
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.favorite_border_outlined)),
+            child: Icon(Icons.favorite_border_outlined,
+                color: Theme.of(context).colorScheme.primary)),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Icon(Icons.share_outlined)),
+            child: Icon(Icons.share_outlined,
+                color: Theme.of(context).colorScheme.primary)),
       ];
 
   ButtonStyle _getStyle(BuildContext context) => OutlinedButton.styleFrom(

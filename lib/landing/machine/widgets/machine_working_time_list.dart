@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
 import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
-import 'package:groundvisual_flutter/landing/machine/widgets/machine_label.dart';
-import 'package:groundvisual_flutter/landing/machine/widgets/machine_offline_indication.dart';
-import 'package:groundvisual_flutter/landing/machine/widgets/machine_online_indication.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:shimmer/shimmer.dart';
@@ -97,10 +95,12 @@ class MachineWorkingTimeList extends StatelessWidget {
                   ? Shimmer.fromColors(
                       baseColor: Theme.of(context).colorScheme.surface,
                       highlightColor: Theme.of(context).colorScheme.onSurface,
-                      child: _genMachineLabelWithStatus(
-                          context, machineName, onlineStatusStream))
-                  : _genMachineLabelWithStatus(
-                      context, machineName, onlineStatusStream),
+                      child: MachineAvatar(
+                          machineName: machineName,
+                          onlineStatusStream: onlineStatusStream))
+                  : MachineAvatar(
+                      machineName: machineName,
+                      onlineStatusStream: onlineStatusStream),
               Expanded(
                   child: shimming
                       ? Shimmer.fromColors(
@@ -111,48 +111,4 @@ class MachineWorkingTimeList extends StatelessWidget {
                       : MachineWorkingTimeChart.withData(data))
             ],
           ));
-
-  Stack _genMachineLabelWithStatus(BuildContext context, String machineName,
-          Stream<MachineOnlineStatus> onlineStatusStream) =>
-      Stack(
-        children: [
-          Container(child: SizedBox.fromSize(size: Size(58, 58))),
-          MachineLabel(
-              name: machineName,
-              labelSize: Size(56, 56),
-              shadowTopLeftOffset: Size(1, 1)),
-          StreamBuilder(
-              stream: onlineStatusStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<MachineOnlineStatus> snapshot) {
-                if (snapshot.hasData) {
-                  return _genIndication(
-                      snapshot.data ??
-                          MachineOnlineStatus(OnlineStatus.unknown, null),
-                      context);
-                } else if (snapshot.hasError) {
-                  return _genIndication(
-                      MachineOnlineStatus(OnlineStatus.unknown, null), context);
-                } else {
-                  return Container();
-                }
-              })
-        ],
-      );
-
-  Widget _genIndication(MachineOnlineStatus status, BuildContext context) {
-    switch (status.status) {
-      case OnlineStatus.offline:
-        return MachineOfflineIndication(
-            offset: Size(0, 0), warning: status.offlineFormattedString());
-      case OnlineStatus.unknown:
-        return MachineOfflineIndication(offset: Size(0, 0), warning: "?!");
-      case OnlineStatus.online:
-        return MachineOnlineIndication(
-            rightBottomOffset: Size(0, 0), shimming: false);
-      default:
-        return MachineOnlineIndication(
-            rightBottomOffset: Size(0, 0), shimming: true);
-    }
-  }
 }
