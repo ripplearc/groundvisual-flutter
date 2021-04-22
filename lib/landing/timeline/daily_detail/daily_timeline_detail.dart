@@ -38,7 +38,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
     with TimelineImageBuilder {
   late double _screenWidth;
   static const double topPadding = 300;
-  late double headerHeight;
+  static const double headerHeight = 100;
 
   @override
   void initState() {
@@ -49,8 +49,6 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenWidth = MediaQuery.of(context).size.width;
-    headerHeight = getValueForScreenType<double>(
-        context: context, mobile: 300, tablet: 700, desktop: 700);
   }
 
   @override
@@ -67,12 +65,10 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
       alignment: Alignment.bottomCenter,
       child: Container(
           margin: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 10),
-          child: CustomScrollView(
-            slivers: <Widget>[
-              _buildContentTitle(topPadding),
-              _buildContentBody()
-            ],
-          )));
+          child: CustomScrollView(slivers: <Widget>[
+            _buildContentTitle(topPadding),
+            _buildContentBody()
+          ])));
 
   SliverPadding _buildContentTitle(double topPadding) => SliverPadding(
       padding: EdgeInsets.only(top: topPadding),
@@ -86,39 +82,53 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
                   child: _buildTitleWithBorder(context)),
               height: headerHeight)));
 
-  SliverList _buildContentBody() => SliverList(
-          delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if (index == 0)
-            return Container(); //_buildImagePageView(context);
-          else
-            return Container(
-              width: _screenWidth,
-              height: 50,
-              color: Colors.red,
-              child: Text("$index"),
-            );
-        },
-        childCount: 20,
-      ));
-
   Widget _buildTitleWithBorder(BuildContext context) => ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(30),
         topRight: Radius.circular(30),
       ),
       child: Container(
-          color: Colors.orange,
+          color: Theme.of(context).colorScheme.background,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("Hello World"),
-              Expanded(
-                  child: Container(
-                      width: _screenWidth * 0.9,
-                      child: _buildImagePageView(context)))
+              Divider(
+                thickness: 4,
+                indent: _screenWidth * 0.43,
+                endIndent: _screenWidth * 0.43,
+              ),
+              Text(
+                "M51 April 21st 2021",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Divider(
+                thickness: 1,
+                indent: _screenWidth * 0.05,
+                endIndent: _screenWidth * 0.05,
+              )
             ],
           )));
+
+  SliverList _buildContentBody() => SliverList(
+          delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          if (index == 0)
+            return Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                height: 300,
+                child: _buildImagePageView(context));
+          else
+            return Container(
+              height: 50,
+              color: Colors.red,
+              alignment: Alignment.center,
+              child: Text("$index"),
+            );
+        },
+        childCount: 20,
+      ));
 
   Hero _buildImagePageView(BuildContext context) => Hero(
       tag: 'image' +
@@ -198,7 +208,7 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => height;
 
   @override
-  double get minExtent => 100;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => false;
