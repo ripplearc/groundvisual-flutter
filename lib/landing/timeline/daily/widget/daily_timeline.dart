@@ -58,24 +58,33 @@ class _DailyTimelineState extends State<DailyTimeline> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  title: Text('Timelapse',
-                      style: Theme.of(context).textTheme.headline6),
+                Flexible(
+                  flex: 1,
+                  child: ListTile(
+                    title: Text('Timelapse',
+                        style: Theme.of(context).textTheme.headline6),
+                  ),
                 ),
-                TimelineImages(
-                  scrollController: _scrollController,
-                  cellSize: Size(cellWidth, 120),
-                  images: images,
+                Flexible(
+                  flex: 3,
+                  child: TimelineImages(
+                    scrollController: _scrollController,
+                    cellSize: Size(cellWidth, 120),
+                    images: images,
+                  ),
                 ),
-                ScrollableViewCursor(
-                  moveTimelineCursor: _scrollToIndex,
-                  getTimestamp: (index) => images.isEmpty
-                      ? "??:??"
-                      : images[index].startTime.toHourMinuteString(),
-                  scrollController: _scrollController,
-                  cellWidth: cellWidth,
-                  numberOfUnits: images.length,
-                  animationDuration: animationDuration,
+                Flexible(
+                  flex: 1,
+                  child: ScrollableViewCursor(
+                    moveTimelineCursor: _scrollToIndex,
+                    getTimestamp: (index) => images.isEmpty
+                        ? "??:??"
+                        : images[index].startTime.toHourMinuteString(),
+                    scrollController: _scrollController,
+                    cellWidth: cellWidth,
+                    numberOfUnits: images.length,
+                    animationDuration: animationDuration,
+                  ),
                 )
               ]));
 

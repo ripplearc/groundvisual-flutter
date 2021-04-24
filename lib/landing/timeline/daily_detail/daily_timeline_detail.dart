@@ -124,7 +124,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
             return Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 350,
+                height: 400,
                 child: _buildImagePageView(context));
           else
             return Container(
@@ -152,40 +152,48 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
           itemBuilder: (_, index) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  widget.heroType.images
-                          .getOrNull<DailyTimelineImageModel>(index)
-                          ?.let((image) => buildImageCell(
-                                image.imageName,
-                                context,
-                                Size(_screenWidth * 0.9, topPadding * 0.8),
-                                status: image.status,
-                                annotation: "3:00 ~ 3:15",
-                                actions:
-                                    buildActions(context, simplified: true),
-                                onTap: () =>
-                                    getValueForScreenType<GestureTapCallback>(
-                                        context: context,
-                                        mobile: () => open(context, index),
-                                        tablet: () => open(context, index),
-                                        desktop: () =>
-                                            openDialog(context, index))(),
-                              )) ??
-                      Container(),
-                  Row(
-                    children: [
-                      MachineAvatar(
-                          machineName: "321",
-                          onlineStatusStream: Stream<MachineOnlineStatus>.value(
-                              MachineOnlineStatus(OnlineStatus.unknown, null))),
-                      TextButton.icon(
-                          icon: Icon(Icons.download_outlined,
-                              color: Theme.of(context).colorScheme.primary),
-                          label: Text("[322 photos]"),
-                          onPressed: () {})
-                    ],
+                  Flexible(
+                    flex: 2,
+                    child: _buildImage(index, context),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: _buildPhotoDownload(context),
                   )
                 ],
               )));
+
+  Row _buildPhotoDownload(BuildContext context) => Row(
+        children: [
+          MachineAvatar(
+              machineName: "321",
+              onlineStatusStream: Stream<MachineOnlineStatus>.value(
+                  MachineOnlineStatus(OnlineStatus.unknown, null))),
+          TextButton.icon(
+              icon: Icon(Icons.download_outlined,
+                  color: Theme.of(context).colorScheme.primary),
+              label: Text("[322 photos]"),
+              onPressed: () {})
+        ],
+      );
+
+  Widget _buildImage(int index, BuildContext context) =>
+      widget.heroType.images
+          .getOrNull<DailyTimelineImageModel>(index)
+          ?.let((image) => buildImageCell(
+                image.imageName,
+                context: context,
+                width: _screenWidth * 0.9,
+                status: image.status,
+                annotation: "3:00 ~ 3:15",
+                actions: buildActions(context, simplified: true),
+                onTap: () => getValueForScreenType<GestureTapCallback>(
+                    context: context,
+                    mobile: () => open(context, index),
+                    tablet: () => open(context, index),
+                    desktop: () => openDialog(context, index))(),
+              )) ??
+      Container();
 
   List<GalleryItem> _getGalleryItems() => widget.heroType.images
       .mapWithIndex((index, value) => GalleryItem(

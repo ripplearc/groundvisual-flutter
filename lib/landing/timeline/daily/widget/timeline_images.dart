@@ -29,19 +29,20 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
     }
   }
 
-  Widget _buildContent(BuildContext context) => Expanded(
-      child: ListView.builder(
-          controller: scrollController,
-          scrollDirection: Axis.horizontal,
-          itemCount: images.length,
-          itemBuilder: (_, index) => images.elementAt(index).let((image) =>
-              Hero(
-                  tag: "image" + image.imageName,
-                  child: buildImageCell(image.imageName, context, cellSize,
-                      annotation: image.timeString, actions: [], onTap: () {
-                    BlocProvider.of<DailyTimelineBloc>(context)
-                        .add(TapDailyTimelineCell(image.startTime));
-                  }, status: image.status, padding: padding)))));
+  Widget _buildContent(BuildContext context) => ListView.builder(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal,
+      itemCount: images.length,
+      itemBuilder: (_, index) => images.elementAt(index).let((image) => Hero(
+          tag: "image" + image.imageName,
+          child: buildImageCell(image.imageName,
+              context: context,
+              width: cellSize.width,
+              annotation: image.timeString,
+              actions: [], onTap: () {
+            BlocProvider.of<DailyTimelineBloc>(context)
+                .add(TapDailyTimelineCell(image.startTime));
+          }, status: image.status, padding: padding))));
 
   Padding _buildShimmerCell(BuildContext context) => Padding(
       padding: EdgeInsets.all(padding),

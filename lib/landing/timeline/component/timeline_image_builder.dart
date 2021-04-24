@@ -4,15 +4,16 @@ import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image
 
 typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {
-  Widget buildImageCell(String imageName, BuildContext context, Size cellSize,
+  Widget buildImageCell(String imageName,
           {String? annotation,
+          required BuildContext context,
           required List<Widget> actions,
+          required double width,
           GestureTapCallback? onTap,
           MachineStatus? status,
           double padding = 0}) =>
       Container(
-          width: cellSize.width,
-          height: cellSize.height,
+          width: width,
           child: Padding(
               padding: EdgeInsets.all(padding),
               child: GestureDetector(
@@ -21,36 +22,33 @@ mixin TimelineImageBuilder {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildImageWithLabelOnTop(
-                            imageName, status, cellSize, padding, context),
+                        Flexible(
+                          flex: 3,
+                          child: _buildImageWithLabelOnTop(
+                              imageName, status, width, padding, context),
+                        ),
                         if (annotation != null || actions.isNotEmpty)
-                          Row(
-                            children: <Widget>[
-                                  if (annotation != null)
-                                    Text(annotation,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  Spacer()
-                                ] +
-                                actions,
+                          Flexible(
+                            flex: 1,
+                            child: _buildBottomSection(
+                                annotation, context, actions),
                           )
                       ]))));
 
   Stack _buildImageWithLabelOnTop(String imageName, MachineStatus? status,
-          Size cellSize, double padding, BuildContext context) =>
+          double width, double padding, BuildContext context) =>
       Stack(children: [
-        _buildImageWithCorner(imageName, cellSize, padding, context),
+        _buildImageWithCorner(imageName, width, padding, context),
         if (status != null && status != MachineStatus.working)
           _buildLabel(status, context),
       ]);
 
   Widget _buildImageWithCorner(
-      String imageName, Size size, double padding, BuildContext context) {
+      String imageName, double width, double padding, BuildContext context) {
     if (imageName.contains(".svg"))
-      return _buildSvg(imageName, size, context);
+      return _buildSvg(imageName, width, context);
     else
-      return _buildRaster(imageName, size);
+      return _buildRaster(imageName, width);
   }
 
   Widget _buildLabel(MachineStatus status, BuildContext context) => Align(
@@ -63,26 +61,27 @@ mixin TimelineImageBuilder {
                   borderRadius: BorderRadius.all(Radius.circular(4))),
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(
-                    status.value().toUpperCase(),
-                    style: Theme.of(context).textTheme.button,
-                  )))));
+                  child: Text(status.value().toUpperCase(),
+                      style: Theme.of(context).textTheme.button)))));
 
-  Widget _buildSvg(String imageName, Size size, BuildContext context) =>
+  Widget _buildSvg(String imageName, double width, BuildContext context) =>
       Container(
-        height: size.height,
-        child: SvgPicture.asset(
-          imageName,
-          color: Theme.of(context).colorScheme.primary,
-          fit: BoxFit.contain,
-        ),
-      );
+          child: SvgPicture.asset(imageName,
+              color: Theme.of(context).colorScheme.primary,
+              fit: BoxFit.contain));
 
-  Widget _buildRaster(String imageName, Size size) => ClipRRect(
+  Widget _buildRaster(String imageName, double width) => ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(
-        imageName,
-        width: size.width,
-        fit: BoxFit.fitWidth,
-      ));
+      child: Image.asset(imageName, width: width, fit: BoxFit.contain));
+
+  Row _buildBottomSection(
+          String? annotation, BuildContext context, List<Widget> actions) =>
+      Row(
+        children: <Widget>[
+              if (annotation != null)
+                Text(annotation, style: Theme.of(context).textTheme.headline6),
+              Spacer()
+            ] +
+            actions,
+      );
 }
