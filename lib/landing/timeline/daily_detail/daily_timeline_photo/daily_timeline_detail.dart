@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_builder.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/mobile/daily_detail_photo_mobile_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/web/daily_detail_photo_web_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/photo_view_actions.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_downloader.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_viewer.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/mobile/daily_detail_gallery_mobile_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/web/daily_detail_gallery_web_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
-import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
+
+import 'daily_timeline_pullup_header.dart';
 
 class HeroType {
   String title;
@@ -37,11 +39,10 @@ class DailyTimelineDetail extends StatefulWidget {
   _DailyTimelineDetailState createState() => _DailyTimelineDetailState();
 }
 
-class _DailyTimelineDetailState extends State<DailyTimelineDetail>
-    with TimelineImageBuilder, PhotoViewAccessories {
+class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   late double _screenWidth;
-  static const double topPadding = 300;
-  static const double headerHeight = 100;
+  late double _mapHeight = 300;
+  static const double titleHeight = 100;
 
   @override
   void initState() {
@@ -52,26 +53,22 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenWidth = MediaQuery.of(context).size.width;
+    _mapHeight = MediaQuery.of(context).size.height * 0.392;
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Stack(children: [
-        _buildMapHeader(context),
-        _buildContent(),
-      ]));
+      body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
   Widget _buildMapHeader(BuildContext context) => Container(
-      width: _screenWidth, height: topPadding + 30, child: WorkZoneMap());
+      width: _screenWidth, height: _mapHeight + 30, child: WorkZoneMap());
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-          margin: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 10),
-          child: CustomScrollView(slivers: <Widget>[
-            _buildContentTitle(topPadding),
-            _buildContentBody()
-          ])));
+      child: CustomScrollView(slivers: <Widget>[
+        _buildContentTitle(_mapHeight),
+        _buildContentBody()
+      ]));
 
   SliverPadding _buildContentTitle(double topPadding) => SliverPadding(
       padding: EdgeInsets.only(top: topPadding),
@@ -81,9 +78,9 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
           delegate: _SliverPersistentHeaderDelegate(
               Container(
                   width: double.infinity,
-                  height: headerHeight,
+                  height: titleHeight,
                   child: _buildTitleWithBorder(context)),
-              height: headerHeight)));
+              height: titleHeight)));
 
   Widget _buildTitleWithBorder(BuildContext context) => ClipRRect(
       borderRadius: BorderRadius.only(
@@ -92,50 +89,17 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
       ),
       child: Container(
           color: Theme.of(context).colorScheme.background,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Divider(
-                thickness: 4,
-                indent: _screenWidth * 0.43,
-                endIndent: _screenWidth * 0.43,
-              ),
-              Text(
-                "M51",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              Text(
-                "April 21st 2021",
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Divider(
-                thickness: 1,
-                indent: _screenWidth * 0.05,
-                endIndent: _screenWidth * 0.05,
-              )
-            ],
-          )));
+          child: DailyTimelinePullUpHeader()));
 
   SliverList _buildContentBody() => SliverList(
-          delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if (index == 0)
-            return Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 400,
-                child: _buildImagePageView(context));
-          else
-            return Container(
-              height: 50,
-              color: Theme.of(context).colorScheme.background,
+      delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) => Container(
               alignment: Alignment.center,
-              child: Text("$index"),
-            );
-        },
-        childCount: 1,
-      ));
+              color: Theme.of(context).colorScheme.background,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              height: _screenWidth,
+              child: _buildImagePageView(context)),
+          childCount: 1));
 
   Hero _buildImagePageView(BuildContext context) => Hero(
       tag: 'image' +
@@ -154,46 +118,29 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
                 children: [
                   Flexible(
                     flex: 2,
-                    child: _buildImage(index, context),
+                    child: widget.heroType.images
+                            .getOrNull<DailyTimelineImageModel>(index)
+                            ?.let((image) => DailyTimelinePhotoViewer(
+                                  image,
+                                  index: index,
+                                  width: _screenWidth * 0.9,
+                                  onTapImage: (BuildContext context,
+                                          int index) =>
+                                      getValueForScreenType<GestureTapCallback>(
+                                          context: context,
+                                          mobile: () => open(context, index),
+                                          tablet: () => open(context, index),
+                                          desktop: () =>
+                                              openDialog(context, index))(),
+                                )) ??
+                        Container(),
                   ),
                   Flexible(
                     flex: 1,
-                    child: _buildPhotoDownload(context),
+                    child: DailyTimelinePhotoDownloader(),
                   )
                 ],
               )));
-
-  Row _buildPhotoDownload(BuildContext context) => Row(
-        children: [
-          MachineAvatar(
-              machineName: "321",
-              onlineStatusStream: Stream<MachineOnlineStatus>.value(
-                  MachineOnlineStatus(OnlineStatus.unknown, null))),
-          TextButton.icon(
-              icon: Icon(Icons.download_outlined,
-                  color: Theme.of(context).colorScheme.primary),
-              label: Text("[322 photos]"),
-              onPressed: () {})
-        ],
-      );
-
-  Widget _buildImage(int index, BuildContext context) =>
-      widget.heroType.images
-          .getOrNull<DailyTimelineImageModel>(index)
-          ?.let((image) => buildImageCell(
-                image.imageName,
-                context: context,
-                width: _screenWidth * 0.9,
-                status: image.status,
-                annotation: "3:00 ~ 3:15",
-                actions: buildActions(context, simplified: true),
-                onTap: () => getValueForScreenType<GestureTapCallback>(
-                    context: context,
-                    mobile: () => open(context, index),
-                    tablet: () => open(context, index),
-                    desktop: () => openDialog(context, index))(),
-              )) ??
-      Container();
 
   List<GalleryItem> _getGalleryItems() => widget.heroType.images
       .mapWithIndex((index, value) => GalleryItem(
@@ -209,7 +156,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
   void open(BuildContext context, final int index) => Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => DailyDetailPhotoMobileView(
+          builder: (context) => DailyDetailGalleryMobileView(
                 galleryItems: _getGalleryItems(),
                 initialIndex: index,
                 backgroundDecoration: BoxDecoration(
@@ -220,7 +167,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail>
       context: context,
       builder: (_) =>
           SimpleDialog(backgroundColor: Colors.transparent, children: [
-            DailyDetailPhotoWebView(
+            DailyDetailGalleryWebView(
               galleryItems: _getGalleryItems(),
               initialIndex: index,
               backgroundDecoration: BoxDecoration(color: Colors.transparent),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_detail.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 

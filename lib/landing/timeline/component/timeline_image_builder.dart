@@ -72,7 +72,7 @@ mixin TimelineImageBuilder {
 
   Widget _buildRaster(String imageName, double width) => ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(imageName, width: width, fit: BoxFit.contain));
+      child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth));
 
   Row _buildBottomSection(
           String? annotation, BuildContext context, List<Widget> actions) =>
