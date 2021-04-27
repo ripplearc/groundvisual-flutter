@@ -10,6 +10,7 @@ import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
+/// Mobile layout of the root home page. The mobile layout should maintain the portrait mode.
 class RootHomeMobilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RootHomeMobilePageState();
@@ -25,6 +26,17 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage>
     _controller = PersistentTabController(initialIndex: 0);
   }
 
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return BlocProvider<SelectedSiteBloc>(
+        create: (_) =>
+            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+        child: Scaffold(
+            body: buildTabBar(
+                controller: _controller, screens: _screens, context: context)));
+  }
+
   List<Widget> get _screens => [
         LandingHomePage(),
         FleetHomePage(title: "Fleet"),
@@ -37,15 +49,4 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage>
           tab: SelectedTab.account,
         )
       ];
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return BlocProvider<SelectedSiteBloc>(
-        create: (_) =>
-            getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
-        child: Scaffold(
-            body: buildTabBar(
-                controller: _controller, screens: _screens, context: context)));
-  }
 }

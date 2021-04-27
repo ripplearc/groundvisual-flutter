@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 
+/// Build the image cell on a timeline. Stamp the image with idling or stationary,
+/// if ths status says so. Display annotation or actions at the bottom.
 typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {
   Widget buildImageCell(String imageName,

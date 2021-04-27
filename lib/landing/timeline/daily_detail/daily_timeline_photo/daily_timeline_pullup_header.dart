@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
+/// The header section of the timeline pullup sheet.
 class DailyTimelinePullUpHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>

@@ -3,24 +3,23 @@ import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_b
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 
-typedef TapImage(BuildContext context, int index);
+typedef TapImage(BuildContext context);
 
+/// Display the image for a selected time period and build the annotation and actions.
 class DailyTimelinePhotoViewer extends StatelessWidget
     with TimelineImageBuilder, PhotoViewAccessories {
   final DailyTimelineImageModel image;
-  final int index;
   final double width;
   final TapImage? onTapImage;
 
-  DailyTimelinePhotoViewer(this.image,
-      {required this.index, required this.width, this.onTapImage});
+  DailyTimelinePhotoViewer(this.image, {required this.width, this.onTapImage});
 
   @override
   Widget build(BuildContext context) => buildImageCell(image.imageName,
       context: context,
       width: width,
       status: image.status,
-      annotation: "3:00 ~ 3:15",
+      annotation: image.timeString,
       actions: buildActions(context, simplified: true),
-      onTap: () => onTapImage?.call(context, index));
+      onTap: () => onTapImage?.call(context));
 }

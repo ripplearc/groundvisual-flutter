@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 
+/// Display the machines that take photos and how much photos available for download.
 class DailyTimelinePhotoDownloader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(

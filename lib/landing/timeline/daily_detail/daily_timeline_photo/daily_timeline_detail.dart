@@ -39,8 +39,10 @@ class DailyTimelineDetail extends StatefulWidget {
 
 class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   late double _screenWidth;
-  late double _mapHeight = 300;
+  late double _mapHeight;
+  late double _scrollViewTopOffset;
   static const double titleHeight = 100;
+  static const double _mapBottomOffset = 30;
 
   @override
   void initState() {
@@ -52,6 +54,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
     super.didChangeDependencies();
     _screenWidth = MediaQuery.of(context).size.width;
     _mapHeight = MediaQuery.of(context).size.height * 0.392;
+    _scrollViewTopOffset = _mapHeight - _mapBottomOffset;
   }
 
   @override
@@ -59,17 +62,17 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
   Widget _buildMapHeader(BuildContext context) => Container(
-      width: _screenWidth, height: _mapHeight + 30, child: WorkZoneMap());
+      width: _screenWidth,
+      height: _mapHeight,
+      child: WorkZoneMap(bottomPadding: _mapBottomOffset));
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
-      child: CustomScrollView(slivers: <Widget>[
-        _buildContentTitle(_mapHeight),
-        _buildContentBody()
-      ]));
+      child: CustomScrollView(
+          slivers: <Widget>[_buildContentTitle(), _buildContentBody()]));
 
-  SliverPadding _buildContentTitle(double topPadding) => SliverPadding(
-      padding: EdgeInsets.only(top: topPadding),
+  SliverPadding _buildContentTitle() => SliverPadding(
+      padding: EdgeInsets.only(top: _scrollViewTopOffset),
       sliver: SliverPersistentHeader(
           pinned: true,
           floating: false,
@@ -116,22 +119,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                 children: [
                   Flexible(
                     flex: 2,
-                    child: widget.heroType.images
-                            .getOrNull<DailyTimelineImageModel>(index)
-                            ?.let((image) => DailyTimelinePhotoViewer(
-                                  image,
-                                  index: index,
-                                  width: _screenWidth * 0.9,
-                                  onTapImage: (BuildContext context,
-                                          int index) =>
-                                      getValueForScreenType<GestureTapCallback>(
-                                          context: context,
-                                          mobile: () => open(context, index),
-                                          tablet: () => open(context, index),
-                                          desktop: () =>
-                                              openDialog(context, index))(),
-                                )) ??
-                        Container(),
+                    child: _buildImageViewer(index),
                   ),
                   Flexible(
                     flex: 1,
@@ -139,6 +127,21 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                   )
                 ],
               )));
+
+  Widget _buildImageViewer(int index) =>
+      widget.heroType.images
+          .getOrNull<DailyTimelineImageModel>(index)
+          ?.let((image) => DailyTimelinePhotoViewer(
+                image,
+                width: _screenWidth * 0.9,
+                onTapImage: (BuildContext context) =>
+                    getValueForScreenType<GestureTapCallback>(
+                        context: context,
+                        mobile: () => open(context, index),
+                        tablet: () => open(context, index),
+                        desktop: () => openDialog(context, index))(),
+              )) ??
+      Container();
 
   List<GalleryItem> _getGalleryItems() => widget.heroType.images
       .mapWithIndex((index, value) => GalleryItem(

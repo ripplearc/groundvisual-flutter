@@ -10,7 +10,6 @@ import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 /// Tablet layout of the root home page.
-
 class RootHomeTabletPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RootHomeTabletPageState();
@@ -26,6 +25,13 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage>
     _controller = PersistentTabController(initialIndex: 0);
   }
 
+  @override
+  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
+      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
+      child: Scaffold(
+          body: buildTabBar(
+              controller: _controller, screens: _screens, context: context)));
+
   List<Widget> get _screens => [
         LandingHomePage(),
         FleetHomePage(title: "Fleet"),
@@ -38,14 +44,4 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage>
           tab: SelectedTab.account,
         )
       ];
-
-  @override
-  Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
-      create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
-      child: Scaffold(
-        body: buildTabBar(
-            controller: _controller,
-            screens: _screens,
-            context: context),
-      ));
 }

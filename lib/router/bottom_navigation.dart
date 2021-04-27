@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-/// Display bottom navigation tabs. The action notifies about the selected tab.
+/// Persistent bottom navigation keeps the bottom navigation visible when navigates
+/// to another route. When answering to the back button event, it goes back
+/// until the first page of the tab. Upon further back button event, it goes back
+/// to the first tab, and then to the Android home screen.
 mixin BottomNavigation {
   PersistentTabView buildTabBar(
       {required PersistentTabController controller,
