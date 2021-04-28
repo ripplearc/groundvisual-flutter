@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
@@ -38,16 +41,12 @@ class DailyTimelineDetail extends StatefulWidget {
 }
 
 class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
+  final Completer<GoogleMapController> _controller = Completer();
   late double _screenWidth;
   late double _mapHeight;
   late double _scrollViewTopOffset;
   static const double titleHeight = 100;
   static const double _mapBottomOffset = 30;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -64,7 +63,8 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   Widget _buildMapHeader(BuildContext context) => Container(
       width: _screenWidth,
       height: _mapHeight,
-      child: WorkZoneMap(bottomPadding: _mapBottomOffset));
+      child: WorkZoneMap(
+          bottomPadding: _mapBottomOffset, mapController: _controller));
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,

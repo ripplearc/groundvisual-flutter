@@ -16,7 +16,7 @@ class RootHomeTabletPage extends StatefulWidget {
 }
 
 class _RootHomeTabletPageState extends State<RootHomeTabletPage>
-    with BottomNavigation {
+    with PersistentBottomNavigation {
   late PersistentTabController _controller;
 
   @override

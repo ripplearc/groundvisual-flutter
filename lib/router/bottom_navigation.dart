@@ -6,7 +6,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 /// to another route. When answering to the back button event, it goes back
 /// until the first page of the tab. Upon further back button event, it goes back
 /// to the first tab, and then to the Android home screen.
-mixin BottomNavigation {
+mixin PersistentBottomNavigation {
   PersistentTabView buildTabBar(
       {required PersistentTabController controller,
       required List<Widget> screens,

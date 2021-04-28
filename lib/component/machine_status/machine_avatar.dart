@@ -5,6 +5,8 @@ import 'package:groundvisual_flutter/models/machine_online_status.dart';
 
 import 'machine_label.dart';
 
+/// Machine icon with online status. The status reacts to the stream that reflects
+/// the machine status in real time.
 class MachineAvatar extends StatelessWidget {
   final String machineName;
 

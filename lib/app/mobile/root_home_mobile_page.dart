@@ -17,7 +17,7 @@ class RootHomeMobilePage extends StatefulWidget {
 }
 
 class _RootHomeMobilePageState extends State<RootHomeMobilePage>
-    with PortraitStatefulModeMixin<RootHomeMobilePage>, BottomNavigation {
+    with PortraitStatefulModeMixin<RootHomeMobilePage>, PersistentBottomNavigation {
   late PersistentTabController _controller;
 
   @override

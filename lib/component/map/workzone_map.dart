@@ -7,26 +7,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-/// Google map shat shows the work zone at date or period.
+/// Use Google map to show the work zone of polygon.
 class WorkZoneMap extends StatefulWidget {
   final double bottomPadding;
   final CameraPosition cameraPosition;
   final Set<Polygon> workZone;
+  final Completer<GoogleMapController> mapController;
 
-  WorkZoneMap({
-    Key? key,
-    this.bottomPadding = 0,
-    this.cameraPosition =
-        const CameraPosition(target: LatLng(37.6, -95.665), zoom: 13),
-    this.workZone = const <Polygon>{},
-  }) : super(key: key);
+  WorkZoneMap(
+      {Key? key,
+      this.bottomPadding = 0,
+      this.cameraPosition =
+          const CameraPosition(target: LatLng(37.6, -95.665), zoom: 13),
+      this.workZone = const <Polygon>{},
+      required this.mapController})
+      : super(key: key);
 
   @override
   State<WorkZoneMap> createState() => WorkZoneMapState();
 }
 
 class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
-  Completer<GoogleMapController> _controller = Completer();
   static const Duration delayInitialAnimationAndStylingAfterMapCreated =
       Duration(milliseconds: 500);
   String? _darkMapStyle;
@@ -47,7 +48,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
       initialCameraPosition: widget.cameraPosition,
       onMapCreated: (GoogleMapController controller) async {
         await Future.delayed(delayInitialAnimationAndStylingAfterMapCreated);
-        _controller.complete(controller);
+        widget.mapController.complete(controller);
       },
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
       zoomControlsEnabled: false,
@@ -75,7 +76,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
   }
 
   Future _setMapStyle() async {
-    final controller = await _controller.future;
+    final controller = await widget.mapController.future;
     final theme = WidgetsBinding.instance?.window.platformBrightness;
     if (theme == Brightness.dark)
       controller.setMapStyle(_darkMapStyle);
