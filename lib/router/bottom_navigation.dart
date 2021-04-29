@@ -1,73 +1,73 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-/// Display bottom navigation tabs. The action notifies about the selected tab.
-class BottomNavigation extends StatefulWidget {
-  final Function(int index)? action;
-
-  const BottomNavigation({Key? key, this.action}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _BottomNavigationState();
-}
-
-class _BottomNavigationState extends State<BottomNavigation> {
-  var _selectedTab = SelectedTab.site;
-
-  _BottomNavigationState();
-
-  void _handleIndexChanged(int i) {
-    widget.action?.call(i);
-    setState(() {
-      _selectedTab = SelectedTab.values[i];
-    });
+/// Persistent bottom navigation keeps the bottom navigation visible when navigates
+/// to another route. When answering to the back button event, it goes back
+/// until the first page of the tab. Upon further back button event, it goes back
+/// to the first tab, and then to the Android home screen.
+mixin PersistentBottomNavigation {
+  PersistentTabView buildTabBar(
+      {required PersistentTabController controller,
+      required List<Widget> screens,
+      required BuildContext context}) {
+    return PersistentTabView(
+      context,
+      controller: controller,
+      screens: screens,
+      confineInSafeArea: true,
+      handleAndroidBackButtonPress: true,
+      stateManagement: true,
+      hideNavigationBar: false,
+      screenTransitionAnimation: ScreenTransitionAnimation(
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      items: _buildNavBarItems(Theme.of(context).colorScheme.primary,
+          Theme.of(context).colorScheme.onSurface),
+      navBarStyle: NavBarStyle.style1,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+    );
   }
 
-  @override
-  Widget build(BuildContext context) => SalomonBottomBar(
-      currentIndex: SelectedTab.values.indexOf(_selectedTab),
-      onTap: _handleIndexChanged,
-      items: SelectedTab.values
-          .map((element) => _buildBarItem(element, context))
-          .toList());
-
-  SalomonBottomBarItem _buildBarItem(
-          SelectedTab element, BuildContext context) =>
-      SalomonBottomBarItem(
-        icon: element.icon(),
-        title: element.text(),
-        selectedColor: Theme.of(context).colorScheme.primary,
-        unselectedColor: Theme.of(context).colorScheme.onBackground,
-      );
+  List<PersistentBottomNavBarItem> _buildNavBarItems(
+          Color activeColor, Color inactiveColor) =>
+      SelectedTab.values
+          .map((tab) => PersistentBottomNavBarItem(
+              icon: Icon(tab.icon),
+              title: tab.name,
+              activeColorPrimary: activeColor,
+              inactiveColorPrimary: inactiveColor))
+          .toList();
 }
 
 enum SelectedTab { site, fleet, doc, account }
 
 extension Value on SelectedTab {
-  Icon icon() {
+  IconData get icon {
     switch (this) {
       case SelectedTab.site:
-        return Icon(Icons.foundation);
+        return Icons.foundation;
       case SelectedTab.fleet:
-        return Icon(Icons.swap_horiz);
+        return Icons.swap_horiz;
       case SelectedTab.doc:
-        return Icon(Icons.toc);
+        return Icons.toc;
       case SelectedTab.account:
-        return Icon(Icons.person_outline);
+        return Icons.person_outline;
     }
   }
 
-  Text text() {
+  String get name {
     switch (this) {
       case SelectedTab.site:
-        return Text("Site");
+        return "Site";
       case SelectedTab.fleet:
-        return Text("Fleet");
+        return "Fleet";
       case SelectedTab.doc:
-        return Text("Doc");
+        return "Doc";
       case SelectedTab.account:
-        return Text("Account");
+        return "Account";
     }
   }
 }

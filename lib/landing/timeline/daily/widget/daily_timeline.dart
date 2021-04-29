@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_detail.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 
-import 'listview_cursor.dart';
+import '../../component/scrollable_view_cursor.dart';
 
 typedef MoveTimelineCursor(double index);
 typedef String GetTimestamp(int index);
@@ -38,9 +38,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
           listener: (context, state) {
             if (state is DailyTimelineNavigateToDetailPage) {
               _navigateToDetailPage(
-                  context,
-                  state.images,
-                  state.initialImageIndex);
+                  context, state.images, state.initialImageIndex);
             }
           },
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
@@ -60,52 +58,55 @@ class _DailyTimelineState extends State<DailyTimeline> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  title: Text('Timelapse',
-                      style: Theme.of(context).textTheme.headline6),
+                Flexible(
+                  flex: 1,
+                  child: ListTile(
+                    title: Text('Timelapse',
+                        style: Theme.of(context).textTheme.headline6),
+                  ),
                 ),
-                TimelineImages(
-                  scrollController: _scrollController,
-                  cellWidth: cellWidth,
-                  images: images,
+                Flexible(
+                  flex: 3,
+                  child: TimelineImages(
+                    scrollController: _scrollController,
+                    cellSize: Size(cellWidth, 120),
+                    images: images,
+                  ),
                 ),
-                ListViewCursor(
-                  moveTimelineCursor: _scrollToIndex,
-                  getTimestamp: (index) => images.isEmpty
-                      ? "??:??"
-                      : images[index].startTime.toHourMinuteString(),
-                  scrollController: _scrollController,
-                  cellWidth: cellWidth,
-                  numberOfUnits: images.length,
-                  animationDuration: animationDuration,
+                Flexible(
+                  flex: 1,
+                  child: ScrollableViewCursor(
+                    moveTimelineCursor: _scrollToIndex,
+                    getTimestamp: (index) => images.isEmpty
+                        ? "??:??"
+                        : images[index].startTime.toHourMinuteString(),
+                    scrollController: _scrollController,
+                    cellWidth: cellWidth,
+                    numberOfUnits: images.length,
+                    animationDuration: animationDuration,
+                  ),
                 )
               ]));
 
-  void _navigateToDetailPage(
-      BuildContext context, List<DailyTimelineImageModel> images, int initialImageIndex) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
+  void _navigateToDetailPage(BuildContext context,
+      List<DailyTimelineImageModel> images, int initialImageIndex) {
+    Navigator.of(context).push(PageRouteBuilder(
         fullscreenDialog: true,
         transitionDuration: Duration(milliseconds: 500),
         pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation) {
-          return DailyTimelineDetail(
-              heroType: HeroType(
-                  title: "3:00 PM ~ 3:15 PM",
-                  subTitle: "Working",
-                  images: images,
-                  initialImageIndex: initialImageIndex,
-                  materialColor: Theme.of(context).colorScheme.primary));
-        },
+                Animation<double> secondaryAnimation) =>
+            DailyTimelineDetail(
+                heroType: HeroType(
+                    title: "3:00 PM ~ 3:15 PM",
+                    subTitle: "Working",
+                    images: images,
+                    initialImageIndex: initialImageIndex,
+                    materialColor: Theme.of(context).colorScheme.primary)),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation, Widget child) {
-          return FadeTransition(
-            opacity: animation,
-            // CurvedAnimation(parent: animation, curve: Curves.elasticInOut),
-            child: child,
-          );
-        },
-      ),
-    );
+                Animation<double> secondaryAnimation, Widget child) =>
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            )));
   }
 }

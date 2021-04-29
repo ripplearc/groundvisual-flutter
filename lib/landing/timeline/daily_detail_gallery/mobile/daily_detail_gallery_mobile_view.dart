@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/daily_detail_photo_view_builder.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/photo_view_actions.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/daily_detail_gallery_view_builder.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 /// Display the zoomable image in the full screen gallery.
-class DailyDetailPhotoMobileView extends StatefulWidget {
-  DailyDetailPhotoMobileView({
+class DailyDetailGalleryMobileView extends StatefulWidget {
+  DailyDetailGalleryMobileView({
     this.loadingBuilder,
     this.backgroundDecoration,
     this.initialIndex = 0,
@@ -26,12 +26,12 @@ class DailyDetailPhotoMobileView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _DailyDetailPhotoMobileViewState();
+    return _DailyDetailGalleryMobileViewState();
   }
 }
 
-class _DailyDetailPhotoMobileViewState extends State<DailyDetailPhotoMobileView>
-    with DailyDetailPhotoViewBuilder, PhotoViewAccessories {
+class _DailyDetailGalleryMobileViewState extends State<DailyDetailGalleryMobileView>
+    with DailyDetailGalleryViewBuilder, PhotoViewAccessories {
   late int currentIndex = widget.initialIndex;
 
   void onPageChanged(int index) {
@@ -67,5 +67,6 @@ class _DailyDetailPhotoMobileViewState extends State<DailyDetailPhotoMobileView>
         tablet: Axis.horizontal,
         desktop: Axis.horizontal,
       ),
+      mainAxisAlignment: MainAxisAlignment.center,
       children: buildTitleContent(widget.galleryItems, currentIndex, context));
 }

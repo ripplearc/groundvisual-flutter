@@ -1,36 +1,30 @@
-import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/component/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/mode/portrait_mode_mixin.dart';
 import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/fleet/fleet_page_body.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
+/// Mobile layout of the root home page. The mobile layout should maintain the portrait mode.
 class RootHomeMobilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RootHomeMobilePageState();
 }
 
 class _RootHomeMobilePageState extends State<RootHomeMobilePage>
-    with PortraitStatefulModeMixin<RootHomeMobilePage> {
-  int _currentIndex = 0;
-  final List<Function> _children = [
-    () => LandingHomePage(),
-    () => DocumentHomePage(title: "Fleet"),
-    () => PlaceholderWidget(
-          pageTitle: "Fleet Page Under Construction",
-          tab: SelectedTab.fleet,
-        ),
-    () => PlaceholderWidget(
-          pageTitle: "Account Page Under Construction",
-          tab: SelectedTab.account,
-        )
-  ];
+    with PortraitStatefulModeMixin<RootHomeMobilePage>, PersistentBottomNavigation {
+  late PersistentTabController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,62 +33,20 @@ class _RootHomeMobilePageState extends State<RootHomeMobilePage>
         create: (_) =>
             getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
         child: Scaffold(
-            body: _children[_currentIndex](),
-            bottomNavigationBar: BottomNavigation(action: _setCurrentIndex)));
+            body: buildTabBar(
+                controller: _controller, screens: _screens, context: context)));
   }
 
-  void _setCurrentIndex(int index) => setState(() {
-        _currentIndex = index;
-      });
-}
-
-class DocumentHomePage extends StatefulWidget {
-  DocumentHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _DocumentHomePageState createState() => _DocumentHomePageState();
-}
-
-class _DocumentHomePageState extends State<DocumentHomePage> {
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: Center(
-          child: ElevatedButton(
-            child: Text('Show Calendar Dialog'),
-            onPressed: _showMaterialDialog,
-          ),
+  List<Widget> get _screens => [
+        LandingHomePage(),
+        FleetHomePage(title: "Fleet"),
+        PlaceholderWidget(
+          pageTitle: "Document Page Under Construction",
+          tab: SelectedTab.doc,
         ),
-      );
-
-  _showMaterialDialog() {
-    showDialog(
-        context: context,
-        builder: (ctx) => SimpleDialog(
-              backgroundColor: Theme.of(context).cardTheme.color,
-              children: [
-                _calenderSelection(ctx, Date.startOfToday, (DateTime t) {})
-              ],
-            ));
-  }
-
-  Widget _calenderSelection(
-    BuildContext context,
-    DateTime initialSelectedDate,
-    Function(DateTime t) action,
-  ) =>
-      Container(
-        height: 600,
-        width: 500,
-        child: CalendarSheet(
-            confirmSelectedDateAction: action,
-            initialSelectedDate: initialSelectedDate),
-      );
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+        PlaceholderWidget(
+          pageTitle: "Account Page Under Construction",
+          tab: SelectedTab.account,
+        )
+      ];
 }

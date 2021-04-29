@@ -14,7 +14,7 @@ import 'chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'chart/bloc/trend/trend_working_time_chart_bloc.dart';
 import 'digest/bloc/play/play_digest_bloc.dart';
 import 'machine/bloc/machine_status_bloc.dart';
-import 'map/bloc/work_zone_map_bloc.dart';
+import 'map/bloc/work_zone_bloc.dart';
 import 'map/bloc/work_zone_map_viewmodel.dart';
 
 /// It orchestrates the creation of the Blocs used for widgets on this page
@@ -30,7 +30,7 @@ class LandingHomePage extends StatelessWidget {
         providers: [
           BlocProvider<MachineStatusBloc>(
               create: (_) => component.getMachineStatusBloc(selectedSiteBloc)),
-          BlocProvider<WorkZoneMapBloc>(
+          BlocProvider<WorkZoneBloc>(
               create: (_) => component.getWorkZoneMapBloc(selectedSiteBloc)),
           BlocProvider<DailyWorkingTimeChartBloc>(
               create: (_) =>
@@ -64,7 +64,7 @@ class LandingHomePageBlocComponent {
   MachineStatusBloc? _machineStatusBloc;
 
   // ignore: close_sinks
-  WorkZoneMapBloc? _workZoneMapBloc;
+  WorkZoneBloc? _workZoneMapBloc;
 
   // ignore: close_sinks
   TrendWorkingTimeChartBloc? _trendWorkingTimeChartBloc;
@@ -123,10 +123,10 @@ class LandingHomePageBlocComponent {
     return bloc;
   }
 
-  WorkZoneMapBloc getWorkZoneMapBloc(SelectedSiteBloc selectedSiteBloc) {
+  WorkZoneBloc getWorkZoneMapBloc(SelectedSiteBloc selectedSiteBloc) {
     final bloc = _workZoneMapBloc;
     if (bloc == null) {
-      final newBloc = WorkZoneMapBloc(getIt<WorkZoneMapViewModel>(),
+      final newBloc = WorkZoneBloc(getIt<WorkZoneMapViewModel>(),
           selectedSiteBloc: selectedSiteBloc,
           dailyWorkingTimeChartBloc:
               getDailyWorkingTimeChartBloc(selectedSiteBloc),

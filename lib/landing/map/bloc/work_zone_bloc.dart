@@ -13,13 +13,13 @@ import 'package:dart_date/dart_date.dart';
 
 import 'work_zone_map_viewmodel.dart';
 
-part 'work_zone_map_event.dart';
+part 'work_zone_event.dart';
 
-part 'work_zone_map_state.dart';
+part 'work_zone_state.dart';
 
 /// Bloc to control the the WorkZone widget.
 /// Both SelectedSiteBloc and WorkingTimeChartTouchBloc signal events to WorkZoneMapBloc.
-class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
+class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
   final DailyWorkingTimeChartBloc? dailyWorkingTimeChartBloc;
   final TrendWorkingTimeChartBloc? trendWorkingTimeChartBloc;
@@ -28,11 +28,11 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   StreamSubscription? _trendChartSubscription;
   StreamSubscription? _selectedSiteSubscription;
 
-  WorkZoneMapBloc(this.workZoneMapViewModel,
+  WorkZoneBloc(this.workZoneMapViewModel,
       {this.selectedSiteBloc,
       this.dailyWorkingTimeChartBloc,
       this.trendWorkingTimeChartBloc})
-      : super(WorkZoneMapInitial()) {
+      : super(WorkZoneInitial()) {
     _listenToSelectedSite();
     _listenToDailyChartSelection();
     _listenToTrendChartSelection();
@@ -75,13 +75,13 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
   }
 
   @override
-  Stream<Transition<WorkZoneMapEvent, WorkZoneMapState>> transformEvents(
-          Stream<WorkZoneMapEvent> events, transitionFn) =>
+  Stream<Transition<WorkZoneEvent, WorkZoneState>> transformEvents(
+          Stream<WorkZoneEvent> events, transitionFn) =>
       events.switchMap(transitionFn);
 
   @override
-  Stream<WorkZoneMapState> mapEventToState(
-    WorkZoneMapEvent event,
+  Stream<WorkZoneState> mapEventToState(
+    WorkZoneEvent event,
   ) async* {
     if (event is SearchWorkZoneAtTime) {
       yield await _handleSelectWorkZoneAtTime(event);
@@ -92,7 +92,7 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
     }
   }
 
-  Future<WorkZoneMapState> _handleSelectWorkZoneAtPeriod(
+  Future<WorkZoneState> _handleSelectWorkZoneAtPeriod(
       SearchWorkZoneAtPeriod event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtPeriod(
@@ -100,25 +100,25 @@ class WorkZoneMapBloc extends Bloc<WorkZoneMapEvent, WorkZoneMapState> {
       workZoneMapViewModel.getCameraPositionAtPeriod(
           event.site, event.date, event.period)
     ]);
-    return WorkZoneMapPolygons(result[0], result[1]);
+    return WorkZonePolygons(result[0], result[1]);
   }
 
-  Future<WorkZoneMapState> _handleSelectWorkZoneAtDate(
+  Future<WorkZoneState> _handleSelectWorkZoneAtDate(
       SearchWorkZoneOnDate event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtDate(event.site, event.date),
       workZoneMapViewModel.getCameraPositionAtDate(event.site, event.date)
     ]);
-    return WorkZoneMapPolygons(result[0], result[1]);
+    return WorkZonePolygons(result[0], result[1]);
   }
 
-  Future<WorkZoneMapState> _handleSelectWorkZoneAtTime(
+  Future<WorkZoneState> _handleSelectWorkZoneAtTime(
       SearchWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
       workZoneMapViewModel.getPolygonAtTime(event.site, event.time),
       workZoneMapViewModel.getCameraPositionAtTime(event.site, event.time)
     ]);
-    return WorkZoneMapPolygons(result[0], result[1]);
+    return WorkZonePolygons(result[0], result[1]);
   }
 
   @override

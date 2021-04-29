@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Display the timelapse images with its timestamp.
-class TimelineImages extends StatelessWidget {
+class TimelineImages extends StatelessWidget with TimelineImageBuilder {
   final ScrollController? scrollController;
-  final double cellWidth;
+  final Size cellSize;
   final List<DailyTimelineImageModel> images;
   final double padding = 8;
 
   const TimelineImages(
       {Key? key,
-      required this.cellWidth,
+      required this.cellSize,
       required this.images,
       this.scrollController})
       : super(key: key);
@@ -29,81 +29,20 @@ class TimelineImages extends StatelessWidget {
     }
   }
 
-  Widget _buildContent(BuildContext context) => Expanded(
-      child: ListView.builder(
-          controller: scrollController,
-          scrollDirection: Axis.horizontal,
-          itemCount: images.length,
-          itemBuilder: (_, index) => images.elementAt(index).let((image) =>
-              _buildImageCell(image.imageName, image.timeString,
-                  image.startTime, context, image.status))));
-
-  Padding _buildImageCell(String imageName, String annotation,
-          DateTime timestamp, BuildContext context, MachineStatus status) =>
-      Padding(
-          padding: EdgeInsets.all(padding),
-          child: GestureDetector(
-              onTap: () => BlocProvider.of<DailyTimelineBloc>(context)
-                  .add(TapDailyTimelineCell(timestamp)),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(children: [
-                      _buildImageWithCorner(imageName, context),
-                      _buildLabelIfNeeded(status, context)
-                    ]),
-                    Text(annotation,
-                        style: Theme.of(context).textTheme.headline6)
-                  ])));
-
-  ClipRRect _buildImageWithCorner(String imageName, BuildContext context) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: Container(
-          width: cellWidth - 2 * padding,
-          height: 120,
-          child: Hero(
-              tag: "image" + imageName, child: _buildImage(imageName, context)),
-        ),
-      );
-
-  Widget _buildLabelIfNeeded(MachineStatus status, BuildContext context) =>
-      status == MachineStatus.working
-          ? Container()
-          : Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                  padding: EdgeInsets.only(top: 10, left: 10),
-                  child: Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Text(
-                            status.value().toUpperCase(),
-                            style: Theme.of(context).textTheme.button,
-                          )))));
-
-  Widget _buildImage(String imageName, BuildContext context) {
-    if (imageName.contains(".svg"))
-      return _buildSvg(imageName, context);
-    else
-      return _buildRaster(imageName);
-  }
-
-  SvgPicture _buildSvg(String imageName, BuildContext context) =>
-      SvgPicture.asset(
-        imageName,
-        color: Theme.of(context).colorScheme.primary,
-        fit: BoxFit.contain,
-      );
-
-  Image _buildRaster(String imageName) => Image.asset(
-        imageName,
-        fit: BoxFit.contain,
-      );
+  Widget _buildContent(BuildContext context) => ListView.builder(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal,
+      itemCount: images.length,
+      itemBuilder: (_, index) => images.elementAt(index).let((image) => Hero(
+          tag: "image" + image.imageName,
+          child: buildImageCell(image.imageName,
+              context: context,
+              width: cellSize.width,
+              annotation: image.timeString,
+              actions: [], onTap: () {
+            BlocProvider.of<DailyTimelineBloc>(context)
+                .add(TapDailyTimelineCell(image.startTime));
+          }, status: image.status, padding: padding))));
 
   Padding _buildShimmerCell(BuildContext context) => Padding(
       padding: EdgeInsets.all(padding),
@@ -117,8 +56,8 @@ class TimelineImages extends StatelessWidget {
                     baseColor: Theme.of(context).colorScheme.surface,
                     highlightColor: Theme.of(context).colorScheme.onSurface,
                     child: Container(
-                        width: cellWidth - 2 * padding,
-                        height: 120,
+                        width: cellSize.width - 2 * padding,
+                        height: cellSize.height,
                         color: Theme.of(context).colorScheme.background))),
             Shimmer.fromColors(
                 baseColor: Theme.of(context).colorScheme.surface,

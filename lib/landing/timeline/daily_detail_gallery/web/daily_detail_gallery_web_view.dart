@@ -2,16 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/daily_detail_photo_view_builder.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_photo/widgets/photo_view_actions.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/daily_detail_gallery_view_builder.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/photo_view_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 /// Display the image in the full screen gallery, with optimization for Web. It is not zoomable
 /// and no amnimation from go from page to page.
-class DailyDetailPhotoWebView extends StatefulWidget {
-  DailyDetailPhotoWebView({
+class DailyDetailGalleryWebView extends StatefulWidget {
+  DailyDetailGalleryWebView({
     this.loadingBuilder,
     this.backgroundDecoration,
     this.minScale,
@@ -32,12 +32,12 @@ class DailyDetailPhotoWebView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _DailyDetailPhotoWebViewState();
+    return _DailyDetailGalleryWebViewState();
   }
 }
 
-class _DailyDetailPhotoWebViewState extends State<DailyDetailPhotoWebView>
-    with DailyDetailPhotoViewBuilder, PhotoViewAccessories {
+class _DailyDetailGalleryWebViewState extends State<DailyDetailGalleryWebView>
+    with DailyDetailGalleryViewBuilder, PhotoViewAccessories {
   late int currentIndex = widget.initialIndex;
   final double arrowSize = 30;
   final double titleHeight = 60;

@@ -1,13 +1,13 @@
-part of 'work_zone_map_bloc.dart';
+part of 'work_zone_bloc.dart';
 
 @immutable
-abstract class WorkZoneMapState extends Equatable {}
+abstract class WorkZoneState extends Equatable {}
 
 /// Display the map with a default location and zoom level.
-class WorkZoneMapInitial extends WorkZoneMapState {
+class WorkZoneInitial extends WorkZoneState {
   final CameraPosition cameraPosition;
 
-  WorkZoneMapInitial(
+  WorkZoneInitial(
       {this.cameraPosition = const CameraPosition(
           target: LatLng(44.182205, -84.506836), zoom: 10)});
 
@@ -16,11 +16,11 @@ class WorkZoneMapInitial extends WorkZoneMapState {
 }
 
 /// Represent the work zone with a set of polygons from a camera position.
-class WorkZoneMapPolygons extends WorkZoneMapState {
+class WorkZonePolygons extends WorkZoneState {
   final Set<Polygon> workZone;
   final CameraPosition cameraPosition;
 
-  WorkZoneMapPolygons(this.workZone, this.cameraPosition);
+  WorkZonePolygons(this.workZone, this.cameraPosition);
 
   @override
   List<Object> get props => [this.workZone, this.cameraPosition];

@@ -27,7 +27,7 @@ class PlaceholderWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        tab?.icon().icon ?? Icons.engineering,
+                        tab?.icon ?? Icons.engineering,
                         size: 80,
                       ),
                       Text(

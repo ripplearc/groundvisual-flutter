@@ -1,10 +1,10 @@
-part of 'work_zone_map_bloc.dart';
+part of 'work_zone_bloc.dart';
 
 @immutable
-abstract class WorkZoneMapEvent extends Equatable {}
+abstract class WorkZoneEvent extends Equatable {}
 
 /// Select a time interval of 15 mins to query the work zone.
-class SearchWorkZoneAtTime extends WorkZoneMapEvent {
+class SearchWorkZoneAtTime extends WorkZoneEvent {
   final String site;
   final DateTime time;
 
@@ -15,7 +15,7 @@ class SearchWorkZoneAtTime extends WorkZoneMapEvent {
 }
 
 /// Select a date to query the work zone.
-class SearchWorkZoneOnDate extends WorkZoneMapEvent {
+class SearchWorkZoneOnDate extends WorkZoneEvent {
   final String site;
   final DateTime date;
 
@@ -26,7 +26,7 @@ class SearchWorkZoneOnDate extends WorkZoneMapEvent {
 }
 
 /// Select a period to query the work zone.
-class SearchWorkZoneAtPeriod extends WorkZoneMapEvent {
+class SearchWorkZoneAtPeriod extends WorkZoneEvent {
   final String site;
   final DateTime date;
   final TrendPeriod period;

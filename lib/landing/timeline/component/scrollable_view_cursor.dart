@@ -4,11 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'daily_timeline.dart';
+import '../daily/widget/daily_timeline.dart';
 
 /// The slider that can control the movement of the timelapse ListView as well as listens
 /// to the movement and reflect that movement.
-class ListViewCursor extends StatefulWidget {
+class ScrollableViewCursor extends StatefulWidget {
   final MoveTimelineCursor? moveTimelineCursor;
   final GetTimestamp? getTimestamp;
   final ScrollController? scrollController;
@@ -16,7 +16,7 @@ class ListViewCursor extends StatefulWidget {
   final double cellWidth;
   final int numberOfUnits;
 
-  const ListViewCursor({
+  const ScrollableViewCursor({
     Key? key,
     required this.cellWidth,
     required this.numberOfUnits,
@@ -27,16 +27,16 @@ class ListViewCursor extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ListViewCursorState();
+  State<StatefulWidget> createState() => ScrollableViewCursorState();
 }
 
-class ListViewCursorState extends State<ListViewCursor> {
+class ScrollableViewCursorState extends State<ScrollableViewCursor> {
   double _currentIndex = 0;
   BehaviorSubject _suspendListenerSubject = BehaviorSubject<bool>();
   StreamSubscription? _subscription;
   VoidCallback? _scrollLambda;
 
-  ListViewCursorState() {
+  ScrollableViewCursorState() {
     _scrollLambda = () {
       setState(() {
         _currentIndex =
