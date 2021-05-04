@@ -19,8 +19,9 @@ class SearchDailyTimelineOnDate extends DailyTimelineEvent {
 /// Tap on a timestamp cell
 class TapDailyTimelineCell extends DailyTimelineEvent {
   final DateTime startTime;
+  final BuildContext context;
 
-  TapDailyTimelineCell(this.startTime);
+  TapDailyTimelineCell(this.startTime, this.context);
 
   @override
   List<Object> get props => [startTime];

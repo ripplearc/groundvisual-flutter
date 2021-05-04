@@ -3,7 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -59,8 +63,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
       if (initialIndex == -1) {
         return;
       } else {
-        yield DailyTimelineNavigateToDetailPage(
-            state.images, state.date, initialIndex, DateTime.now());
+        _navigateToDetailPage(event.context, state.images, initialIndex);
       }
     }
   }
@@ -80,4 +83,21 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
     _selectedSiteSubscription?.cancel();
     return super.close();
   }
+
+  void _navigateToDetailPage(BuildContext context,
+          List<DailyTimelineImageModel> images, int initialImageIndex) =>
+      FluroRouter.appRouter.navigateTo(
+        context,
+        '/site/timeline/detail',
+        transition: TransitionType.fadeIn,
+        transitionDuration: Duration(milliseconds: 500),
+        routeSettings: RouteSettings(
+          arguments: HeroType(
+              title: "3:00 PM ~ 3:15 PM",
+              subTitle: "Working",
+              images: images,
+              initialImageIndex: initialImageIndex,
+              materialColor: Theme.of(context).colorScheme.primary),
+        ),
+      );
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
-import 'package:groundvisual_flutter/extensions/date.dart';
 
 import '../../component/scrollable_view_cursor.dart';
 
@@ -33,20 +32,14 @@ class _DailyTimelineState extends State<DailyTimeline> {
       color: Theme.of(context).colorScheme.background,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: BlocConsumer<DailyTimelineBloc, DailyTimelineState>(
-          listenWhen: (prev, curr) => curr is DailyTimelineNavigateToDetailPage,
-          listener: (context, state) {
-            if (state is DailyTimelineNavigateToDetailPage) {
-              _navigateToDetailPage(
-                  context, state.images, state.initialImageIndex);
-            }
-          },
+      child: BlocBuilder<DailyTimelineBloc, DailyTimelineState>(
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
           builder: (context, state) {
-            if (state is DailyTimelineImagesLoaded)
+            if (state is DailyTimelineImagesLoaded) {
               return _buildTimelineContent(context, state.images);
-            else
+            } else {
               return _buildTimelineContent(context, []);
+            }
           }));
 
   Container _buildTimelineContent(
@@ -87,26 +80,4 @@ class _DailyTimelineState extends State<DailyTimeline> {
                   ),
                 )
               ]));
-
-  void _navigateToDetailPage(BuildContext context,
-      List<DailyTimelineImageModel> images, int initialImageIndex) {
-    Navigator.of(context).push(PageRouteBuilder(
-        fullscreenDialog: true,
-        transitionDuration: Duration(milliseconds: 500),
-        pageBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation) =>
-            DailyTimelineDetail(
-                heroType: HeroType(
-                    title: "3:00 PM ~ 3:15 PM",
-                    subTitle: "Working",
-                    images: images,
-                    initialImageIndex: initialImageIndex,
-                    materialColor: Theme.of(context).colorScheme.primary)),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) =>
-            FadeTransition(
-              opacity: animation,
-              child: child,
-            )));
-  }
 }

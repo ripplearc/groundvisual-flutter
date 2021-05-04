@@ -41,7 +41,7 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
               annotation: image.timeString,
               actions: [], onTap: () {
             BlocProvider.of<DailyTimelineBloc>(context)
-                .add(TapDailyTimelineCell(image.startTime));
+                .add(TapDailyTimelineCell(image.startTime, context));
           }, status: image.status, padding: padding))));
 
   Padding _buildShimmerCell(BuildContext context) => Padding(
