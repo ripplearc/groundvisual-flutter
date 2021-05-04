@@ -11,8 +11,7 @@ abstract class AppModule {
 
   @preResolve
   Future<FluroRouter> get router async {
-    final router = FluroRouter();
-    Routes.configureRoutes(router);
-    return router;
+    Routes.configureRoutes(FluroRouter.appRouter);
+    return FluroRouter.appRouter;
   }
 }

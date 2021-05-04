@@ -1,5 +1,3 @@
-
-import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,26 +26,6 @@ class LandingHomePageMobileBody extends StatelessWidget {
                       Animation<double> animation) =>
                   builder.buildItem(
                       animation, state.runtimeType, index, context)));
-
-  void _tapDetail(BuildContext context, FluroRouter router, String key) {
-    String message = "";
-    String hexCode = "#FFFFFF";
-    TransitionType transitionType = TransitionType.native;
-    hexCode = "#F76F00";
-    message =
-        "This screen should have appeared using the default flutter animation for the current OS";
-    transitionType = TransitionType.inFromRight;
-
-    String route = "/site/detail?message=$message&color_hex=$hexCode";
-
-    router
-        .navigateTo(context, route, transition: transitionType)
-        .then((result) {
-      if (key == "pop-result") {
-        router.navigateTo(context, "/demo/func?message=$result");
-      }
-    });
-  }
 }
 
 /// Build the slivers based on the current SelectedSiteState
