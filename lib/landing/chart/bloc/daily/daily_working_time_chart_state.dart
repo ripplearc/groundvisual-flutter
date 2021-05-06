@@ -11,12 +11,25 @@ abstract class DailyWorkingTimeState extends Equatable {
 /// Indicating the loading in progress of the daily working time.
 class DailyWorkingTimeDataLoading extends DailyWorkingTimeState {}
 
+class HighlightedBar {
+  final int groupId;
+  final int rodId;
+  final String siteName;
+  final DateTime time;
+
+  HighlightedBar(
+      {required this.groupId,
+      required this.rodId,
+      required this.siteName,
+      required this.time});
+}
+
 /// Finish loading the daily working time data.
 class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   final WorkingTimeChartData chartData;
   final String siteName;
   final DateTime date;
-  final Stream<Tuple2<int, int>> highlightRodBarStream;
+  final Stream<HighlightedBar> highlightRodBarStream;
 
   DailyWorkingTimeDataLoaded(
       this.chartData, this.siteName, this.date, this.highlightRodBarStream);
@@ -25,7 +38,7 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
           {WorkingTimeChartData? chartDataParam,
           String? siteNameParam,
           DateTime? dateParam,
-          Stream<Tuple2<int, int>>? highlightRodBarStreamParam}) =>
+          Stream<HighlightedBar>? highlightRodBarStreamParam}) =>
       DailyWorkingTimeDataLoaded(
           chartDataParam ?? chartData,
           siteNameParam ?? siteName,
@@ -46,21 +59,6 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   List<Object> get props => [chartData, siteName, date];
 }
 
-class DailyWorkingTimeBarRodHighlighted extends DailyWorkingTimeState {
-  final int _groupId;
-  final int _rodId;
-
-  final String siteName;
-  final DateTime time;
-
-  DailyWorkingTimeBarRodHighlighted(
-      this._groupId, this._rodId, this.siteName, this.time);
-
-  bool get unselected => _groupId == -1 && _rodId == -1;
-
-  @override
-  List<Object> get props => [_groupId, _rodId, siteName, time];
-}
 
 /// Indicate the thumbnail image loading is in progress.
 class SiteSnapShotLoading extends DailyWorkingTimeState {}

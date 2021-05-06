@@ -20,13 +20,14 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<Tuple2<int, int>>(
+  Widget build(BuildContext context) => StreamBuilder<HighlightedBar>(
       stream: barChartDataAtDate.highlightRodBarStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return _genBarChart(
               context,
-              snapshot.data ??
+              snapshot.data?.let((highlight) =>
+                      Tuple2(highlight.groupId, highlight.rodId)) ??
                   Tuple2(SelectDailyChartBarRod.UnSelectedGroupId,
                       SelectDailyChartBarRod.UnSelectedRodId));
         } else {
