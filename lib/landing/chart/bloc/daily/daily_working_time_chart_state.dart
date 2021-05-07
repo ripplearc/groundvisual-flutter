@@ -11,18 +11,6 @@ abstract class DailyWorkingTimeState extends Equatable {
 /// Indicating the loading in progress of the daily working time.
 class DailyWorkingTimeDataLoading extends DailyWorkingTimeState {}
 
-class HighlightedBar {
-  final int groupId;
-  final int rodId;
-  final String siteName;
-  final DateTime time;
-
-  HighlightedBar(
-      {required this.groupId,
-      required this.rodId,
-      required this.siteName,
-      required this.time});
-}
 
 /// Finish loading the daily working time data.
 class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {

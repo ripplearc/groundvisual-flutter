@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
 import 'package:injectable/injectable.dart';

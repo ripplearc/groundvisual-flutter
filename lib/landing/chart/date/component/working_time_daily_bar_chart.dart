@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.d
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:tuple/tuple.dart';
 
 /// BarChart that updates itself with the data stream.

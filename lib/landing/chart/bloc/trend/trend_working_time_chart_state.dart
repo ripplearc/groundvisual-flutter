@@ -1,6 +1,5 @@
 part of 'trend_working_time_chart_bloc.dart';
 
-
 /// State that reflects the loading of the trend working time.
 abstract class TrendWorkingTimeChartState extends Equatable {
   const TrendWorkingTimeChartState();
@@ -22,21 +21,23 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
   final String siteName;
   final TrendPeriod period;
   final DateTimeRange dateRange;
+  final Stream<HighlightedBar> highlightRodBarStream;
 
-  TrendWorkingTimeDataLoaded(
-      this.chartData, this.siteName, this.period, this.dateRange);
+  TrendWorkingTimeDataLoaded(this.chartData, this.siteName, this.period,
+      this.dateRange, this.highlightRodBarStream);
 
-  TrendWorkingTimeDataLoaded copyWith({
-    WorkingTimeChartData? chartDataParam,
-    String? siteNameParam,
-    TrendPeriod? periodParam,
-    DateTimeRange? dateRangeParam,
-  }) =>
+  TrendWorkingTimeDataLoaded copyWith(
+          {WorkingTimeChartData? chartDataParam,
+          String? siteNameParam,
+          TrendPeriod? periodParam,
+          DateTimeRange? dateRangeParam,
+          Stream<HighlightedBar>? highlightRodBarStreamParam}) =>
       TrendWorkingTimeDataLoaded(
           chartDataParam ?? chartData,
           siteNameParam ?? siteName,
           periodParam ?? period,
-          dateRangeParam ?? dateRange);
+          dateRangeParam ?? dateRange,
+          highlightRodBarStreamParam ?? highlightRodBarStream);
 
   TrendWorkingTimeDataLoaded transformBarChart(BarRodTransform transform) =>
       copyWith(
@@ -47,6 +48,7 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
       copyWith(
           chartDataParam: chartData.copyWith(
               barsParam: chartData.bars.mapBarGroup(transformer)));
+
   @override
   List<Object> get props => [chartData, siteName, period, dateRange];
 }
