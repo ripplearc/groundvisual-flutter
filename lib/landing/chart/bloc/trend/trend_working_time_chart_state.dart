@@ -53,13 +53,3 @@ class TrendWorkingTimeDataLoaded extends TrendWorkingTimeChartState {
   List<Object> get props => [chartData, siteName, period, dateRange];
 }
 
-/// Select a date in the trend chart
-class TrendWorkingTimeBarRodHighlighted extends TrendWorkingTimeChartState {
-  final String siteName;
-  final DateTime time;
-
-  TrendWorkingTimeBarRodHighlighted(this.siteName, this.time);
-
-  @override
-  List<Object> get props => [siteName, time];
-}

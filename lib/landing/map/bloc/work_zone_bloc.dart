@@ -57,11 +57,8 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   void _listenToTrendChartSelection() {
     _trendChartSubscription = trendWorkingTimeChartBloc?.stream
         .switchMap((value) => value is TrendWorkingTimeDataLoaded
-            ? value.highlightRodBarStream
-                .map<WorkZoneEvent>((highlight) =>
-                    SearchWorkZoneOnDate(highlight.siteName, highlight.time))
-                .startWith(
-                    SearchWorkZoneOnDate(value.siteName, value.dateRange.end))
+            ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
+                SearchWorkZoneOnDate(highlight.siteName, highlight.time))
             : Stream.empty())
         .listen((event) => add(event));
   }
@@ -69,10 +66,8 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   void _listenToDailyChartSelection() {
     _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream
         .switchMap((value) => value is DailyWorkingTimeDataLoaded
-            ? value.highlightRodBarStream
-                .map<WorkZoneEvent>((highlight) =>
-                    SearchWorkZoneAtTime(highlight.siteName, highlight.time))
-                .startWith(SearchWorkZoneOnDate(value.siteName, value.date))
+            ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
+                SearchWorkZoneAtTime(highlight.siteName, highlight.time))
             : Stream.empty())
         .listen((event) => add(event));
   }

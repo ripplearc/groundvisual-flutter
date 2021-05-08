@@ -46,22 +46,3 @@ class DailyWorkingTimeDataLoaded extends DailyWorkingTimeState {
   @override
   List<Object> get props => [chartData, siteName, date];
 }
-
-
-/// Indicate the thumbnail image loading is in progress.
-class SiteSnapShotLoading extends DailyWorkingTimeState {}
-
-/// Hide the thumbnail image.
-class SiteSnapShotHiding extends DailyWorkingTimeState {}
-
-/// Showing thumbnail image corresponding to the selected rod bar.
-class SiteSnapShotThumbnailLoaded extends DailyWorkingTimeState {
-  final int groupId;
-  final int rodId;
-  final String assetName;
-
-  SiteSnapShotThumbnailLoaded(this.groupId, this.rodId, this.assetName);
-
-  @override
-  List<Object> get props => [this.groupId, this.rodId, this.assetName];
-}
