@@ -1,3 +1,4 @@
+/// Id and attributes of the highlighted bar.
 class HighlightedBar {
   final int groupId;
   final int rodId;
