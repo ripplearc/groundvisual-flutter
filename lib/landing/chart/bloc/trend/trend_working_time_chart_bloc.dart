@@ -9,6 +9,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/trend_chart_bar_converter.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart_viewmodel.dart';
 import 'package:injectable/injectable.dart';
@@ -27,6 +28,9 @@ class TrendWorkingTimeChartBloc
   final TrendChartBarConverter trendChartConverter;
   final SelectedSiteBloc? selectedSiteBloc;
   StreamSubscription? _selectedSiteSubscription;
+
+  final StreamController<HighlightedBar> _highlightController =
+      StreamController.broadcast();
 
   TrendWorkingTimeChartBloc(this.trendChartConverter,
       this.workingTimeTrendChartViewModel, @factoryParam this.selectedSiteBloc)
@@ -61,7 +65,7 @@ class TrendWorkingTimeChartBloc
       await for (var state
           in _yieldTrendWorkingTime(event.siteName, event.period)) yield state;
     } else if (event is SelectTrendChartBarRod) {
-      yield await _handleBarSelectionOnDate(event);
+      _handleBarSelectionOnDate(event);
     }
   }
 
@@ -80,21 +84,25 @@ class TrendWorkingTimeChartBloc
             DateTimeRange(
               start: Date.startOfToday - Duration(days: period.days()),
               end: Date.startOfToday,
-            ))));
+            ),
+            _highlightController.stream)));
     return Stream.fromFutures([loadingTrendFuture, trendWithChartFuture]);
   }
 
-  Future<TrendWorkingTimeChartState> _handleBarSelectionOnDate(
-          SelectTrendChartBarRod event) =>
+  void _handleBarSelectionOnDate(SelectTrendChartBarRod event) =>
       trendChartConverter
           .convertToDateTime(
               event.range, event.period, event.groupId, event.rodId)
-          .let((time) => Future.value(
-              TrendWorkingTimeBarRodHighlighted(event.siteName, time)));
+          .let((time) => _highlightController.sink.add(HighlightedBar(
+              groupId: event.groupId,
+              rodId: event.rodId,
+              siteName: event.siteName,
+              time: time)));
 
   @override
   Future<void> close() {
     _selectedSiteSubscription?.cancel();
+    _highlightController.close();
     return super.close();
   }
 }

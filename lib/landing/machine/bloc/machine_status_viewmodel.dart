@@ -5,6 +5,7 @@ import 'package:groundvisual_flutter/messenger/machine_status_communicator.dart'
 import 'package:groundvisual_flutter/models/machine_online_status.dart';
 import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// Viewmodel for determining the UI model of the machine working hours and online status.
 @injectable
@@ -36,5 +37,5 @@ class MachineStatusViewModel {
           key: (m) => m,
           value: (m) => machineStatusCommunicator
               .getMachineOnlineStatus(m)
-              .asBroadcastStream());
+              .shareReplay());
 }

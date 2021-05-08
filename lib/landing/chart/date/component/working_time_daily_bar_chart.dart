@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/chart/component/bar_rod_magnifier.d
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_measurement.dart';
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:tuple/tuple.dart';
 
 /// BarChart that updates itself with the data stream.
@@ -20,13 +21,14 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<Tuple2<int, int>>(
+  Widget build(BuildContext context) => StreamBuilder<HighlightedBar>(
       stream: barChartDataAtDate.highlightRodBarStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return _genBarChart(
               context,
-              snapshot.data ??
+              snapshot.data?.let((highlight) =>
+                      Tuple2(highlight.groupId, highlight.rodId)) ??
                   Tuple2(SelectDailyChartBarRod.UnSelectedGroupId,
                       SelectDailyChartBarRod.UnSelectedRodId));
         } else {

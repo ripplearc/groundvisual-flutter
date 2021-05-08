@@ -8,7 +8,6 @@ import 'package:groundvisual_flutter/landing/chart/component/bar_rod_palette.dar
 import 'package:groundvisual_flutter/landing/chart/component/chart_section_with_title.dart';
 
 import 'component/working_time_daily_bar_chart.dart';
-import 'component/working_time_daily_chart_thumbnail.dart';
 
 /// Widget displays the working and idling time at a date.
 /// It can display as a card or embedded in the map card.
@@ -51,11 +50,7 @@ class WorkingTimeDailyChart extends StatelessWidget {
               current is DailyWorkingTimeDataLoaded,
           builder: (context, state) => state is DailyWorkingTimeDataLoaded
               ? Stack(
-                  children: [
-                    _buildBackground(),
-                    _buildForeground(state),
-                    _buildThumbnail()
-                  ],
+                  children: [_buildBackground(), _buildForeground(state)],
                 )
               : Container()));
 
@@ -73,13 +68,5 @@ class WorkingTimeDailyChart extends StatelessWidget {
 
   Widget _buildBackground() =>
       embeddedBackground?.let((embedded) => Positioned.fill(child: embedded)) ??
-      Container();
-
-  Widget _buildThumbnail() =>
-      thumbnail?.let((it) => Positioned.fill(
-              child: Align(
-            alignment: Alignment.topRight,
-            child: WorkingTimeDailyChartThumbnail(),
-          ))) ??
       Container();
 }

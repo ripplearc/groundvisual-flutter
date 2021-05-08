@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,7 +10,6 @@ import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time
 import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:dart_date/dart_date.dart';
 
 import 'work_zone_map_viewmodel.dart';
 
@@ -55,23 +55,21 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   }
 
   void _listenToTrendChartSelection() {
-    _trendChartSubscription = trendWorkingTimeChartBloc?.stream.listen((state) {
-      if (state is TrendWorkingTimeBarRodHighlighted) {
-        add(SearchWorkZoneOnDate(state.siteName, state.time));
-      }
-    });
+    _trendChartSubscription = trendWorkingTimeChartBloc?.stream
+        .switchMap((value) => value is TrendWorkingTimeDataLoaded
+            ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
+                SearchWorkZoneOnDate(highlight.siteName, highlight.time))
+            : Stream.empty())
+        .listen((event) => add(event));
   }
 
   void _listenToDailyChartSelection() {
-    _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream.listen((state) {
-      if (state is DailyWorkingTimeBarRodHighlighted) {
-        if (state.unselected) {
-          add(SearchWorkZoneOnDate(state.siteName, state.time.startOfDay));
-        } else {
-          add(SearchWorkZoneAtTime(state.siteName, state.time));
-        }
-      }
-    });
+    _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream
+        .switchMap((value) => value is DailyWorkingTimeDataLoaded
+            ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
+                SearchWorkZoneAtTime(highlight.siteName, highlight.time))
+            : Stream.empty())
+        .listen((event) => add(event));
   }
 
   @override

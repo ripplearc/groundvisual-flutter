@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/chart/component/bar_rod_transformer.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_viewmodel.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:groundvisual_flutter/landing/chart/model/working_time_daily_chart_data.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -16,6 +17,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 part 'daily_working_time_chart_event.dart';
+
 part 'daily_working_time_chart_state.dart';
 
 /// bloc to take events of touching a bar rod on the date chart,
@@ -30,7 +32,7 @@ class DailyWorkingTimeChartBloc
   StreamSubscription? _selectedSiteSubscription;
   StreamSubscription? _playDigestSubscription;
 
-  final StreamController<Tuple2<int, int>> _highlightController =
+  final StreamController<HighlightedBar> _highlightController =
       StreamController.broadcast();
 
   DailyWorkingTimeChartBloc(
@@ -83,10 +85,11 @@ class DailyWorkingTimeChartBloc
       await for (var state
           in _yieldDailyWorkingTime(event.siteName, event.date)) yield state;
     } else if (event is SelectDailyChartBarRod)
-      await for (var state in _handleBarSelectionOnTime(event)) yield state;
+      _handleBarSelectionOnTime(event);
   }
 
-  Stream<DailyWorkingTimeState> _yieldDailyWorkingTime(String siteName, DateTime date) {
+  Stream<DailyWorkingTimeState> _yieldDailyWorkingTime(
+      String siteName, DateTime date) {
     final loadingFuture = Future.value(DailyWorkingTimeDataLoading());
     final dailyWithChartFuture = Future.delayed(Duration(seconds: 2),
             () => workingTimeDailyChartViewModel.dailyWorkingTime())
@@ -96,27 +99,14 @@ class DailyWorkingTimeChartBloc
     return Stream.fromFutures([loadingFuture, dailyWithChartFuture]);
   }
 
-  Stream<DailyWorkingTimeState> _handleBarSelectionOnTime(
-      SelectDailyChartBarRod event) {
-    _highlightController.sink.add(Tuple2(event.groupId, event.rodId));
-    Future<DailyWorkingTimeBarRodHighlighted> highlightFuture =
-        dailyChartConverter
-            .convertToDateTime(event.date, event.groupId, event.rodId)
-            .let((time) => Future.value(DailyWorkingTimeBarRodHighlighted(
-                event.groupId, event.rodId, event.siteName, time)));
-
-    final thumbnailFuture = Future.delayed(Duration(milliseconds: 200)).then(
-        (_) => SiteSnapShotThumbnailLoaded(event.groupId, event.rodId,
-            'images/thumbnails/${event.groupId * 4 + event.rodId}.jpg'));
-
-    return Stream.fromFutures([
-      highlightFuture,
-      event.showThumbnail
-          ? Future.value(SiteSnapShotLoading())
-          : Future.value(),
-      event.showThumbnail ? thumbnailFuture : Future.value()
-    ]);
-  }
+  void _handleBarSelectionOnTime(SelectDailyChartBarRod event) =>
+      dailyChartConverter
+          .convertToDateTime(event.date, event.groupId, event.rodId)
+          .let((time) => _highlightController.sink.add(HighlightedBar(
+              groupId: event.groupId,
+              rodId: event.rodId,
+              siteName: event.siteName,
+              time: time)));
 
   @override
   Future<void> close() {

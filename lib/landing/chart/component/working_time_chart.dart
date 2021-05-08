@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/date/component/working_time_daily_chart_thumbnail.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/date/working_time_daily_chart_shimmer.dart';
 import 'package:groundvisual_flutter/landing/chart/trend/working_time_trend_chart.dart';
@@ -21,7 +20,6 @@ class WorkingTimeChart extends StatelessWidget {
                   ? WorkingTimeDailyChartShimmer(aspectRatio: 2)
                   : WorkingTimeDailyChart(
                       aspectRatio: 2,
-                      thumbnail: WorkingTimeDailyChartThumbnail(),
                       showTitle: true,
                     ));
         } else if (state is SelectedSiteAtTrend) {
