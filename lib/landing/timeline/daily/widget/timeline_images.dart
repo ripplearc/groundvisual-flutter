@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
+import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Display the timelapse images with its timestamp.
 class TimelineImages extends StatelessWidget with TimelineImageBuilder {
   final ScrollController? scrollController;
   final Size cellSize;
-  final List<DailyTimelineImageModel> images;
+  final List<TimelineImageModel> images;
   final double padding = 8;
 
   const TimelineImages(
@@ -40,8 +40,9 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
               width: cellSize.width,
               annotation: image.timeString,
               actions: [], onTap: () {
-            BlocProvider.of<DailyTimelineBloc>(context)
-                .add(TapDailyTimelineCell(image.startTime, context));
+            BlocProvider.of<DailyTimelineBloc>(context).add(
+                TapDailyTimelineCell(
+                    image.downloadingModel.timeRange.start, context));
           }, status: image.status, padding: padding))));
 
   Padding _buildShimmerCell(BuildContext context) => Padding(

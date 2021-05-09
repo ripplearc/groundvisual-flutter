@@ -9,7 +9,7 @@ import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timelin
 import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/mobile/daily_detail_gallery_mobile_view.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/web/daily_detail_gallery_web_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
+import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -18,7 +18,7 @@ import 'daily_timeline_pullup_header.dart';
 class HeroType {
   String title;
   String subTitle;
-  List<DailyTimelineImageModel> images;
+  List<TimelineImageModel> images;
   int initialImageIndex;
   Color materialColor;
 
@@ -105,7 +105,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   Hero _buildImagePageView(BuildContext context) => Hero(
       tag: 'image' +
           (widget.heroType.images
-                  .getOrNull<DailyTimelineImageModel>(
+                  .getOrNull<TimelineImageModel>(
                       widget.heroType.initialImageIndex)
                   ?.imageName ??
               ""),
@@ -130,7 +130,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
 
   Widget _buildImageViewer(int index) =>
       widget.heroType.images
-          .getOrNull<DailyTimelineImageModel>(index)
+          .getOrNull<TimelineImageModel>(index)
           ?.let((image) => DailyTimelinePhotoViewer(
                 image,
                 width: _screenWidth * 0.9,

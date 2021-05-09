@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/timeline_images.dart';
-import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
+import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 
 import '../../component/scrollable_view_cursor.dart';
 
@@ -43,7 +43,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
           }));
 
   Container _buildTimelineContent(
-          BuildContext context, List<DailyTimelineImageModel> images) =>
+          BuildContext context, List<TimelineImageModel> images) =>
       Container(
           margin: EdgeInsets.symmetric(vertical: 20.0),
           height: 280.0,
@@ -72,7 +72,11 @@ class _DailyTimelineState extends State<DailyTimeline> {
                     moveTimelineCursor: _scrollToIndex,
                     getTimestamp: (index) => images.isEmpty
                         ? "??:??"
-                        : images[index].startTime.toHourMinuteString(),
+                        : images[index]
+                            .downloadingModel
+                            .timeRange
+                            .start
+                            .toHourMinuteString(),
                     scrollController: _scrollController,
                     cellWidth: cellWidth,
                     numberOfUnits: images.length,
