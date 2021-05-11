@@ -6,7 +6,7 @@ import 'package:groundvisual_flutter/router/route_handlers.dart';
 /// Register the route address and its destination
 class Routes {
   static String root = "/";
-  static String timelineDetail = "/site/timeline/detail";
+  static String timelineSearch = "/site/timeline/search";
 
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
@@ -15,7 +15,7 @@ class Routes {
       return;
     });
     router.define(root, handler: rootHandler);
-    router.define(timelineDetail, handler: timelineDetailHandler);
+    router.define(timelineSearch, handler: timelineDetailHandler);
   }
 
 

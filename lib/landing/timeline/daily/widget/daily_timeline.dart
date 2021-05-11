@@ -34,13 +34,8 @@ class _DailyTimelineState extends State<DailyTimeline> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       child: BlocBuilder<DailyTimelineBloc, DailyTimelineState>(
           buildWhen: (prev, curr) => curr is DailyTimelineImagesLoaded,
-          builder: (context, state) {
-            if (state is DailyTimelineImagesLoaded) {
-              return _buildTimelineContent(context, state.images);
-            } else {
-              return _buildTimelineContent(context, []);
-            }
-          }));
+          builder: (context, state) =>
+              _buildTimelineContent(context, state.images)));
 
   Container _buildTimelineContent(
           BuildContext context, List<TimelineImageModel> images) =>

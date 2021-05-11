@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/models/image_downloading_model.dart';
 

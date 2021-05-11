@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/daily_detail/bloc/daily_timeline_detail_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/mobile/daily_detail_gallery_mobile_view.dart';
@@ -15,25 +17,10 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import 'daily_timeline_pullup_header.dart';
 
-class HeroType {
-  String title;
-  String subTitle;
-  List<TimelineImageModel> images;
-  int initialImageIndex;
-  Color materialColor;
-
-  HeroType(
-      {required this.title,
-      required this.subTitle,
-      required this.images,
-      required this.initialImageIndex,
-      required this.materialColor});
-}
-
 class DailyTimelineDetail extends StatefulWidget {
-  final HeroType heroType;
+  final int initialImageIndex;
 
-  const DailyTimelineDetail({Key? key, required this.heroType})
+  const DailyTimelineDetail({Key? key, required this.initialImageIndex})
       : super(key: key);
 
   @override
@@ -94,86 +81,94 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
 
   SliverList _buildContentBody() => SliverList(
       delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) => Container(
-              alignment: Alignment.center,
-              color: Theme.of(context).colorScheme.background,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              height: _screenWidth,
-              child: _buildImagePageView(context)),
+          (BuildContext context, int index) =>
+              BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+                  builder: (blocContext, state) => Container(
+                      alignment: Alignment.center,
+                      color: Theme.of(context).colorScheme.background,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: _screenWidth,
+                      child: _buildImagePageView(context, state.images))),
           childCount: 1));
 
-  Hero _buildImagePageView(BuildContext context) => Hero(
-      tag: 'image' +
-          (widget.heroType.images
-                  .getOrNull<TimelineImageModel>(
-                      widget.heroType.initialImageIndex)
-                  ?.imageName ??
-              ""),
-      child: PageView.builder(
-          controller:
-              PageController(initialPage: widget.heroType.initialImageIndex),
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.heroType.images.length,
-          itemBuilder: (_, index) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: _buildImageViewer(index),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: DailyTimelinePhotoDownloader(),
-                  )
-                ],
-              )));
+  Widget _buildImagePageView(
+      BuildContext context, List<TimelineImageModel> images) {
+    if (images.isNotEmpty) {
+      int index = widget.initialImageIndex.clamp(0, images.length);
+      return Hero(
+          tag: 'image' +
+              (images.getOrNull<TimelineImageModel>(index)?.imageName ?? ""),
+          child: PageView.builder(
+              controller: PageController(initialPage: widget.initialImageIndex),
+              scrollDirection: Axis.horizontal,
+              itemCount: images.length,
+              itemBuilder: (_, index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                          flex: 2,
+                          child: images
+                                  .getOrNull<TimelineImageModel>(index)
+                                  ?.let((image) =>
+                                      _buildImageViewer(image, index)) ??
+                              Container()),
+                      Flexible(
+                        flex: 1,
+                        child: DailyTimelinePhotoDownloader(),
+                      )
+                    ],
+                  )));
+    } else {
+      return Container();
+    }
+  }
 
-  Widget _buildImageViewer(int index) =>
-      widget.heroType.images
-          .getOrNull<TimelineImageModel>(index)
-          ?.let((image) => DailyTimelinePhotoViewer(
-                image,
-                width: _screenWidth * 0.9,
-                onTapImage: (BuildContext context) =>
-                    getValueForScreenType<GestureTapCallback>(
-                        context: context,
-                        mobile: () => open(context, index),
-                        tablet: () => open(context, index),
-                        desktop: () => openDialog(context, index))(),
-              )) ??
-      Container();
+  Widget _buildImageViewer(TimelineImageModel image, int index) =>
+      DailyTimelinePhotoViewer(
+        image,
+        width: _screenWidth * 0.9,
+        onTapImage: (BuildContext context) =>
+            getValueForScreenType<GestureTapCallback>(
+                context: context,
+                mobile: () => open(context, index),
+                tablet: () => open(context, index),
+                desktop: () => openDialog(context, index))(),
+      );
 
-  List<GalleryItem> _getGalleryItems() => widget.heroType.images
-      .mapWithIndex((index, value) => GalleryItem(
-          tag: value.timeString,
-          statusLabel: [MachineStatus.idling, MachineStatus.stationary]
-                  .contains(value.status)
-              ? " [ ${value.status.value().toUpperCase()} ] "
-              : "",
-          resource: value.imageName,
-          isSvg: value.imageName.contains(".svg")))
-      .toList();
+  // List<GalleryItem> _getGalleryItems() => widget.heroType.images
+  //     .mapWithIndex((index, value) => GalleryItem(
+  //         tag: value.timeString,
+  //         statusLabel: [MachineStatus.idling, MachineStatus.stationary]
+  //                 .contains(value.status)
+  //             ? " [ ${value.status.value().toUpperCase()} ] "
+  //             : "",
+  //         resource: value.imageName,
+  //         isSvg: value.imageName.contains(".svg")))
+  //     .toList();
 
-  void open(BuildContext context, final int index) => Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => DailyDetailGalleryMobileView(
-                galleryItems: _getGalleryItems(),
-                initialIndex: index,
-                backgroundDecoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background),
-              )));
+  void open(BuildContext context, final int index) {}
 
-  void openDialog(BuildContext context, final int index) => showDialog(
-      context: context,
-      builder: (_) =>
-          SimpleDialog(backgroundColor: Colors.transparent, children: [
-            DailyDetailGalleryWebView(
-              galleryItems: _getGalleryItems(),
-              initialIndex: index,
-              backgroundDecoration: BoxDecoration(color: Colors.transparent),
-            )
-          ]));
+  // => Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //         builder: (context) => DailyDetailGalleryMobileView(
+  //               galleryItems: _getGalleryItems(),
+  //               initialIndex: index,
+  //               backgroundDecoration: BoxDecoration(
+  //                   color: Theme.of(context).colorScheme.background),
+  //             )));
+
+  void openDialog(BuildContext context, final int index) {}
+// => showDialog(
+//     context: context,
+//     builder: (_) =>
+//         SimpleDialog(backgroundColor: Colors.transparent, children: [
+//           DailyDetailGalleryWebView(
+//             galleryItems: _getGalleryItems(),
+//             initialIndex: index,
+//             backgroundDecoration: BoxDecoration(color: Colors.transparent),
+//           )
+//         ]));
 }
 
 class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {

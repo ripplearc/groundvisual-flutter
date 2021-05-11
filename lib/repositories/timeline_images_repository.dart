@@ -2,18 +2,38 @@ import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/models/image_downloading_model.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
+import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:injectable/injectable.dart';
 
+/// Fetch a list of [TimelineImageModel] for a group of machines [muids]
+/// in a period [timeRange] at [siteName].
 abstract class TimelineImagesRepository {
-  Future<List<TimelineImageModel>> getTimelineImages(
-      List<String> muid, DateTimeRange timeRange);
+  /// Search for the group of [TimelineImageModel] at the [siteName] during the
+  /// [timeRange] for the group of machines [muids]. This is for searching timeline
+  /// images without specifying customized zone.
+  Future<List<TimelineImageModel>> getTimelineImagesAtSite(
+      String siteName, List<String> muids, DateTimeRange timeRange);
+
+  /// Search for the group of [TimelineImageModel] at the specified [zone] during the
+  /// [timeRange] for the group of machines [muids]. This is for searching timeline
+  /// images by specifying customized zone.
+  Future<List<TimelineImageModel>> getTimelineImagesAtZone(
+      ConstructionZone zone, List<String> muids, DateTimeRange timeRange);
 }
 
 @LazySingleton(as: TimelineImagesRepository)
 class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
   @override
-  Future<List<TimelineImageModel>> getTimelineImages(
-          List<String> muid, DateTimeRange timeRange) =>
+  Future<List<TimelineImageModel>> getTimelineImagesAtSite(
+          String siteName, List<String> muids, DateTimeRange timeRange) =>
+      _getMockImages();
+
+  @override
+  Future<List<TimelineImageModel>> getTimelineImagesAtZone(
+          ConstructionZone zone, List<String> muids, DateTimeRange timeRange) =>
+      _getMockImages();
+
+  Future<List<TimelineImageModel>> _getMockImages() =>
       Future.value(List.generate(
           50,
           (index) => TimelineImageModel(

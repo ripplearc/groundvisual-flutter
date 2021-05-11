@@ -2,15 +2,18 @@ part of 'daily_timeline_detail_bloc.dart';
 
 /// Event of displaying the  timelapse photos in a day on the timelapse detail page
 @immutable
-abstract class DailyTimelineDetailEvent extends Equatable {}
+abstract class TimelineSearchEvent extends Equatable {}
 
 /// Searching for the timelapse photos in a day
-class SearchDailyTimelineOnDate extends DailyTimelineDetailEvent {
+class SearchDailyTimeline extends TimelineSearchEvent {
   final String siteName;
   final DateTime date;
+  final List<String>? muids;
+  final ConstructionZone? zone;
 
-  SearchDailyTimelineOnDate(this.siteName, this.date);
+  SearchDailyTimeline(this.siteName, this.date, {this.muids, this.zone});
 
   @override
-  List<Object> get props => [siteName, date];
+  List<Object> get props =>
+      [siteName, date, muids ?? [], zone ?? ConstructionZone([])];
 }
