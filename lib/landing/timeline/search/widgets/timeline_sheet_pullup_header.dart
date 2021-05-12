@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/bloc/daily_timeline_detail_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 
 /// The header section of the timeline pullup sheet.
-class DailyTimelinePullUpHeader extends StatelessWidget {
+class TimelineSheetPullUpHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MediaQuery.of(context)
       .size

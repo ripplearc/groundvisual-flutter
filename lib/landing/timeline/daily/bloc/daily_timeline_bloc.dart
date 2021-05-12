@@ -7,7 +7,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:groundvisual_flutter/repositories/timeline_images_repository.dart';
@@ -78,12 +77,6 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
     return super.close();
   }
 
-  // String? siteName = params["sitename"]?.first;
-  // DateTime? date = int.tryParse(params["millisecondssinceepoch"]?.first ?? "")
-  //     ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
-  // int? initialImageIndex =
-  // int.tryParse(params["initialImageIndex"]?.first ?? "");
-  // if (siteName == null || date == null || initialImageIndex == null)
   void _navigateToDetailPage(
           BuildContext context,
           String siteName,

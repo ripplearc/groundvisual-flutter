@@ -10,9 +10,9 @@ import 'package:groundvisual_flutter/repositories/timeline_images_repository.dar
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
-part 'daily_timeline_detail_event.dart';
+part 'timeline_search_event.dart';
 
-part 'daily_timeline_detail_state.dart';
+part 'timeline_search_state.dart';
 
 @injectable
 class TimelineSearchBloc
@@ -20,7 +20,7 @@ class TimelineSearchBloc
   final TimelineImagesRepository timelineImagesRepository;
 
   TimelineSearchBloc(this.timelineImagesRepository)
-      : super(DailyTimelineDetailLoading());
+      : super(TimelineSearching());
 
   @override
   Stream<TimelineSearchState> mapEventToState(
@@ -32,7 +32,7 @@ class TimelineSearchBloc
           event.siteName,
           ["00001A"],
           DateTimeRange(start: Date.startOfToday, end: Date.today));
-      yield DailyTimelineDetailImagesLoaded(images);
+      yield TimelineSearchResultsLoaded(images);
     }
   }
 }

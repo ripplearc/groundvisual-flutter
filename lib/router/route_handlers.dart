@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
 import 'package:groundvisual_flutter/app/tablet/root_home_tablet_page.dart';
 import 'package:groundvisual_flutter/di/di.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/bloc/daily_timeline_detail_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_search_page.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
@@ -28,6 +28,6 @@ var timelineDetailHandler = Handler(
   return BlocProvider(
     create: (context) =>
         getIt<TimelineSearchBloc>()..add(SearchDailyTimeline(siteName, date)),
-    child: DailyTimelineDetail(initialImageIndex: initialImageIndex),
+    child: TimelineSearchPage(initialImageIndex: initialImageIndex),
   );
 });

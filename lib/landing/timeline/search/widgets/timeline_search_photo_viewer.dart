@@ -6,13 +6,13 @@ import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 typedef TapImage(BuildContext context);
 
 /// Display the image for a selected time period and build the annotation and actions.
-class DailyTimelinePhotoViewer extends StatelessWidget
+class TimelineSearchPhotoViewer extends StatelessWidget
     with TimelineImageBuilder, PhotoViewAccessories {
   final TimelineImageModel image;
   final double width;
   final TapImage? onTapImage;
 
-  DailyTimelinePhotoViewer(this.image, {required this.width, this.onTapImage});
+  TimelineSearchPhotoViewer(this.image, {required this.width, this.onTapImage});
 
   @override
   Widget build(BuildContext context) => buildImageCell(image.imageName,

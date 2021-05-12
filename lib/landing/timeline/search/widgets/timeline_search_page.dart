@@ -6,28 +6,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/bloc/daily_timeline_detail_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_photo_viewer.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/mobile/daily_detail_gallery_mobile_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/web/daily_detail_gallery_web_view.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_photo_downloader.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
-import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import 'daily_timeline_pullup_header.dart';
+import 'timeline_sheet_pullup_header.dart';
 
-class DailyTimelineDetail extends StatefulWidget {
+class TimelineSearchPage extends StatefulWidget {
   final int initialImageIndex;
 
-  const DailyTimelineDetail({Key? key, required this.initialImageIndex})
+  const TimelineSearchPage({Key? key, required this.initialImageIndex})
       : super(key: key);
 
   @override
-  _DailyTimelineDetailState createState() => _DailyTimelineDetailState();
+  _TimelineSearchPageState createState() => _TimelineSearchPageState();
 }
 
-class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
+class _TimelineSearchPageState extends State<TimelineSearchPage> {
   final Completer<GoogleMapController> _controller = Completer();
   late double _screenWidth;
   late double _mapHeight;
@@ -77,7 +74,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
       ),
       child: Container(
           color: Theme.of(context).colorScheme.background,
-          child: DailyTimelinePullUpHeader()));
+          child: TimelineSheetPullUpHeader()));
 
   SliverList _buildContentBody() => SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -114,7 +111,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
                               Container()),
                       Flexible(
                         flex: 1,
-                        child: DailyTimelinePhotoDownloader(),
+                        child: TimelinePhotoDownloader(),
                       )
                     ],
                   )));
@@ -124,7 +121,7 @@ class _DailyTimelineDetailState extends State<DailyTimelineDetail> {
   }
 
   Widget _buildImageViewer(TimelineImageModel image, int index) =>
-      DailyTimelinePhotoViewer(
+      TimelineSearchPhotoViewer(
         image,
         width: _screenWidth * 0.9,
         onTapImage: (BuildContext context) =>
