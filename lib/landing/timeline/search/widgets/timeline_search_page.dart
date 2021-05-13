@@ -5,12 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 
 import 'timeline_sheet_pullup_header.dart';
 
@@ -102,13 +100,7 @@ class _TimelineSearchPageState extends State<TimelineSearchPage> {
               itemBuilder: (_, index) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                          flex: 2,
-                          child: images
-                                  .getOrNull<TimelineImageModel>(index)
-                                  ?.let((image) =>
-                                      _buildImageViewer(image, index)) ??
-                              Container()),
+                      Flexible(flex: 2, child: _buildImageViewer(index)),
                       Flexible(
                         flex: 1,
                         child: TimelinePhotoDownloader(),
@@ -120,52 +112,8 @@ class _TimelineSearchPageState extends State<TimelineSearchPage> {
     }
   }
 
-  Widget _buildImageViewer(TimelineImageModel image, int index) =>
-      TimelineSearchPhotoViewer(
-        image,
-        width: _screenWidth * 0.9,
-        onTapImage: (BuildContext context) =>
-            getValueForScreenType<GestureTapCallback>(
-                context: context,
-                mobile: () => open(context, index),
-                tablet: () => open(context, index),
-                desktop: () => openDialog(context, index))(),
-      );
-
-  // List<GalleryItem> _getGalleryItems() => widget.heroType.images
-  //     .mapWithIndex((index, value) => GalleryItem(
-  //         tag: value.timeString,
-  //         statusLabel: [MachineStatus.idling, MachineStatus.stationary]
-  //                 .contains(value.status)
-  //             ? " [ ${value.status.value().toUpperCase()} ] "
-  //             : "",
-  //         resource: value.imageName,
-  //         isSvg: value.imageName.contains(".svg")))
-  //     .toList();
-
-  void open(BuildContext context, final int index) {}
-
-  // => Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //         builder: (context) => DailyDetailGalleryMobileView(
-  //               galleryItems: _getGalleryItems(),
-  //               initialIndex: index,
-  //               backgroundDecoration: BoxDecoration(
-  //                   color: Theme.of(context).colorScheme.background),
-  //             )));
-
-  void openDialog(BuildContext context, final int index) {}
-// => showDialog(
-//     context: context,
-//     builder: (_) =>
-//         SimpleDialog(backgroundColor: Colors.transparent, children: [
-//           DailyDetailGalleryWebView(
-//             galleryItems: _getGalleryItems(),
-//             initialIndex: index,
-//             backgroundDecoration: BoxDecoration(color: Colors.transparent),
-//           )
-//         ]));
+  Widget _buildImageViewer(int index) =>
+      TimelineSearchPhotoViewer(index, width: _screenWidth * 0.9);
 }
 
 class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {

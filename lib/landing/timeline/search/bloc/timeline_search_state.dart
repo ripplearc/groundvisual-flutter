@@ -16,6 +16,5 @@ class TimelineSearching extends TimelineSearchState {
 
 /// Loaded the timelapse photos in a day
 class TimelineSearchResultsLoaded extends TimelineSearchState {
-  TimelineSearchResultsLoaded(List<TimelineImageModel> images)
-      : super(images);
+  TimelineSearchResultsLoaded(List<TimelineImageModel> images) : super(images);
 }

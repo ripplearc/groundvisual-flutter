@@ -20,3 +20,14 @@ class SearchDailyTimeline extends TimelineSearchEvent {
   List<Object> get props =>
       [siteName, date, muids ?? [], zone ?? ConstructionZone([])];
 }
+
+/// Tap on a timestamp cell
+class TapImageAndNavigateToGallery extends TimelineSearchEvent {
+  final int index;
+  final BuildContext context;
+
+  TapImageAndNavigateToGallery(this.index, this.context);
+
+  @override
+  List<Object> get props => [index];
+}

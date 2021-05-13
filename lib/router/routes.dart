@@ -7,6 +7,7 @@ import 'package:groundvisual_flutter/router/route_handlers.dart';
 class Routes {
   static String root = "/";
   static String timelineSearch = "/site/timeline/search";
+  static String timelineGallery = "/site/timeline/gallery";
 
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
@@ -15,8 +16,10 @@ class Routes {
       return;
     });
     router.define(root, handler: rootHandler);
-    router.define(timelineSearch, handler: timelineDetailHandler);
+    router.define(timelineSearch, handler: timelineSearchHandler);
+    router.define(timelineGallery, handler: timelineGalleryHandler);
   }
+
 
 
 }
