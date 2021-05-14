@@ -6,6 +6,7 @@ import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
 
 part 'timeline_gallery_event.dart';
 
@@ -14,13 +15,28 @@ part 'timeline_gallery_state.dart';
 @injectable
 class TimelineGalleryBloc
     extends Bloc<TimelineGalleryEvent, TimelineGalleryState> {
-  TimelineGalleryBloc(@factoryParam this.galleryItems)
-      : super(TimelineGalleryImages(galleryItems ));
-
-  final List<GalleryItem>? galleryItems;
+  TimelineGalleryBloc(@factoryParam List<TimelineImageModel>? images)
+      : super(TimelineGalleryImages([])) {
+    add(LoadingImagesToGallery(images ?? []));
+  }
 
   @override
   Stream<TimelineGalleryState> mapEventToState(
     TimelineGalleryEvent event,
-  ) async* {}
+  ) async* {
+    if (event is LoadingImagesToGallery) {
+      yield TimelineGalleryImages(_getGalleryItems(event.images));
+    }
+  }
+
+  List<GalleryItem> _getGalleryItems(List<TimelineImageModel> images) => images
+      .mapWithIndex((index, value) => GalleryItem(
+          tag: value.timeString,
+          statusLabel: [MachineStatus.idling, MachineStatus.stationary]
+                  .contains(value.status)
+              ? " [ ${value.status.value().toUpperCase()} ] "
+              : "",
+          resource: value.imageName,
+          isSvg: value.imageName.contains(".svg")))
+      .toList();
 }

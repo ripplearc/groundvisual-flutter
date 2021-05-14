@@ -49,27 +49,31 @@ class _TimelineGalleryMobileViewState extends State<TimelineGalleryMobileView>
                   actions: buildActions(context, simplified: true)),
               body: _buildGallery(state.galleryItems)));
 
-  Widget _buildGallery(List<GalleryItem> galleryItems) =>
-      PhotoViewGallery.builder(
-        scrollPhysics: const BouncingScrollPhysics(),
-        builder: (context, index) => buildItem(context, galleryItems, index),
-        itemCount: galleryItems.length,
-        loadingBuilder: widget.loadingBuilder,
-        backgroundDecoration:
-            BoxDecoration(color: Theme.of(context).colorScheme.background),
-        pageController: widget.pageController,
-        onPageChanged: onPageChanged,
-        scrollDirection: widget.scrollDirection,
-      );
+  Widget _buildGallery(List<GalleryItem> galleryItems) => galleryItems
+          .isNotEmpty
+      ? PhotoViewGallery.builder(
+          scrollPhysics: const BouncingScrollPhysics(),
+          builder: (context, index) => buildItem(context, galleryItems, index),
+          itemCount: galleryItems.length,
+          loadingBuilder: widget.loadingBuilder,
+          backgroundDecoration:
+              BoxDecoration(color: Theme.of(context).colorScheme.background),
+          pageController: widget.pageController,
+          onPageChanged: onPageChanged,
+          scrollDirection: widget.scrollDirection,
+        )
+      : Container();
 
-  Flex _buildTitle(BuildContext context, List<GalleryItem> galleryItems) =>
-      Flex(
-          direction: getValueForScreenType(
-            context: context,
-            mobile: Axis.vertical,
-            tablet: Axis.horizontal,
-            desktop: Axis.horizontal,
-          ),
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: buildTitleContent(galleryItems, currentIndex, context));
+  Widget _buildTitle(BuildContext context, List<GalleryItem> galleryItems) =>
+      galleryItems.isNotEmpty
+          ? Flex(
+              direction: getValueForScreenType(
+                context: context,
+                mobile: Axis.vertical,
+                tablet: Axis.horizontal,
+                desktop: Axis.horizontal,
+              ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: buildTitleContent(galleryItems, currentIndex, context))
+          : Container();
 }

@@ -54,23 +54,24 @@ class _TimelineGalleryWebViewState extends State<TimelineGalleryWebView>
                 decoration: BoxDecoration(color: Colors.transparent),
                 width: MediaQuery.of(context).size.width * 0.95,
                 height: MediaQuery.of(context).size.height * 0.95,
-                child: Stack(
-                  children: <Widget>[
-                    _buildGallery(state.galleryItems),
-                    _buildHeader(state.galleryItems),
-                    if (currentIndex > 0) _buildBackwardArrow(),
-                    if (currentIndex < (state.galleryItems.length - 1))
-                      _buildForwardArrow(state.galleryItems.length)
-                  ],
-                ),
+                child: state.galleryItems.isNotEmpty
+                    ? Stack(
+                        children: <Widget>[
+                          _buildGallery(state.galleryItems),
+                          _buildHeader(state.galleryItems),
+                          if (currentIndex > 0) _buildBackwardArrow(),
+                          if (currentIndex < (state.galleryItems.length - 1))
+                            _buildForwardArrow(state.galleryItems.length)
+                        ],
+                      )
+                    : Container(),
               ));
 
   Widget _buildHeader(List<GalleryItem> galleryItems) => Align(
       alignment: Alignment.topCenter,
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: buildTitleContent(
-                  galleryItems, currentIndex, context,
+          children: buildTitleContent(galleryItems, currentIndex, context,
                   style: Theme.of(context)
                       .textTheme
                       .headline4
@@ -91,8 +92,7 @@ class _TimelineGalleryWebViewState extends State<TimelineGalleryWebView>
   Widget _buildGallery(List<GalleryItem> galleryItems) => Padding(
       padding: EdgeInsets.only(top: titleHeight),
       child: PhotoViewGallery.builder(
-          builder: (context, index) =>
-              buildItem(context, galleryItems, index),
+          builder: (context, index) => buildItem(context, galleryItems, index),
           itemCount: galleryItems.length,
           loadingBuilder: widget.loadingBuilder,
           backgroundDecoration: backgroundDecoration,
@@ -104,9 +104,8 @@ class _TimelineGalleryWebViewState extends State<TimelineGalleryWebView>
       alignment: Alignment.centerRight,
       child: GestureDetector(
           child: _buildArrow(Icons.arrow_forward_ios_outlined),
-          onTap: () => widget.pageController.jumpToPage(min(
-              (widget.pageController.page ?? 0).toInt() + 1,
-              length - 1))));
+          onTap: () => widget.pageController.jumpToPage(
+              min((widget.pageController.page ?? 0).toInt() + 1, length - 1))));
 
   Align _buildBackwardArrow() => Align(
       alignment: Alignment.centerLeft,
