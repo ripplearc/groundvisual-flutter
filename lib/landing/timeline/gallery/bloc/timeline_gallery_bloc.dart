@@ -12,11 +12,13 @@ part 'timeline_gallery_event.dart';
 
 part 'timeline_gallery_state.dart';
 
+/// Convert an array of [TimelineImageModel] to [GalleryItem], to be displayed
+/// in the gallery.
 @injectable
 class TimelineGalleryBloc
     extends Bloc<TimelineGalleryEvent, TimelineGalleryState> {
   TimelineGalleryBloc(@factoryParam List<TimelineImageModel>? images)
-      : super(TimelineGalleryImages([])) {
+      : super(TimelineGalleryLoaded([])) {
     add(LoadingImagesToGallery(images ?? []));
   }
 
@@ -25,7 +27,7 @@ class TimelineGalleryBloc
     TimelineGalleryEvent event,
   ) async* {
     if (event is LoadingImagesToGallery) {
-      yield TimelineGalleryImages(_getGalleryItems(event.images));
+      yield TimelineGalleryLoaded(_getGalleryItems(event.images));
     }
   }
 

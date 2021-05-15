@@ -5,19 +5,16 @@ import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gall
 import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_actions.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_view_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-/// Display the zoomable image in the full screen gallery.
+/// Display the zoomable image in the full screen gallery on a mobile device,
+/// and scroll to the image of [initialIndex] at the beginning.
 class TimelineGalleryMobileView extends StatefulWidget {
   TimelineGalleryMobileView({
-    this.loadingBuilder,
     this.initialIndex = 0,
     this.scrollDirection = Axis.horizontal,
   }) : pageController = PageController(initialPage: initialIndex);
-
-  final LoadingBuilder? loadingBuilder;
 
   final int initialIndex;
   final PageController pageController;
@@ -55,7 +52,6 @@ class _TimelineGalleryMobileViewState extends State<TimelineGalleryMobileView>
           scrollPhysics: const BouncingScrollPhysics(),
           builder: (context, index) => buildItem(context, galleryItems, index),
           itemCount: galleryItems.length,
-          loadingBuilder: widget.loadingBuilder,
           backgroundDecoration:
               BoxDecoration(color: Theme.of(context).colorScheme.background),
           pageController: widget.pageController,

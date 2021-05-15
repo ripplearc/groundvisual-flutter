@@ -10,11 +10,12 @@ abstract class TimelineSearchState extends Equatable {
   List<Object?> get props => [images];
 }
 
+/// Searching for images of [TimelineImageModel] that matches query of [SearchDailyTimeline].
 class TimelineSearching extends TimelineSearchState {
   TimelineSearching() : super([]);
 }
 
-/// Loaded the timelapse photos in a day
+/// Emit images of [TimelineImageModel] after the search query returns.
 class TimelineSearchResultsLoaded extends TimelineSearchState {
   TimelineSearchResultsLoaded(List<TimelineImageModel> images) : super(images);
 }

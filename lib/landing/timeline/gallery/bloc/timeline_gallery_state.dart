@@ -7,8 +7,9 @@ abstract class TimelineGalleryState extends Equatable {
   TimelineGalleryState(this.galleryItems);
 }
 
-class TimelineGalleryImages extends TimelineGalleryState {
-  TimelineGalleryImages(List<GalleryItem> images) : super(images);
+/// Emit images of [GalleryItem] to be displayed in the gallery.
+class TimelineGalleryLoaded extends TimelineGalleryState {
+  TimelineGalleryLoaded(List<GalleryItem> images) : super(images);
 
   @override
   List<Object?> get props => [galleryItems];

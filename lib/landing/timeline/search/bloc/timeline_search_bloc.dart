@@ -15,6 +15,9 @@ import 'package:meta/meta.dart';
 part 'timeline_search_event.dart';
 part 'timeline_search_state.dart';
 
+/// Take in the search criteria [TimelineSearchEvent] including location, time,
+/// machines and etc, search through the [TimelineImagesRepository] and output
+/// the results through [TimelineSearchState] containing [TimelineImageModel] imags.
 @injectable
 class TimelineSearchBloc
     extends Bloc<TimelineSearchEvent, TimelineSearchState> {

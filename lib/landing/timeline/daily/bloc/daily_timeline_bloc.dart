@@ -65,7 +65,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
         return;
       } else {
         final siteName = await currentSelectedSite.site().first;
-        _navigateToDetailPage(event.context, siteName, event.startTime,
+        _navigateToSearchPage(event.context, siteName, event.startTime,
             state.images, initialIndex);
       }
     }
@@ -77,7 +77,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
     return super.close();
   }
 
-  void _navigateToDetailPage(
+  void _navigateToSearchPage(
           BuildContext context,
           String siteName,
           DateTime date,

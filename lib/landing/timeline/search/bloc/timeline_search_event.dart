@@ -4,7 +4,10 @@ part of 'timeline_search_bloc.dart';
 @immutable
 abstract class TimelineSearchEvent extends Equatable {}
 
-/// Searching for the timelapse photos in a day
+/// Searching for the timelapse photos on [date]. The user
+/// can also specify the [startTime] and [endTime] optionally.
+/// The search query can also include the selected machines with [muids]
+/// within a specified [zone].
 class SearchDailyTimeline extends TimelineSearchEvent {
   final String siteName;
   final DateTime date;
