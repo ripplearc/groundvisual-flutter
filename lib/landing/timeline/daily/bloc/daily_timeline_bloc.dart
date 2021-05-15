@@ -87,6 +87,9 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
         context,
         "${Routes.timelineSearch}?sitename=$siteName&millisecondssinceepoch=" +
             "${date.getMillisecondsSinceEpoch}&initialImageIndex=$initialImageIndex",
+        routeSettings: RouteSettings(
+          arguments: state.images,
+        ),
         transition: TransitionType.fadeIn,
         transitionDuration: Duration(milliseconds: 500),
       );

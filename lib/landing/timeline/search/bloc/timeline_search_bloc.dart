@@ -13,6 +13,7 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
 part 'timeline_search_event.dart';
+
 part 'timeline_search_state.dart';
 
 /// Take in the search criteria [TimelineSearchEvent] including location, time,
@@ -23,8 +24,9 @@ class TimelineSearchBloc
     extends Bloc<TimelineSearchEvent, TimelineSearchState> {
   final TimelineImagesRepository timelineImagesRepository;
 
-  TimelineSearchBloc(this.timelineImagesRepository)
-      : super(TimelineSearching());
+  TimelineSearchBloc(this.timelineImagesRepository,
+      @factoryParam List<TimelineImageModel>? defaultImages)
+      : super(TimelineSearching(defaultImages));
 
   @override
   Stream<TimelineSearchState> mapEventToState(
@@ -52,5 +54,4 @@ class TimelineSearchBloc
           arguments: state.images,
         ),
       );
-
 }

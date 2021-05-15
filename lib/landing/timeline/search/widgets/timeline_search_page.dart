@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_search_photo_viewer.dart';
@@ -87,13 +86,9 @@ class _TimelineSearchPageState extends State<TimelineSearchPage> {
           childCount: 1));
 
   Widget _buildImagePageView(
-      BuildContext context, List<TimelineImageModel> images) {
-    if (images.isNotEmpty) {
-      int index = widget.initialImageIndex.clamp(0, images.length);
-      return Hero(
-          tag: 'image' +
-              (images.getOrNull<TimelineImageModel>(index)?.imageName ?? ""),
-          child: PageView.builder(
+          BuildContext context, List<TimelineImageModel> images) =>
+      images.isNotEmpty
+          ? PageView.builder(
               controller: PageController(initialPage: widget.initialImageIndex),
               scrollDirection: Axis.horizontal,
               itemCount: images.length,
@@ -106,11 +101,8 @@ class _TimelineSearchPageState extends State<TimelineSearchPage> {
                         child: TimelinePhotoDownloader(),
                       )
                     ],
-                  )));
-    } else {
-      return Container();
-    }
-  }
+                  ))
+          : Container();
 
   Widget _buildImageViewer(int index) =>
       TimelineSearchPhotoViewer(index, width: _screenWidth * 0.9);

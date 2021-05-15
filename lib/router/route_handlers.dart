@@ -20,6 +20,7 @@ var rootHandler = Handler(
 
 var timelineSearchHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  final args = context?.settings?.arguments as List<TimelineImageModel>;
   String? siteName = params["sitename"]?.first;
   DateTime? date = int.tryParse(params["millisecondssinceepoch"]?.first ?? "")
       ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
@@ -29,8 +30,8 @@ var timelineSearchHandler = Handler(
     return null;
 
   return BlocProvider(
-    create: (context) =>
-        getIt<TimelineSearchBloc>()..add(SearchDailyTimeline(siteName, date)),
+    create: (context) => getIt<TimelineSearchBloc>(param1: args)
+      ..add(SearchDailyTimeline(siteName, date)),
     child: TimelineSearchPage(initialImageIndex: initialImageIndex),
   );
 });

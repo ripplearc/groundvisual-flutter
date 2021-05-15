@@ -38,7 +38,7 @@ class TimelineGalleryBloc
                   .contains(value.status)
               ? " [ ${value.status.value().toUpperCase()} ] "
               : "",
-          resource: value.imageName,
+          imageName: value.imageName,
           isSvg: value.imageName.contains(".svg")))
       .toList();
 }

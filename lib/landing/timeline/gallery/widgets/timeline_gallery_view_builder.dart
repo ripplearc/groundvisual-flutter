@@ -22,7 +22,7 @@ mixin TimelineGalleryViewBuilder {
           GalleryItem item, BuildContext context) =>
       PhotoViewGalleryPageOptions.customChild(
         child: SvgPicture.asset(
-          item.resource,
+          item.imageName,
           color: Theme.of(context).colorScheme.primary,
           fit: BoxFit.contain,
         ),
@@ -34,7 +34,7 @@ mixin TimelineGalleryViewBuilder {
 
   PhotoViewGalleryPageOptions _buildImageAsset(GalleryItem item) =>
       PhotoViewGalleryPageOptions(
-        imageProvider: AssetImage(item.resource),
+        imageProvider: AssetImage(item.imageName),
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * ScaleFactor,

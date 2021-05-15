@@ -11,8 +11,10 @@ abstract class TimelineSearchState extends Equatable {
 }
 
 /// Searching for images of [TimelineImageModel] that matches query of [SearchDailyTimeline].
+/// It emits [defaultImages] at the beginning.
 class TimelineSearching extends TimelineSearchState {
-  TimelineSearching() : super([]);
+  TimelineSearching(List<TimelineImageModel>? defaultImages)
+      : super(defaultImages ?? []);
 }
 
 /// Emit images of [TimelineImageModel] after the search query returns.

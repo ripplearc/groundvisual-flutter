@@ -29,7 +29,9 @@ class TimelineSearchPhotoViewer extends StatelessWidget
           builder: (context, state) =>
               state.images
                   .getOrNull<TimelineImageModel>(index)
-                  ?.let((image) => buildImageCell(
+                  ?.let((image) => Hero(
+                      tag: 'image' + image.imageName,
+                      child: buildImageCell(
                         image.imageName,
                         context: context,
                         width: width,
@@ -40,9 +42,9 @@ class TimelineSearchPhotoViewer extends StatelessWidget
                             context: context,
                             mobile: () => _navigateToGallery(context),
                             tablet: () => _navigateToGallery(context),
-                            desktop: () =>
-                                openGalleryDialog(context, state.images, index))(),
-                      )) ??
+                            desktop: () => openGalleryDialog(
+                                context, state.images, index))(),
+                      ))) ??
               Container());
 
   void _navigateToGallery(BuildContext context) =>
