@@ -2,7 +2,7 @@ part of 'daily_timeline_bloc.dart';
 
 /// State of the displaying the timelapse photos in a day
 abstract class DailyTimelineState extends Equatable {
-  final List<DailyTimelineImageModel> images;
+  final List<TimelineImageModel> images;
   final DateTime date;
 
   const DailyTimelineState(this.images, this.date);
@@ -18,7 +18,7 @@ class DailyTimelineLoading extends DailyTimelineState {
 
 /// Loaded the timelapse photos in a day
 class DailyTimelineImagesLoaded extends DailyTimelineState {
-  DailyTimelineImagesLoaded(List<DailyTimelineImageModel> images, DateTime date)
+  DailyTimelineImagesLoaded(List<TimelineImageModel> images, DateTime date)
       : super(images, date);
 }
 
@@ -27,7 +27,7 @@ class DailyTimelineNavigateToDetailPage extends DailyTimelineState {
   final int initialImageIndex;
   final DateTime timestamp;
 
-  DailyTimelineNavigateToDetailPage(List<DailyTimelineImageModel> images,
+  DailyTimelineNavigateToDetailPage(List<TimelineImageModel> images,
       DateTime date, this.initialImageIndex, this.timestamp)
       : super(images, date);
 

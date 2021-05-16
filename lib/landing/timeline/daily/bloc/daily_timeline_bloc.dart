@@ -7,8 +7,10 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail/daily_timeline_photo/daily_timeline_detail.dart';
-import 'package:groundvisual_flutter/landing/timeline/model/daily_timeline_image_model.dart';
+import 'package:groundvisual_flutter/models/timeline_image_model.dart';
+import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
+import 'package:groundvisual_flutter/repositories/timeline_images_repository.dart';
+import 'package:groundvisual_flutter/router/routes.dart';
 import 'package:injectable/injectable.dart';
 
 part 'daily_timeline_event.dart';
@@ -19,11 +21,16 @@ part 'daily_timeline_state.dart';
 @injectable
 class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
   final SelectedSiteBloc? selectedSiteBloc;
+  final TimelineImagesRepository timelineImagesRepository;
+  final CurrentSelectedSite currentSelectedSite;
 
   StreamSubscription? _selectedSiteSubscription;
 
-  DailyTimelineBloc(@factoryParam this.selectedSiteBloc)
-      : super(DailyTimelineLoading()) {
+  DailyTimelineBloc(
+    this.timelineImagesRepository,
+    this.currentSelectedSite,
+    @factoryParam this.selectedSiteBloc,
+  ) : super(DailyTimelineLoading()) {
     _listenToSelectedSite();
   }
 
@@ -46,35 +53,21 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
   ) async* {
     if (event is SearchDailyTimelineOnDate) {
       await Future.delayed(Duration(seconds: 2));
-      yield DailyTimelineImagesLoaded(
-          List.generate(
-              50,
-              (index) => DailyTimelineImageModel(
-                  index == 4
-                      ? 'assets/icon/excavator.svg'
-                      : 'images/thumbnails/${index + 1}.jpg',
-                  Date.startOfToday.add(Duration(minutes: index * 15)),
-                  Date.startOfToday.add(Duration(minutes: index * 15 + 15)),
-                  _getMachineStatus(index))),
-          event.date);
+      final images = await timelineImagesRepository.getTimelineImagesAtSite(
+          event.siteName,
+          ["00001A"],
+          DateTimeRange(start: Date.startOfToday, end: Date.today));
+      yield DailyTimelineImagesLoaded(images, event.date);
     } else if (event is TapDailyTimelineCell) {
-      int initialIndex = state.images
-          .indexWhere((image) => image.startTime == event.startTime);
+      int initialIndex = state.images.indexWhere(
+          (image) => image.downloadingModel.timeRange.start == event.startTime);
       if (initialIndex == -1) {
         return;
       } else {
-        _navigateToDetailPage(event.context, state.images, initialIndex);
+        final siteName = await currentSelectedSite.site().first;
+        _navigateToSearchPage(event.context, siteName, event.startTime,
+            state.images, initialIndex);
       }
-    }
-  }
-
-  MachineStatus _getMachineStatus(int index) {
-    if (index == 3) {
-      return MachineStatus.idling;
-    } else if (index == 4) {
-      return MachineStatus.stationary;
-    } else {
-      return MachineStatus.working;
     }
   }
 
@@ -84,20 +77,20 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
     return super.close();
   }
 
-  void _navigateToDetailPage(BuildContext context,
-          List<DailyTimelineImageModel> images, int initialImageIndex) =>
+  void _navigateToSearchPage(
+          BuildContext context,
+          String siteName,
+          DateTime date,
+          List<TimelineImageModel> images,
+          int initialImageIndex) =>
       FluroRouter.appRouter.navigateTo(
         context,
-        '/site/timeline/detail',
+        "${Routes.timelineSearch}?sitename=$siteName&millisecondssinceepoch=" +
+            "${date.getMillisecondsSinceEpoch}&initialImageIndex=$initialImageIndex",
+        routeSettings: RouteSettings(
+          arguments: state.images,
+        ),
         transition: TransitionType.fadeIn,
         transitionDuration: Duration(milliseconds: 500),
-        routeSettings: RouteSettings(
-          arguments: HeroType(
-              title: "3:00 PM ~ 3:15 PM",
-              subTitle: "Working",
-              images: images,
-              initialImageIndex: initialImageIndex,
-              materialColor: Theme.of(context).colorScheme.primary),
-        ),
       );
 }

@@ -2,45 +2,44 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/daily_detail_gallery_view_builder.dart';
-import 'package:groundvisual_flutter/landing/timeline/daily_detail_gallery/widgets/photo_view_actions.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_actions.dart';
+import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_view_builder.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 /// Display the image in the full screen gallery, with optimization for Web. It is not zoomable
 /// and no amnimation from go from page to page.
-class DailyDetailGalleryWebView extends StatefulWidget {
-  DailyDetailGalleryWebView({
+class TimelineGalleryWebView extends StatefulWidget {
+  TimelineGalleryWebView({
     this.loadingBuilder,
-    this.backgroundDecoration,
     this.minScale,
     this.maxScale,
     this.initialIndex = 0,
-    required this.galleryItems,
     this.scrollDirection = Axis.horizontal,
   }) : pageController = PageController(initialPage: initialIndex);
 
   final LoadingBuilder? loadingBuilder;
-  final BoxDecoration? backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
   final int initialIndex;
   final PageController pageController;
-  final List<GalleryItem> galleryItems;
   final Axis scrollDirection;
 
   @override
   State<StatefulWidget> createState() {
-    return _DailyDetailGalleryWebViewState();
+    return _TimelineGalleryWebViewState();
   }
 }
 
-class _DailyDetailGalleryWebViewState extends State<DailyDetailGalleryWebView>
-    with DailyDetailGalleryViewBuilder, PhotoViewAccessories {
+class _TimelineGalleryWebViewState extends State<TimelineGalleryWebView>
+    with TimelineGalleryViewBuilder, TimelineGalleryViewAccessories {
   late int currentIndex = widget.initialIndex;
   final double arrowSize = 30;
   final double titleHeight = 60;
+  final backgroundDecoration = BoxDecoration(color: Colors.transparent);
 
   void onPageChanged(int index) {
     setState(() {
@@ -49,27 +48,30 @@ class _DailyDetailGalleryWebViewState extends State<DailyDetailGalleryWebView>
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: widget.backgroundDecoration,
-        width: MediaQuery.of(context).size.width * 0.95,
-        height: MediaQuery.of(context).size.height * 0.95,
-        child: Stack(
-          children: <Widget>[
-            _buildGallery(),
-            _buildHeader(),
-            if (currentIndex > 0) _buildBackwardArrow(),
-            if (currentIndex < (widget.galleryItems.length - 1))
-              _buildForwardArrow()
-          ],
-        ),
-      );
+  Widget build(BuildContext context) =>
+      BlocBuilder<TimelineGalleryBloc, TimelineGalleryState>(
+          builder: (context, state) => Container(
+                decoration: BoxDecoration(color: Colors.transparent),
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: MediaQuery.of(context).size.height * 0.95,
+                child: state.galleryItems.isNotEmpty
+                    ? Stack(
+                        children: <Widget>[
+                          _buildGallery(state.galleryItems),
+                          _buildHeader(state.galleryItems),
+                          if (currentIndex > 0) _buildBackwardArrow(),
+                          if (currentIndex < (state.galleryItems.length - 1))
+                            _buildForwardArrow(state.galleryItems.length)
+                        ],
+                      )
+                    : Container(),
+              ));
 
-  Widget _buildHeader() => Align(
+  Widget _buildHeader(List<GalleryItem> galleryItems) => Align(
       alignment: Alignment.topCenter,
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: buildTitleContent(
-                  widget.galleryItems, currentIndex, context,
+          children: buildTitleContent(galleryItems, currentIndex, context,
                   style: Theme.of(context)
                       .textTheme
                       .headline4
@@ -87,25 +89,23 @@ class _DailyDetailGalleryWebViewState extends State<DailyDetailGalleryWebView>
                 onPressed: () => Navigator.of(context).pop()))
       ];
 
-  Widget _buildGallery() => Padding(
+  Widget _buildGallery(List<GalleryItem> galleryItems) => Padding(
       padding: EdgeInsets.only(top: titleHeight),
       child: PhotoViewGallery.builder(
-          builder: (context, index) =>
-              buildItem(context, widget.galleryItems, index),
-          itemCount: widget.galleryItems.length,
+          builder: (context, index) => buildItem(context, galleryItems, index),
+          itemCount: galleryItems.length,
           loadingBuilder: widget.loadingBuilder,
-          backgroundDecoration: widget.backgroundDecoration,
+          backgroundDecoration: backgroundDecoration,
           pageController: widget.pageController,
           onPageChanged: onPageChanged,
           scrollDirection: widget.scrollDirection));
 
-  Align _buildForwardArrow() => Align(
+  Align _buildForwardArrow(int length) => Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
           child: _buildArrow(Icons.arrow_forward_ios_outlined),
-          onTap: () => widget.pageController.jumpToPage(min(
-              (widget.pageController.page ?? 0).toInt() + 1,
-              widget.galleryItems.length - 1))));
+          onTap: () => widget.pageController.jumpToPage(
+              min((widget.pageController.page ?? 0).toInt() + 1, length - 1))));
 
   Align _buildBackwardArrow() => Align(
       alignment: Alignment.centerLeft,

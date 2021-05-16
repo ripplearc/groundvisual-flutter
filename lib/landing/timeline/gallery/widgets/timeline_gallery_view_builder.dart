@@ -9,7 +9,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 /// Build a photo item in the gallery. It is capable of building either a SVG
 /// or an image asset.
-mixin DailyDetailGalleryViewBuilder {
+mixin TimelineGalleryViewBuilder {
   static const double ScaleFactor = 3;
 
   PhotoViewGalleryPageOptions buildItem(
@@ -22,7 +22,7 @@ mixin DailyDetailGalleryViewBuilder {
           GalleryItem item, BuildContext context) =>
       PhotoViewGalleryPageOptions.customChild(
         child: SvgPicture.asset(
-          item.resource,
+          item.imageName,
           color: Theme.of(context).colorScheme.primary,
           fit: BoxFit.contain,
         ),
@@ -34,7 +34,7 @@ mixin DailyDetailGalleryViewBuilder {
 
   PhotoViewGalleryPageOptions _buildImageAsset(GalleryItem item) =>
       PhotoViewGalleryPageOptions(
-        imageProvider: AssetImage(item.resource),
+        imageProvider: AssetImage(item.imageName),
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * ScaleFactor,

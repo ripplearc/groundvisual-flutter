@@ -6,7 +6,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 /// Helper functions to build the title and actions button for the gallery. The
 /// title indicates if the machine is in idling or stationary.
-mixin PhotoViewAccessories {
+mixin TimelineGalleryViewAccessories {
   List<Widget> buildActions(BuildContext context, {bool simplified = false}) =>
       simplified ? _buildIconsOnly(context) : _buildButtons(context);
 
