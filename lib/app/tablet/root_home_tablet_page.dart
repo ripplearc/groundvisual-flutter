@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/fleet/fleet_page_body.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:groundvisual_flutter/landing/appbar/tablet/landing_page_tablet_header.dart';
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
@@ -29,6 +30,7 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage>
   Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
       create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
       child: Scaffold(
+          appBar: buildLandingHomePageTabletHeader(context),
           body: buildTabBar(
               controller: _controller, screens: _screens, context: context)));
 
