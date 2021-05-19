@@ -13,6 +13,7 @@ mixin TimelineImageBuilder {
           required double width,
           GestureTapCallback? onTap,
           MachineStatus? status,
+          String? indexLabel,
           double padding = 0}) =>
       Container(
           width: width,
@@ -26,8 +27,8 @@ mixin TimelineImageBuilder {
                       children: [
                         Flexible(
                           flex: 3,
-                          child: _buildImageWithLabelOnTop(
-                              imageName, status, width, padding, context),
+                          child: _buildImageWithLabel(imageName, status,
+                              indexLabel, width, padding, context),
                         ),
                         if (annotation != null || actions.isNotEmpty)
                           Flexible(
@@ -37,12 +38,18 @@ mixin TimelineImageBuilder {
                           )
                       ]))));
 
-  Stack _buildImageWithLabelOnTop(String imageName, MachineStatus? status,
-          double width, double padding, BuildContext context) =>
+  Stack _buildImageWithLabel(
+          String imageName,
+          MachineStatus? status,
+          String? indexLabel,
+          double width,
+          double padding,
+          BuildContext context) =>
       Stack(children: [
         _buildImageWithCorner(imageName, width, padding, context),
         if (status != null && status != MachineStatus.working)
-          _buildLabel(status, context),
+          _buildTopLeftLabel(status, context),
+        if (indexLabel != null) _buildBottomRightLabel(indexLabel, context)
       ]);
 
   Widget _buildImageWithCorner(
@@ -53,17 +60,31 @@ mixin TimelineImageBuilder {
       return _buildRaster(imageName, width);
   }
 
-  Widget _buildLabel(MachineStatus status, BuildContext context) => Align(
-      alignment: Alignment.topLeft,
+  Widget _buildTopLeftLabel(MachineStatus status, BuildContext context) =>
+      Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: EdgeInsets.only(top: 10, left: 10),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Text(status.value().toUpperCase(),
+                          style: Theme.of(context).textTheme.button)))));
+
+  Widget _buildBottomRightLabel(String index, BuildContext context) => Align(
+      alignment: Alignment.bottomRight,
       child: Padding(
-          padding: EdgeInsets.only(top: 10, left: 10),
+          padding: EdgeInsets.only(bottom: 10, right: 10),
           child: Container(
               decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.all(Radius.circular(4))),
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(status.value().toUpperCase(),
+                  child: Text(index,
                       style: Theme.of(context).textTheme.button)))));
 
   Widget _buildSvg(String imageName, double width, BuildContext context) =>

@@ -36,6 +36,7 @@ class TimelineSearchPhotoViewer extends StatelessWidget
                         context: context,
                         width: width,
                         status: image.status,
+                        indexLabel: "${index + 1}/${state.images.length}",
                         annotation: image.timeString,
                         actions: buildActions(context, simplified: true),
                         onTap: () => getValueForScreenType<GestureTapCallback>(
