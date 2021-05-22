@@ -9,6 +9,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import 'appbar/bloc/selected_site_bloc.dart';
 import 'appbar/mobile/landing_page_mobile_header.dart';
+import 'appbar/tablet/landing_page_tablet_header.dart';
 import 'body/mobile/landing_page_body.dart';
 import 'chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'chart/bloc/trend/trend_working_time_chart_bloc.dart';
@@ -50,8 +51,10 @@ class LandingHomePage extends StatelessWidget {
               LandingHomePageMobileBody()
             ],
           ),
-          tablet: (BuildContext context) => LandingHomePageTabletBody(),
-          desktop: (BuildContext context) => LandingHomePageTabletBody(),
+          tablet: (BuildContext context) => Scaffold(
+            appBar: buildLandingHomePageTabletHeader(context),
+            body: LandingHomePageTabletBody(),
+          ),
         ));
   }
 }
@@ -81,9 +84,9 @@ class LandingHomePageBlocComponent {
   MachineStatusBloc getMachineStatusBloc(SelectedSiteBloc selectedSiteBloc) {
     final bloc = _machineStatusBloc;
     if (bloc == null) {
-       final newBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
-       _machineStatusBloc = newBloc;
-       return newBloc;
+      final newBloc = getIt<MachineStatusBloc>(param1: selectedSiteBloc);
+      _machineStatusBloc = newBloc;
+      return newBloc;
     }
     return bloc;
   }

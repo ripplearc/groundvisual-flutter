@@ -5,23 +5,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/widgets/timeline_search_photo_viewer.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 
-import 'timeline_sheet_pullup_header.dart';
+import '../components/timeline_sheet_pullup_header.dart';
 
-class TimelineSearchPage extends StatefulWidget {
+class TimelineSearchMobilePage extends StatefulWidget {
   final int initialImageIndex;
 
-  const TimelineSearchPage({Key? key, required this.initialImageIndex})
+  const TimelineSearchMobilePage({Key? key, required this.initialImageIndex})
       : super(key: key);
 
   @override
-  _TimelineSearchPageState createState() => _TimelineSearchPageState();
+  _TimelineSearchMobilePageState createState() =>
+      _TimelineSearchMobilePageState();
 }
 
-class _TimelineSearchPageState extends State<TimelineSearchPage> {
+class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   final Completer<GoogleMapController> _controller = Completer();
   late double _screenWidth;
   late double _mapHeight;
@@ -39,6 +40,12 @@ class _TimelineSearchPageState extends State<TimelineSearchPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text("M51", style: Theme.of(context).textTheme.headline6,),
+      ),
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
   Widget _buildMapHeader(BuildContext context) => Container(

@@ -30,7 +30,6 @@ class _RootHomeTabletPageState extends State<RootHomeTabletPage>
   Widget build(BuildContext context) => BlocProvider<SelectedSiteBloc>(
       create: (_) => getIt<SelectedSiteBloc>()..add(SelectedSiteInit(context)),
       child: Scaffold(
-          appBar: buildLandingHomePageTabletHeader(context),
           body: buildTabBar(
               controller: _controller, screens: _screens, context: context)));
 
