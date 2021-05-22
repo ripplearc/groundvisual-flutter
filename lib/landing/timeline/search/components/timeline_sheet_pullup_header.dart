@@ -21,12 +21,8 @@ class TimelineSheetPullUpHeader extends StatelessWidget {
                     endIndent: width * 0.43,
                   ),
                   Text(
-                    "M51",
+                    "7:00 AM ~ 3:00 PM",
                     style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    "April 21st 2021",
-                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Divider(
                     thickness: 1,
