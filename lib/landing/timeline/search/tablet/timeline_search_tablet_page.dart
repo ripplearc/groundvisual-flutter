@@ -30,6 +30,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
+  final ItemScrollController itemScrollController = ItemScrollController();
   late Size _screenSize;
   final int mapFlex = 5;
   final int contentFlex = 4;
@@ -54,7 +55,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
     super.initState();
     itemPositionsListener.itemPositions.addListener(() {
       int value = itemPositionsListener.itemPositions.value
-          .where((ItemPosition position) => position.itemTrailingEdge > 0)
+          .where(this._itemIsAtLeastHalfVisible)
           .reduce((ItemPosition min, ItemPosition position) =>
               position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
           .index;
@@ -66,6 +67,10 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
       }
     });
   }
+
+  bool _itemIsAtLeastHalfVisible(ItemPosition position) =>
+      position.itemTrailingEdge > 0 &&
+      position.itemLeadingEdge.abs() < position.itemTrailingEdge.abs();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -85,12 +90,13 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
                     WorkZoneMap(bottomPadding: 0, mapController: _controller)),
             Flexible(
               flex: 4,
-              // child: ScrollablePositionedListExample(),
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                _buildTitleWithBorder(context),
-                _buildContentBody(),
-              ]),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _buildTitleWithBorder(context),
+                  _buildContentBody(),
+                ],
+              ),
             )
           ],
         ),
@@ -131,8 +137,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
                       )
                     ],
                   )),
-
-              // itemScrollController: itemScrollController,
+              initialScrollIndex: widget.initialImageIndex,
               itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
