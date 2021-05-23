@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_searc
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_pullup_header.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class TimelineSearchTabletPage extends StatefulWidget {
   final int initialImageIndex;
@@ -25,24 +26,49 @@ class TimelineSearchTabletPage extends StatefulWidget {
 class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   final Completer<GoogleMapController> _controller = Completer();
 
+  /// Listener that reports the position of items when the list is scrolled.
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+
   late Size _screenSize;
   final int mapFlex = 5;
   final int contentFlex = 4;
   late double _searchBarWidth;
+  late double _photoWidth;
+
+  int? prevMin;
+  int? min;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _screenSize = MediaQuery
-        .of(context)
-        .size;
+    _screenSize = MediaQuery.of(context).size;
     _searchBarWidth =
         _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.96);
+    _photoWidth =
+        _screenSize.width * (contentFlex / (mapFlex + contentFlex) * 0.96);
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  void initState() {
+    super.initState();
+    itemPositionsListener.itemPositions.addListener(() {
+      int value = itemPositionsListener.itemPositions.value
+          .where((ItemPosition position) => position.itemTrailingEdge > 0)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .index;
+
+      if (value != prevMin) {
+        setState(() {
+          prevMin = value;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -56,68 +82,84 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
             Flexible(
                 flex: 5,
                 child:
-                WorkZoneMap(bottomPadding: 0, mapController: _controller)),
+                    WorkZoneMap(bottomPadding: 0, mapController: _controller)),
             Flexible(
               flex: 4,
-              child: Column(children: [
+              // child: ScrollablePositionedListExample(),
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 _buildTitleWithBorder(context),
-                _buildContentBody()
+                _buildContentBody(),
               ]),
             )
           ],
         ),
       );
 
-  Widget _buildTitleWithBorder(BuildContext context) =>
-      ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          child: Container(
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .background,
-              child: TimelineSheetPullUpHeader()));
+  Widget _buildTitleWithBorder(BuildContext context) => Text(
+        "7:00 AM ~ 3:00 PM",
+        style: Theme.of(context).textTheme.headline6,
+      );
 
   Widget _buildContentBody() =>
       BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
-          builder: (blocContext, state) =>
-              Container(
-                  alignment: Alignment.center,
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .background,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: _screenSize.width,
-                  child: _buildImagePageView(context, state.images)));
+          builder: (blocContext, state) => Container(
+              alignment: Alignment.center,
+              color: Theme.of(context).colorScheme.background,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              height: _screenSize.height - 80,
+              child: _buildImagePageView(context, state.images)));
 
-  Widget _buildImagePageView(BuildContext context,
-      List<TimelineImageModel> images) =>
+  Widget _buildImagePageView(
+          BuildContext context, List<TimelineImageModel> images) =>
       images.isNotEmpty
-          ? PageView.builder(
-          controller: PageController(initialPage: widget.initialImageIndex),
-          scrollDirection: Axis.horizontal,
-          itemCount: images.length,
-          itemBuilder: (_, index) =>
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                      flex: 2,
-                      fit: FlexFit.tight,
-                      child: _buildImageViewer(index)),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: TimelinePhotoDownloader(),
-                  )
-                ],
-              ))
+          ? ScrollablePositionedList.builder(
+              itemCount: images.length,
+              itemBuilder: (context, index) => SizedBox(
+                  height: 400,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                          flex: 2,
+                          fit: FlexFit.tight,
+                          child: _buildImageViewer(index, index == prevMin)),
+                      Flexible(
+                        flex: 1,
+                        fit: FlexFit.tight,
+                        child: TimelinePhotoDownloader(),
+                      )
+                    ],
+                  )),
+
+              // itemScrollController: itemScrollController,
+              itemPositionsListener: itemPositionsListener,
+              scrollDirection: Axis.vertical,
+            )
+
+          // ListView.builder(
+          //         controller: PageController(initialPage: widget.initialImageIndex),
+          //         scrollDirection: Axis.vertical,
+          //         itemCount: images.length,
+          //         itemBuilder: (_, index) => SizedBox(
+          //             height: 400,
+          //             child: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 Flexible(
+          //                     flex: 2,
+          //                     fit: FlexFit.tight,
+          //                     child: _buildImageViewer(index, true)),
+          //                 Flexible(
+          //                   flex: 1,
+          //                   fit: FlexFit.tight,
+          //                   child: TimelinePhotoDownloader(),
+          //                 )
+          //               ],
+          //             )))
           : Container();
 
-  Widget _buildImageViewer(int index) =>
-      TimelineSearchPhotoViewer(index, width: _screenSize.width * 0.9);
+  Widget _buildImageViewer(int index, bool isHighlighted) =>
+      TimelineSearchPhotoViewer(index,
+          width: _photoWidth, isHighlighted: isHighlighted);
 }

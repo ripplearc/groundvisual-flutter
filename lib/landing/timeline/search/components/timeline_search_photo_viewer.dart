@@ -19,9 +19,11 @@ class TimelineSearchPhotoViewer extends StatelessWidget
     with TimelineImageBuilder, TimelineGalleryViewAccessories {
   final int index;
   final double width;
+  final bool? isHighlighted;
   final TapImage? onTapImage;
 
-  TimelineSearchPhotoViewer(this.index, {required this.width, this.onTapImage});
+  TimelineSearchPhotoViewer(this.index,
+      {required this.width, this.onTapImage, this.isHighlighted = false});
 
   @override
   Widget build(BuildContext context) =>
@@ -35,6 +37,7 @@ class TimelineSearchPhotoViewer extends StatelessWidget
                         image.imageName,
                         context: context,
                         width: width,
+                        isHighlighted: isHighlighted,
                         status: image.status,
                         indexLabel: "${index + 1}/${state.images.length}",
                         annotation: image.timeString,

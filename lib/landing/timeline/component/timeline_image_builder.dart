@@ -13,6 +13,7 @@ mixin TimelineImageBuilder {
           required double width,
           GestureTapCallback? onTap,
           MachineStatus? status,
+          bool? isHighlighted,
           String? indexLabel,
           double padding = 0}) =>
       Container(
@@ -28,7 +29,7 @@ mixin TimelineImageBuilder {
                         Flexible(
                           flex: 3,
                           child: _buildImageWithLabel(imageName, status,
-                              indexLabel, width, padding, context),
+                              indexLabel, width, isHighlighted, padding, context),
                         ),
                         if (annotation != null || actions.isNotEmpty)
                           Flexible(
@@ -43,21 +44,22 @@ mixin TimelineImageBuilder {
           MachineStatus? status,
           String? indexLabel,
           double width,
+          bool? isHighlighted,
           double padding,
           BuildContext context) =>
       Stack(children: [
-        _buildImageWithCorner(imageName, width, padding, context),
+        _buildImageWithCorner(imageName, width, isHighlighted, padding, context),
         if (status != null && status != MachineStatus.working)
           _buildTopLeftLabel(status, context),
         if (indexLabel != null) _buildBottomRightLabel(indexLabel, context)
       ]);
 
-  Widget _buildImageWithCorner(
-      String imageName, double width, double padding, BuildContext context) {
+  Widget _buildImageWithCorner(String imageName, double width,
+      bool? isHighlighted, double padding, BuildContext context) {
     if (imageName.contains(".svg"))
       return _buildSvg(imageName, width, context);
     else
-      return _buildRaster(imageName, width);
+      return _buildRaster(imageName, width, isHighlighted);
   }
 
   Widget _buildTopLeftLabel(MachineStatus status, BuildContext context) =>
@@ -93,9 +95,10 @@ mixin TimelineImageBuilder {
               color: Theme.of(context).colorScheme.primary,
               fit: BoxFit.contain));
 
-  Widget _buildRaster(String imageName, double width) => ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth));
+  Widget _buildRaster(String imageName, double width, bool? isHighlighted) =>
+      ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: _buildImage(imageName, width, isHighlighted));
 
   Row _buildBottomSection(
           String? annotation, BuildContext context, List<Widget> actions) =>
@@ -107,4 +110,20 @@ mixin TimelineImageBuilder {
             ] +
             actions,
       );
+
+  Widget _buildImage(String imageName, double width, bool? isHighlighted) =>
+      (isHighlighted ?? false)
+          ? Container(
+              padding: EdgeInsets.all(2),
+              // margin: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  color: Colors.orange,
+                  width: 5,
+                ),
+              ),
+              child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth),
+            )
+          : Image.asset(imageName, width: width, fit: BoxFit.fitWidth);
 }
