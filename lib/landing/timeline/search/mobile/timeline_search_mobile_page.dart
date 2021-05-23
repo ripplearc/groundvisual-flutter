@@ -8,6 +8,7 @@ import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 
@@ -47,39 +48,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 3,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              child: IntrinsicHeight(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      icon: Icon(Icons.arrow_back_outlined),
-                      onPressed: () => Navigator.pop(context)),
-                  Text("Penton Rise Ct.",
-                      style: Theme.of(context).textTheme.subtitle1),
-                  Spacer(),
-                  Text("Aug 1 - 2",
-                      style: Theme.of(context).textTheme.bodyText2),
-                  VerticalDivider(
-                    thickness: 2,
-                  ),
-                  Icon(Icons.filter_list)
-                ],
-              )))),
+          title: TimelineSearchBar()),
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
   Widget _buildMapHeader(BuildContext context) => Container(
