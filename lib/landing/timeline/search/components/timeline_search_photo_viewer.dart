@@ -21,35 +21,44 @@ class TimelineSearchPhotoViewer extends StatelessWidget
   final double width;
   final bool? isHighlighted;
   final TapImage? onTapImage;
+  final bool? enableHeroAnimation;
 
   TimelineSearchPhotoViewer(this.index,
-      {required this.width, this.onTapImage, this.isHighlighted = false});
+      {required this.width,
+      this.onTapImage,
+      this.isHighlighted = false,
+      this.enableHeroAnimation = false});
 
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
           builder: (context, state) =>
-              state.images
-                  .getOrNull<TimelineImageModel>(index)
-                  ?.let((image) => Hero(
-                      tag: 'image' + image.imageName,
-                      child: buildImageCell(
-                        image.imageName,
-                        context: context,
-                        width: width,
-                        isHighlighted: isHighlighted,
-                        status: image.status,
-                        indexLabel: "${index + 1}/${state.images.length}",
-                        annotation: image.timeString,
-                        actions: buildActions(context, simplified: true),
-                        onTap: () => getValueForScreenType<GestureTapCallback>(
-                            context: context,
-                            mobile: () => _navigateToGallery(context),
-                            tablet: () => _navigateToGallery(context),
-                            desktop: () => openGalleryDialog(
-                                context, state.images, index))(),
-                      ))) ??
+              state.images.getOrNull<TimelineImageModel>(index)?.let((image) =>
+                  Hero(
+                      tag: enableHeroAnimation == true
+                          ? 'image' + image.imageName
+                          : 'no animation' + image.imageName,
+                      child: _buildContent(image, context, state))) ??
               Container());
+
+  Widget _buildContent(TimelineImageModel image, BuildContext context,
+      TimelineSearchState state) {
+    return buildImageCell(
+      image.imageName,
+      context: context,
+      width: width,
+      isHighlighted: isHighlighted,
+      status: image.status,
+      indexLabel: "${index + 1}/${state.images.length}",
+      annotation: image.timeString,
+      actions: buildActions(context, simplified: true),
+      onTap: () => getValueForScreenType<GestureTapCallback>(
+          context: context,
+          mobile: () => _navigateToGallery(context),
+          tablet: () => _navigateToGallery(context),
+          desktop: () => openGalleryDialog(context, state.images, index))(),
+    );
+  }
 
   void _navigateToGallery(BuildContext context) =>
       BlocProvider.of<TimelineSearchBloc>(context)

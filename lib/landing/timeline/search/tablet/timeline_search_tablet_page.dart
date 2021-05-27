@@ -141,27 +141,6 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
               itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
-
-          // ListView.builder(
-          //         controller: PageController(initialPage: widget.initialImageIndex),
-          //         scrollDirection: Axis.vertical,
-          //         itemCount: images.length,
-          //         itemBuilder: (_, index) => SizedBox(
-          //             height: 400,
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Flexible(
-          //                     flex: 2,
-          //                     fit: FlexFit.tight,
-          //                     child: _buildImageViewer(index, true)),
-          //                 Flexible(
-          //                   flex: 1,
-          //                   fit: FlexFit.tight,
-          //                   child: TimelinePhotoDownloader(),
-          //                 )
-          //               ],
-          //             )))
           : Container();
 
   Widget _buildImageViewer(int index, bool isHighlighted) =>

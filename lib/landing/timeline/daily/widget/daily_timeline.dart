@@ -54,7 +54,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
                   ),
                 ),
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: TimelineImages(
                     scrollController: _scrollController,
                     cellSize: Size(cellWidth, 120),

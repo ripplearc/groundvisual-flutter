@@ -6,6 +6,8 @@ import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 /// if ths status says so. Display annotation or actions at the bottom.
 typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {
+  double get heightWidthRatio => 9.0 / 16.0;
+
   Widget buildImageCell(String imageName,
           {String? annotation,
           required BuildContext context,
@@ -24,22 +26,15 @@ mixin TimelineImageBuilder {
                   onTap: onTap,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Flexible(
-                          flex: 3,
-                          child: _buildImageWithLabel(imageName, status,
-                              indexLabel, width, isHighlighted, padding, context),
-                        ),
-                        if (annotation != null || actions.isNotEmpty)
-                          Flexible(
-                            flex: 1,
-                            child: _buildBottomSection(
-                                annotation, context, actions),
-                          )
+                        _buildImageWithLabel(imageName, status, indexLabel,
+                            width, isHighlighted, padding, context),
+                        // if (annotation != null || actions.isNotEmpty)
+                        //   _buildBottomSection(annotation, context, actions),
                       ]))));
 
-  Stack _buildImageWithLabel(
+  Widget _buildImageWithLabel(
           String imageName,
           MachineStatus? status,
           String? indexLabel,
@@ -48,7 +43,8 @@ mixin TimelineImageBuilder {
           double padding,
           BuildContext context) =>
       Stack(children: [
-        _buildImageWithCorner(imageName, width, isHighlighted, padding, context),
+        _buildImageWithCorner(
+            imageName, width, isHighlighted, padding, context),
         if (status != null && status != MachineStatus.working)
           _buildTopLeftLabel(status, context),
         if (indexLabel != null) _buildBottomRightLabel(indexLabel, context)
@@ -92,8 +88,10 @@ mixin TimelineImageBuilder {
   Widget _buildSvg(String imageName, double width, BuildContext context) =>
       Container(
           child: SvgPicture.asset(imageName,
+              width: width,
+              height: width * heightWidthRatio,
               color: Theme.of(context).colorScheme.primary,
-              fit: BoxFit.contain));
+              fit: BoxFit.fitHeight));
 
   Widget _buildRaster(String imageName, double width, bool? isHighlighted) =>
       ClipRRect(
