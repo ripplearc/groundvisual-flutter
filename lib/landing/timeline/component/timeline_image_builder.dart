@@ -18,20 +18,21 @@ mixin TimelineImageBuilder {
           bool? isHighlighted,
           String? indexLabel,
           double padding = 0}) =>
-      Container(
-          width: width,
-          child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: GestureDetector(
-                  onTap: onTap,
+      GestureDetector(
+          onTap: onTap,
+          child: Container(
+              width: width,
+              // height: width * heightWidthRatio + 100,
+              child: Padding(
+                  padding: EdgeInsets.all(padding),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         _buildImageWithLabel(imageName, status, indexLabel,
                             width, isHighlighted, padding, context),
-                        // if (annotation != null || actions.isNotEmpty)
-                        //   _buildBottomSection(annotation, context, actions),
+                        if (annotation != null || actions.isNotEmpty)
+                          _buildBottomSection(annotation, context, actions),
                       ]))));
 
   Widget _buildImageWithLabel(
@@ -42,13 +43,13 @@ mixin TimelineImageBuilder {
           bool? isHighlighted,
           double padding,
           BuildContext context) =>
-      Stack(children: [
-        _buildImageWithCorner(
-            imageName, width, isHighlighted, padding, context),
-        if (status != null && status != MachineStatus.working)
-          _buildTopLeftLabel(status, context),
-        if (indexLabel != null) _buildBottomRightLabel(indexLabel, context)
-      ]);
+      _buildImageWithCorner(imageName, width, isHighlighted, padding, context);
+
+  // Stack(children: [
+  //       if (status != null && status != MachineStatus.working)
+  //         _buildTopLeftLabel(status, context),
+  //       if (indexLabel != null) _buildBottomRightLabel(indexLabel, context)
+  //     ]);
 
   Widget _buildImageWithCorner(String imageName, double width,
       bool? isHighlighted, double padding, BuildContext context) {
@@ -86,12 +87,11 @@ mixin TimelineImageBuilder {
                       style: Theme.of(context).textTheme.button)))));
 
   Widget _buildSvg(String imageName, double width, BuildContext context) =>
-      Container(
-          child: SvgPicture.asset(imageName,
-              width: width,
-              height: width * heightWidthRatio,
-              color: Theme.of(context).colorScheme.primary,
-              fit: BoxFit.fitHeight));
+      SvgPicture.asset(imageName,
+          width: width,
+          height: width * heightWidthRatio,
+          color: Theme.of(context).colorScheme.primary,
+          fit: BoxFit.fitWidth);
 
   Widget _buildRaster(String imageName, double width, bool? isHighlighted) =>
       ClipRRect(

@@ -101,9 +101,9 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                   alignment: Alignment.center,
                   color: Theme.of(context).colorScheme.background,
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: _buildImagePageView(context, state.images))));
+                  child: _buildImageListView(context, state.images))));
 
-  Widget _buildImagePageView(
+  Widget _buildImageListView(
           BuildContext context, List<TimelineImageModel> images) =>
       images.isNotEmpty
           ? ScrollablePositionedList.separated(
@@ -113,21 +113,27 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
               initialScrollIndex: widget.initialImageIndex,
               scrollDirection: Axis.vertical,
               itemCount: images.length,
-              itemBuilder: (_, index) => Column(
+              itemBuilder: (_, index) => Container(
+                  height: 400,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: _buildImageItem(index)),
-                      Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: TimelinePhotoDownloader()),
+                      Flexible(
+                          flex: 3,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: _buildImageItem(index))),
+                      Flexible(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: TimelinePhotoDownloader())),
                     ],
-                  ))
+                  )))
           : Container();
 
   Widget _buildImageItem(int index) => TimelineSearchPhotoViewer(index,
-      width: _screenSize.width * 0.9,
+      width: _screenSize.width,
       enableHeroAnimation: index == widget.initialImageIndex);
 }
 
