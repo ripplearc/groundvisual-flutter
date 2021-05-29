@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
@@ -26,7 +27,6 @@ class TimelineSearchTabletPage extends StatefulWidget {
 class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   final Completer<GoogleMapController> _controller = Completer();
 
-  /// Listener that reports the position of items when the list is scrolled.
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
@@ -121,29 +121,39 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
       images.isNotEmpty
           ? ScrollablePositionedList.builder(
               itemCount: images.length,
-              itemBuilder: (context, index) => SizedBox(
-                  height: 400,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                          flex: 2,
-                          fit: FlexFit.tight,
-                          child: _buildImageViewer(index, index == prevMin)),
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: TimelinePhotoDownloader(),
-                      )
-                    ],
-                  )),
+              itemBuilder: (context, index) =>
+                  BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+                      builder: (context, state) =>
+                          state.images
+                              .getOrNull<TimelineImageModel>(index)
+                              ?.let((image) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: _buildImageViewer(
+                                            index,
+                                            image,
+                                            state.images,
+                                            context,
+                                            index == prevMin) +
+                                        [TimelinePhotoDownloader()],
+                                  )) ??
+                          Container()),
               initialScrollIndex: widget.initialImageIndex,
               itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
           : Container();
 
-  Widget _buildImageViewer(int index, bool isHighlighted) =>
-      TimelineSearchPhotoViewer(index,
-          width: _photoWidth, isHighlighted: isHighlighted);
+  List<Widget> _buildImageViewer(
+          int index,
+          TimelineImageModel image,
+          List<TimelineImageModel> images,
+          BuildContext context,
+          bool isHighlighted) =>
+      TimelineSearchImageBuilder(image,
+              index: index,
+              images: images,
+              width: _photoWidth,
+              isHighlighted: isHighlighted)
+          .buildSearchImageCellWidgets(context);
 }

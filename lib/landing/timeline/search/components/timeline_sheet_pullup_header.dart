@@ -21,7 +21,7 @@ class TimelineSheetPullUpHeader extends StatelessWidget {
                     endIndent: width * 0.43,
                   ),
                   Text(
-                    "7:00 AM ~ 3:00 PM",
+                    "45 results",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   Divider(

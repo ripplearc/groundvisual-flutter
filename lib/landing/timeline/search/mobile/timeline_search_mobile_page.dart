@@ -12,6 +12,8 @@ import 'package:groundvisual_flutter/landing/timeline/search/components/timeline
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 import '../components/timeline_sheet_pullup_header.dart';
 
@@ -29,17 +31,14 @@ class TimelineSearchMobilePage extends StatefulWidget {
 class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   final Completer<GoogleMapController> _controller = Completer();
   late Size _screenSize;
-  late double _mapHeight;
-  late double _scrollViewTopOffset;
+  late double _contentHeight;
   static const double titleHeight = 70;
-  static const double _mapBottomOffset = 30;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenSize = MediaQuery.of(context).size;
-    _mapHeight = MediaQuery.of(context).size.height * 0.5;
-    _scrollViewTopOffset = _mapHeight - _mapBottomOffset;
+    _contentHeight = MediaQuery.of(context).size.height * 0.55;
   }
 
   @override
@@ -52,11 +51,8 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           title: TimelineSearchBar()),
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
-  Widget _buildMapHeader(BuildContext context) => Container(
-      width: _screenSize.width,
-      height: _mapHeight,
-      child: WorkZoneMap(
-          bottomPadding: _mapBottomOffset, mapController: _controller));
+  Widget _buildMapHeader(BuildContext context) =>
+      WorkZoneMap(bottomPadding: _contentHeight, mapController: _controller);
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
@@ -64,21 +60,12 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
         width: double.infinity,
         height: _screenSize.height * 0.55,
         child: Column(
-          children: [_buildContentBody()],
+          children: [_buildContentTitle(), _buildContentBody()],
         ),
       ));
 
-  SliverPadding _buildContentTitle() => SliverPadding(
-      padding: EdgeInsets.only(top: _scrollViewTopOffset),
-      sliver: SliverPersistentHeader(
-          pinned: true,
-          floating: false,
-          delegate: _SliverPersistentHeaderDelegate(
-              Container(
-                  width: double.infinity,
-                  height: titleHeight,
-                  child: _buildTitleWithBorder(context)),
-              height: titleHeight)));
+  Widget _buildContentTitle() =>
+      Container(height: titleHeight, child: _buildTitleWithBorder(context));
 
   Widget _buildTitleWithBorder(BuildContext context) => ClipShadowPath(
       clipper: ShapeBorderClipper(
@@ -105,56 +92,36 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
 
   Widget _buildImageListView(
           BuildContext context, List<TimelineImageModel> images) =>
-      images.isNotEmpty
-          ? ScrollablePositionedList.separated(
-              separatorBuilder: (context, index) => Divider(
-                    color: Colors.black,
-                  ),
-              initialScrollIndex: widget.initialImageIndex,
-              scrollDirection: Axis.vertical,
-              itemCount: images.length,
-              itemBuilder: (_, index) => Container(
-                  height: 400,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                          flex: 3,
-                          child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: _buildImageItem(index))),
-                      Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: TimelinePhotoDownloader())),
-                    ],
-                  )))
-          : Container();
+      ScrollablePositionedList.separated(
+          separatorBuilder: (context, index) => Divider(
+                color: Colors.black,
+              ),
+          initialScrollIndex: widget.initialImageIndex,
+          scrollDirection: Axis.vertical,
+          itemCount: images.length,
+          itemBuilder: (_, index) =>
+              BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+                  builder: (context, state) =>
+                      state.images
+                          .getOrNull<TimelineImageModel>(index)
+                          ?.let((image) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: _buildImageItem(
+                                        index, image, state.images, context) +
+                                    [
+                                      Padding(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          child: TimelinePhotoDownloader()),
+                                    ],
+                              )) ??
+                      Container()));
 
-  Widget _buildImageItem(int index) => TimelineSearchPhotoViewer(index,
-      width: _screenSize.width,
-      enableHeroAnimation: index == widget.initialImageIndex);
-}
-
-class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  _SliverPersistentHeaderDelegate(this.child, {required this.height});
-
-  final Widget child;
-  final double height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => false;
+  List<Widget> _buildImageItem(int index, TimelineImageModel image,
+          List<TimelineImageModel> images, BuildContext context) =>
+      TimelineSearchImageBuilder(image,
+              index: index,
+              images: images,
+              width: _screenSize.width * 0.9,
+              enableHeroAnimation: index == widget.initialImageIndex)
+          .buildSearchImageCellWidgets(context);
 }
