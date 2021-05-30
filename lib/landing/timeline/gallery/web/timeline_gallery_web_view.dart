@@ -11,7 +11,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 /// Display the image in the full screen gallery, with optimization for Web. It is not zoomable
-/// and no amnimation from go from page to page.
+/// and no animation from go from page to page.
 class TimelineGalleryWebView extends StatefulWidget {
   TimelineGalleryWebView({
     this.loadingBuilder,

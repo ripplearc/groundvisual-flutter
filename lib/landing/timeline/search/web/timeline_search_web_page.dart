@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
@@ -15,28 +14,25 @@ import 'package:groundvisual_flutter/landing/timeline/search/components/timeline
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-/// [TimelineSearchTabletPage] is the search page optimized for the tablet layout.
+/// [TimelineSearchWebPage] is the search page optimized for the web layout.
 /// [initialImageIndex] is the one being displayed at the top of viewport when the
 /// search page is first loaded.
-/// The tablet highlights the item at the top.
+/// The web page highlights the item with the mouse hover over.
 /// See also:
-///  * [TimelineSearchWebPage] for web layout.
+///  * [TimelineSearchTabletPage] for tablet layout.
 ///  * [TimelineSearchMobilePage] for mobile layout.
-class TimelineSearchTabletPage extends StatefulWidget {
+class TimelineSearchWebPage extends StatefulWidget {
   final int initialImageIndex;
 
-  const TimelineSearchTabletPage({Key? key, required this.initialImageIndex})
+  const TimelineSearchWebPage({Key? key, required this.initialImageIndex})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => TimelineSearchTabletPageState();
+  State<StatefulWidget> createState() => TimelineSearchWebPageState();
 }
 
-class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
+class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
   final Completer<GoogleMapController> _controller = Completer();
-
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
 
   late Size _screenSize;
   final int mapFlex = 5;
@@ -44,7 +40,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   late double _searchBarWidth;
   late double _contentWidth;
 
-  int? prevMin;
+  int _selectedIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -55,32 +51,6 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
     _contentWidth =
         _screenSize.width * (contentFlex / (mapFlex + contentFlex) * 0.96);
   }
-
-  @override
-  void initState() {
-    super.initState();
-    _detectCurrentHighlightedItem();
-  }
-
-  void _detectCurrentHighlightedItem() {
-    itemPositionsListener.itemPositions.addListener(() {
-      int value = itemPositionsListener.itemPositions.value
-          .where(this._itemIsAtLeastHalfVisible)
-          .reduce((ItemPosition min, ItemPosition position) =>
-              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
-          .index;
-
-      if (value != prevMin) {
-        setState(() {
-          prevMin = value;
-        });
-      }
-    });
-  }
-
-  bool _itemIsAtLeastHalfVisible(ItemPosition position) =>
-      position.itemTrailingEdge > 0 &&
-      position.itemLeadingEdge.abs() < position.itemTrailingEdge.abs();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -115,6 +85,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
               alignment: Alignment.center,
               color: Theme.of(context).colorScheme.background,
               padding: EdgeInsets.symmetric(horizontal: 20),
+              height: _screenSize.height - 80,
               child: _buildImageListView(context, state.images)));
 
   Widget _buildImageListView(
@@ -126,30 +97,76 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
               itemCount: images.length,
               itemBuilder: (context, index) => _buildItem(index),
               initialScrollIndex: widget.initialImageIndex,
-              itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
           : Container();
 
-  BlocBuilder<TimelineSearchBloc, TimelineSearchState> _buildItem(int index) =>
-      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
-          builder: (context, state) => state.images[index].let((image) =>
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _getImageWidgets(index, image, state.images,
-                          context, index == prevMin) +
-                      [TimelinePhotoDownloader()])));
+  Widget _buildItem(int index) =>
+      _highlightItemWhenHover(_buildItemContent(index), index);
+
+  MouseRegion _highlightItemWhenHover(Widget child, int index) {
+    StreamSubscription? highlightSubscription;
+    final highlightDelayDuringScrolling = Duration(milliseconds: 180);
+    return MouseRegion(
+        onExit: (_) => highlightSubscription?.cancel(),
+        onEnter: (_) {
+          highlightSubscription = Future.delayed(highlightDelayDuringScrolling)
+              .asStream()
+              .listen((_) => setState(() {
+                    _selectedIndex = index;
+                  }));
+        },
+        child: child);
+  }
+
+  Widget _buildItemContent(int index) {
+    final imageFlex = 4;
+    final accessoryFlex = 3;
+    final imageWidth = _contentWidth * 4 / 7;
+    return BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+        builder: (context, state) => state.images[index].let((image) {
+              final viewer = _getImageWidgets(index, image, state.images,
+                  imageWidth, context, index == _selectedIndex);
+              return Container(
+                  height: 280,
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                            flex: imageFlex,
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: viewer[0])),
+                        Flexible(
+                            flex: accessoryFlex,
+                            child: _buildItemAccessories(viewer[1]))
+                      ]));
+            }));
+  }
+
+  Padding _buildItemAccessories(Widget accessory) => Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TimelinePhotoDownloader(),
+            Spacer(),
+            accessory,
+          ]));
 
   List<Widget> _getImageWidgets(
           int index,
           TimelineImageModel image,
           List<TimelineImageModel> images,
+          double imageWidth,
           BuildContext context,
           bool isHighlighted) =>
       TimelineSearchImageBuilder(image,
               index: index,
               images: images,
-              width: _contentWidth,
+              width: imageWidth,
               isHighlighted: isHighlighted)
           .buildSearchImageCellWidgets(context);
 }

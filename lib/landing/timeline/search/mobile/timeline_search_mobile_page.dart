@@ -15,8 +15,14 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 
-import '../components/timeline_sheet_pullup_header.dart';
+import '../components/timeline_sheet_header.dart';
 
+/// [TimelineSearchMobilePage] is the search page optimized for the search layout.
+/// [initialImageIndex] is the one being displayed at the top of viewport when the
+/// search page is first loaded.
+/// See also:
+///  * [TimelineSearchWebPage] for web layout.
+///  * [TimelineSearchTabletPage] for tablet layout.
 class TimelineSearchMobilePage extends StatefulWidget {
   final int initialImageIndex;
 
@@ -78,7 +84,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           offset: Offset(0, -5)),
       child: Container(
           color: Theme.of(context).colorScheme.background,
-          child: TimelineSheetPullUpHeader()));
+          child: TimelineSheetHeader(width: _screenSize.width)));
 
   Widget _buildContentBody() =>
       BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
@@ -108,7 +114,8 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                                         index, image, state.images, context) +
                                     [
                                       Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
                                           child: TimelinePhotoDownloader()),
                                     ],
                               )) ??

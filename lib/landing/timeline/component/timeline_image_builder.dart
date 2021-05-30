@@ -29,13 +29,11 @@ mixin TimelineImageBuilder {
       GestureDetector(
           onTap: onTap,
           child: Stack(children: [
-            Align(
-                alignment: Alignment.center,
-                child: Hero(
-                  tag: heroAnimationTag,
-                  child: _buildImageWithCorner(
-                      imageName, width, isHighlighted, context),
-                )),
+            Hero(
+              tag: heroAnimationTag,
+              child: _buildImageWithCorner(
+                  imageName, width, isHighlighted, context),
+            ),
             if (status != null && status != MachineStatus.working)
               _buildTopLeftLabel(status, context),
           ]));

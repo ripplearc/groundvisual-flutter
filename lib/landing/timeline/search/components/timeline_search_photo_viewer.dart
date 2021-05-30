@@ -12,8 +12,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 typedef TapImage(BuildContext context);
 
-/// Display the [image] and its associated annoations and actions for a selected time period.
-/// Group the [annotation] or [actions] as one widget.
+/// Display the [image] and its associated annotations and actions for a selected time period.
 class TimelineSearchImageBuilder
     with TimelineImageBuilder, TimelineGalleryViewAccessories {
   final TimelineImageModel image;
@@ -34,36 +33,36 @@ class TimelineSearchImageBuilder
       this.enableHeroAnimation = false,
       this.padding = 4});
 
-  List<Widget> buildSearchImageCellWidgets(BuildContext context) => [
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: buildImageCell(
-              image.imageName,
-              context: context,
-              width: width,
-              isHighlighted: isHighlighted,
-              status: image.status,
-              heroAnimationTag: enableHeroAnimation == true
-                  ? 'image' + image.imageName
-                  : 'no animation' + image.imageName,
-              onTap: () => getValueForScreenType<GestureTapCallback>(
-                  context: context,
-                  mobile: () => _navigateToGallery(context),
-                  tablet: () => _navigateToGallery(context),
-                  desktop: () => _openGalleryDialog(context, images, index))(),
-            )),
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-            child: Container(
-                width: width,
-                child: Row(
-                    children: <Widget>[
-                          Text(image.timeString,
-                              style: Theme.of(context).textTheme.headline6),
-                          Spacer()
-                        ] +
-                        buildActions(context, simplified: true))))
-      ];
+  List<Widget> buildSearchImageCellWidgets(BuildContext context) =>
+      [_buildImage(context), _buildAccessories(context)];
+
+  Padding _buildAccessories(BuildContext context) => Padding(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+      child: Row(
+          children: <Widget>[
+                Text(image.timeString,
+                    style: Theme.of(context).textTheme.headline6),
+                Spacer()
+              ] +
+              buildActions(context, simplified: true)));
+
+  Padding _buildImage(BuildContext context) => Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: buildImageCell(
+        image.imageName,
+        context: context,
+        width: width,
+        isHighlighted: isHighlighted,
+        status: image.status,
+        heroAnimationTag: enableHeroAnimation == true
+            ? 'image' + image.imageName
+            : 'no animation' + image.imageName,
+        onTap: () => getValueForScreenType<GestureTapCallback>(
+            context: context,
+            mobile: () => _navigateToGallery(context),
+            tablet: () => _navigateToGallery(context),
+            desktop: () => _openGalleryDialog(context, images, index))(),
+      ));
 
   void _navigateToGallery(BuildContext context) =>
       BlocProvider.of<TimelineSearchBloc>(context)

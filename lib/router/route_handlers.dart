@@ -10,6 +10,7 @@ import 'package:groundvisual_flutter/landing/timeline/gallery/mobile/timeline_ga
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/mobile/timeline_search_mobile_page.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_search_tablet_page.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/web/timeline_search_web_page.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -39,7 +40,7 @@ var timelineSearchHandler = Handler(
         tablet: (_) =>
             TimelineSearchTabletPage(initialImageIndex: initialImageIndex),
         desktop: (_) =>
-            TimelineSearchTabletPage(initialImageIndex: initialImageIndex),
+            TimelineSearchWebPage(initialImageIndex: initialImageIndex),
       ));
 });
 
