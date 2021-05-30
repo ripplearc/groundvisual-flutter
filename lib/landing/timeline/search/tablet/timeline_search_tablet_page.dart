@@ -74,33 +74,27 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: TimelineSearchBar(width: _searchBarWidth),
-          centerTitle: false,
-        ),
-        body: Row(
-          children: [
-            Flexible(
-                flex: 5,
-                child:
-                    WorkZoneMap(bottomPadding: 0, mapController: _controller)),
-            Flexible(
-              flex: 4,
-              child: Column(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: TimelineSearchBar(width: _searchBarWidth),
+        centerTitle: false,
+      ),
+      body: Row(children: [
+        Flexible(
+            flex: 5,
+            child: WorkZoneMap(bottomPadding: 0, mapController: _controller)),
+        Flexible(
+            flex: 4,
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildTitleWithBorder(context),
-                  _buildContentBody(),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                  _buildContentBody()
+                ]))
+      ]));
 
   Widget _buildTitleWithBorder(BuildContext context) => Text(
         "7:00 AM ~ 3:00 PM",
@@ -119,30 +113,27 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   Widget _buildImagePageView(
           BuildContext context, List<TimelineImageModel> images) =>
       images.isNotEmpty
-          ? ScrollablePositionedList.builder(
+          ? ScrollablePositionedList.separated(
+              separatorBuilder: (context, index) =>
+                  Divider(color: Theme.of(context).colorScheme.onBackground),
               itemCount: images.length,
-              itemBuilder: (context, index) =>
-                  BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
-                      builder: (context, state) =>
-                          state.images
-                              .getOrNull<TimelineImageModel>(index)
-                              ?.let((image) => Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: _buildImageViewer(
-                                            index,
-                                            image,
-                                            state.images,
-                                            context,
-                                            index == prevMin) +
-                                        [TimelinePhotoDownloader()],
-                                  )) ??
-                          Container()),
+              itemBuilder: (context, index) => _buildItem(index),
               initialScrollIndex: widget.initialImageIndex,
               itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
           : Container();
+
+  BlocBuilder<TimelineSearchBloc, TimelineSearchState> _buildItem(int index) =>
+      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+          builder: (context, state) =>
+              state.images.getOrNull<TimelineImageModel>(index)?.let((image) =>
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildImageViewer(index, image, state.images,
+                              context, index == prevMin) +
+                          [TimelinePhotoDownloader()])) ??
+              Container());
 
   List<Widget> _buildImageViewer(
           int index,

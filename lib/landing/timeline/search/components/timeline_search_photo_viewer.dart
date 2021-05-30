@@ -13,6 +13,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 typedef TapImage(BuildContext context);
 
 /// Display the [image] and its associated annoations and actions for a selected time period.
+/// Group the [annotation] or [actions] as one widget.
 class TimelineSearchImageBuilder
     with TimelineImageBuilder, TimelineGalleryViewAccessories {
   final TimelineImageModel image;
@@ -22,6 +23,7 @@ class TimelineSearchImageBuilder
   final bool? isHighlighted;
   final TapImage? onTapImage;
   final bool? enableHeroAnimation;
+  final double padding;
 
   TimelineSearchImageBuilder(this.image,
       {required this.width,
@@ -29,26 +31,39 @@ class TimelineSearchImageBuilder
       required this.images,
       this.onTapImage,
       this.isHighlighted = false,
-      this.enableHeroAnimation = false});
+      this.enableHeroAnimation = false,
+      this.padding = 4});
 
-  List<Widget> buildSearchImageCellWidgets(BuildContext context) =>
-      buildImageCellWidgets(
-        image.imageName,
-        context: context,
-        width: width,
-        isHighlighted: isHighlighted,
-        status: image.status,
-        annotation: image.timeString,
-        heroAnimationTag: enableHeroAnimation == true
-            ? 'image' + image.imageName
-            : 'no animation' + image.imageName,
-        actions: buildActions(context, simplified: true),
-        onTap: () => getValueForScreenType<GestureTapCallback>(
-            context: context,
-            mobile: () => _navigateToGallery(context),
-            tablet: () => _navigateToGallery(context),
-            desktop: () => _openGalleryDialog(context, images, index))(),
-      );
+  List<Widget> buildSearchImageCellWidgets(BuildContext context) => [
+        Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: buildImageCell(
+              image.imageName,
+              context: context,
+              width: width,
+              isHighlighted: isHighlighted,
+              status: image.status,
+              heroAnimationTag: enableHeroAnimation == true
+                  ? 'image' + image.imageName
+                  : 'no animation' + image.imageName,
+              onTap: () => getValueForScreenType<GestureTapCallback>(
+                  context: context,
+                  mobile: () => _navigateToGallery(context),
+                  tablet: () => _navigateToGallery(context),
+                  desktop: () => _openGalleryDialog(context, images, index))(),
+            )),
+        Padding(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+            child: Container(
+                width: width,
+                child: Row(
+                    children: <Widget>[
+                          Text(image.timeString,
+                              style: Theme.of(context).textTheme.headline6),
+                          Spacer()
+                        ] +
+                        buildActions(context, simplified: true))))
+      ];
 
   void _navigateToGallery(BuildContext context) =>
       BlocProvider.of<TimelineSearchBloc>(context)

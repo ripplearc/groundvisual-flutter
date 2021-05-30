@@ -57,12 +57,11 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        width: double.infinity,
-        height: _screenSize.height * 0.55,
-        child: Column(
-          children: [_buildContentTitle(), _buildContentBody()],
-        ),
-      ));
+          width: double.infinity,
+          height: _screenSize.height * 0.55,
+          child: Column(
+            children: [_buildContentTitle(), _buildContentBody()],
+          )));
 
   Widget _buildContentTitle() =>
       Container(height: titleHeight, child: _buildTitleWithBorder(context));
@@ -93,9 +92,8 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   Widget _buildImageListView(
           BuildContext context, List<TimelineImageModel> images) =>
       ScrollablePositionedList.separated(
-          separatorBuilder: (context, index) => Divider(
-                color: Colors.black,
-              ),
+          separatorBuilder: (context, index) =>
+              Divider(color: Theme.of(context).colorScheme.onBackground),
           initialScrollIndex: widget.initialImageIndex,
           scrollDirection: Axis.vertical,
           itemCount: images.length,
@@ -110,7 +108,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                                         index, image, state.images, context) +
                                     [
                                       Padding(
-                                          padding: EdgeInsets.only(bottom: 10),
+                                          padding: EdgeInsets.symmetric(vertical: 10),
                                           child: TimelinePhotoDownloader()),
                                     ],
                               )) ??
