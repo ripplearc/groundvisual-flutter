@@ -4,13 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 
-/// The header section of the timeline pullup sheet.
-class TimelineSheetPullUpHeader extends StatelessWidget {
+/// The header section of the timeline search result sheet.
+class TimelineSheetHeader extends StatelessWidget {
+  final double width;
+
+  const TimelineSheetHeader({Key? key, required this.width})
+      : super(key: key);
+
   @override
-  Widget build(BuildContext context) => MediaQuery.of(context)
-      .size
-      .width
-      .let((width) => BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+  Widget build(BuildContext context) =>
+      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
           builder: (blocContext, state) => Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -21,12 +24,8 @@ class TimelineSheetPullUpHeader extends StatelessWidget {
                     endIndent: width * 0.43,
                   ),
                   Text(
-                    "M51",
+                    "45 results",
                     style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    "April 21st 2021",
-                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Divider(
                     thickness: 1,
@@ -34,5 +33,5 @@ class TimelineSheetPullUpHeader extends StatelessWidget {
                     endIndent: width * 0.05,
                   )
                 ],
-              )));
+              ));
 }

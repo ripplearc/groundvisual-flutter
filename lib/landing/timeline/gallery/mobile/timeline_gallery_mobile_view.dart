@@ -42,6 +42,7 @@ class _TimelineGalleryMobileViewState extends State<TimelineGalleryMobileView>
           builder: (context, state) => Scaffold(
               appBar: AppBar(
                   centerTitle: true,
+                  elevation: 0,
                   title: _buildTitle(context, state.galleryItems),
                   actions: buildActions(context, simplified: true)),
               body: _buildGallery(state.galleryItems)));

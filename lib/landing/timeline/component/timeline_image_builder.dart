@@ -2,88 +2,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 
-/// Build the image cell on a timeline. Stamp the image with idling or stationary,
-/// if ths status says so. Display annotation or actions at the bottom.
 typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {
+  /// Build the widgets of the image cell on a timeline. Stamp the image
+  /// if the [status] is idling or stationary.
+  /// Outline the image if it is [isHighlighted].
   Widget buildImageCell(String imageName,
-          {String? annotation,
-          required BuildContext context,
-          required List<Widget> actions,
+          {required BuildContext context,
           required double width,
+          required String heroAnimationTag,
+          String? annotation,
           GestureTapCallback? onTap,
           MachineStatus? status,
-          double padding = 0}) =>
-      Container(
-          width: width,
-          child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: GestureDetector(
-                  onTap: onTap,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Flexible(
-                          flex: 3,
-                          child: _buildImageWithLabelOnTop(
-                              imageName, status, width, padding, context),
-                        ),
-                        if (annotation != null || actions.isNotEmpty)
-                          Flexible(
-                            flex: 1,
-                            child: _buildBottomSection(
-                                annotation, context, actions),
-                          )
-                      ]))));
+          bool? isHighlighted}) =>
+      _buildImageWithLabel(imageName, status, onTap, width, isHighlighted,
+          heroAnimationTag, context);
 
-  Stack _buildImageWithLabelOnTop(String imageName, MachineStatus? status,
-          double width, double padding, BuildContext context) =>
-      Stack(children: [
-        _buildImageWithCorner(imageName, width, padding, context),
-        if (status != null && status != MachineStatus.working)
-          _buildLabel(status, context),
-      ]);
+  Widget _buildImageWithLabel(
+          String imageName,
+          MachineStatus? status,
+          GestureTapCallback? onTap,
+          double width,
+          bool? isHighlighted,
+          String heroAnimationTag,
+          BuildContext context) =>
+      GestureDetector(
+          onTap: onTap,
+          child: Stack(children: [
+            Hero(
+              tag: heroAnimationTag,
+              child: _buildImageWithCorner(
+                  imageName, width, isHighlighted, context),
+            ),
+            if (status != null && status != MachineStatus.working)
+              _buildTopLeftLabel(status, context),
+          ]));
 
-  Widget _buildImageWithCorner(
-      String imageName, double width, double padding, BuildContext context) {
+  Widget _buildImageWithCorner(String imageName, double width,
+      bool? isHighlighted, BuildContext context) {
     if (imageName.contains(".svg"))
       return _buildSvg(imageName, width, context);
     else
-      return _buildRaster(imageName, width);
+      return _buildRaster(imageName, width, isHighlighted);
   }
 
-  Widget _buildLabel(MachineStatus status, BuildContext context) => Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-          padding: EdgeInsets.only(top: 10, left: 10),
-          child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
-                  borderRadius: BorderRadius.all(Radius.circular(4))),
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(status.value().toUpperCase(),
-                      style: Theme.of(context).textTheme.button)))));
+  Widget _buildTopLeftLabel(MachineStatus status, BuildContext context) =>
+      Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: EdgeInsets.only(top: 10, left: 10),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Text(status.value().toUpperCase(),
+                          style: Theme.of(context).textTheme.button)))));
 
   Widget _buildSvg(String imageName, double width, BuildContext context) =>
-      Container(
-          child: SvgPicture.asset(imageName,
-              color: Theme.of(context).colorScheme.primary,
-              fit: BoxFit.contain));
+      SvgPicture.asset(imageName,
+          width: width,
+          color: Theme.of(context).colorScheme.primary,
+          fit: BoxFit.contain);
 
-  Widget _buildRaster(String imageName, double width) => ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth));
+  Widget _buildRaster(String imageName, double width, bool? isHighlighted) =>
+      ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: _buildImage(imageName, width, isHighlighted));
 
-  Row _buildBottomSection(
-          String? annotation, BuildContext context, List<Widget> actions) =>
-      Row(
-        children: <Widget>[
-              if (annotation != null)
-                Text(annotation, style: Theme.of(context).textTheme.headline6),
-              Spacer()
-            ] +
-            actions,
-      );
+  Widget _buildImage(String imageName, double width, bool? isHighlighted) =>
+      (isHighlighted ?? false)
+          ? Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.orange, width: 5)),
+              child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth))
+          : Image.asset(imageName, width: width, fit: BoxFit.fitWidth);
 }
