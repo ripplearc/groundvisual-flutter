@@ -3,6 +3,8 @@ part of 'timeline_search_bloc.dart';
 @immutable
 abstract class TimelineSearchState extends Equatable {
   final List<TimelineImageModel> images;
+  // final Set<Polygon> workZone;
+  // final CameraPosition? cameraPosition;
 
   TimelineSearchState(this.images);
 

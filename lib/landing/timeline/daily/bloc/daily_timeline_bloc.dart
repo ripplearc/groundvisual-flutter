@@ -85,7 +85,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
           int initialImageIndex) =>
       FluroRouter.appRouter.navigateTo(
         context,
-        "${Routes.timelineSearch}?sitename=$siteName&millisecondssinceepoch=" +
+        "${Routes.timelineSearch}?millisecondssinceepoch=" +
             "${date.getMillisecondsSinceEpoch}&initialImageIndex=$initialImageIndex",
         routeSettings: RouteSettings(
           arguments: state.images,

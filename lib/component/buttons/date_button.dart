@@ -8,18 +8,20 @@ class DateButton extends StatelessWidget {
   final double? iconSize;
   final TextStyle? textStyle;
   final Function()? action;
+  final Icon? icon;
 
   const DateButton({
     Key? key,
     required this.dateText,
     this.action,
-    this.iconSize = 20,
     this.textStyle,
+    this.icon,
+    this.iconSize = 20,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => TextButton.icon(
-      icon: Icon(Icons.calendar_today_outlined, size: iconSize),
+      icon: icon ?? Icon(Icons.calendar_today_outlined, size: iconSize),
       label: Text(dateText),
       style: TextButton.styleFrom(
           primary: Theme.of(context).colorScheme.primary,

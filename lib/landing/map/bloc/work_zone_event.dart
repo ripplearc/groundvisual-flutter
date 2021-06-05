@@ -3,15 +3,16 @@ part of 'work_zone_bloc.dart';
 @immutable
 abstract class WorkZoneEvent extends Equatable {}
 
-/// Select a time interval of 15 mins to query the work zone.
+/// Select a time interval to query the work zone.
 class SearchWorkZoneAtTime extends WorkZoneEvent {
   final String site;
-  final DateTime time;
+  final DateTime startTime;
+  final DateTime endTime;
 
-  SearchWorkZoneAtTime(this.site, this.time);
+  SearchWorkZoneAtTime(this.site, this.startTime, this.endTime);
 
   @override
-  List<Object> get props => [site, time];
+  List<Object> get props => [site, startTime, endTime];
 }
 
 /// Select a date to query the work zone.

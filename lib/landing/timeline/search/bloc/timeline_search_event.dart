@@ -9,19 +9,18 @@ abstract class TimelineSearchEvent extends Equatable {}
 /// The search query can also include the selected machines with [muids]
 /// within a specified [zone].
 class SearchDailyTimeline extends TimelineSearchEvent {
-  final String siteName;
   final DateTime date;
   final DateTime? startTime;
   final DateTime? endTime;
   final List<String>? muids;
   final ConstructionZone? zone;
 
-  SearchDailyTimeline(this.siteName, this.date,
+  SearchDailyTimeline(this.date,
       {this.muids, this.zone, this.startTime, this.endTime});
 
   @override
   List<Object> get props =>
-      [siteName, date, muids ?? [], zone ?? ConstructionZone([])];
+      [date, muids ?? [], zone ?? ConstructionZone([])];
 }
 
 /// Tap on a timestamp cell

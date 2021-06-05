@@ -9,8 +9,9 @@ import 'package:injectable/injectable.dart';
 
 /// Network service to get the work zone for a specific time, date or over a period.
 abstract class SiteWorkZoneService {
-  /// Get the work zone at a specific time.
-  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time);
+  /// Get the work zone at a specific time duration.
+  Future<ConstructionZone> getWorkZoneAtTime(
+      String siteName, DateTime startTime, DateTime endTime);
 
   /// Get the work zone for a day.
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time);
@@ -30,27 +31,30 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
           .then((decoded) => SiteConstructionZone.fromJson(decoded)
               .records
               .firstWhere((element) => time.weekday == element.date.weekday,
-                  orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
+                  orElse: (() => UnitConstructionZone(Date.startOfToday, 900,
+                      ConstructionZone(<Region>[].toList()))))
               .zone);
 
-  String _getDailyWorkZoneAsset(String siteName) => {
+  String _getDailyWorkZoneAsset(String siteName) =>
+      {
         'Penton Rise': 'assets/mock_response/penton_date_work_zone.json',
         'M51': 'assets/mock_response/m51_date_work_zone.json',
         'Kensington': 'assets/mock_response/kensington_date_work_zone.json',
         'Cresent Blvd': 'assets/mock_response/cresent_date_work_zone.json'
-      }[siteName] ??  'assets/mock_response/penton_date_work_zone.json';
+      }[siteName] ??
+      'assets/mock_response/penton_date_work_zone.json';
 
   @override
-  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) =>
+  Future<ConstructionZone> getWorkZoneAtTime(
+          String siteName, DateTime startTime, DateTime endTime) =>
       rootBundle
           .loadString('assets/mock_response/penton_time_work_zone.json')
           .then((value) => json.decode(value))
           .then((decoded) => SiteConstructionZone.fromJson(decoded)
               .records
-              .firstWhere((element) => time.minute == element.date.minute,
-                  orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
+              .firstWhere((element) => startTime.minute == element.date.minute,
+                  orElse: (() => UnitConstructionZone(Date.startOfToday, 900,
+                      ConstructionZone(<Region>[].toList()))))
               .zone);
 
   @override
@@ -63,7 +67,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
               .records
               .firstWhere(
                   (element) => period.seconds() == element.durationInSeconds,
-                  orElse: (() => UnitConstructionZone(
-                      Date.startOfToday, 900, ConstructionZone(<Region>[].toList()))))
+                  orElse: (() => UnitConstructionZone(Date.startOfToday, 900,
+                      ConstructionZone(<Region>[].toList()))))
               .zone);
 }

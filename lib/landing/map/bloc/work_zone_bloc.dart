@@ -8,6 +8,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
+import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
+import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,8 +22,11 @@ part 'work_zone_state.dart';
 
 /// Bloc to control the the WorkZone widget.
 /// Both SelectedSiteBloc and WorkingTimeChartTouchBloc signal events to WorkZoneMapBloc.
+@injectable
 class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   final WorkZoneMapViewModel workZoneMapViewModel;
+  final DailyChartBarConverter dailyChartBarConverter;
+
   final DailyWorkingTimeChartBloc? dailyWorkingTimeChartBloc;
   final TrendWorkingTimeChartBloc? trendWorkingTimeChartBloc;
   final SelectedSiteBloc? selectedSiteBloc;
@@ -28,7 +34,7 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   StreamSubscription? _trendChartSubscription;
   StreamSubscription? _selectedSiteSubscription;
 
-  WorkZoneBloc(this.workZoneMapViewModel,
+  WorkZoneBloc(this.workZoneMapViewModel, this.dailyChartBarConverter,
       {this.selectedSiteBloc,
       this.dailyWorkingTimeChartBloc,
       this.trendWorkingTimeChartBloc})
@@ -67,10 +73,14 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
     _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream
         .switchMap((value) => value is DailyWorkingTimeDataLoaded
             ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
-                SearchWorkZoneAtTime(highlight.siteName, highlight.time))
+                SearchWorkZoneAtTime(highlight.siteName, highlight.time,
+                    _endTimeOfHighlightedRod(highlight)))
             : Stream.empty())
         .listen((event) => add(event));
   }
+
+  DateTime _endTimeOfHighlightedRod(HighlightedBar highlight) => highlight.time
+      .add(Duration(seconds: dailyChartBarConverter.secondsPerRod));
 
   @override
   Stream<Transition<WorkZoneEvent, WorkZoneState>> transformEvents(
@@ -113,8 +123,10 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   Future<WorkZoneState> _handleSelectWorkZoneAtTime(
       SearchWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
-      workZoneMapViewModel.getPolygonAtTime(event.site, event.time),
-      workZoneMapViewModel.getCameraPositionAtTime(event.site, event.time)
+      workZoneMapViewModel.getPolygonAtTime(
+          event.site, event.startTime, event.endTime),
+      workZoneMapViewModel.getCameraPositionAtTime(
+          event.site, event.startTime, event.endTime)
     ]);
     return WorkZonePolygons(result[0], result[1]);
   }

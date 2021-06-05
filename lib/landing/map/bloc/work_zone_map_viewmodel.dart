@@ -14,10 +14,10 @@ class WorkZoneMapViewModel {
   WorkZoneMapViewModel(this.siteWorkZoneRepository, this.cartographer);
 
   Future<CameraPosition> getCameraPositionAtTime(
-      String siteName, DateTime time) async {
+      String siteName, DateTime startTime, DateTime endTime) async {
     List<dynamic> result = await Future.wait<dynamic>([
-      _getCameraLatLngAtTime(siteName, time),
-      _getCameraZoomAtTime(siteName, time)
+      _getCameraLatLngAtTime(siteName, startTime, endTime),
+      _getCameraZoomAtTime(siteName, startTime, endTime)
     ]);
     return CameraPosition(target: result[0], zoom: result[1], tilt: 30);
   }
@@ -40,9 +40,10 @@ class WorkZoneMapViewModel {
     return CameraPosition(target: result[0], zoom: result[1], tilt: 30);
   }
 
-  Future<LatLng> _getCameraLatLngAtTime(String siteName, DateTime time) =>
+  Future<LatLng> _getCameraLatLngAtTime(
+          String siteName, DateTime startTime, DateTime endTime) =>
       siteWorkZoneRepository
-          .getWorkZoneAtTime(siteName, time)
+          .getWorkZoneAtTime(siteName, startTime, endTime)
           .then((zone) => _calcCameraLatLng(zone));
 
   Future<LatLng> _getCameraLatLngAtDate(String siteName, DateTime time) =>
@@ -59,9 +60,10 @@ class WorkZoneMapViewModel {
   LatLng _calcCameraLatLng(ConstructionZone zone) => cartographer
       .calcCentroid(zone.regions.expand((e) => e.points).toList().toRegion());
 
-  Future<double> _getCameraZoomAtTime(String siteName, DateTime time) =>
+  Future<double> _getCameraZoomAtTime(
+          String siteName, DateTime startTime, DateTime endTime) =>
       siteWorkZoneRepository
-          .getWorkZoneAtTime(siteName, time)
+          .getWorkZoneAtTime(siteName, startTime, endTime)
           .then((zone) => _determineRegionZoomLevel(zone));
 
   Future<double> _getCameraZoomAtDate(String siteName, DateTime time) =>
@@ -79,9 +81,10 @@ class WorkZoneMapViewModel {
       cartographer.determineRegionZoomLevel(
           zone.regions.expand((element) => element.points).toList().toRegion());
 
-  Future<Set<Polygon>> getPolygonAtTime(String siteName, DateTime time) async =>
+  Future<Set<Polygon>> getPolygonAtTime(
+          String siteName, DateTime startTime, DateTime endTime) async =>
       siteWorkZoneRepository
-          .getWorkZoneAtTime(siteName, time)
+          .getWorkZoneAtTime(siteName, startTime, endTime)
           .then((zone) => _genPolygons(zone));
 
   Future<Set<Polygon>> getPolygonAtDate(String siteName, DateTime time) async =>

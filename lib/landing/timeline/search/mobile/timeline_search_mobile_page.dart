@@ -99,7 +99,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
   PreferredSize _buildAppBar() => PreferredSize(
-      preferredSize: Size.fromHeight(100.0),
+      preferredSize: Size.fromHeight(150.0),
       child: AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
         transitionBuilder: (Widget child, Animation<double> animation) {
@@ -127,43 +127,80 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
 
   AppBar _buildAppBarInSearchMode() => AppBar(
       key: ValueKey(2),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       automaticallyImplyLeading: false,
-      flexibleSpace: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _animatedAppBar = _buildAppBarInVisualMode();
-                  });
-                },
-                icon: Icon(Icons.cancel_outlined),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              Text(
-                "Penton Rise Ct.",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ],
-          ),
-          Row(
+      flexibleSpace: Padding(
+          padding: EdgeInsets.only(top: 30),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                  child: DateButton(
-                      textStyle: Theme.of(context).textTheme.bodyText2,
-                      dateText: "Jun 3rd",
-                      action: () {})),
-              Expanded(child: Text("All Day"))
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  children: [
+                    _buildExitSearchModeButton(),
+                    Expanded(
+                        child: Center(
+                            child: Text("Edit your search",
+                                style: Theme.of(context).textTheme.headline6))),
+                    _buildSearchFilterButton()
+                  ],
+                ),
+              ),
+              Container(
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 3,
+                          blurRadius: 3,
+                          offset:
+                              Offset(0.5, 0.5), // changes position of shadow
+                        ),
+                      ],
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  child: IntrinsicHeight(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: DateButton(
+                              textStyle: Theme.of(context).textTheme.bodyText2,
+                              dateText: "Jun 3rd",
+                              action: () {})),
+                      VerticalDivider(
+                        thickness: 2,
+                      ),
+                      Expanded(
+                          child: DateButton(
+                              textStyle: Theme.of(context).textTheme.bodyText2,
+                              dateText: "Time",
+                              icon:
+                                  Icon(Icons.calendar_today_outlined, size: 20),
+                              action: () {})),
+                    ],
+                  )))
             ],
-          )
-        ],
-      ));
+          )));
+
+  IconButton _buildExitSearchModeButton() => IconButton(
+        onPressed: () => setState(() {
+          _animatedAppBar = _buildAppBarInVisualMode();
+        }),
+        icon: Icon(Icons.close),
+        color: Theme.of(context).colorScheme.onBackground,
+      );
+
+  IconButton _buildSearchFilterButton() => IconButton(
+        onPressed: () {},
+        icon: Icon(Icons.filter_list),
+        color: Theme.of(context).colorScheme.onBackground,
+      );
 
   Widget _buildMapHeader(BuildContext context) =>
       BlocBuilder<WorkZoneBloc, WorkZoneState>(builder: (context, state) {
