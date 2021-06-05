@@ -25,6 +25,8 @@ class TrendPeriodSelectionButton extends StatelessWidget {
           buildWhen: (previous, current) => current is SelectedSiteAtTrend,
           builder: (context, state) => state is SelectedSiteAtTrend
               ? DateButton(
+                  iconSize: 12,
+                  textStyle: Theme.of(context).textTheme.caption,
                   dateText: state.period.value(),
                   action: () {
                     onTapAction(context, state);

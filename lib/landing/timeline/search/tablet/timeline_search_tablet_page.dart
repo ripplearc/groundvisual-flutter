@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
@@ -43,6 +42,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   final int contentFlex = 4;
   late double _searchBarWidth;
   late double _contentWidth;
+  StreamSubscription? _highlightDelaySubscription;
 
   int? prevMin;
 
@@ -64,17 +64,21 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
 
   void _detectCurrentHighlightedItem() {
     itemPositionsListener.itemPositions.addListener(() {
+      _highlightDelaySubscription?.cancel();
       int value = itemPositionsListener.itemPositions.value
           .where(this._itemIsAtLeastHalfVisible)
           .reduce((ItemPosition min, ItemPosition position) =>
               position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
           .index;
-
-      if (value != prevMin) {
-        setState(() {
-          prevMin = value;
-        });
-      }
+      _highlightDelaySubscription = Future.delayed(Duration(milliseconds: 180))
+          .asStream()
+          .listen((event) {
+        if (value != prevMin) {
+          setState(() {
+            prevMin = value;
+          });
+        }
+      });
     });
   }
 

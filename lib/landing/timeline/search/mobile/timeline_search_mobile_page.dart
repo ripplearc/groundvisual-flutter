@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/component/buttons/date_button.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
@@ -38,7 +41,15 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   final Completer<GoogleMapController> _controller = Completer();
   late Size _screenSize;
   late double _contentHeight;
+  Widget? _animatedAppBar;
   static const double titleHeight = 70;
+
+  final ItemPositionsListener _itemPositionsListener =
+      ItemPositionsListener.create();
+
+  StreamSubscription? _highlightDelaySubscription;
+
+  int? prevMin;
 
   @override
   void didChangeDependencies() {
@@ -48,17 +59,129 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _detectCurrentHighlightedItem();
+  }
+
+  void _detectCurrentHighlightedItem() {
+    _itemPositionsListener.itemPositions.addListener(() {
+      _highlightDelaySubscription?.cancel();
+      int value = _itemPositionsListener.itemPositions.value
+          .where(this._itemIsAtLeastHalfVisible)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .index;
+
+      _highlightDelaySubscription = Future.delayed(Duration(milliseconds: 180))
+          .asStream()
+          .listen((event) {
+        if (value != prevMin) {
+          setState(() {
+            prevMin = value;
+            print("✅ $prevMin");
+            BlocProvider.of<TimelineSearchBloc>(context)
+                .add(SearchDailyTimeline(Date.today));
+          });
+        }
+      });
+    });
+  }
+
+  bool _itemIsAtLeastHalfVisible(ItemPosition position) =>
+      position.itemTrailingEdge > 0 &&
+      position.itemLeadingEdge.abs() < position.itemTrailingEdge.abs();
+
+  @override
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: TimelineSearchBar()),
+      appBar: _buildAppBar(),
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
+  PreferredSize _buildAppBar() => PreferredSize(
+      preferredSize: Size.fromHeight(100.0),
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final offsetAnimation =
+              Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, -0.0))
+                  .animate(animation);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+        child: _animatedAppBar ?? _buildAppBarInVisualMode(),
+      ));
+
+  AppBar _buildAppBarInVisualMode() => AppBar(
+        key: ValueKey(1),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: TimelineSearchBar(
+            onTap: () => setState(() {
+                  _animatedAppBar = _buildAppBarInSearchMode();
+                })),
+      );
+
+  AppBar _buildAppBarInSearchMode() => AppBar(
+      key: ValueKey(2),
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      flexibleSpace: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _animatedAppBar = _buildAppBarInVisualMode();
+                  });
+                },
+                icon: Icon(Icons.cancel_outlined),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              Text(
+                "Penton Rise Ct.",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: DateButton(
+                      textStyle: Theme.of(context).textTheme.bodyText2,
+                      dateText: "Jun 3rd",
+                      action: () {})),
+              Expanded(child: Text("All Day"))
+            ],
+          )
+        ],
+      ));
+
   Widget _buildMapHeader(BuildContext context) =>
-      WorkZoneMap(bottomPadding: _contentHeight, mapController: _controller);
+      BlocBuilder<WorkZoneBloc, WorkZoneState>(builder: (context, state) {
+        if (state is WorkZoneInitial)
+          return WorkZoneMap(
+              bottomPadding: _contentHeight,
+              cameraPosition: state.cameraPosition,
+              mapController: _controller);
+        else if (state is WorkZonePolygons)
+          return WorkZoneMap(
+              bottomPadding: _contentHeight,
+              cameraPosition: state.cameraPosition,
+              workZone: state.workZone,
+              mapController: _controller);
+        else
+          return WorkZoneMap(
+              bottomPadding: _contentHeight, mapController: _controller);
+      });
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
@@ -103,6 +226,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           initialScrollIndex: widget.initialImageIndex,
           scrollDirection: Axis.vertical,
           itemCount: images.length,
+          itemPositionsListener: _itemPositionsListener,
           itemBuilder: (_, index) =>
               BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
                   builder: (context, state) =>

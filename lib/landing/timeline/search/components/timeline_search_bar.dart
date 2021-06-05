@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class TimelineSearchBar extends StatelessWidget {
-
   final double? width;
+  final GestureTapCallback? onTap;
 
-  const TimelineSearchBar({Key? key, this.width}) : super(key: key);
+  const TimelineSearchBar({Key? key, this.width, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildSearchBar(context);
@@ -26,20 +27,33 @@ class TimelineSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(30))),
       child: IntrinsicHeight(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                  color: Theme.of(context).colorScheme.onBackground,
-                  icon: Icon(Icons.arrow_back_outlined),
-                  onPressed: () => Navigator.pop(context)),
-              Text("Penton Rise Ct.", style: Theme.of(context).textTheme.subtitle1),
-              Spacer(),
-              Text("Aug 1 - 2", style: Theme.of(context).textTheme.bodyText2),
-              VerticalDivider(
-                thickness: 2,
-              ),
-              Icon(Icons.filter_list)
-            ],
-          )));
-
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          IconButton(
+              color: Theme.of(context).colorScheme.onBackground,
+              icon: Icon(Icons.arrow_back_outlined),
+              onPressed: () => Navigator.pop(context)),
+          Expanded(
+              child: GestureDetector(
+            onTap: onTap,
+            behavior: HitTestBehavior.translucent,
+            child: Row(
+              children: [
+                Text("Penton Rise Ct.",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.subtitle1),
+                Spacer(),
+                Text("Aug 1 - 2",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyText2),
+                VerticalDivider(
+                  thickness: 2,
+                ),
+                Icon(Icons.filter_list)
+              ],
+            ),
+          ))
+        ],
+      )));
 }

@@ -26,6 +26,8 @@ class DateSelectionButton extends StatelessWidget {
           buildWhen: (prev, current) => current is SelectedSiteAtDate,
           builder: (context, state) => state is SelectedSiteAtDate
               ? DateButton(
+                  iconSize: 12,
+                  textStyle: Theme.of(context).textTheme.caption,
                   dateText: state.date.isSameDay(DateTime.now())
                       ? 'Today'
                       : DateFormat('MM/dd/yyyy').format(state.date),

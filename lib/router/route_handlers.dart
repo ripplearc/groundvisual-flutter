@@ -5,6 +5,7 @@ import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
 import 'package:groundvisual_flutter/app/tablet/root_home_tablet_page.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/mobile/timeline_gallery_mobile_view.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
@@ -23,17 +24,18 @@ var rootHandler = Handler(
 var timelineSearchHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   final args = context?.settings?.arguments as List<TimelineImageModel>;
-  String? siteName = params["sitename"]?.first;
   DateTime? date = int.tryParse(params["millisecondssinceepoch"]?.first ?? "")
       ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
   int? initialImageIndex =
       int.tryParse(params["initialImageIndex"]?.first ?? "0");
-  if (siteName == null || date == null || initialImageIndex == null)
-    return null;
-
-  return BlocProvider(
-      create: (context) => getIt<TimelineSearchBloc>(param1: args)
-        ..add(SearchDailyTimeline(siteName, date)),
+  if (date == null || initialImageIndex == null) return null;
+  return MultiBlocProvider(
+      providers: [
+        BlocProvider<TimelineSearchBloc>(
+            create: (_) => getIt<TimelineSearchBloc>(param1: args)
+              ..add(SearchDailyTimeline(date))),
+        BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>())
+      ],
       child: ScreenTypeLayout.builder(
         mobile: (_) =>
             TimelineSearchMobilePage(initialImageIndex: initialImageIndex),
