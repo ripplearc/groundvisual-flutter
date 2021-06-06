@@ -6,9 +6,14 @@ class TimelineSearchBar extends StatelessWidget {
   final double? width;
   final GestureTapCallback? onTap;
   final String dateString;
+  final String siteName;
 
   const TimelineSearchBar(
-      {Key? key, this.width, this.onTap, required this.dateString})
+      {Key? key,
+      this.width,
+      this.onTap,
+      required this.dateString,
+      required this.siteName})
       : super(key: key);
 
   @override
@@ -43,7 +48,7 @@ class TimelineSearchBar extends StatelessWidget {
             behavior: HitTestBehavior.translucent,
             child: Row(
               children: [
-                Text("Penton Rise Ct.",
+                Text(siteName,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.subtitle1),
                 Spacer(),

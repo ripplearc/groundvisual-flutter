@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
 import 'package:groundvisual_flutter/component/calendar_sheet.dart';
-import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
+import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 typedef _OnTapAction(BuildContext context, SelectedSiteAtDate state);
 
@@ -41,13 +40,14 @@ class DateSelectionButton extends StatelessWidget {
           context: scaffoldContext,
           isScrollControlled: true,
           backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
-          builder: (_) => _buildCalenderInBottomSheet(state.date, (DateTime t) {
+          builder: (_) =>
+              _buildCalenderInBottomSheet(state.date, (DateTime? t) {
                 _onDateSelected(state, t, scaffoldContext);
               }));
 
   Container _buildCalenderInBottomSheet(
     DateTime initialSelectedDate,
-    Function(DateTime t) action,
+    Function(DateTime? t) action,
   ) =>
       Container(
         height: 500,
@@ -62,7 +62,7 @@ class DateSelectionButton extends StatelessWidget {
           builder: (_) => SimpleDialog(
                 backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
                 children: [
-                  _buildCalenderInDialog(state.date, (DateTime t) {
+                  _buildCalenderInDialog(state.date, (DateTime? t) {
                     _onDateSelected(state, t, scaffoldContext);
                   })
                 ],
@@ -70,7 +70,7 @@ class DateSelectionButton extends StatelessWidget {
 
   Widget _buildCalenderInDialog(
     DateTime initialSelectedDate,
-    Function(DateTime t) action,
+    Function(DateTime? t) action,
   ) =>
       Container(
         height: 600,
@@ -81,8 +81,8 @@ class DateSelectionButton extends StatelessWidget {
       );
 
   void _onDateSelected(
-      SelectedSiteAtDate state, DateTime t, BuildContext context) {
-    if (state.date.isSameDay(t)) return;
+      SelectedSiteAtDate state, DateTime? t, BuildContext context) {
+    if (t == null || state.date.isSameDay(t)) return;
     BlocProvider.of<SelectedSiteBloc>(context).add(DateSelected(t, context));
   }
 }

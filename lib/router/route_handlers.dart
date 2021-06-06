@@ -1,4 +1,5 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
@@ -29,6 +30,7 @@ var timelineSearchHandler = Handler(
       ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
   int? initialImageIndex =
       int.tryParse(params["initialImageIndex"]?.first ?? "0");
+  String? siteName =  params["siteName"]?.first ?? "";
   if (date == null || initialImageIndex == null) return null;
   return MultiBlocProvider(
       providers: [
@@ -37,8 +39,8 @@ var timelineSearchHandler = Handler(
               ..add(SearchDailyTimeline(date))),
         BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>()),
         BlocProvider<TimelineSearchQueryBloc>(
-          create: (_) =>
-              getIt<TimelineSearchQueryBloc>(param1: date, param2: date),
+          create: (_) => getIt<TimelineSearchQueryBloc>(
+              param1: DateTimeRange(start: date, end: date), param2: siteName),
         )
       ],
       child: ScreenTypeLayout.builder(

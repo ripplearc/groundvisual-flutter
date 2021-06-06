@@ -27,7 +27,7 @@ class _FleetHomePageState extends State<FleetHomePage> {
         builder: (ctx) => SimpleDialog(
               backgroundColor: Theme.of(context).cardTheme.color,
               children: [
-                _calenderSelection(ctx, Date.startOfToday, (DateTime t) {})
+                _calenderSelection(ctx, Date.startOfToday, (DateTime? t) {})
               ],
             ));
   }
@@ -35,7 +35,7 @@ class _FleetHomePageState extends State<FleetHomePage> {
   Widget _calenderSelection(
     BuildContext context,
     DateTime initialSelectedDate,
-    Function(DateTime t) action,
+    Function(DateTime? t) action,
   ) =>
       Container(
         height: 600,

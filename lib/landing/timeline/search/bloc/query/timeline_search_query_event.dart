@@ -3,12 +3,11 @@ part of 'timeline_search_query_bloc.dart';
 @immutable
 abstract class TimelineSearchQueryEvent extends Equatable {}
 
-class BuildInitialTimelineSearchQuery extends TimelineSearchQueryEvent {
-  final DateTime startDate;
-  final DateTime endDate;
+class UpdateTimelineSearchQueryOfDateRange extends TimelineSearchQueryEvent {
+  final DateTimeRange range;
 
-  BuildInitialTimelineSearchQuery(this.startDate, this.endDate);
+  UpdateTimelineSearchQueryOfDateRange(this.range);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [range];
 }

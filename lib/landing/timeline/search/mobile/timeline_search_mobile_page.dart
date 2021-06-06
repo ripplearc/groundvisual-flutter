@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
+import 'package:groundvisual_flutter/component/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
@@ -123,6 +124,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
         title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
             builder: (blocContext, state) => TimelineSearchBar(
                 dateString: state.dateString,
+                siteName: state.siteName,
                 onTap: () => setState(() {
                       _animatedAppBar = _buildAppBarInSearchMode();
                     }))),
@@ -167,7 +169,14 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
               child: DateButton(
                   textStyle: Theme.of(context).textTheme.bodyText2,
                   dateText: state.dateString,
-                  action: () {})),
+                  action: () {
+                    showModalBottomSheet<void>(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Theme.of(context).cardTheme.color,
+                        builder: (_) =>
+                            _buildCalenderInBottomSheet(state.dateRange));
+                  })),
           VerticalDivider(
             thickness: 2,
           ),
@@ -179,6 +188,31 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                   action: () {})),
         ],
       )));
+
+  Container _buildCalenderInBottomSheet(
+          DateTimeRange initialSelectedDateRange) =>
+      Container(
+        height: 500,
+        child: CalendarSheet(
+          confirmSelectedDateAction: (t) =>
+              BlocProvider.of<TimelineSearchQueryBloc>(context).add(
+                  UpdateTimelineSearchQueryOfDateRange(
+                      DateTimeRange(start: t, end: t))),
+          confirmSelectedDateRangeAction: (s, e) =>
+              BlocProvider.of<TimelineSearchQueryBloc>(context).add(
+                  UpdateTimelineSearchQueryOfDateRange(
+                      DateTimeRange(start: s, end: e))),
+          initialSelectedDate: initialSelectedDateRange.start
+                  .isSameDay(initialSelectedDateRange.end)
+              ? initialSelectedDateRange.start
+              : Date.today,
+          initialSelectedDateRange: initialSelectedDateRange.start
+                  .isSameDay(initialSelectedDateRange.end)
+              ? null
+              : initialSelectedDateRange,
+          allowRangeSelection: true,
+        ),
+      );
 
   Container _buildSearchModeHeader() => Container(
         margin: EdgeInsets.symmetric(horizontal: 20.0),

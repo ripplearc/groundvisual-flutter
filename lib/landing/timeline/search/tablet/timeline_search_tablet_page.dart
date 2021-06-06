@@ -96,7 +96,9 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
         elevation: 0,
         title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
             builder: (blocContext, state) => TimelineSearchBar(
-                dateString: state.dateString, width: _searchBarWidth)),
+                siteName: state.siteName,
+                dateString: state.dateString,
+                width: _searchBarWidth)),
         centerTitle: false,
       ),
       body: Row(children: [
