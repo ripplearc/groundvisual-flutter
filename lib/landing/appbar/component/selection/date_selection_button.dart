@@ -7,6 +7,7 @@ import 'package:groundvisual_flutter/component/calendar_sheet.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:groundvisual_flutter/extensions/date.dart';
 
 typedef _OnTapAction(BuildContext context, SelectedSiteAtDate state);
 
@@ -28,9 +29,7 @@ class DateSelectionButton extends StatelessWidget {
               ? DateButton(
                   iconSize: 12,
                   textStyle: Theme.of(context).textTheme.caption,
-                  dateText: state.date.isSameDay(DateTime.now())
-                      ? 'Today'
-                      : DateFormat('MM/dd/yyyy').format(state.date),
+                  dateText: state.date.toShortString(),
                   action: () {
                     onTapAction(context, state);
                   },

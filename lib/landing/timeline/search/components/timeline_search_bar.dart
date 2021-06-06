@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 class TimelineSearchBar extends StatelessWidget {
   final double? width;
   final GestureTapCallback? onTap;
+  final String dateString;
 
-  const TimelineSearchBar({Key? key, this.width, this.onTap}) : super(key: key);
+  const TimelineSearchBar(
+      {Key? key, this.width, this.onTap, required this.dateString})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildSearchBar(context);
@@ -44,7 +47,7 @@ class TimelineSearchBar extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.subtitle1),
                 Spacer(),
-                Text("Aug 1 - 2",
+                Text(dateString,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyText2),
                 VerticalDivider(

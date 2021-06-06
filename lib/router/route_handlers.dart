@@ -8,7 +8,8 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/mobile/timeline_gallery_mobile_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/mobile/timeline_search_mobile_page.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_search_tablet_page.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/web/timeline_search_web_page.dart';
@@ -31,10 +32,14 @@ var timelineSearchHandler = Handler(
   if (date == null || initialImageIndex == null) return null;
   return MultiBlocProvider(
       providers: [
-        BlocProvider<TimelineSearchBloc>(
-            create: (_) => getIt<TimelineSearchBloc>(param1: args)
+        BlocProvider<TimelineSearchImagesBloc>(
+            create: (_) => getIt<TimelineSearchImagesBloc>(param1: args)
               ..add(SearchDailyTimeline(date))),
-        BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>())
+        BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>()),
+        BlocProvider<TimelineSearchQueryBloc>(
+          create: (_) =>
+              getIt<TimelineSearchQueryBloc>(param1: date, param2: date),
+        )
       ],
       child: ScreenTypeLayout.builder(
         mobile: (_) =>
