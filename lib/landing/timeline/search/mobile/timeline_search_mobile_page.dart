@@ -19,6 +19,7 @@ import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 import '../components/timeline_sheet_header.dart';
 
@@ -169,13 +170,16 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
               child: DateButton(
                   textStyle: Theme.of(context).textTheme.bodyText2,
                   dateText: state.dateString,
-                  action: () {
-                    showModalBottomSheet<void>(
+                  action: () async {
+                    final range = await showModalBottomSheet<DateTimeRange>(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Theme.of(context).cardTheme.color,
                         builder: (_) =>
                             _buildCalenderInBottomSheet(state.dateRange));
+                    range?.let((it) =>
+                        BlocProvider.of<TimelineSearchQueryBloc>(context)
+                            .add(UpdateTimelineSearchQueryOfDateRange(it)));
                   })),
           VerticalDivider(
             thickness: 2,
@@ -185,7 +189,60 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                   textStyle: Theme.of(context).textTheme.bodyText2,
                   dateText: "Time",
                   icon: Icon(Icons.calendar_today_outlined, size: 20),
-                  action: () {})),
+                  action: () async {
+                    TimeRange result = await showTimeRangePicker(
+                      context: context,
+                      start: TimeOfDay(hour: 22, minute: 9),
+                      onStartChange: (start) {
+                        print("start time " + start.toString());
+                      },
+                      onEndChange: (end) {
+                        print("end time " + end.toString());
+                      },
+                      interval: Duration(minutes: 30),
+                      use24HourFormat: false,
+                      padding: 30,
+                      strokeWidth: 20,
+                      handlerRadius: 14,
+                      strokeColor: Colors.orange,
+                      handlerColor: Colors.orange[700],
+                      selectedColor: Colors.amber,
+                      backgroundColor: Colors.black.withOpacity(0.3),
+                      ticks: 12,
+                      ticksColor: Colors.white,
+                      snap: true,
+                      labels: [
+                        "12 pm",
+                        "3 am",
+                        "6 am",
+                        "9 am",
+                        "12 am",
+                        "3 pm",
+                        "6 pm",
+                        "9 pm"
+                      ].asMap().entries.map((e) {
+                        return ClockLabel.fromIndex(
+                            idx: e.key, length: 8, text: e.value);
+                      }).toList(),
+                      labelOffset: -30,
+                      labelStyle: TextStyle(
+                          fontSize: 22,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold),
+                      timeTextStyle: TextStyle(
+                          color: Colors.orange[700],
+                          fontSize: 24,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold),
+                      activeTimeTextStyle: TextStyle(
+                          color: Colors.orange,
+                          fontSize: 26,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold),
+                    );
+
+                    print("result " + result.toString());
+                  })),
         ],
       )));
 
@@ -194,14 +251,6 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
       Container(
         height: 500,
         child: CalendarSheet(
-          confirmSelectedDateAction: (t) =>
-              BlocProvider.of<TimelineSearchQueryBloc>(context).add(
-                  UpdateTimelineSearchQueryOfDateRange(
-                      DateTimeRange(start: t, end: t))),
-          confirmSelectedDateRangeAction: (s, e) =>
-              BlocProvider.of<TimelineSearchQueryBloc>(context).add(
-                  UpdateTimelineSearchQueryOfDateRange(
-                      DateTimeRange(start: s, end: e))),
           initialSelectedDate: initialSelectedDateRange.start
                   .isSameDay(initialSelectedDateRange.end)
               ? initialSelectedDateRange.start

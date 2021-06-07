@@ -40,8 +40,6 @@ class _FleetHomePageState extends State<FleetHomePage> {
       Container(
         height: 600,
         width: 500,
-        child: CalendarSheet(
-            confirmSelectedDateAction: action,
-            initialSelectedDate: initialSelectedDate),
+        child: CalendarSheet(initialSelectedDate: initialSelectedDate),
       );
 }

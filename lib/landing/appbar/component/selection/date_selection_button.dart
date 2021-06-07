@@ -7,8 +7,10 @@ import 'package:groundvisual_flutter/component/calendar_sheet.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
-typedef _OnTapAction(BuildContext context, SelectedSiteAtDate state);
+typedef _OnTapAction = Future<DateTimeRange?> Function(
+    BuildContext context, SelectedSiteAtDate state);
 
 /// Select a date to display information about the current site. By default it selects today,
 /// and it doesn't allow to select the future. It resets to today when toggles between sites,
@@ -29,55 +31,43 @@ class DateSelectionButton extends StatelessWidget {
                   iconSize: 12,
                   textStyle: Theme.of(context).textTheme.caption,
                   dateText: state.date.toShortString(),
-                  action: () {
-                    onTapAction(context, state);
+                  action: () async {
+                    final range = await onTapAction(context, state);
+                    range?.let(
+                        (it) => _onDateSelected(state, it.start, context));
                   },
                 )
               : Container());
 
-  _showBottomSheet(BuildContext scaffoldContext, SelectedSiteAtDate state) =>
-      showModalBottomSheet<void>(
+  Future<DateTimeRange?> _showBottomSheet(
+          BuildContext scaffoldContext, SelectedSiteAtDate state) =>
+      showModalBottomSheet<DateTimeRange>(
           context: scaffoldContext,
           isScrollControlled: true,
           backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
-          builder: (_) =>
-              _buildCalenderInBottomSheet(state.date, (DateTime? t) {
-                _onDateSelected(state, t, scaffoldContext);
-              }));
+          builder: (_) => _buildCalenderInBottomSheet(state.date));
 
   Container _buildCalenderInBottomSheet(
     DateTime initialSelectedDate,
-    Function(DateTime? t) action,
   ) =>
       Container(
         height: 500,
-        child: CalendarSheet(
-            confirmSelectedDateAction: action,
-            initialSelectedDate: initialSelectedDate),
+        child: CalendarSheet(initialSelectedDate: initialSelectedDate),
       );
 
-  _showMaterialDialog(BuildContext scaffoldContext, SelectedSiteAtDate state) =>
-      showDialog(
+  Future<DateTimeRange?> _showMaterialDialog(
+          BuildContext scaffoldContext, SelectedSiteAtDate state) =>
+      showDialog<DateTimeRange>(
           context: scaffoldContext,
           builder: (_) => SimpleDialog(
                 backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
-                children: [
-                  _buildCalenderInDialog(state.date, (DateTime? t) {
-                    _onDateSelected(state, t, scaffoldContext);
-                  })
-                ],
+                children: [_buildCalenderInDialog(state.date)],
               ));
 
-  Widget _buildCalenderInDialog(
-    DateTime initialSelectedDate,
-    Function(DateTime? t) action,
-  ) =>
-      Container(
+  Widget _buildCalenderInDialog(DateTime initialSelectedDate) => Container(
         height: 600,
         width: 500,
-        child: CalendarSheet(
-            confirmSelectedDateAction: action,
-            initialSelectedDate: initialSelectedDate),
+        child: CalendarSheet(initialSelectedDate: initialSelectedDate),
       );
 
   void _onDateSelected(

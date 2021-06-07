@@ -6,16 +6,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'buttons/cancel_button.dart';
 import 'buttons/confirm_button.dart';
 
-typedef ConfirmSelectedDateAction(DateTime t);
-typedef ConfirmSelectedDateRangeAction(DateTime start, DateTime end);
 
 /// RDS Calendar sheet for selecting a certain date, or a date range,
 /// and execute an action upon the confirmation of date or range selection.
 class CalendarSheet extends StatefulWidget {
   CalendarSheet({
     Key? key,
-    this.confirmSelectedDateAction,
-    this.confirmSelectedDateRangeAction,
     this.initialSelectedDate,
     this.initialSelectedDateRange,
     this.allowRangeSelection = false,
@@ -24,8 +20,6 @@ class CalendarSheet extends StatefulWidget {
   final bool allowRangeSelection;
   final DateTime? initialSelectedDate;
   final DateTimeRange? initialSelectedDateRange;
-  final ConfirmSelectedDateAction? confirmSelectedDateAction;
-  final ConfirmSelectedDateRangeAction? confirmSelectedDateRangeAction;
 
   @override
   _CalendarSheetState createState() => _CalendarSheetState(
@@ -186,11 +180,12 @@ class _CalendarSheetState extends State<CalendarSheet>
                 final rangeEnd = _rangeEnd;
                 if (_rangeSelectionMode == RangeSelectionMode.disabled &&
                     selectedDay != null)
-                  widget.confirmSelectedDateAction?.call(selectedDay);
+                  Navigator.of(context).pop(DateTimeRange(
+                      start: selectedDay.startOfDay,
+                      end: selectedDay.endOfDay));
                 else if (rangeStart != null && rangeEnd != null)
-                  widget.confirmSelectedDateRangeAction
-                      ?.call(rangeStart, rangeEnd);
-                Navigator.pop(context);
+                  Navigator.of(context)
+                      .pop(DateTimeRange(start: rangeStart, end: rangeEnd));
               }),
             ),
           ),
