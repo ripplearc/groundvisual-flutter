@@ -147,6 +147,25 @@ class _CalendarSheetState extends State<CalendarSheet>
               .subtitle1
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
+      rangeStartDecoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        shape: BoxShape.circle,
+      ),
+      rangeEndDecoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        shape: BoxShape.circle,
+      ),
+      rangeHighlightColor: Theme.of(context).colorScheme.primary.withAlpha(64),
+      rangeStartTextStyle:Theme.of(context)
+          .textTheme
+          .subtitle1
+          ?.apply(color: Theme.of(context).colorScheme.background) ??
+          TextStyle(color: Theme.of(context).colorScheme.background),
+      rangeEndTextStyle:Theme.of(context)
+          .textTheme
+          .subtitle1
+          ?.apply(color: Theme.of(context).colorScheme.background) ??
+          TextStyle(color: Theme.of(context).colorScheme.background),
       weekendTextStyle: Theme.of(context)
               .textTheme
               .subtitle1
