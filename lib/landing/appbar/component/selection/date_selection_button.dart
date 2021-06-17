@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
-import 'package:groundvisual_flutter/component/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -45,14 +45,17 @@ class DateSelectionButton extends StatelessWidget {
           context: scaffoldContext,
           isScrollControlled: true,
           backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
-          builder: (_) => _buildCalenderInBottomSheet(state.date));
+          builder: (_) =>
+              _buildCalenderInBottomSheet(state.date, state.siteName));
 
   Container _buildCalenderInBottomSheet(
     DateTime initialSelectedDate,
+    String title,
   ) =>
       Container(
-        height: 500,
-        child: CalendarSheet(initialSelectedDate: initialSelectedDate),
+        height: 550,
+        child: CalendarSheet(
+            initialSelectedDate: initialSelectedDate, title: title),
       );
 
   Future<DateTimeRange?> _showMaterialDialog(

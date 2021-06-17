@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/buttons/toggle_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'buttons/cancel_button.dart';
-import 'buttons/confirm_button.dart';
-
+import '../buttons/cancel_button.dart';
+import '../buttons/confirm_button.dart';
 
 /// RDS Calendar sheet for selecting a certain date, or a date range,
 /// and execute an action upon the confirmation of date or range selection.
@@ -15,8 +14,10 @@ class CalendarSheet extends StatefulWidget {
     this.initialSelectedDate,
     this.initialSelectedDateRange,
     this.allowRangeSelection = false,
+    this.title,
   }) : super(key: key);
 
+  final String? title;
   final bool allowRangeSelection;
   final DateTime? initialSelectedDate;
   final DateTimeRange? initialSelectedDateRange;
@@ -66,35 +67,51 @@ class _CalendarSheetState extends State<CalendarSheet>
   Widget build(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          if (widget.title != null)
+            Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  widget.title ?? "",
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.left,
+                )),
           if (widget.allowRangeSelection) _buildDateRangeToggle(),
           _buildTableCalendar(),
-          _buildButtons(null),
+          _buildButtons(),
         ],
       );
 
-  ToggleButton _buildDateRangeToggle() => ToggleButton(
-      key: UniqueKey(),
-      initialIndex: _toggleIndex,
-      labels: ["Date", "Range"],
-      widthPercent: 50,
-      height: 35,
-      toggleAction: (index) {
-        setState(() {
-          _toggleIndex = index;
-          if (index == 0) {
-            _rangeStart = null;
-            _rangeEnd = null;
-            _rangeSelectionMode = RangeSelectionMode.disabled;
-          } else {
-            _selectedDay = null;
-            _rangeSelectionMode = RangeSelectionMode.enforced;
-          }
-        });
-      });
+  Row _buildDateRangeToggle() => Row(
+        children: [
+          Spacer(),
+          ToggleButton(
+              key: UniqueKey(),
+              initialIndex: _toggleIndex,
+              labels: ["Date", "Range"],
+              widthPercent: 50,
+              height: 35,
+              toggleAction: (index) {
+                setState(() {
+                  _toggleIndex = index;
+                  if (index == 0) {
+                    _rangeStart = null;
+                    _rangeEnd = null;
+                    _rangeSelectionMode = RangeSelectionMode.disabled;
+                  } else {
+                    _selectedDay = null;
+                    _rangeSelectionMode = RangeSelectionMode.enforced;
+                  }
+                });
+              }),
+          Spacer()
+        ],
+      );
 
-  TableCalendar _buildTableCalendar() => TableCalendar(
+  Widget _buildTableCalendar() => Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: TableCalendar(
         firstDay: DateTime.now().subtract(Duration(days: 365)),
         lastDay: DateTime.now(),
         focusedDay: _focusedDay,
@@ -113,7 +130,7 @@ class _CalendarSheetState extends State<CalendarSheet>
         rangeStartDay: _rangeStart,
         rangeEndDay: _rangeEnd,
         rangeSelectionMode: _rangeSelectionMode,
-      );
+      ));
 
   void _onRangeSelected(start, end, focusedDay) {
     setState(() {
@@ -156,15 +173,15 @@ class _CalendarSheetState extends State<CalendarSheet>
         shape: BoxShape.circle,
       ),
       rangeHighlightColor: Theme.of(context).colorScheme.primary.withAlpha(64),
-      rangeStartTextStyle:Theme.of(context)
-          .textTheme
-          .subtitle1
-          ?.apply(color: Theme.of(context).colorScheme.background) ??
+      rangeStartTextStyle: Theme.of(context)
+              .textTheme
+              .subtitle1
+              ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
-      rangeEndTextStyle:Theme.of(context)
-          .textTheme
-          .subtitle1
-          ?.apply(color: Theme.of(context).colorScheme.background) ??
+      rangeEndTextStyle: Theme.of(context)
+              .textTheme
+              .subtitle1
+              ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       weekendTextStyle: Theme.of(context)
               .textTheme
@@ -174,18 +191,13 @@ class _CalendarSheetState extends State<CalendarSheet>
       todayDecoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           shape: BoxShape.circle),
-      todayTextStyle: Theme.of(context)
-              .textTheme
-              .subtitle1
-              ?.apply(color: Theme.of(context).colorScheme.background) ??
+      todayTextStyle: Theme.of(context).textTheme.subtitle1?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
-      disabledTextStyle: Theme.of(context)
-              .textTheme
-              .subtitle1
-              ?.apply(color: Theme.of(context).colorScheme.onSurface) ??
-          TextStyle(color: Theme.of(context).colorScheme.onSurface));
+      disabledTextStyle:
+          Theme.of(context).textTheme.subtitle1?.apply(color: Theme.of(context).colorScheme.onSurface) ??
+              TextStyle(color: Theme.of(context).colorScheme.onSurface));
 
-  Row _buildButtons(Function(DateTime t)? f) => Row(
+  Row _buildButtons() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,7 +213,7 @@ class _CalendarSheetState extends State<CalendarSheet>
                     selectedDay != null)
                   Navigator.of(context).pop(DateTimeRange(
                       start: selectedDay.startOfDay,
-                      end: selectedDay.endOfDay));
+                      end: selectedDay.startOfDay));
                 else if (rangeStart != null && rangeEnd != null)
                   Navigator.of(context)
                       .pop(DateTimeRange(start: rangeStart, end: rangeEnd));

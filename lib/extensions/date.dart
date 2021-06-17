@@ -1,4 +1,5 @@
 import 'package:dart_date/dart_date.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 extension ToString on DateTime {
@@ -16,4 +17,20 @@ extension ToString on DateTime {
       : isSameMonth(endDate)
           ? toShortString() + " - " + DateFormat('dd').format(endDate)
           : toShortString() + " - " + endDate.toShortString();
+}
+
+extension ToTimeString on DateTimeRange {
+  String get toTimeRangeString {
+    final startTime = TimeOfDay.fromDateTime(start);
+    final endTime = TimeOfDay.fromDateTime(end);
+    return start.isSameDay(end)
+        ? "${_addLeadingZeroIfNeeded(startTime.hour)}:${_addLeadingZeroIfNeeded(startTime.minute)}" +
+            " - ${_addLeadingZeroIfNeeded(endTime.hour)}:${_addLeadingZeroIfNeeded(endTime.minute)}"
+        : "Not Same Day";
+  }
+
+  String _addLeadingZeroIfNeeded(int value) {
+    if (value < 10) return '0$value';
+    return value.toString();
+  }
 }

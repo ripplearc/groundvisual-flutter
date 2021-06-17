@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dart_date/dart_date.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
-import 'package:groundvisual_flutter/component/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/card/time_range_card.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
@@ -17,9 +20,6 @@ import 'package:groundvisual_flutter/landing/timeline/search/components/timeline
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
-import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:time_range_picker/time_range_picker.dart';
 
 import '../components/timeline_sheet_header.dart';
 
@@ -175,11 +175,11 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Theme.of(context).cardTheme.color,
-                        builder: (_) =>
-                            _buildCalenderInBottomSheet(state.dateRange));
+                        builder: (_) => _buildCalenderInBottomSheet(
+                            state.dateTimeRange, state.siteName));
                     range?.let((it) =>
                         BlocProvider.of<TimelineSearchQueryBloc>(context)
-                            .add(UpdateTimelineSearchQueryOfDateRange(it)));
+                            .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
                   })),
           VerticalDivider(
             thickness: 2,
@@ -187,70 +187,44 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           Expanded(
               child: DateButton(
                   textStyle: Theme.of(context).textTheme.bodyText2,
-                  dateText: "Time",
+                  dateText: state.timeString,
                   icon: Icon(Icons.calendar_today_outlined, size: 20),
-                  action: () async {
-                    TimeRange result = await showTimeRangePicker(
-                      context: context,
-                      start: TimeOfDay(hour: 22, minute: 9),
-                      onStartChange: (start) {
-                        print("start time " + start.toString());
-                      },
-                      onEndChange: (end) {
-                        print("end time " + end.toString());
-                      },
-                      interval: Duration(minutes: 30),
-                      use24HourFormat: false,
-                      padding: 30,
-                      strokeWidth: 20,
-                      handlerRadius: 14,
-                      strokeColor: Colors.orange,
-                      handlerColor: Colors.orange[700],
-                      selectedColor: Colors.amber,
-                      backgroundColor: Colors.black.withOpacity(0.3),
-                      ticks: 12,
-                      ticksColor: Colors.white,
-                      snap: true,
-                      labels: [
-                        "12 pm",
-                        "3 am",
-                        "6 am",
-                        "9 am",
-                        "12 am",
-                        "3 pm",
-                        "6 pm",
-                        "9 pm"
-                      ].asMap().entries.map((e) {
-                        return ClockLabel.fromIndex(
-                            idx: e.key, length: 8, text: e.value);
-                      }).toList(),
-                      labelOffset: -30,
-                      labelStyle: TextStyle(
-                          fontSize: 22,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold),
-                      timeTextStyle: TextStyle(
-                          color: Colors.orange[700],
-                          fontSize: 24,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold),
-                      activeTimeTextStyle: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 26,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold),
-                    );
+                  action: state.enableTimeEdit
+                      ? () async {
+                          DateTimeRange? range =
+                              await showModalBottomSheet<DateTimeRange>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor:
+                                      Theme.of(context).cardTheme.color,
+                                  builder: (_) => _buildTimeRangeBottomSheet(
+                                      state.siteName,
+                                      state.dateTimeRange.start,
+                                      state.dateTimeRange.end));
 
-                    print("result " + result.toString());
-                  })),
+                          range?.let((it) =>
+                              BlocProvider.of<TimelineSearchQueryBloc>(context)
+                                  .add(UpdateTimelineSearchQueryOfDateTimeRange(
+                                      it)));
+                        }
+                      : null)),
         ],
       )));
 
-  Container _buildCalenderInBottomSheet(
-          DateTimeRange initialSelectedDateRange) =>
+  Container _buildTimeRangeBottomSheet(
+          String title, DateTime start, DateTime end) =>
       Container(
-        height: 500,
+          height: 380,
+          child: TimeRangeCard(
+              title: title,
+              initialDateTimeRange: (DateTimeRange(start: start, end: end))));
+
+  Container _buildCalenderInBottomSheet(
+          DateTimeRange initialSelectedDateRange, String title) =>
+      Container(
+        height: 560,
         child: CalendarSheet(
+          title: title,
           initialSelectedDate: initialSelectedDateRange.start
                   .isSameDay(initialSelectedDateRange.end)
               ? initialSelectedDateRange.start

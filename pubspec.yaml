@@ -49,7 +49,7 @@ dependencies:
   dart_date: ^1.1.0-nullsafety.0
   # UI
   table_calendar: ^3.0.0
-  time_range_picker: ^2.0.1
+  time_range: ^1.0.0
   flutter_toggle_tab: ^1.0.0
   persistent_bottom_nav_bar: any
   shimmer: ^2.0.0-nullsafety.0
