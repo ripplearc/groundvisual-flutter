@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
-import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
@@ -43,6 +43,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   final int contentFlex = 4;
   late double _searchBarWidth;
   late double _contentWidth;
+  StreamSubscription? _highlightDelaySubscription;
 
   int? prevMin;
 
@@ -64,17 +65,21 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
 
   void _detectCurrentHighlightedItem() {
     itemPositionsListener.itemPositions.addListener(() {
+      _highlightDelaySubscription?.cancel();
       int value = itemPositionsListener.itemPositions.value
           .where(this._itemIsAtLeastHalfVisible)
           .reduce((ItemPosition min, ItemPosition position) =>
               position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
           .index;
-
-      if (value != prevMin) {
-        setState(() {
-          prevMin = value;
-        });
-      }
+      _highlightDelaySubscription = Future.delayed(Duration(milliseconds: 180))
+          .asStream()
+          .listen((event) {
+        if (value != prevMin) {
+          setState(() {
+            prevMin = value;
+          });
+        }
+      });
     });
   }
 
@@ -89,7 +94,11 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: TimelineSearchBar(width: _searchBarWidth),
+        title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
+            builder: (blocContext, state) => TimelineSearchBar(
+                siteName: state.siteName,
+                dateString: state.dateString,
+                width: _searchBarWidth)),
         centerTitle: false,
       ),
       body: Row(children: [
@@ -110,7 +119,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
       TimelineSheetHeader(width: _contentWidth);
 
   Widget _buildContentBody() =>
-      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
           builder: (blocContext, state) => Container(
               alignment: Alignment.center,
               color: Theme.of(context).colorScheme.background,
@@ -131,8 +140,9 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
             )
           : Container();
 
-  BlocBuilder<TimelineSearchBloc, TimelineSearchState> _buildItem(int index) =>
-      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+  BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState> _buildItem(
+          int index) =>
+      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
           builder: (context, state) => state.images[index].let((image) =>
               Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

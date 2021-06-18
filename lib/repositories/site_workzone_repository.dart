@@ -9,7 +9,8 @@ import 'package:injectable/injectable.dart';
 /// Repository to provide the work zone at specific time, date or over a period of time.
 abstract class SiteWorkZoneRepository {
   /// Get the work zone at specific time, typically over 15 mins.
-  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time);
+  Future<ConstructionZone> getWorkZoneAtTime(
+      String siteName, DateTime startTime, DateTime endTime);
 
   /// Get the work zone for one day.
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time);
@@ -42,7 +43,8 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
       siteWorkZoneService.getWorkZoneAtDate(siteName, time);
 
   @override
-  Future<ConstructionZone> getWorkZoneAtTime(String siteName, DateTime time) {
+  Future<ConstructionZone> getWorkZoneAtTime(
+      String siteName, DateTime startTime, DateTime endTime) {
     switch (siteName) {
       case "M51":
         return _getM51Zone;
@@ -51,7 +53,8 @@ class SiteWorkZoneRepositoryImpl extends SiteWorkZoneRepository {
       case "Kensington":
         return _getKensingtonZoneAtTime;
       default:
-        return siteWorkZoneService.getWorkZoneAtTime("Penton Rise", time);
+        return siteWorkZoneService.getWorkZoneAtTime(
+            "Penton Rise", startTime, endTime);
     }
   }
 

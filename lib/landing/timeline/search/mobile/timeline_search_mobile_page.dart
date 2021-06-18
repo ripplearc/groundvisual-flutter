@@ -1,19 +1,21 @@
 import 'dart:async';
 
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
-import 'package:groundvisual_flutter/models/timeline_image_model.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/mobile/timeline_mobile_search_bar.dart';
+import 'package:groundvisual_flutter/models/timeline_image_model.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../components/timeline_sheet_header.dart';
 
@@ -40,6 +42,13 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   late double _contentHeight;
   static const double titleHeight = 70;
 
+  final ItemPositionsListener _itemPositionsListener =
+      ItemPositionsListener.create();
+
+  StreamSubscription? _highlightDelaySubscription;
+
+  int? prevMin;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -48,17 +57,64 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _detectCurrentHighlightedItem();
+  }
+
+  void _detectCurrentHighlightedItem() {
+    _itemPositionsListener.itemPositions.addListener(() {
+      _highlightDelaySubscription?.cancel();
+      int value = _itemPositionsListener.itemPositions.value
+          .where(this._itemIsAtLeastHalfVisible)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .index;
+
+      _highlightDelaySubscription = Future.delayed(Duration(milliseconds: 180))
+          .asStream()
+          .listen((event) {
+        if (value != prevMin) {
+          setState(() {
+            prevMin = value;
+            BlocProvider.of<TimelineSearchImagesBloc>(context)
+                .add(SearchDailyTimeline(Date.today));
+          });
+        }
+      });
+    });
+  }
+
+  bool _itemIsAtLeastHalfVisible(ItemPosition position) =>
+      position.itemTrailingEdge > 0 &&
+      position.itemLeadingEdge.abs() < position.itemTrailingEdge.abs();
+
+  @override
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: TimelineSearchBar()),
+      appBar: _buildAppBar(),
       body: Stack(children: [_buildMapHeader(context), _buildContent()]));
 
+  PreferredSize _buildAppBar() => PreferredSize(
+      preferredSize: Size.fromHeight(150.0), child: TimelineMobileSearchBar());
+
   Widget _buildMapHeader(BuildContext context) =>
-      WorkZoneMap(bottomPadding: _contentHeight, mapController: _controller);
+      BlocBuilder<WorkZoneBloc, WorkZoneState>(builder: (context, state) {
+        if (state is WorkZoneInitial)
+          return WorkZoneMap(
+              bottomPadding: _contentHeight,
+              cameraPosition: state.cameraPosition,
+              mapController: _controller);
+        else if (state is WorkZonePolygons)
+          return WorkZoneMap(
+              bottomPadding: _contentHeight,
+              cameraPosition: state.cameraPosition,
+              workZone: state.workZone,
+              mapController: _controller);
+        else
+          return WorkZoneMap(
+              bottomPadding: _contentHeight, mapController: _controller);
+      });
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,
@@ -87,7 +143,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           child: TimelineSheetHeader(width: _screenSize.width)));
 
   Widget _buildContentBody() =>
-      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
           builder: (blocContext, state) => Expanded(
               child: Container(
                   alignment: Alignment.center,
@@ -103,8 +159,9 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
           initialScrollIndex: widget.initialImageIndex,
           scrollDirection: Axis.vertical,
           itemCount: images.length,
+          itemPositionsListener: _itemPositionsListener,
           itemBuilder: (_, index) =>
-              BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+              BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
                   builder: (context, state) =>
                       state.images
                           .getOrNull<TimelineImageModel>(index)

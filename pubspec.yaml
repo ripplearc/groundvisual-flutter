@@ -37,8 +37,8 @@ dependencies:
   fluro: ^2.0.3
   responsive_builder:
   # Map
-  google_maps_flutter: ^2.0.2
-  google_maps_flutter_web: ^0.3.0
+  google_maps_flutter: ^2.0.6
+  google_maps_flutter_web: ^0.3.0+1
   # Tools
   streaming_shared_preferences:
     git:
@@ -48,7 +48,8 @@ dependencies:
   tuple: ^2.0.0
   dart_date: ^1.1.0-nullsafety.0
   # UI
-  table_calendar: ^3.0.0-nullsafety.1
+  table_calendar: ^3.0.0
+  time_range: ^1.0.0
   flutter_toggle_tab: ^1.0.0
   persistent_bottom_nav_bar: any
   shimmer: ^2.0.0-nullsafety.0

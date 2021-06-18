@@ -43,7 +43,7 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
               downloadingModel: ImageDownloadingModel("00001A",
                   timeRange: DateTimeRange(
                       start:
-                          Date.startOfToday.add(Duration(minutes: index * 15)),
+                          Date.startOfToday.subtract(Duration(days: 2)).add(Duration(minutes: index * 15)),
                       end: Date.startOfToday
                           .add(Duration(minutes: index * 15 + 15))),
                   numberOfImages: 100),

@@ -1,13 +1,16 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/app/mobile/root_home_mobile_page.dart';
 import 'package:groundvisual_flutter/app/tablet/root_home_tablet_page.dart';
 import 'package:groundvisual_flutter/di/di.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/mobile/timeline_gallery_mobile_view.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/mobile/timeline_search_mobile_page.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_search_tablet_page.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/web/timeline_search_web_page.dart';
@@ -23,17 +26,23 @@ var rootHandler = Handler(
 var timelineSearchHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   final args = context?.settings?.arguments as List<TimelineImageModel>;
-  String? siteName = params["sitename"]?.first;
   DateTime? date = int.tryParse(params["millisecondssinceepoch"]?.first ?? "")
       ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
   int? initialImageIndex =
       int.tryParse(params["initialImageIndex"]?.first ?? "0");
-  if (siteName == null || date == null || initialImageIndex == null)
-    return null;
-
-  return BlocProvider(
-      create: (context) => getIt<TimelineSearchBloc>(param1: args)
-        ..add(SearchDailyTimeline(siteName, date)),
+  String? siteName =  params["siteName"]?.first ?? "";
+  if (date == null || initialImageIndex == null) return null;
+  return MultiBlocProvider(
+      providers: [
+        BlocProvider<TimelineSearchImagesBloc>(
+            create: (_) => getIt<TimelineSearchImagesBloc>(param1: args)
+              ..add(SearchDailyTimeline(date))),
+        BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>()),
+        BlocProvider<TimelineSearchQueryBloc>(
+          create: (_) => getIt<TimelineSearchQueryBloc>(
+              param1: DateTimeRange(start: date, end: date), param2: siteName),
+        )
+      ],
       child: ScreenTypeLayout.builder(
         mobile: (_) =>
             TimelineSearchMobilePage(initialImageIndex: initialImageIndex),

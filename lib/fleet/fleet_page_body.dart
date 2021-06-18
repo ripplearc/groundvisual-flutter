@@ -1,7 +1,7 @@
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:groundvisual_flutter/component/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 
 class FleetHomePage extends StatefulWidget {
   FleetHomePage({Key? key, required this.title}) : super(key: key);
@@ -27,7 +27,7 @@ class _FleetHomePageState extends State<FleetHomePage> {
         builder: (ctx) => SimpleDialog(
               backgroundColor: Theme.of(context).cardTheme.color,
               children: [
-                _calenderSelection(ctx, Date.startOfToday, (DateTime t) {})
+                _calenderSelection(ctx, Date.startOfToday, (DateTime? t) {})
               ],
             ));
   }
@@ -35,13 +35,11 @@ class _FleetHomePageState extends State<FleetHomePage> {
   Widget _calenderSelection(
     BuildContext context,
     DateTime initialSelectedDate,
-    Function(DateTime t) action,
+    Function(DateTime? t) action,
   ) =>
       Container(
         height: 600,
         width: 500,
-        child: CalendarSheet(
-            confirmSelectedDateAction: action,
-            initialSelectedDate: initialSelectedDate),
+        child: CalendarSheet(initialSelectedDate: initialSelectedDate),
       );
 }

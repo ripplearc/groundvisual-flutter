@@ -6,7 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
@@ -59,7 +60,11 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: TimelineSearchBar(width: _searchBarWidth),
+        title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
+            builder: (blocContext, state) => TimelineSearchBar(
+                dateString: state.dateString,
+                siteName: state.siteName,
+                width: _searchBarWidth)),
         centerTitle: false,
       ),
       body: Row(children: [
@@ -80,7 +85,7 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
       TimelineSheetHeader(width: _contentWidth);
 
   Widget _buildContentBody() =>
-      BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
           builder: (blocContext, state) => Container(
               alignment: Alignment.center,
               color: Theme.of(context).colorScheme.background,
@@ -123,7 +128,7 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
     final imageFlex = 4;
     final accessoryFlex = 3;
     final imageWidth = _contentWidth * 4 / 7;
-    return BlocBuilder<TimelineSearchBloc, TimelineSearchState>(
+    return BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
         builder: (context, state) => state.images[index].let((image) {
               final viewer = _getImageWidgets(index, image, state.images,
                   imageWidth, context, index == _selectedIndex);

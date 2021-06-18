@@ -6,7 +6,7 @@ import 'package:groundvisual_flutter/landing/timeline/component/timeline_image_b
 import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/web/timeline_gallery_web_view.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_actions.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/timeline_search_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -65,7 +65,7 @@ class TimelineSearchImageBuilder
       ));
 
   void _navigateToGallery(BuildContext context) =>
-      BlocProvider.of<TimelineSearchBloc>(context)
+      BlocProvider.of<TimelineSearchImagesBloc>(context)
           .add(TapImageAndNavigateToGallery(index, context));
 
   void _openGalleryDialog(BuildContext context, List<TimelineImageModel> images,
