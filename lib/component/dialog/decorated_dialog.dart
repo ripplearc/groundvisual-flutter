@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:groundvisual_flutter/component/buttons/confirm_button.dart';
 
-/// DecoratedDialog allows specification of icon at the header of the Dialog.
+/// [DecoratedDialog] is the RDS design that allows customization of icon at the header of the Dialog.
 class DecoratedDialog extends StatelessWidget {
   final String title, descriptions;
 

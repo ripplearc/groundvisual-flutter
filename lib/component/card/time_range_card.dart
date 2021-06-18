@@ -7,7 +7,7 @@ import 'package:groundvisual_flutter/component/dialog/decorated_dialog.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:time_range/time_range.dart';
 
-/// [TimeRangeCard] returns the selection of the time range at a certain day.
+/// [TimeRangeCard] is the RDS design that returns the selection of the time range at a certain day.
 /// The ending time must be later than the starting time.
 class TimeRangeCard extends StatefulWidget {
   final DateTimeRange initialDateTimeRange;

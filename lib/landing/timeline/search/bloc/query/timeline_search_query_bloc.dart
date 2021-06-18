@@ -12,6 +12,8 @@ part 'timeline_search_query_event.dart';
 
 part 'timeline_search_query_state.dart';
 
+/// [TimelineSearchQueryBloc] stores the user search query, enable or disable
+/// search criteria as needed.
 @injectable
 class TimelineSearchQueryBloc
     extends Bloc<TimelineSearchQueryEvent, TimelineSearchQueryState> {
