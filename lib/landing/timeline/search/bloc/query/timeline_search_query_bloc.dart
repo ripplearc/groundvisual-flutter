@@ -5,6 +5,8 @@ import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
+import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
+import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
@@ -17,13 +19,18 @@ part 'timeline_search_query_state.dart';
 @injectable
 class TimelineSearchQueryBloc
     extends Bloc<TimelineSearchQueryEvent, TimelineSearchQueryState> {
-  TimelineSearchQueryBloc(
-      @factoryParam DateTimeRange? dateRange, @factoryParam String? siteName)
+  final CurrentSelectedSite selectedSitePreference;
+  final MachineWorkingTimeRepository machineWorkingTimeRepository;
+
+  TimelineSearchQueryBloc(this.selectedSitePreference,
+      this.machineWorkingTimeRepository, @factoryParam DateTimeRange? dateRange)
       : super(TimelineSearchQueryInitial(
             dateRange ??
                 DateTimeRange(start: Date.startOfToday, end: Date.endOfToday),
-            siteName ?? "",
-            {}));
+            "",
+            {})) {
+    add(UpdateTimelineSearchQueryFilter());
+  }
 
   @override
   Stream<TimelineSearchQueryState> mapEventToState(
@@ -32,6 +39,13 @@ class TimelineSearchQueryBloc
     if (event is UpdateTimelineSearchQueryOfDateTimeRange) {
       yield TimelineSearchQueryUpdate(
           event.range, state.filteredMachines, state.siteName);
+    } else if (event is UpdateTimelineSearchQueryFilter) {
+      final siteName = await selectedSitePreference.site().first;
+      final Map<String, bool> machines = await machineWorkingTimeRepository
+          .getMachineWorkingTime(siteName, state.dateTimeRange)
+          .then((value) =>
+              value.map<String, bool>((key, value) => MapEntry(key, true)));
+      yield TimelineSearchQueryInitial(state.dateTimeRange, siteName, machines);
     }
   }
 }

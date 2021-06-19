@@ -52,7 +52,7 @@ class SelectedSiteBloc
           siteName,
           DateTimeRange(
               start:
-                  Date.endOfToday.subtract(Duration(days: event.period.days())),
+                  Date.endOfToday.subtract(Duration(days: event.period.days)),
               end: Date.endOfToday),
           event.period);
     }

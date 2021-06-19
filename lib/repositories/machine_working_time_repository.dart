@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dart_date/dart_date.dart';
+import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/machine/model/machine_working_time_by_site.dart';
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
@@ -12,7 +13,7 @@ import 'package:injectable/injectable.dart';
 /// All repository implementations should be singleton to eliminate duplicated network call.
 abstract class MachineWorkingTimeRepository {
   Future<Map<String, UnitWorkingTime>> getMachineWorkingTime(
-      String siteName, DateTime startTime, DateTime endTime);
+      String siteName, DateTimeRange dateTimeRange);
 }
 
 @LazySingleton(as: MachineWorkingTimeRepository)
@@ -25,19 +26,19 @@ class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
 
   @override
   Future<Map<String, UnitWorkingTime>> getMachineWorkingTime(
-          String siteName, DateTime startTime, DateTime endTime) =>
+          String siteName, DateTimeRange dateTimeRange) =>
       Future.delayed(
           Duration(milliseconds: 1000),
-          () => fetchMachineWorkingTime(siteName, startTime, endTime).then(
-              (value) => value.records
+          () => _fetchMachineWorkingTime(siteName, dateTimeRange.start, dateTimeRange.end)
+              .then((value) => value.records
                   .firstWhere((durationMachineWorkingTime) =>
                       durationMachineWorkingTime.durationInSeconds ==
-                      max(startTime.differenceInSeconds(endTime).abs(),
+                      max(dateTimeRange.start.differenceInSeconds(dateTimeRange.end).abs(),
                           secondsPerDay))
                   .machines
-                  .let((items) => _convertToUnitWorkingTime(startTime.differenceInDays(endTime).abs() * normalTenWorkingHourPerDayInSeconds, items))));
+                  .let((items) => _convertToUnitWorkingTime(dateTimeRange.start.differenceInDays(dateTimeRange.end).abs() * normalTenWorkingHourPerDayInSeconds, items))));
 
-  Future<SiteMachineWorkingTime> fetchMachineWorkingTime(
+  Future<SiteMachineWorkingTime> _fetchMachineWorkingTime(
           String siteName, DateTime startTime, DateTime endTime) =>
       startTime.isToday
           ? machineWorkingTimeService

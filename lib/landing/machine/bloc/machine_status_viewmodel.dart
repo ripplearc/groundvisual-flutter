@@ -1,4 +1,5 @@
 import 'package:dart_date/dart_date.dart';
+import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/machine/bloc/machine_status_bloc.dart';
 import 'package:groundvisual_flutter/messenger/machine_status_communicator.dart';
@@ -19,15 +20,19 @@ class MachineStatusViewModel {
   Future<MachineStatusOfWorkingTimeAndOnline> getMachineStatusAtDate(
           String siteName, DateTime date) =>
       machineWorkingTimeRepository
-          .getMachineWorkingTime(siteName, date.startOfDay, date.endOfDay)
+          .getMachineWorkingTime(siteName,
+              DateTimeRange(start: date.startOfDay, end: date.endOfDay))
           .then((time) => MachineStatusOfWorkingTimeAndOnline(
               time, _getMachineOnlineStatuses(time.keys)));
 
   Future<MachineStatusOfWorkingTimeAndOnline> getMachineStatusAtPeriod(
           String siteName, TrendPeriod period) =>
       machineWorkingTimeRepository
-          .getMachineWorkingTime(siteName, Date.startOfToday,
-              Date.startOfToday.subtract(Duration(days: period.days())))
+          .getMachineWorkingTime(
+              siteName,
+              DateTimeRange(
+                  start: Date.startOfToday,
+                  end: Date.startOfToday.subDays(period.days)))
           .then((time) => MachineStatusOfWorkingTimeAndOnline(
               time, _getMachineOnlineStatuses(time.keys)));
 
