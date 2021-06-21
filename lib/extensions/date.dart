@@ -6,17 +6,20 @@ extension ToString on DateTime {
   String toHourMinuteString() =>
       hour.toString() + (minute == 0 ? ":0" : ":") + minute.toString();
 
-  String toShortString() => isSameDay(DateTime.now())
-      ? 'Today'
-      : isSameYear(DateTime.now())
-          ? DateFormat('MMM dd').format(this)
-          : DateFormat('MMM dd,yyyy').format(this);
+  String toShortString({bool spellOutToday = true}) =>
+      isSameDay(DateTime.now()) && spellOutToday
+          ? 'Today'
+          : isSameYear(DateTime.now())
+              ? DateFormat('MMM dd').format(this)
+              : DateFormat('MMM dd,yyyy').format(this);
 
   String toStartEndDateString(DateTime endDate) => isSameDay(endDate)
       ? toShortString()
       : isSameMonth(endDate)
           ? toShortString() + " - " + DateFormat('dd').format(endDate)
-          : toShortString() + " - " + endDate.toShortString();
+          : toShortString() +
+              " - " +
+              endDate.toShortString(spellOutToday: false);
 }
 
 extension ToTimeString on DateTimeRange {

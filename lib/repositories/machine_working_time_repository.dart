@@ -40,11 +40,11 @@ class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
 
   Future<SiteMachineWorkingTime> _fetchMachineWorkingTime(
           String siteName, DateTime startTime, DateTime endTime) =>
-      startTime.isToday
-          ? machineWorkingTimeService
-              .getMachineWorkingTimeOfRecentBySite(siteName)
-          : machineWorkingTimeService.getMachineWorkingTimeOfDateBySite(
-              siteName, startTime);
+      startTime.isSameDay(endTime)
+          ? machineWorkingTimeService.getMachineWorkingTimeOfDateBySite(
+              siteName, startTime)
+          : machineWorkingTimeService
+              .getMachineWorkingTimeOfRecentBySite(siteName);
 
   Map<String, UnitWorkingTime> _convertToUnitWorkingTime(
           int duration, List times) =>

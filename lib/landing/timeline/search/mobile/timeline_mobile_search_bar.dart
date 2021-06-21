@@ -45,7 +45,20 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
             builder: (blocContext, state) => TimelineSearchBar(
                 dateString: state.dateString,
                 siteName: state.siteName,
-                onTap: () => setState(() {
+                onTapFilter: () async {
+                  await showModalBottomSheet<DateTimeRange>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Theme.of(context).cardTheme.color,
+                      builder: (_) => Container(
+                            height: 500,
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemCount: 300,
+                                itemBuilder: (_, index) => Text("Excavator")),
+                          ));
+                },
+                onTapSearchBar: () => setState(() {
                       _animatedAppBar = _buildAppBarInSearchMode();
                     }))),
       );
@@ -129,30 +142,25 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
                 .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
           }));
 
-  Container _buildTimeRangeBottomSheet(
+  Widget _buildTimeRangeBottomSheet(
           String title, DateTime start, DateTime end) =>
-      Container(
-          height: 380,
-          child: TimeRangeCard(
-              title: title,
-              initialDateTimeRange: (DateTimeRange(start: start, end: end))));
-
-  Container _buildCalenderInBottomSheet(
-          DateTimeRange initialSelectedDateRange, String title) =>
-      Container(
-        height: 560,
-        child: CalendarSheet(
+      TimeRangeCard(
           title: title,
-          initialSelectedDate: initialSelectedDateRange.start
-                  .isSameDay(initialSelectedDateRange.end)
-              ? initialSelectedDateRange.start
-              : Date.today,
-          initialSelectedDateRange: initialSelectedDateRange.start
-                  .isSameDay(initialSelectedDateRange.end)
-              ? null
-              : initialSelectedDateRange,
-          allowRangeSelection: true,
-        ),
+          initialDateTimeRange: (DateTimeRange(start: start, end: end)));
+
+  Widget _buildCalenderInBottomSheet(
+          DateTimeRange initialSelectedDateRange, String title) =>
+      CalendarSheet(
+        title: title,
+        initialSelectedDate: initialSelectedDateRange.start
+                .isSameDay(initialSelectedDateRange.end)
+            ? initialSelectedDateRange.start
+            : Date.today,
+        initialSelectedDateRange: initialSelectedDateRange.start
+                .isSameDay(initialSelectedDateRange.end)
+            ? null
+            : initialSelectedDateRange,
+        allowRangeSelection: true,
       );
 
   Container _buildSearchModeHeader() => Container(

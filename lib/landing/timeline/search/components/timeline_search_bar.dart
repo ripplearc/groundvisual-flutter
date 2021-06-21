@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 
 class TimelineSearchBar extends StatelessWidget {
   final double? width;
-  final GestureTapCallback? onTap;
+  final GestureTapCallback? onTapSearchBar;
+  final GestureTapCallback? onTapFilter;
   final String dateString;
   final String siteName;
 
   const TimelineSearchBar(
       {Key? key,
       this.width,
-      this.onTap,
+      this.onTapSearchBar,
+      this.onTapFilter,
       required this.dateString,
       required this.siteName})
       : super(key: key);
@@ -44,9 +46,10 @@ class TimelineSearchBar extends StatelessWidget {
               onPressed: () => Navigator.pop(context)),
           Expanded(
               child: GestureDetector(
-            onTap: onTap,
+            onTap: onTapSearchBar,
             behavior: HitTestBehavior.translucent,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(siteName,
                     textAlign: TextAlign.center,
@@ -58,7 +61,13 @@ class TimelineSearchBar extends StatelessWidget {
                 VerticalDivider(
                   thickness: 2,
                 ),
-                Icon(Icons.filter_list)
+                Container(
+                  width: 28,
+                  child: IconButton(
+                      icon: Icon(Icons.filter_list),
+                      iconSize: 24,
+                      onPressed: onTapFilter),
+                )
               ],
             ),
           ))

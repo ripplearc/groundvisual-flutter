@@ -31,8 +31,8 @@ class MachineStatusViewModel {
           .getMachineWorkingTime(
               siteName,
               DateTimeRange(
-                  start: Date.startOfToday,
-                  end: Date.startOfToday.subDays(period.days)))
+                  start: Date.startOfToday.subDays(period.days),
+                  end: Date.startOfToday))
           .then((time) => MachineStatusOfWorkingTimeAndOnline(
               time, _getMachineOnlineStatuses(time.keys)));
 

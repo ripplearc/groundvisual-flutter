@@ -43,6 +43,7 @@ class TimeRangeCardState extends State<TimeRangeCard> {
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          SizedBox(height: 40),
           if (widget.title != null)
             Padding(
               padding: const EdgeInsets.all(20),
@@ -54,6 +55,8 @@ class TimeRangeCardState extends State<TimeRangeCard> {
             child: Text(widget.initialDateTimeRange.start.toShortString(),
                 style: Theme.of(context).textTheme.subtitle1),
           ),
+          Divider(thickness: 2),
+          SizedBox(height: 20),
           TimeRange(
             fromTitle:
                 Text('FROM', style: Theme.of(context).textTheme.headline6),
@@ -75,8 +78,11 @@ class TimeRangeCardState extends State<TimeRangeCard> {
             timeBlock: 15,
             onRangeCompleted: (range) => setState(() => _timeRange = range),
           ),
+          Spacer(),
+          Divider(thickness: 2),
+          SizedBox(height: 10),
+          _buildButtons(),
           SizedBox(height: 30),
-          _buildButtons()
         ],
       );
 

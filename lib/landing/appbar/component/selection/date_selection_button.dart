@@ -48,15 +48,11 @@ class DateSelectionButton extends StatelessWidget {
           builder: (_) =>
               _buildCalenderInBottomSheet(state.date, state.siteName));
 
-  Container _buildCalenderInBottomSheet(
+  Widget _buildCalenderInBottomSheet(
     DateTime initialSelectedDate,
     String title,
   ) =>
-      Container(
-        height: 550,
-        child: CalendarSheet(
-            initialSelectedDate: initialSelectedDate, title: title),
-      );
+      CalendarSheet(initialSelectedDate: initialSelectedDate, title: title);
 
   Future<DateTimeRange?> _showMaterialDialog(
           BuildContext scaffoldContext, SelectedSiteAtDate state) =>

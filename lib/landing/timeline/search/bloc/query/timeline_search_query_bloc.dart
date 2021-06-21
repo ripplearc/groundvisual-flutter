@@ -41,7 +41,7 @@ class TimelineSearchQueryBloc
           event.range, state.filteredMachines, state.siteName);
     } else if (event is UpdateTimelineSearchQueryFilter) {
       final siteName = await selectedSitePreference.site().first;
-      final Map<String, bool> machines = await machineWorkingTimeRepository
+      final machines = await machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, state.dateTimeRange)
           .then((value) =>
               value.map<String, bool>((key, value) => MapEntry(key, true)));
