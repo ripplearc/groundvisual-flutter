@@ -13,14 +13,14 @@ mixin TimelineImageBuilder {
           required String heroAnimationTag,
           String? annotation,
           GestureTapCallback? onTap,
-          MachineStatus? status,
+          Set<String> labels = const {},
           bool? isHighlighted}) =>
-      _buildImageWithLabel(imageName, status, onTap, width, isHighlighted,
+      _buildImageWithLabel(imageName, labels, onTap, width, isHighlighted,
           heroAnimationTag, context);
 
   Widget _buildImageWithLabel(
           String imageName,
-          MachineStatus? status,
+          Set<String> labels,
           GestureTapCallback? onTap,
           double width,
           bool? isHighlighted,
@@ -34,8 +34,7 @@ mixin TimelineImageBuilder {
               child: _buildImageWithCorner(
                   imageName, width, isHighlighted, context),
             ),
-            if (status != null && status != MachineStatus.working)
-              _buildTopLeftLabel(status, context),
+            _buildTopLeftLabel(labels, context),
           ]));
 
   Widget _buildImageWithCorner(String imageName, double width,
@@ -46,19 +45,22 @@ mixin TimelineImageBuilder {
       return _buildRaster(imageName, width, isHighlighted);
   }
 
-  Widget _buildTopLeftLabel(MachineStatus status, BuildContext context) =>
-      Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(top: 10, left: 10),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.all(Radius.circular(4))),
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Text(status.value().toUpperCase(),
-                          style: Theme.of(context).textTheme.button)))));
+  Widget _buildTopLeftLabel(Set<String> labels, BuildContext context) => Align(
+        alignment: Alignment.topLeft,
+        child: Row(
+            children: labels
+                .map((label) => Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.all(Radius.circular(4))),
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Text(label.toUpperCase(),
+                                style: Theme.of(context).textTheme.button)))))
+                .toList()),
+      );
 
   Widget _buildSvg(String imageName, double width, BuildContext context) =>
       SvgPicture.asset(imageName,
