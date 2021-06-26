@@ -26,14 +26,14 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
   @override
   Future<List<TimelineImageModel>> getTimelineImagesAtSite(
           String siteName, List<String> muids, DateTimeRange timeRange) =>
-      _getMockImages();
+      _getMockImages(timeRange);
 
   @override
   Future<List<TimelineImageModel>> getTimelineImagesAtZone(
           ConstructionZone zone, List<String> muids, DateTimeRange timeRange) =>
-      _getMockImages();
+      _getMockImages(timeRange);
 
-  Future<List<TimelineImageModel>> _getMockImages() =>
+  Future<List<TimelineImageModel>> _getMockImages(DateTimeRange timeRange) =>
       Future.value(List.generate(
           50,
           (index) => TimelineImageModel(
@@ -43,8 +43,8 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
               downloadingModel: ImageDownloadingModel("00001A",
                   timeRange: DateTimeRange(
                       start:
-                          Date.startOfToday.subtract(Duration(days: 2)).add(Duration(minutes: index * 15)),
-                      end: Date.startOfToday
+                          timeRange.start.startOfDay.add(Duration(minutes: index * 15)),
+                      end: timeRange.start.startOfDay
                           .add(Duration(minutes: index * 15 + 15))),
                   numberOfImages: 100),
               status: _getMachineStatus(index))));

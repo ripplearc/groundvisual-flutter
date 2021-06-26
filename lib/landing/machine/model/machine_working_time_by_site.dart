@@ -35,11 +35,11 @@ class DurationMachineWorkingTime {
 
 @JsonSerializable()
 class MachineWorkingTime {
-  final String name;
+  final String muid;
   final int workingInSeconds;
   final int idlingInSeconds;
 
-  MachineWorkingTime(this.name, this.workingInSeconds, this.idlingInSeconds);
+  MachineWorkingTime(this.muid, this.workingInSeconds, this.idlingInSeconds);
 
   factory MachineWorkingTime.fromJson(Map<String, dynamic> json) =>
       _$MachineWorkingTimeFromJson(json);

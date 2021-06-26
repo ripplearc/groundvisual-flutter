@@ -9,7 +9,7 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
@@ -95,9 +95,9 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-            builder: (blocContext, state) => TimelineSearchBar(
+            builder: (blocContext, state) => TimelineVisualSearchBar(
                 siteName: state.siteName,
-                dateString: state.dateString,
+                dateTimeString: state.dateString,
                 width: _searchBarWidth)),
         centerTitle: false,
       ),

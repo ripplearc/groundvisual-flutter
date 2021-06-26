@@ -9,6 +9,8 @@ abstract class TimelineSearchQueryState extends Equatable {
 
   String get timeString;
 
+  String get dateTimeString;
+
   TimeOfDay? get startTime;
 
   TimeOfDay? get endTime;
@@ -17,14 +19,14 @@ abstract class TimelineSearchQueryState extends Equatable {
 
   String get siteName;
 
-  Map<String, bool> get filteredMachines;
+  Map<MachineDetail, bool> get filteredMachines;
 
   List<Object?> get props => [dateTimeRange, siteName, filteredMachines];
 }
 
 class TimelineSearchQueryInitial extends TimelineSearchQueryState {
   final DateTimeRange dateTimeRange;
-  final Map<String, bool> filteredMachines;
+  final Map<MachineDetail, bool> filteredMachines;
   final String siteName;
 
   TimelineSearchQueryInitial(
@@ -38,12 +40,16 @@ class TimelineSearchQueryInitial extends TimelineSearchQueryState {
 
   @override
   TimeOfDay? get startTime => null;
+
+  @override
+  String get dateTimeString => dateString;
 }
 
 class TimelineSearchQueryUpdate extends TimelineSearchQueryState {
   final DateTimeRange dateTimeRange;
-  final Map<String, bool> filteredMachines;
+  final Map<MachineDetail, bool> filteredMachines;
   final String siteName;
+  static const String EditTime = "Edit Time";
 
   TimelineSearchQueryUpdate(
       this.dateTimeRange, this.filteredMachines, this.siteName);
@@ -52,8 +58,8 @@ class TimelineSearchQueryUpdate extends TimelineSearchQueryState {
   String get timeString => dateTimeRange.start.isSameDay(dateTimeRange.end)
       ? dateTimeRange.start.isBefore(dateTimeRange.end)
           ? dateTimeRange.toTimeRangeString
-          : "Edit Time"
-      : "Edit Time";
+          : EditTime
+      : EditTime;
 
   @override
   TimeOfDay? get endTime => dateTimeRange.start.isSameDay(dateTimeRange.end)
@@ -68,4 +74,8 @@ class TimelineSearchQueryUpdate extends TimelineSearchQueryState {
           ? null
           : TimeOfDay.fromDateTime(dateTimeRange.start)
       : null;
+
+  @override
+  String get dateTimeString =>
+      dateString  + (timeString != EditTime ? "  |  " + timeString : "");
 }

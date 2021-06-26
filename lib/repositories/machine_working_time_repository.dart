@@ -7,6 +7,7 @@ import 'package:groundvisual_flutter/landing/machine/model/machine_working_time_
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
 import 'package:groundvisual_flutter/repositories/machine_working_time_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:groundvisual_flutter/extensions/stream_logger.dart';
 
 /// Repository for managing the working time of machines at a site. It can be
 /// an date or an period.
@@ -33,10 +34,9 @@ class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
               .then((value) => value.records
                   .firstWhere((durationMachineWorkingTime) =>
                       durationMachineWorkingTime.durationInSeconds ==
-                      max(dateTimeRange.start.differenceInSeconds(dateTimeRange.end).abs(),
-                          secondsPerDay))
+                      max(dateTimeRange.start.differenceInSeconds(dateTimeRange.end).abs(), secondsPerDay))
                   .machines
-                  .let((items) => _convertToUnitWorkingTime(dateTimeRange.start.differenceInDays(dateTimeRange.end).abs() * normalTenWorkingHourPerDayInSeconds, items))));
+                  .let((items) => _convertToUnitWorkingTime(dateTimeRange.start.differenceInDays(dateTimeRange.end).abs() * normalTenWorkingHourPerDayInSeconds, items)))).log("🚀");
 
   Future<SiteMachineWorkingTime> _fetchMachineWorkingTime(
           String siteName, DateTime startTime, DateTime endTime) =>
@@ -49,7 +49,7 @@ class MachineWorkingTimeRepositoryImpl extends MachineWorkingTimeRepository {
   Map<String, UnitWorkingTime> _convertToUnitWorkingTime(
           int duration, List times) =>
       Map.fromIterable(times,
-          key: (item) => item.name,
+          key: (item) => item.muid,
           value: (item) => UnitWorkingTime(
               duration, item.workingInSeconds, item.idlingInSeconds));
 }

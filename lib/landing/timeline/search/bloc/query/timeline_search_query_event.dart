@@ -17,3 +17,13 @@ class UpdateTimelineSearchQueryOfDateTimeRange
   @override
   List<Object?> get props => [range];
 }
+
+class UpdateTimelineSearchQueryOfSelectedMachines
+    extends TimelineSearchQueryEvent {
+  final Map<MachineDetail, bool> filteredMachines;
+
+  UpdateTimelineSearchQueryOfSelectedMachines(this.filteredMachines);
+
+  @override
+  List<Object?> get props => [filteredMachines];
+}

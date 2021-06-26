@@ -66,9 +66,9 @@ class _CalendarSheetState extends State<CalendarSheet>
   @override
   Widget build(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+        children: [
           SizedBox(height: 40),
           if (widget.title != null)
             Padding(

@@ -1,13 +1,12 @@
-import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groundvisual_flutter/component/buttons/date_button.dart';
-import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
-import 'package:groundvisual_flutter/component/card/time_range_card.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_bar.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_edit_search_bar.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_filter.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
+import 'package:groundvisual_flutter/models/machine_detail.dart';
 
 /// [TimelineMobileSearchBar] specifies the date, time range of the
 /// search query. It transitions between visual and search edit mode.
@@ -42,21 +41,11 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-            builder: (blocContext, state) => TimelineSearchBar(
-                dateString: state.dateString,
+            builder: (blocContext, state) => TimelineVisualSearchBar(
+                dateTimeString: state.dateTimeString,
                 siteName: state.siteName,
                 onTapFilter: () async {
-                  await showModalBottomSheet<DateTimeRange>(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Theme.of(context).cardTheme.color,
-                      builder: (_) => Container(
-                            height: 500,
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                itemCount: 300,
-                                itemBuilder: (_, index) => Text("Excavator")),
-                          ));
+                  await _updateFilteredResults(state);
                 },
                 onTapSearchBar: () => setState(() {
                       _animatedAppBar = _buildAppBarInSearchMode();
@@ -70,124 +59,28 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
       flexibleSpace: Padding(
           padding: EdgeInsets.only(top: 30),
           child: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-              builder: (blocContext, state) =>
-                  _buildAppBarSearchModeContent(state))));
+              builder: (blocContext, state) => TimelineEditSearchBar(
+                    onExitEditMode: () => setState(() {
+                      _animatedAppBar = _buildAppBarInVisualMode();
+                    }),
+                    onTapFilter: () async {
+                      await _updateFilteredResults(state);
+                    },
+                  ))));
 
-  Column _buildAppBarSearchModeContent(TimelineSearchQueryState state) =>
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [_buildSearchModeHeader(), _buildSearchModeBody(state)],
-      );
-
-  Container _buildSearchModeBody(TimelineSearchQueryState state) => Container(
-      margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 3,
-              blurRadius: 3,
-              offset: Offset(0.5, 0.5), // changes position of shadow
-            ),
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(15))),
-      child: IntrinsicHeight(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildDateEditButton(state),
-          VerticalDivider(thickness: 2),
-          _buildTimeEditButton(state),
-        ],
-      )));
-
-  Expanded _buildTimeEditButton(TimelineSearchQueryState state) => Expanded(
-      child: DateButton(
-          textStyle: Theme.of(context).textTheme.bodyText2,
-          dateText: state.timeString,
-          icon: Icon(Icons.calendar_today_outlined, size: 20),
-          action: state.enableTimeEdit
-              ? () async {
-                  DateTimeRange? range =
-                      await showModalBottomSheet<DateTimeRange>(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Theme.of(context).cardTheme.color,
-                          builder: (_) => _buildTimeRangeBottomSheet(
-                              state.siteName,
-                              state.dateTimeRange.start,
-                              state.dateTimeRange.end));
-
-                  range?.let((it) =>
-                      BlocProvider.of<TimelineSearchQueryBloc>(context)
-                          .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
-                }
-              : null));
-
-  Expanded _buildDateEditButton(TimelineSearchQueryState state) => Expanded(
-      child: DateButton(
-          textStyle: Theme.of(context).textTheme.bodyText2,
-          dateText: state.dateString,
-          action: () async {
-            final range = await showModalBottomSheet<DateTimeRange>(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Theme.of(context).cardTheme.color,
-                builder: (_) => _buildCalenderInBottomSheet(
-                    state.dateTimeRange, state.siteName));
-            range?.let((it) => BlocProvider.of<TimelineSearchQueryBloc>(context)
-                .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
-          }));
-
-  Widget _buildTimeRangeBottomSheet(
-          String title, DateTime start, DateTime end) =>
-      TimeRangeCard(
-          title: title,
-          initialDateTimeRange: (DateTimeRange(start: start, end: end)));
-
-  Widget _buildCalenderInBottomSheet(
-          DateTimeRange initialSelectedDateRange, String title) =>
-      CalendarSheet(
-        title: title,
-        initialSelectedDate: initialSelectedDateRange.start
-                .isSameDay(initialSelectedDateRange.end)
-            ? initialSelectedDateRange.start
-            : Date.today,
-        initialSelectedDateRange: initialSelectedDateRange.start
-                .isSameDay(initialSelectedDateRange.end)
-            ? null
-            : initialSelectedDateRange,
-        allowRangeSelection: true,
-      );
-
-  Container _buildSearchModeHeader() => Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          children: [
-            _buildExitSearchModeButton(),
-            Expanded(
-                child: Center(
-                    child: Text("Edit your search",
-                        style: Theme.of(context).textTheme.headline6))),
-            _buildSearchFilterButton()
-          ],
-        ),
-      );
-
-  IconButton _buildExitSearchModeButton() => IconButton(
-        onPressed: () => setState(() {
-          _animatedAppBar = _buildAppBarInVisualMode();
-        }),
-        icon: Icon(Icons.close),
-        color: Theme.of(context).colorScheme.onBackground,
-      );
-
-  IconButton _buildSearchFilterButton() => IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.filter_list),
-        color: Theme.of(context).colorScheme.onBackground,
-      );
+  Future<void> _updateFilteredResults(TimelineSearchQueryState state) async {
+    final filteredMachines =
+        await showModalBottomSheet<Map<MachineDetail, bool>>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Theme.of(context).cardTheme.color,
+            builder: (_) => TimelineSearchFilter(
+                  title: state.siteName,
+                  subtitle: state.dateTimeString,
+                  filteredMachines: Map.from(state.filteredMachines),
+                ));
+    filteredMachines?.let((machines) =>
+        BlocProvider.of<TimelineSearchQueryBloc>(context)
+            .add(UpdateTimelineSearchQueryOfSelectedMachines(machines)));
+  }
 }

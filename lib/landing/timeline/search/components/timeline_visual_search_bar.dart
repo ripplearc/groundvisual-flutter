@@ -2,19 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class TimelineSearchBar extends StatelessWidget {
+/// [TimelineVisualSearchBar] displays the current search query of [siteName] and [dateTimeString].
+/// It transitions to the edit mode after tapping [onTapSearchBar], or transitions
+/// to the filter mode after tapping [onTapFilter].
+/// See also [TimelineEditSearchBar].
+class TimelineVisualSearchBar extends StatelessWidget {
   final double? width;
   final GestureTapCallback? onTapSearchBar;
   final GestureTapCallback? onTapFilter;
-  final String dateString;
+  final String dateTimeString;
   final String siteName;
 
-  const TimelineSearchBar(
+  const TimelineVisualSearchBar(
       {Key? key,
       this.width,
       this.onTapSearchBar,
       this.onTapFilter,
-      required this.dateString,
+      required this.dateTimeString,
       required this.siteName})
       : super(key: key);
 
@@ -49,28 +53,34 @@ class TimelineSearchBar extends StatelessWidget {
             onTap: onTapSearchBar,
             behavior: HitTestBehavior.translucent,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(siteName,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle1),
-                Spacer(),
-                Text(dateString,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyText2),
+                Flexible(
+                    flex: 6,
+                    child: Text(siteName,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1)),
+                Spacer(flex: 1),
+                Flexible(
+                    flex: 6,
+                    child: Text(dateTimeString,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyText2)),
                 VerticalDivider(
                   thickness: 2,
                 ),
-                Container(
-                  width: 28,
-                  child: IconButton(
-                      icon: Icon(Icons.filter_list),
-                      iconSize: 24,
-                      onPressed: onTapFilter),
-                )
               ],
             ),
-          ))
+          )),
+          Container(
+            width: 28,
+            child: IconButton(
+                icon: Icon(Icons.filter_list),
+                iconSize: 24,
+                onPressed: onTapFilter),
+          )
         ],
       )));
 }
