@@ -8,11 +8,19 @@ class UpdateTimelineSearchQueryFilter extends TimelineSearchQueryEvent {
   List<Object?> get props => [];
 }
 
-class UpdateTimelineSearchQueryOfDateTimeRange
-    extends TimelineSearchQueryEvent {
+class UpdateTimelineSearchQueryOfDateRange extends TimelineSearchQueryEvent {
   final DateTimeRange range;
 
-  UpdateTimelineSearchQueryOfDateTimeRange(this.range);
+  UpdateTimelineSearchQueryOfDateRange(this.range);
+
+  @override
+  List<Object?> get props => [range];
+}
+
+class UpdateTimelineSearchQueryOfTimeRange extends TimelineSearchQueryEvent {
+  final DateTimeRange range;
+
+  UpdateTimelineSearchQueryOfTimeRange(this.range);
 
   @override
   List<Object?> get props => [range];

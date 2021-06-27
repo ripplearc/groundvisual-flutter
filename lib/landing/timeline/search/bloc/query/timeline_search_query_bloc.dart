@@ -43,10 +43,7 @@ class TimelineSearchQueryBloc
   Stream<TimelineSearchQueryState> mapEventToState(
     TimelineSearchQueryEvent event,
   ) async* {
-    if (event is UpdateTimelineSearchQueryOfDateTimeRange) {
-      yield TimelineSearchQueryUpdate(
-          event.range, state.filteredMachines, state.siteName);
-    } else if (event is UpdateTimelineSearchQueryFilter) {
+    if (event is UpdateTimelineSearchQueryFilter) {
       final siteName = await selectedSitePreference.site().first;
       final machines = await machineWorkingTimeRepository
           .getMachineWorkingTime(siteName, state.dateTimeRange)
@@ -58,9 +55,15 @@ class TimelineSearchQueryBloc
           .then<Map<MachineDetail, bool>>((list) =>
               Map.fromIterable(list, key: (e) => e, value: (_) => true));
       yield TimelineSearchQueryInitial(state.dateTimeRange, siteName, machines);
-    } else if (event is UpdateTimelineSearchQueryOfSelectedMachines) {
+    } else if (event is UpdateTimelineSearchQueryOfDateRange) {
       yield TimelineSearchQueryUpdate(
-          state.dateTimeRange, event.filteredMachines, state.siteName);
+          event.range, state.filteredMachines, state.siteName, false);
+    } else if (event is UpdateTimelineSearchQueryOfTimeRange) {
+      yield TimelineSearchQueryUpdate(
+          event.range, state.filteredMachines, state.siteName, true);
+    } else if (event is UpdateTimelineSearchQueryOfSelectedMachines) {
+      yield TimelineSearchQueryUpdate(state.dateTimeRange,
+          event.filteredMachines, state.siteName, state.timeRangeEdited);
     }
   }
 }

@@ -12,16 +12,19 @@ import 'package:time_range/time_range.dart';
 class TimeRangeCard extends StatefulWidget {
   final DateTimeRange initialDateTimeRange;
   final String? title;
+  final bool timeRangeEdited;
 
-  TimeRangeResult? get initialTimeRange =>
-      initialDateTimeRange.start.isAtSameMomentAs(initialDateTimeRange.end)
-          ? TimeRangeResult(
-              TimeOfDay(hour: 6, minute: 0), TimeOfDay(hour: 18, minute: 0))
-          : TimeRangeResult(TimeOfDay.fromDateTime(initialDateTimeRange.start),
-              TimeOfDay.fromDateTime(initialDateTimeRange.end));
+  TimeRangeResult? get initialTimeRange => timeRangeEdited
+      ? TimeRangeResult(TimeOfDay.fromDateTime(initialDateTimeRange.start),
+          TimeOfDay.fromDateTime(initialDateTimeRange.end))
+      : TimeRangeResult(
+          TimeOfDay(hour: 6, minute: 0), TimeOfDay(hour: 18, minute: 0));
 
   const TimeRangeCard(
-      {Key? key, required this.initialDateTimeRange, this.title})
+      {Key? key,
+      this.title,
+      required this.initialDateTimeRange,
+      required this.timeRangeEdited})
       : super(key: key);
 
   @override
