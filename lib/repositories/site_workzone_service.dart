@@ -66,7 +66,7 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
           .then((decoded) => SiteConstructionZone.fromJson(decoded)
               .records
               .firstWhere(
-                  (element) => period.seconds() == element.durationInSeconds,
+                  (element) => period.seconds == element.durationInSeconds,
                   orElse: (() => UnitConstructionZone(Date.startOfToday, 900,
                       ConstructionZone(<Region>[].toList()))))
               .zone);

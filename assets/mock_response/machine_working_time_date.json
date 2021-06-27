@@ -7,12 +7,12 @@
 	  "durationInSeconds": 86400,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 50960,
 		  "idlingInSeconds": 41320
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 55480,
 		  "idlingInSeconds": 2880
 		}

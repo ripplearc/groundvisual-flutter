@@ -66,9 +66,10 @@ class _CalendarSheetState extends State<CalendarSheet>
   @override
   Widget build(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+        children: [
+          SizedBox(height: 40),
           if (widget.title != null)
             Padding(
                 padding: EdgeInsets.all(20),
@@ -78,8 +79,15 @@ class _CalendarSheetState extends State<CalendarSheet>
                   textAlign: TextAlign.left,
                 )),
           if (widget.allowRangeSelection) _buildDateRangeToggle(),
+          SizedBox(height: 20),
+          Divider(thickness: 2),
+          SizedBox(height: 20),
           _buildTableCalendar(),
+          Spacer(),
+          Divider(thickness: 2),
+          SizedBox(height: 10),
           _buildButtons(),
+          SizedBox(height: 30),
         ],
       );
 

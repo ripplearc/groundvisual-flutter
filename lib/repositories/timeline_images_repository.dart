@@ -26,14 +26,14 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
   @override
   Future<List<TimelineImageModel>> getTimelineImagesAtSite(
           String siteName, List<String> muids, DateTimeRange timeRange) =>
-      _getMockImages();
+      _getMockImages(timeRange);
 
   @override
   Future<List<TimelineImageModel>> getTimelineImagesAtZone(
           ConstructionZone zone, List<String> muids, DateTimeRange timeRange) =>
-      _getMockImages();
+      _getMockImages(timeRange);
 
-  Future<List<TimelineImageModel>> _getMockImages() =>
+  Future<List<TimelineImageModel>> _getMockImages(DateTimeRange timeRange) =>
       Future.value(List.generate(
           50,
           (index) => TimelineImageModel(
@@ -42,12 +42,13 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
                   : 'images/thumbnails/${index + 1}.jpg',
               downloadingModel: ImageDownloadingModel("00001A",
                   timeRange: DateTimeRange(
-                      start:
-                          Date.startOfToday.subtract(Duration(days: 2)).add(Duration(minutes: index * 15)),
-                      end: Date.startOfToday
+                      start: timeRange.start.startOfDay
+                          .add(Duration(minutes: index * 15)),
+                      end: timeRange.start.startOfDay
                           .add(Duration(minutes: index * 15 + 15))),
                   numberOfImages: 100),
-              status: _getMachineStatus(index))));
+              status: _getMachineStatus(index),
+              activities: _getMachineActivities(index))));
 
   MachineStatus _getMachineStatus(int index) {
     if (index == 3) {
@@ -56,6 +57,24 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
       return MachineStatus.stationary;
     } else {
       return MachineStatus.working;
+    }
+  }
+
+  Set<MachineActivity> _getMachineActivities(int index) {
+    if (<int>[3, 4].contains(index)) {
+      return {};
+    } else if (index % 5 == 0) {
+      return {MachineActivity.install_pipe};
+    } else if (index % 7 == 0) {
+      return {MachineActivity.trenching, MachineActivity.load};
+    } else if (index % 13 == 0) {
+      return {
+        MachineActivity.level,
+        MachineActivity.load,
+        MachineActivity.install_pipe
+      };
+    } else {
+      return {MachineActivity.dig};
     }
   }
 }

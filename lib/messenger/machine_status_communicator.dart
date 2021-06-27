@@ -15,7 +15,7 @@ class MachineStatusCommunicatorImpl extends MachineStatusCommunicator {
     yield MachineOnlineStatus(OnlineStatus.connecting, null);
     await Future.delayed(Duration(seconds: 4));
     switch (machine) {
-      case "332":
+      case "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2":
         yield MachineOnlineStatus(
             OnlineStatus.offline, DateTime.now().subtract(Duration(hours: 2)));
         break;

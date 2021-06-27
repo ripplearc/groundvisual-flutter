@@ -56,7 +56,7 @@ extension Value on TrendPeriod {
     }
   }
 
-  int days() {
+  int get days {
     switch (this) {
       case TrendPeriod.oneWeek:
         return 7;
@@ -69,7 +69,7 @@ extension Value on TrendPeriod {
     }
   }
 
-  int seconds() {
+  int get seconds {
     switch (this) {
       case TrendPeriod.oneWeek:
         return 604800;

@@ -7,12 +7,12 @@
 	  "durationInSeconds": 86400,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 30960,
 		  "idlingInSeconds": 4320
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 15480,
 		  "idlingInSeconds": 2880
 		}
@@ -24,17 +24,17 @@
 	  "durationInSeconds": 604800,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 102960,
 		  "idlingInSeconds": 29520
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 123480,
 		  "idlingInSeconds": 38880
 		},
 		{
-		  "name": "331",
+		  "muid": "82CC0FDD-1E38-48C4-9109-BE34358796CD",
 		  "workingInSeconds": 90720,
 		  "idlingInSeconds": 10080
 		}
@@ -46,17 +46,17 @@
 	  "durationInSeconds": 1209600,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 205920,
 		  "idlingInSeconds": 59040
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 246960,
 		  "idlingInSeconds": 77760
 		},
 		{
-		  "name": "331",
+		  "muid": "82CC0FDD-1E38-48C4-9109-BE34358796CD",
 		  "workingInSeconds": 181440,
 		  "idlingInSeconds": 20160
 		}
@@ -68,17 +68,17 @@
 	  "durationInSeconds": 2592000,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 440668,
 		  "idlingInSeconds": 126345
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 528494,
 		  "idlingInSeconds": 166406
 		},
 		{
-		  "name": "331",
+		  "muid": "82CC0FDD-1E38-48C4-9109-BE34358796CD",
 		  "workingInSeconds": 388281,
 		  "idlingInSeconds": 43142
 		}
@@ -90,17 +90,17 @@
 	  "durationInSeconds": 5184000,
 	  "machines": [
 		{
-		  "name": "312",
+		  "muid": "3EF7447C-6FD9-4180-919B-3ACF09915CDB",
 		  "workingInSeconds": 880000,
 		  "idlingInSeconds": 250345
 		},
 		{
-		  "name": "332",
+		  "muid": "186204B5-E8E7-49AA-BEC7-FFF6A2D6DAA2",
 		  "workingInSeconds": 1028494,
 		  "idlingInSeconds": 333406
 		},
 		{
-		  "name": "331",
+		  "muid": "82CC0FDD-1E38-48C4-9109-BE34358796CD",
 		  "workingInSeconds": 700281,
 		  "idlingInSeconds": 86142
 		}

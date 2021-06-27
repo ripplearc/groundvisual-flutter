@@ -82,7 +82,7 @@ class TrendWorkingTimeChartBloc
             siteName,
             period,
             DateTimeRange(
-              start: Date.startOfToday - Duration(days: period.days()),
+              start: Date.startOfToday - Duration(days: period.days),
               end: Date.startOfToday,
             ),
             _highlightController.stream)));

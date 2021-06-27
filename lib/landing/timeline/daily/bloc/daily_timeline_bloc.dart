@@ -56,7 +56,7 @@ class DailyTimelineBloc extends Bloc<DailyTimelineEvent, DailyTimelineState> {
       final images = await timelineImagesRepository.getTimelineImagesAtSite(
           event.siteName,
           ["00001A"],
-          DateTimeRange(start: Date.startOfToday, end: Date.today));
+          DateTimeRange(start: event.date.startOfDay, end: event.date.endOfDay));
       yield DailyTimelineImagesLoaded(images, event.date);
     } else if (event is TapDailyTimelineCell) {
       int initialIndex = state.images.indexWhere(

@@ -6,7 +6,8 @@ import 'package:groundvisual_flutter/component/card/period_sheet.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-typedef _OnTapAction(BuildContext context, SelectedSiteAtTrend state);
+typedef _OnTapAction = Future<TrendPeriod?> Function(
+    BuildContext context, SelectedSiteAtTrend state);
 
 /// Select a period to display the information about the selected site. It selects
 /// the last 7 days by default, and it resets to last 7 days when toggle between sites,
@@ -28,26 +29,25 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                   iconSize: 12,
                   textStyle: Theme.of(context).textTheme.caption,
                   dateText: state.period.value(),
-                  action: () {
-                    onTapAction(context, state);
+                  action: () async {
+                    final period = await onTapAction(context, state);
+                    _onTrendSelected(
+                        period ?? TrendPeriod.oneWeek, state, context);
                   })
               : Container());
 
-  void _buildTrendWindowSelectionInBottomSheet(
+  Future<TrendPeriod?> _buildTrendWindowSelectionInBottomSheet(
           BuildContext context, SelectedSiteAtTrend state) =>
       showModalBottomSheet(
           context: context,
+          isScrollControlled: true,
           backgroundColor: Theme.of(context).cardTheme.color,
-          builder: (_) => Container(
-              height: 350,
-              child: PeriodSheet(
+          builder: (_) => PeriodSheet(
+                title: state.siteName,
                 initialPeriod: state.period,
-                onSelectedTrendAction: (TrendPeriod period) {
-                  _onTrendSelected(period, state, context);
-                },
-              )));
+              ));
 
-  void _buildTrendWindowSelectionInDialog(
+  Future<TrendPeriod?> _buildTrendWindowSelectionInDialog(
           BuildContext scaffoldContext, SelectedSiteAtTrend state) =>
       showDialog(
           context: scaffoldContext,
@@ -58,10 +58,8 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                         width: 300,
                         height: 330,
                         child: PeriodSheet(
+                          title: state.siteName,
                           initialPeriod: state.period,
-                          onSelectedTrendAction: (TrendPeriod period) {
-                            _onTrendSelected(period, state, scaffoldContext);
-                          },
                         ))
                   ]));
 

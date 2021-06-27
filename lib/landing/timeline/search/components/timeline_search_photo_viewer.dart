@@ -53,7 +53,7 @@ class TimelineSearchImageBuilder
         context: context,
         width: width,
         isHighlighted: isHighlighted,
-        status: image.status,
+        labels: image.activityLabels,
         heroAnimationTag: enableHeroAnimation == true
             ? 'image' + image.imageName
             : 'no animation' + image.imageName,

@@ -16,6 +16,7 @@ import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_sea
 import 'package:groundvisual_flutter/landing/timeline/search/web/timeline_search_web_page.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:dart_date/dart_date.dart';
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -30,7 +31,7 @@ var timelineSearchHandler = Handler(
       ?.let((epoch) => DateTime.fromMillisecondsSinceEpoch(epoch));
   int? initialImageIndex =
       int.tryParse(params["initialImageIndex"]?.first ?? "0");
-  String? siteName =  params["siteName"]?.first ?? "";
+  String? siteName = params["siteName"]?.first ?? "";
   if (date == null || initialImageIndex == null) return null;
   return MultiBlocProvider(
       providers: [
@@ -40,7 +41,8 @@ var timelineSearchHandler = Handler(
         BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>()),
         BlocProvider<TimelineSearchQueryBloc>(
           create: (_) => getIt<TimelineSearchQueryBloc>(
-              param1: DateTimeRange(start: date, end: date), param2: siteName),
+              param1: DateTimeRange(start: date.startOfDay, end: date.endOfDay),
+              param2: siteName),
         )
       ],
       child: ScreenTypeLayout.builder(

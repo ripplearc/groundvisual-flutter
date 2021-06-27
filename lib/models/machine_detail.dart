@@ -13,4 +13,6 @@ class MachineDetail {
   final String? nickName;
 
   MachineDetail(this.muid, this.model, this.year, this.brand, this.nickName);
+
+  String get modelYear => model + " " + year.toString();
 }
