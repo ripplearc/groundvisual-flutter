@@ -107,9 +107,11 @@ class TimelineEditSearchBar extends StatelessWidget {
                                   initialDateTimeRange: state.dateTimeRange,
                                   timeRangeEdited: state.timeRangeEdited));
 
-                      range?.let((it) =>
-                          BlocProvider.of<TimelineSearchQueryBloc>(context)
-                              .add(UpdateTimelineSearchQueryOfTimeRange(it)));
+                      range?.let((it) {
+                        BlocProvider.of<TimelineSearchQueryBloc>(context)
+                            .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                        onExitEditMode?.call();
+                      });
                     }
                   : null));
 
@@ -126,9 +128,11 @@ class TimelineEditSearchBar extends StatelessWidget {
                     backgroundColor: Theme.of(context).cardTheme.color,
                     builder: (_) => _buildCalenderInBottomSheet(
                         state.dateTimeRange, state.siteName));
-                range?.let((it) =>
-                    BlocProvider.of<TimelineSearchQueryBloc>(context)
-                        .add(UpdateTimelineSearchQueryOfDateRange(it)));
+                range?.let((it) {
+                  BlocProvider.of<TimelineSearchQueryBloc>(context)
+                      .add(UpdateTimelineSearchQueryOfDateRange(it));
+                  onExitEditMode?.call();
+                });
               }));
 
   Widget _buildCalenderInBottomSheet(

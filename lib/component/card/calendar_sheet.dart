@@ -213,19 +213,21 @@ class _CalendarSheetState extends State<CalendarSheet>
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
-              child: ConfirmButton(confirmAction: () {
-                final selectedDay = _selectedDay;
-                final rangeStart = _rangeStart;
-                final rangeEnd = _rangeEnd;
-                if (_rangeSelectionMode == RangeSelectionMode.disabled &&
-                    selectedDay != null)
-                  Navigator.of(context).pop(DateTimeRange(
-                      start: selectedDay.startOfDay,
-                      end: selectedDay.startOfDay));
-                else if (rangeStart != null && rangeEnd != null)
-                  Navigator.of(context)
-                      .pop(DateTimeRange(start: rangeStart, end: rangeEnd));
-              }),
+              child: ConfirmButton(
+                  text: "Search",
+                  confirmAction: () {
+                    final selectedDay = _selectedDay;
+                    final rangeStart = _rangeStart;
+                    final rangeEnd = _rangeEnd;
+                    if (_rangeSelectionMode == RangeSelectionMode.disabled &&
+                        selectedDay != null)
+                      Navigator.of(context).pop(DateTimeRange(
+                          start: selectedDay.startOfDay,
+                          end: selectedDay.startOfDay));
+                    else if (rangeStart != null && rangeEnd != null)
+                      Navigator.of(context)
+                          .pop(DateTimeRange(start: rangeStart, end: rangeEnd));
+                  }),
             ),
           ),
           Expanded(

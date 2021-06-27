@@ -97,24 +97,28 @@ class TimeRangeCardState extends State<TimeRangeCard> {
           Expanded(
               child: Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ConfirmButton(confirmAction: () async {
-                    final range = _timeRange;
-                    if (range != null) {
-                      Navigator.of(context).pop(DateTimeRange(
-                          start: widget.initialDateTimeRange.start.startOfDay
-                              .addHours(range.start.hour)
-                              .addMinutes(range.start.minute),
-                          end: widget.initialDateTimeRange.start.startOfDay
-                              .addHours(range.end.hour)
-                              .addMinutes(range.end.minute)));
-                    } else {
-                      await showDialog(
-                          context: context,
-                          builder: (ctx) => DecoratedDialog(
-                              title: "Invalid Time",
-                              descriptions: "Missing ending time selection"));
-                    }
-                  }))),
+                  child: ConfirmButton(
+                      text: "Search",
+                      confirmAction: () async {
+                        final range = _timeRange;
+                        if (range != null) {
+                          Navigator.of(context).pop(DateTimeRange(
+                              start: widget
+                                  .initialDateTimeRange.start.startOfDay
+                                  .addHours(range.start.hour)
+                                  .addMinutes(range.start.minute),
+                              end: widget.initialDateTimeRange.start.startOfDay
+                                  .addHours(range.end.hour)
+                                  .addMinutes(range.end.minute)));
+                        } else {
+                          await showDialog(
+                              context: context,
+                              builder: (ctx) => DecoratedDialog(
+                                  title: "Invalid Time",
+                                  descriptions:
+                                      "Missing ending time selection"));
+                        }
+                      }))),
           Expanded(
               child: Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),

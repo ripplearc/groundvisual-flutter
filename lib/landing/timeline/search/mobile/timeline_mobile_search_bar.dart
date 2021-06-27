@@ -42,16 +42,16 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
         elevation: 0,
         title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
             builder: (blocContext, state) => TimelineVisualSearchBar(
-                dateTimeString: state.dateTimeString,
-                siteName: state.siteName,
-                onTapFilter: () async {
-                  await _updateFilteredResults(state);
-                },
-                onTapSearchBar: () => setState(() {
-                      _animatedAppBar = _buildAppBarInSearchMode();
-                    }),
-              filterIndicator: state.filterIndicator,
-            )),
+                  dateTimeString: state.dateTimeString,
+                  siteName: state.siteName,
+                  onTapFilter: () async {
+                    await _updateFilteredResults(state);
+                  },
+                  onTapSearchBar: () => setState(() {
+                    _animatedAppBar = _buildAppBarInSearchMode();
+                  }),
+                  filterIndicator: state.filterIndicator,
+                )),
       );
 
   AppBar _buildAppBarInSearchMode() => AppBar(
@@ -82,8 +82,12 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
                   subtitle: state.dateTimeString,
                   filteredMachines: Map.from(state.filteredMachines),
                 ));
-    filteredMachines?.let((machines) =>
-        BlocProvider.of<TimelineSearchQueryBloc>(context)
-            .add(UpdateTimelineSearchQueryOfSelectedMachines(machines)));
+    filteredMachines?.let((machines) {
+      BlocProvider.of<TimelineSearchQueryBloc>(context)
+          .add(UpdateTimelineSearchQueryOfSelectedMachines(machines));
+      setState(() {
+        _animatedAppBar = _buildAppBarInVisualMode();
+      });
+    });
   }
 }

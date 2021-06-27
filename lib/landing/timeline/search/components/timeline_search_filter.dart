@@ -80,9 +80,11 @@ class TimelineSearchFilterState extends State<TimelineSearchFilter> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
-              child: ConfirmButton(confirmAction: () {
-                Navigator.of(context).pop(widget.filteredMachines);
-              }),
+              child: ConfirmButton(
+                  text: "Search",
+                  confirmAction: () {
+                    Navigator.of(context).pop(widget.filteredMachines);
+                  }),
             ),
           ),
           Expanded(
