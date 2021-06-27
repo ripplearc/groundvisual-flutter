@@ -14,6 +14,7 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'timeline_search_query_event.dart';
+
 part 'timeline_search_query_state.dart';
 
 /// [TimelineSearchQueryBloc] stores the user search query, enable or disable
@@ -58,8 +59,8 @@ class TimelineSearchQueryBloc
               Map.fromIterable(list, key: (e) => e, value: (_) => true));
       yield TimelineSearchQueryInitial(state.dateTimeRange, siteName, machines);
     } else if (event is UpdateTimelineSearchQueryOfSelectedMachines) {
-      yield TimelineSearchQueryInitial(
-          state.dateTimeRange, state.siteName, event.filteredMachines);
+      yield TimelineSearchQueryUpdate(
+          state.dateTimeRange, event.filteredMachines, state.siteName);
     }
   }
 }

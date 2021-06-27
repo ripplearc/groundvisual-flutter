@@ -21,6 +21,8 @@ abstract class TimelineSearchQueryState extends Equatable {
 
   Map<MachineDetail, bool> get filteredMachines;
 
+  String? get filterIndicator => null;
+
   List<Object?> get props => [dateTimeRange, siteName, filteredMachines];
 }
 
@@ -77,5 +79,9 @@ class TimelineSearchQueryUpdate extends TimelineSearchQueryState {
 
   @override
   String get dateTimeString =>
-      dateString  + (timeString != EditTime ? "  |  " + timeString : "");
+      dateString + (timeString != EditTime ? "  |  " + timeString : "");
+
+  @override
+  String? get filterIndicator =>
+      filteredMachines.values.any((element) => !element) ? "1" : null;
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 
 typedef OnTapTimelineImage(DateTime timestamp);
 mixin TimelineImageBuilder {

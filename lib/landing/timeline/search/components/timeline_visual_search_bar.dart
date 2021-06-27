@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter.dart';
 
 /// [TimelineVisualSearchBar] displays the current search query of [siteName] and [dateTimeString].
 /// It transitions to the edit mode after tapping [onTapSearchBar], or transitions
@@ -12,6 +13,7 @@ class TimelineVisualSearchBar extends StatelessWidget {
   final GestureTapCallback? onTapFilter;
   final String dateTimeString;
   final String siteName;
+  final String? filterIndicator;
 
   const TimelineVisualSearchBar(
       {Key? key,
@@ -19,14 +21,15 @@ class TimelineVisualSearchBar extends StatelessWidget {
       this.onTapSearchBar,
       this.onTapFilter,
       required this.dateTimeString,
-      required this.siteName})
+      required this.siteName,
+      this.filterIndicator})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildSearchBar(context);
 
   Container _buildSearchBar(BuildContext context) => Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding: EdgeInsets.only(left: 20.0, right: 10),
       width: width ?? double.infinity,
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
@@ -74,13 +77,7 @@ class TimelineVisualSearchBar extends StatelessWidget {
               ],
             ),
           )),
-          Container(
-            width: 28,
-            child: IconButton(
-                icon: Icon(Icons.filter_list),
-                iconSize: 24,
-                onPressed: onTapFilter),
-          )
+          SearchFilter(filterIndicator: filterIndicator, onTapFilter: onTapFilter)
         ],
       )));
 }

@@ -7,6 +7,8 @@ import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/card/time_range_card.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 
 /// [TimelineEditSearchBar] allows edit of the date and time in the search query.
 /// It transits to the visual mode after [onExitEditMode], or transitions to the
@@ -15,8 +17,10 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 class TimelineEditSearchBar extends StatelessWidget {
   final GestureTapCallback? onExitEditMode;
   final GestureTapCallback? onTapFilter;
+  final String? filterIndicator;
 
-  const TimelineEditSearchBar({Key? key, this.onExitEditMode, this.onTapFilter})
+  const TimelineEditSearchBar(
+      {Key? key, this.onExitEditMode, this.onTapFilter, this.filterIndicator})
       : super(key: key);
 
   @override
@@ -45,7 +49,8 @@ class TimelineEditSearchBar extends StatelessWidget {
                 child: Center(
                     child: Text("Edit your search",
                         style: Theme.of(context).textTheme.headline6))),
-            _buildSearchFilterButton(context)
+            SearchFilter(
+                filterIndicator: filterIndicator, onTapFilter: onTapFilter)
           ],
         ),
       );
@@ -55,14 +60,6 @@ class TimelineEditSearchBar extends StatelessWidget {
         icon: Icon(Icons.close),
         color: Theme.of(context).colorScheme.onBackground,
       );
-
-  Widget _buildSearchFilterButton(BuildContext context) =>
-      BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-          builder: (blocContext, state) => IconButton(
-                onPressed: onTapFilter,
-                icon: Icon(Icons.filter_list),
-                color: Theme.of(context).colorScheme.onBackground,
-              ));
 
   Container _buildSearchModeBody(
           BuildContext context, TimelineSearchQueryState state) =>

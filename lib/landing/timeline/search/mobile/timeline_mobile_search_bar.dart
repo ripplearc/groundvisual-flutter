@@ -49,7 +49,9 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
                 },
                 onTapSearchBar: () => setState(() {
                       _animatedAppBar = _buildAppBarInSearchMode();
-                    }))),
+                    }),
+              filterIndicator: state.filterIndicator,
+            )),
       );
 
   AppBar _buildAppBarInSearchMode() => AppBar(
@@ -66,6 +68,7 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
                     onTapFilter: () async {
                       await _updateFilteredResults(state);
                     },
+                    filterIndicator: state.filterIndicator,
                   ))));
 
   Future<void> _updateFilteredResults(TimelineSearchQueryState state) async {
