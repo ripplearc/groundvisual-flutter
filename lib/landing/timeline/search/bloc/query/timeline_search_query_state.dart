@@ -82,6 +82,8 @@ class TimelineSearchQueryUpdate extends TimelineSearchQueryState {
       dateString + (timeString != EditTime ? "  |  " + timeString : "");
 
   @override
-  String? get filterIndicator =>
+  String? get filterIndicator => _indicateOneIfAnyMachinesBeUnselected();
+
+  String? _indicateOneIfAnyMachinesBeUnselected() =>
       filteredMachines.values.any((element) => !element) ? "1" : null;
 }

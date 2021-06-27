@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-/// [SearchFilter] invokes [onTapFilter] upon touch. It superimposes indicator
+/// [SearchFilterButton] invokes [onTapFilter] upon touch. It superimposes indicator
 /// on top of the button if the [filterIndicator] is not null.
-class SearchFilter extends StatelessWidget {
-  const SearchFilter({
+class SearchFilterButton extends StatelessWidget {
+  const SearchFilterButton({
     Key? key,
     required this.filterIndicator,
     required this.onTapFilter,

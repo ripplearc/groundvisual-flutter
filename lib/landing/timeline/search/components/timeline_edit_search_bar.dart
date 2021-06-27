@@ -7,7 +7,7 @@ import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/card/time_range_card.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 
 /// [TimelineEditSearchBar] allows edit of the date and time in the search query.
@@ -49,7 +49,7 @@ class TimelineEditSearchBar extends StatelessWidget {
                 child: Center(
                     child: Text("Edit your search",
                         style: Theme.of(context).textTheme.headline6))),
-            SearchFilter(
+            SearchFilterButton(
                 filterIndicator: filterIndicator, onTapFilter: onTapFilter)
           ],
         ),
@@ -103,9 +103,7 @@ class TimelineEditSearchBar extends StatelessWidget {
                               backgroundColor:
                                   Theme.of(context).cardTheme.color,
                               builder: (_) => _buildTimeRangeBottomSheet(
-                                  state.siteName,
-                                  state.dateTimeRange.start,
-                                  state.dateTimeRange.end));
+                                  state.siteName, state.dateTimeRange));
 
                       range?.let((it) =>
                           BlocProvider.of<TimelineSearchQueryBloc>(context).add(
@@ -131,11 +129,8 @@ class TimelineEditSearchBar extends StatelessWidget {
                         .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
               }));
 
-  Widget _buildTimeRangeBottomSheet(
-          String title, DateTime start, DateTime end) =>
-      TimeRangeCard(
-          title: title,
-          initialDateTimeRange: (DateTimeRange(start: start, end: end)));
+  Widget _buildTimeRangeBottomSheet(String title, DateTimeRange range) =>
+      TimeRangeCard(title: title, initialDateTimeRange: range);
 
   Widget _buildCalenderInBottomSheet(
           DateTimeRange initialSelectedDateRange, String title) =>
