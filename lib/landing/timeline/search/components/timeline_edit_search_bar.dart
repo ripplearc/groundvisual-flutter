@@ -93,7 +93,7 @@ class TimelineEditSearchBar extends StatelessWidget {
           child: DateButton(
               textStyle: Theme.of(context).textTheme.bodyText2,
               dateText: state.timeString,
-              icon: Icon(Icons.calendar_today_outlined, size: 20),
+              icon: Icon(Icons.timer, size: 20),
               action: state.enableTimeEdit
                   ? () async {
                       DateTimeRange? range =
@@ -102,12 +102,16 @@ class TimelineEditSearchBar extends StatelessWidget {
                               isScrollControlled: true,
                               backgroundColor:
                                   Theme.of(context).cardTheme.color,
-                              builder: (_) => _buildTimeRangeBottomSheet(
-                                  state.siteName, state.dateTimeRange));
+                              builder: (_) => TimeRangeCard(
+                                  title: state.siteName,
+                                  initialDateTimeRange: state.dateTimeRange,
+                                  timeRangeEdited: state.timeRangeEdited));
 
-                      range?.let((it) =>
-                          BlocProvider.of<TimelineSearchQueryBloc>(context).add(
-                              UpdateTimelineSearchQueryOfDateTimeRange(it)));
+                      range?.let((it) {
+                        BlocProvider.of<TimelineSearchQueryBloc>(context)
+                            .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                        onExitEditMode?.call();
+                      });
                     }
                   : null));
 
@@ -124,13 +128,12 @@ class TimelineEditSearchBar extends StatelessWidget {
                     backgroundColor: Theme.of(context).cardTheme.color,
                     builder: (_) => _buildCalenderInBottomSheet(
                         state.dateTimeRange, state.siteName));
-                range?.let((it) =>
-                    BlocProvider.of<TimelineSearchQueryBloc>(context)
-                        .add(UpdateTimelineSearchQueryOfDateTimeRange(it)));
+                range?.let((it) {
+                  BlocProvider.of<TimelineSearchQueryBloc>(context)
+                      .add(UpdateTimelineSearchQueryOfDateRange(it));
+                  onExitEditMode?.call();
+                });
               }));
-
-  Widget _buildTimeRangeBottomSheet(String title, DateTimeRange range) =>
-      TimeRangeCard(title: title, initialDateTimeRange: range);
 
   Widget _buildCalenderInBottomSheet(
           DateTimeRange initialSelectedDateRange, String title) =>
