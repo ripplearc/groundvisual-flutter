@@ -61,9 +61,21 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).colorScheme.background,
             elevation: 0,
-            flexibleSpace: Center(
-                child: TimelineTabletSearchBar(
-                    barSize: Size(_searchBarWidth, 45)))),
+            flexibleSpace: Stack(
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      child: Image(
+                          image: AssetImage('icon/logo.png'),
+                          color: Theme.of(context).colorScheme.primary),
+                    )),
+                Center(
+                    child: TimelineTabletSearchBar(
+                        barSize: Size(_searchBarWidth, 45)))
+              ],
+            )),
       ),
       body: Row(children: [
         Flexible(

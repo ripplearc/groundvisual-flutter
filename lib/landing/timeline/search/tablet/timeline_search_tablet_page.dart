@@ -9,7 +9,6 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
@@ -53,7 +52,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
     super.didChangeDependencies();
     _screenSize = MediaQuery.of(context).size;
     _searchBarWidth =
-        _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.96);
+        _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.95);
     _contentWidth =
         _screenSize.width * (contentFlex / (mapFlex + contentFlex) * 0.96);
   }
@@ -92,20 +91,22 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(150.0),
-        child: AppBar(
+          preferredSize: Size.fromHeight(90.0),
+          child: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: false,
             flexibleSpace:
                 BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-                    builder: (blocContext, state) => TimelineTabletSearchBar(
-                          barSize: Size(_searchBarWidth, 45),
-                          barMargin:
-                              EdgeInsets.only(left: 100, right: 300, top: 30),
-                        ))),
-      ),
+                    builder: (blocContext, state) => Row(children: [
+                          TimelineTabletSearchBar(
+                            barSize: Size(_searchBarWidth, 35),
+                            barMargin: EdgeInsets.only(left: 20, top: 30),
+                          ),
+                          Spacer()
+                        ])),
+          )),
       body: Row(children: [
         Flexible(
             flex: mapFlex,

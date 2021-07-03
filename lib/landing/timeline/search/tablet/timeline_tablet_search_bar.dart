@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
 import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
+import 'package:groundvisual_flutter/component/card/time_range_card.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
 
 class TimelineTabletSearchBar extends StatelessWidget {
   final Size barSize;
   final EdgeInsets? barMargin;
+  final bool? displayBackButton;
 
   const TimelineTabletSearchBar(
-      {Key? key, required this.barSize, this.barMargin})
+      {Key? key, required this.barSize, this.barMargin, this.displayBackButton})
       : super(key: key);
 
   @override
@@ -36,18 +39,34 @@ class TimelineTabletSearchBar extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(30))),
             child: IntrinsicHeight(
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(
-                    flex: 6,
-                    child: Text(state.siteName,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (displayBackButton == true)
+                      IconButton(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          icon: Icon(Icons.arrow_back_outlined),
+                          onPressed: () => Navigator.pop(context)),
+                    if (displayBackButton == true) SizedBox(width: 20),
+                    Text(state.siteName,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.subtitle1)),
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
                 VerticalDivider(thickness: 2),
                 _buildDateEditButton(context, state),
                 VerticalDivider(thickness: 2),
                 _buildTimeEditButton(context, state),
+                Row(
+                  children: [
+                    VerticalDivider(thickness: 2),
+                    SizedBox(width: 5),
+                    SearchFilterButton(filterIndicator: "1", onTapFilter: null)
+                  ],
+                )
               ],
             ))),
       );
@@ -58,7 +77,27 @@ class TimelineTabletSearchBar extends StatelessWidget {
           textStyle: Theme.of(context).textTheme.bodyText2,
           dateText: state.timeString,
           icon: Icon(Icons.timer, size: 20),
-          action: state.enableTimeEdit ? () async {} : null);
+          action: state.enableTimeEdit
+              ? () async {
+                  DateTimeRange? range = await showDialog<DateTimeRange>(
+                      context: context,
+                      builder: (_) => SimpleDialog(children: [
+                            Container(
+                                width: 600,
+                                height: 700,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: TimeRangeCard(
+                                    title: state.siteName,
+                                    initialDateTimeRange: state.dateTimeRange,
+                                    timeRangeEdited: state.timeRangeEdited))
+                          ]));
+
+                  range?.let((it) {
+                    BlocProvider.of<TimelineSearchQueryBloc>(context)
+                        .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                  });
+                }
+              : null);
 
   Widget _buildDateEditButton(
           BuildContext context, TimelineSearchQueryState state) =>
@@ -68,9 +107,7 @@ class TimelineTabletSearchBar extends StatelessWidget {
           action: () async {
             final range = await showDialog<DateTimeRange>(
                 context: context,
-                // isScrollControlled: true,
-                // backgroundColor: Theme.of(context).cardTheme.color,
-                builder: (_) => _buildCalenderInBottomSheet(
+                builder: (_) => _buildCalenderInDialog(
                     state.dateTimeRange, state.siteName));
             range?.let((it) {
               BlocProvider.of<TimelineSearchQueryBloc>(context)
@@ -78,18 +115,24 @@ class TimelineTabletSearchBar extends StatelessWidget {
             });
           });
 
-  Widget _buildCalenderInBottomSheet(
+  Widget _buildCalenderInDialog(
           DateTimeRange initialSelectedDateRange, String title) =>
       SimpleDialog(children: [
         Container(
-          width: 600,
-          height: 700,
-          child: CalendarSheet(
-            title: title,
-            initialSelectedDate: Date.today,
-            initialSelectedDateRange: null,
-            allowRangeSelection: true,
-          ),
-        )
+            width: 600,
+            height: 700,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: CalendarSheet(
+              title: title,
+              initialSelectedDate: initialSelectedDateRange.start
+                      .isSameDay(initialSelectedDateRange.end)
+                  ? initialSelectedDateRange.start
+                  : Date.today,
+              initialSelectedDateRange: initialSelectedDateRange.start
+                      .isSameDay(initialSelectedDateRange.end)
+                  ? null
+                  : initialSelectedDateRange,
+              allowRangeSelection: true,
+            ))
       ]);
 }

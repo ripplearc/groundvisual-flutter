@@ -6,10 +6,21 @@ import 'package:groundvisual_flutter/landing/appbar/component/toggle/day_trend_t
 /// Build the landing home page AppBar with site and date selections.
 AppBar buildLandingHomePageTabletHeader(BuildContext context) => AppBar(
       leadingWidth: 200,
-      leading: Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: SiteDropDownList(),
-      ),
+      flexibleSpace: Stack(children: [
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              child: Image(
+                  image: AssetImage('icon/logo.png'),
+                  color: Theme.of(context).colorScheme.primary),
+            )),
+        Center(
+            child: Container(
+          width: 200,
+          child: SiteDropDownList(),
+        ))
+      ]),
       actions: [
         Padding(
             padding: EdgeInsets.only(right: 30),
