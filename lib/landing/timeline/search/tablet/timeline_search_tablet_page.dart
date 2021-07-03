@@ -12,6 +12,7 @@ import 'package:groundvisual_flutter/landing/timeline/search/components/timeline
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -90,16 +91,20 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-            builder: (blocContext, state) => TimelineVisualSearchBar(
-                siteName: state.siteName,
-                dateTimeString: state.dateString,
-                width: _searchBarWidth)),
-        centerTitle: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150.0),
+        child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: false,
+            flexibleSpace:
+                BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
+                    builder: (blocContext, state) => TimelineTabletSearchBar(
+                          barSize: Size(_searchBarWidth, 45),
+                          barMargin:
+                              EdgeInsets.only(left: 100, right: 300, top: 30),
+                        ))),
       ),
       body: Row(children: [
         Flexible(

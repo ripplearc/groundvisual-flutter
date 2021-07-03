@@ -1,6 +1,7 @@
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/buttons/toggle_button.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../buttons/cancel_button.dart';
@@ -98,7 +99,7 @@ class _CalendarSheetState extends State<CalendarSheet>
               key: UniqueKey(),
               initialIndex: _toggleIndex,
               labels: ["Date", "Range"],
-              widthPercent: 50,
+              widthPercent: _widthPercent,
               height: 35,
               toggleAction: (index) {
                 setState(() {
@@ -115,6 +116,13 @@ class _CalendarSheetState extends State<CalendarSheet>
               }),
           Spacer()
         ],
+      );
+
+  double get _widthPercent => getValueForScreenType<double>(
+        context: context,
+        mobile: 30,
+        tablet: 20,
+        desktop: 15,
       );
 
   Widget _buildTableCalendar() => Padding(

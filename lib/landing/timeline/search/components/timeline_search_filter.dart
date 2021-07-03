@@ -44,7 +44,7 @@ class TimelineSearchFilterState extends State<TimelineSearchFilter> {
           Divider(thickness: 2),
           Padding(
               padding: const EdgeInsets.all(20),
-              child: Text("Machines",
+              child: Text("Equipments",
                   style: Theme.of(context).textTheme.headline6)),
           Expanded(
               child: ListView.builder(
