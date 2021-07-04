@@ -1,4 +1,5 @@
-import 'package:charts_flutter/flutter.dart';
+import 'dart:ui';
+
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
 import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/card/time_range_card.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
+import 'package:groundvisual_flutter/component/dialog/dialog_config.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_filter.dart';
+import 'package:groundvisual_flutter/models/machine_detail.dart';
 
-class TimelineTabletSearchBar extends StatelessWidget {
+class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
   final Size barSize;
   final EdgeInsets? barMargin;
   final bool? displayBackButton;
@@ -44,6 +48,7 @@ class TimelineTabletSearchBar extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     if (displayBackButton == true)
                       IconButton(
@@ -61,10 +66,15 @@ class TimelineTabletSearchBar extends StatelessWidget {
                 VerticalDivider(thickness: 2),
                 _buildTimeEditButton(context, state),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     VerticalDivider(thickness: 2),
                     SizedBox(width: 5),
-                    SearchFilterButton(filterIndicator: "1", onTapFilter: null)
+                    SearchFilterButton(
+                        filterIndicator: state.filterIndicator,
+                        onTapFilter: () async {
+                          _updateFilteredResults(state, context);
+                        })
                   ],
                 )
               ],
@@ -83,8 +93,8 @@ class TimelineTabletSearchBar extends StatelessWidget {
                       context: context,
                       builder: (_) => SimpleDialog(children: [
                             Container(
-                                width: 600,
-                                height: 700,
+                                width: webDialogWidth,
+                                height: webDialogHeight,
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: TimeRangeCard(
                                     title: state.siteName,
@@ -119,8 +129,8 @@ class TimelineTabletSearchBar extends StatelessWidget {
           DateTimeRange initialSelectedDateRange, String title) =>
       SimpleDialog(children: [
         Container(
-            width: 600,
-            height: 700,
+            width: webDialogWidth,
+            height: webDialogHeight,
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: CalendarSheet(
               title: title,
@@ -135,4 +145,24 @@ class TimelineTabletSearchBar extends StatelessWidget {
               allowRangeSelection: true,
             ))
       ]);
+
+  Future<void> _updateFilteredResults(
+      TimelineSearchQueryState state, BuildContext context) async {
+    final filteredMachines = await showDialog<Map<MachineDetail, bool>>(
+        context: context,
+        builder: (_) => SimpleDialog(children: [
+              Container(
+                width: webDialogWidth,
+                  height: webDialogHeight,
+                  child: TimelineSearchFilter(
+                title: state.siteName,
+                subtitle: state.dateTimeString,
+                filteredMachines: Map.from(state.filteredMachines),
+              ))
+            ]));
+    filteredMachines?.let((machines) {
+      BlocProvider.of<TimelineSearchQueryBloc>(context)
+          .add(UpdateTimelineSearchQueryOfSelectedMachines(machines));
+    });
+  }
 }

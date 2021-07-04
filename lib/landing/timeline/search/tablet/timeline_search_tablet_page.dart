@@ -91,7 +91,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(90.0),
+          preferredSize: Size.fromHeight(100.0),
           child: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
@@ -103,6 +103,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
                           TimelineTabletSearchBar(
                             barSize: Size(_searchBarWidth, 35),
                             barMargin: EdgeInsets.only(left: 20, top: 30),
+                            displayBackButton: true,
                           ),
                           Spacer()
                         ])),
