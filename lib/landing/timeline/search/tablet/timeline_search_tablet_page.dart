@@ -96,7 +96,6 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            centerTitle: false,
             flexibleSpace:
                 BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
                     builder: (blocContext, state) => Row(children: [

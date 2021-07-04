@@ -14,6 +14,8 @@ import 'package:groundvisual_flutter/landing/timeline/search/components/search_f
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_filter.dart';
 import 'package:groundvisual_flutter/models/machine_detail.dart';
 
+/// [TimelineTabletSearchBar] displays and edits the date, date range and time range
+/// of the search query. Both tablet and web page use [TimelineTabletSearchBar].
 class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
   final Size barSize;
   final EdgeInsets? barMargin;
