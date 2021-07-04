@@ -8,8 +8,10 @@ class SearchWorkZoneAtTime extends WorkZoneEvent {
   final String site;
   final DateTime startTime;
   final DateTime endTime;
+  final Map<MachineDetail, bool>? filteredMachines;
 
-  SearchWorkZoneAtTime(this.site, this.startTime, this.endTime);
+  SearchWorkZoneAtTime(this.site, this.startTime, this.endTime,
+      {this.filteredMachines});
 
   @override
   List<Object> get props => [site, startTime, endTime];

@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
 import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/card/time_range_card.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
+import 'package:groundvisual_flutter/models/machine_detail.dart';
 
 /// [TimelineEditSearchBar] allows edit of the date and time in the search query.
 /// It transits to the visual mode after [onExitEditMode], or transitions to the
@@ -108,9 +110,8 @@ class TimelineEditSearchBar extends StatelessWidget {
                                   timeRangeEdited: state.timeRangeEdited));
 
                       range?.let((it) {
-                        BlocProvider.of<TimelineSearchQueryBloc>(context)
-                            .add(UpdateTimelineSearchQueryOfTimeRange(it));
-                        onExitEditMode?.call();
+                        _updateBloc(context, state.siteName, it,
+                            state.filteredMachines);
                       });
                     }
                   : null));
@@ -129,11 +130,20 @@ class TimelineEditSearchBar extends StatelessWidget {
                     builder: (_) => _buildCalenderInBottomSheet(
                         state.dateTimeRange, state.siteName));
                 range?.let((it) {
-                  BlocProvider.of<TimelineSearchQueryBloc>(context)
-                      .add(UpdateTimelineSearchQueryOfDateRange(it));
-                  onExitEditMode?.call();
+                  _updateBloc(
+                      context, state.siteName, it, state.filteredMachines);
                 });
               }));
+
+  void _updateBloc(BuildContext context, String siteName, DateTimeRange it,
+      Map<MachineDetail, bool> filteredMachines) {
+    BlocProvider.of<TimelineSearchQueryBloc>(context)
+        .add(UpdateTimelineSearchQueryOfDateRange(it));
+    BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
+        siteName, it.start, it.end,
+        filteredMachines: filteredMachines));
+    onExitEditMode?.call();
+  }
 
   Widget _buildCalenderInBottomSheet(
           DateTimeRange initialSelectedDateRange, String title) =>

@@ -231,7 +231,7 @@ class _CalendarSheetState extends State<CalendarSheet>
                         selectedDay != null)
                       Navigator.of(context).pop(DateTimeRange(
                           start: selectedDay.startOfDay,
-                          end: selectedDay.startOfDay));
+                          end: selectedDay.endOfDay));
                     else if (rangeStart != null && rangeEnd != null)
                       Navigator.of(context)
                           .pop(DateTimeRange(start: rangeStart, end: rangeEnd));
