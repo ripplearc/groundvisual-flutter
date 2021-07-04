@@ -41,7 +41,9 @@ var timelineSearchHandler = Handler(
         BlocProvider<WorkZoneBloc>(create: (_) => getIt<WorkZoneBloc>()),
         BlocProvider<TimelineSearchQueryBloc>(
           create: (_) => getIt<TimelineSearchQueryBloc>(
-              param1: DateTimeRange(start: date.startOfDay, end: date.endOfDay),
+              param1: DateTimeRange(
+                  start: date.startOfDay,
+                  end: date.endOfDay.subMilliseconds(1)),
               param2: siteName),
         )
       ],

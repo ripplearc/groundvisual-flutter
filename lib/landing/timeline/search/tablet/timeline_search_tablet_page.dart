@@ -9,9 +9,9 @@ import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -52,7 +52,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
     super.didChangeDependencies();
     _screenSize = MediaQuery.of(context).size;
     _searchBarWidth =
-        _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.96);
+        _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.95);
     _contentWidth =
         _screenSize.width * (contentFlex / (mapFlex + contentFlex) * 0.96);
   }
@@ -90,17 +90,23 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-            builder: (blocContext, state) => TimelineVisualSearchBar(
-                siteName: state.siteName,
-                dateTimeString: state.dateString,
-                width: _searchBarWidth)),
-        centerTitle: false,
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            flexibleSpace:
+                BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
+                    builder: (blocContext, state) => Row(children: [
+                          TimelineTabletSearchBar(
+                            barSize: Size(_searchBarWidth, 35),
+                            barMargin: EdgeInsets.only(left: 20, top: 30),
+                            displayBackButton: true,
+                          ),
+                          Spacer()
+                        ])),
+          )),
       body: Row(children: [
         Flexible(
             flex: mapFlex,

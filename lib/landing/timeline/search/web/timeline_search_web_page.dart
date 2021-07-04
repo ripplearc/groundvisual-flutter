@@ -7,11 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_visual_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -47,25 +46,34 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenSize = MediaQuery.of(context).size;
-    _searchBarWidth =
-        _screenSize.width * (mapFlex / (mapFlex + contentFlex) * 0.96);
+    _searchBarWidth = _screenSize.width * 0.4;
     _contentWidth =
         _screenSize.width * (contentFlex / (mapFlex + contentFlex) * 0.96);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: BlocBuilder<TimelineSearchQueryBloc, TimelineSearchQueryState>(
-            builder: (blocContext, state) => TimelineVisualSearchBar(
-                dateTimeString: state.dateString,
-                siteName: state.siteName,
-                width: _searchBarWidth)),
-        centerTitle: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            elevation: 0,
+            flexibleSpace: Stack(
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      child: Image(
+                          image: AssetImage('icon/logo.png'),
+                          color: Theme.of(context).colorScheme.primary),
+                    )),
+                Center(
+                    child: TimelineTabletSearchBar(
+                        barSize: Size(_searchBarWidth, 45)))
+              ],
+            )),
       ),
       body: Row(children: [
         Flexible(

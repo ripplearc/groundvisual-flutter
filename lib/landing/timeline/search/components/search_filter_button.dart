@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -19,6 +18,11 @@ class SearchFilterButton extends StatelessWidget {
     return Container(
         width: 40,
         child: Stack(children: [
+          IconButton(
+              icon: Icon(Icons.filter_list),
+              color: Theme.of(context).colorScheme.onBackground,
+              iconSize: 24,
+              onPressed: onTapFilter),
           if (filterIndicator != null)
             Positioned.fill(
                 top: 4,
@@ -30,18 +34,11 @@ class SearchFilterButton extends StatelessWidget {
                             height: 16,
                             width: 16,
                             alignment: Alignment.center,
-                            color:
-                            Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.secondary,
                             child: Text(filterIndicator ?? "",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1))))),
-          IconButton(
-              icon: Icon(Icons.filter_list),
-              color: Theme.of(context).colorScheme.onBackground,
-              iconSize: 24,
-              onPressed: onTapFilter),
+                                style:
+                                    Theme.of(context).textTheme.bodyText1))))),
         ]));
   }
 }
