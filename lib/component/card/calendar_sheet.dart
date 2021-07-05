@@ -120,7 +120,7 @@ class _CalendarSheetState extends State<CalendarSheet>
 
   double get _widthPercent => getValueForScreenType<double>(
         context: context,
-        mobile: 30,
+        mobile: 50,
         tablet: 20,
         desktop: 15,
       );
@@ -231,7 +231,7 @@ class _CalendarSheetState extends State<CalendarSheet>
                         selectedDay != null)
                       Navigator.of(context).pop(DateTimeRange(
                           start: selectedDay.startOfDay,
-                          end: selectedDay.startOfDay));
+                          end: selectedDay.endOfDay.subMilliseconds(1)));
                     else if (rangeStart != null && rangeEnd != null)
                       Navigator.of(context)
                           .pop(DateTimeRange(start: rangeStart, end: rangeEnd));

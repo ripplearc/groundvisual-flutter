@@ -9,6 +9,7 @@ import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/component/card/time_range_card.dart';
 import 'package:groundvisual_flutter/component/dialog/dialog_config.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_filter.dart';
@@ -107,6 +108,8 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
                   range?.let((it) {
                     BlocProvider.of<TimelineSearchQueryBloc>(context)
                         .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                    _updateWorkZoneMap(
+                        context, state.siteName, it, state.filteredMachines);
                   });
                 }
               : null);
@@ -124,6 +127,8 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
             range?.let((it) {
               BlocProvider.of<TimelineSearchQueryBloc>(context)
                   .add(UpdateTimelineSearchQueryOfDateRange(it));
+              _updateWorkZoneMap(
+                  context, state.siteName, it, state.filteredMachines);
             });
           });
 
@@ -154,17 +159,25 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
         context: context,
         builder: (_) => SimpleDialog(children: [
               Container(
-                width: webDialogWidth,
+                  width: webDialogWidth,
                   height: webDialogHeight,
                   child: TimelineSearchFilter(
-                title: state.siteName,
-                subtitle: state.dateTimeString,
-                filteredMachines: Map.from(state.filteredMachines),
-              ))
+                    title: state.siteName,
+                    subtitle: state.dateTimeString,
+                    filteredMachines: Map.from(state.filteredMachines),
+                  ))
             ]));
     filteredMachines?.let((machines) {
       BlocProvider.of<TimelineSearchQueryBloc>(context)
           .add(UpdateTimelineSearchQueryOfSelectedMachines(machines));
+      _updateWorkZoneMap(
+          context, state.siteName, state.dateTimeRange, filteredMachines);
     });
   }
+
+  void _updateWorkZoneMap(BuildContext context, String siteName,
+          DateTimeRange it, Map<MachineDetail, bool> filteredMachines) =>
+      BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
+          siteName, it.start, it.end,
+          filteredMachines: filteredMachines));
 }

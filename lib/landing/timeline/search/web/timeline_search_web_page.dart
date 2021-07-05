@@ -4,12 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_workzone_map_mixin.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -31,7 +31,8 @@ class TimelineSearchWebPage extends StatefulWidget {
   State<StatefulWidget> createState() => TimelineSearchWebPageState();
 }
 
-class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
+class TimelineSearchWebPageState extends State<TimelineSearchWebPage>
+    with TimelineWorkZoneMap {
   final Completer<GoogleMapController> _controller = Completer();
 
   late Size _screenSize;
@@ -66,7 +67,7 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
                     child: Container(
                       margin: EdgeInsets.all(20),
                       child: Image(
-                          image: AssetImage('icon/logo.png'),
+                          image: AssetImage('assets/icon/logo.png'),
                           color: Theme.of(context).colorScheme.primary),
                     )),
                 Center(
@@ -76,9 +77,7 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage> {
             )),
       ),
       body: Row(children: [
-        Flexible(
-            flex: mapFlex,
-            child: WorkZoneMap(bottomPadding: 0, mapController: _controller)),
+        Flexible(flex: mapFlex, child: buildMap(context, _controller)),
         Flexible(
             flex: contentFlex,
             child: Column(

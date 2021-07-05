@@ -24,4 +24,14 @@ class WorkZonePolygons extends WorkZoneState {
 
   @override
   List<Object> get props => [this.workZone, this.cameraPosition];
+
+  @override
+  String toString() =>
+      workZone
+          .map((e) => e.points
+              .map((e) => "${e.latitude} ${e.longitude}")
+              .reduce((value, element) => "$value $element"))
+          .reduce((value, element) => "$value points 🧬: $element") +
+      " 📸 " +
+      cameraPosition.toString();
 }

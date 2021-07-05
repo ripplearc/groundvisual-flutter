@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_edit_search_bar.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_filter.dart';
@@ -88,6 +89,9 @@ class TimelineMobileSearchBarState extends State<TimelineMobileSearchBar> {
       setState(() {
         _animatedAppBar = _buildAppBarInVisualMode();
       });
+      BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
+          state.siteName, state.dateTimeRange.start, state.dateTimeRange.end,
+          filteredMachines: machines));
     });
   }
 }

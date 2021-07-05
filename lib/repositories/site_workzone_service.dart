@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/models/site_work_records.dart';
 import 'package:groundvisual_flutter/models/zone.dart';
 import 'package:injectable/injectable.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 /// Network service to get the work zone for a specific time, date or over a period.
 abstract class SiteWorkZoneService {
@@ -23,6 +25,8 @@ abstract class SiteWorkZoneService {
 
 @Injectable(as: SiteWorkZoneService)
 class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
+  final rng = new Random();
+
   @override
   Future<ConstructionZone> getWorkZoneAtDate(String siteName, DateTime time) =>
       rootBundle
@@ -46,16 +50,21 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
 
   @override
   Future<ConstructionZone> getWorkZoneAtTime(
-          String siteName, DateTime startTime, DateTime endTime) =>
-      rootBundle
-          .loadString('assets/mock_response/penton_time_work_zone.json')
-          .then((value) => json.decode(value))
-          .then((decoded) => SiteConstructionZone.fromJson(decoded)
-              .records
-              .firstWhere((element) => startTime.minute == element.date.minute,
-                  orElse: (() => UnitConstructionZone(Date.startOfToday, 900,
-                      ConstructionZone(<Region>[].toList()))))
-              .zone);
+      String siteName, DateTime startTime, DateTime endTime) {
+    return rootBundle
+        .loadString('assets/mock_response/penton_time_work_zone.json')
+        .then((value) => json.decode(value))
+        .then(_selectRandomZoneFromJsonCollection);
+  }
+
+  ConstructionZone _selectRandomZoneFromJsonCollection(decoded) =>
+      SiteConstructionZone.fromJson(decoded)
+          .records
+          .let((elements) => elements.isNotEmpty
+              ? elements.elementAt(rng.nextInt(elements.length))
+              : UnitConstructionZone(Date.startOfToday, 900,
+                  ConstructionZone(<Region>[].toList())))
+          .zone;
 
   @override
   Future<ConstructionZone> getWorkZoneAtPeriod(

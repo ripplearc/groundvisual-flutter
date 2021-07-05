@@ -37,8 +37,13 @@ class SearchFilterButton extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                             child: Text(filterIndicator ?? "",
                                 textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.bodyText1))))),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    ?.apply(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background)))))),
         ]));
   }
 }
