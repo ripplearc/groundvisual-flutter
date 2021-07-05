@@ -110,7 +110,9 @@ class TimelineEditSearchBar extends StatelessWidget {
                                   timeRangeEdited: state.timeRangeEdited));
 
                       range?.let((it) {
-                        _updateBloc(context, state.siteName, it,
+                        BlocProvider.of<TimelineSearchQueryBloc>(context)
+                            .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                        _updateWorkZoneMapAndExit(context, state.siteName, it,
                             state.filteredMachines);
                       });
                     }
@@ -130,15 +132,15 @@ class TimelineEditSearchBar extends StatelessWidget {
                     builder: (_) => _buildCalenderInBottomSheet(
                         state.dateTimeRange, state.siteName));
                 range?.let((it) {
-                  _updateBloc(
+                  BlocProvider.of<TimelineSearchQueryBloc>(context)
+                      .add(UpdateTimelineSearchQueryOfDateRange(it));
+                  _updateWorkZoneMapAndExit(
                       context, state.siteName, it, state.filteredMachines);
                 });
               }));
 
-  void _updateBloc(BuildContext context, String siteName, DateTimeRange it,
-      Map<MachineDetail, bool> filteredMachines) {
-    BlocProvider.of<TimelineSearchQueryBloc>(context)
-        .add(UpdateTimelineSearchQueryOfDateRange(it));
+  void _updateWorkZoneMapAndExit(BuildContext context, String siteName,
+      DateTimeRange it, Map<MachineDetail, bool> filteredMachines) {
     BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
         siteName, it.start, it.end,
         filteredMachines: filteredMachines));

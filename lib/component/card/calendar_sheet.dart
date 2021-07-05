@@ -120,7 +120,7 @@ class _CalendarSheetState extends State<CalendarSheet>
 
   double get _widthPercent => getValueForScreenType<double>(
         context: context,
-        mobile: 30,
+        mobile: 50,
         tablet: 20,
         desktop: 15,
       );

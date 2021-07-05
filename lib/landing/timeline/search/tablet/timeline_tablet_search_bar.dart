@@ -106,7 +106,9 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
                           ]));
 
                   range?.let((it) {
-                    _updateBloc(
+                    BlocProvider.of<TimelineSearchQueryBloc>(context)
+                        .add(UpdateTimelineSearchQueryOfTimeRange(it));
+                    _updateWorkZoneMap(
                         context, state.siteName, it, state.filteredMachines);
                   });
                 }
@@ -123,18 +125,12 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
                 builder: (_) => _buildCalenderInDialog(
                     state.dateTimeRange, state.siteName));
             range?.let((it) {
-              _updateBloc(context, state.siteName, it, state.filteredMachines);
+              BlocProvider.of<TimelineSearchQueryBloc>(context)
+                  .add(UpdateTimelineSearchQueryOfDateRange(it));
+              _updateWorkZoneMap(
+                  context, state.siteName, it, state.filteredMachines);
             });
           });
-
-  void _updateBloc(BuildContext context, String siteName, DateTimeRange it,
-      Map<MachineDetail, bool> filteredMachines) {
-    BlocProvider.of<TimelineSearchQueryBloc>(context)
-        .add(UpdateTimelineSearchQueryOfDateRange(it));
-    BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
-        siteName, it.start, it.end,
-        filteredMachines: filteredMachines));
-  }
 
   Widget _buildCalenderInDialog(
           DateTimeRange initialSelectedDateRange, String title) =>
@@ -174,9 +170,14 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
     filteredMachines?.let((machines) {
       BlocProvider.of<TimelineSearchQueryBloc>(context)
           .add(UpdateTimelineSearchQueryOfSelectedMachines(machines));
-      BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
-          state.siteName, state.dateTimeRange.start, state.dateTimeRange.end,
-          filteredMachines: machines));
+      _updateWorkZoneMap(
+          context, state.siteName, state.dateTimeRange, filteredMachines);
     });
   }
+
+  void _updateWorkZoneMap(BuildContext context, String siteName,
+          DateTimeRange it, Map<MachineDetail, bool> filteredMachines) =>
+      BlocProvider.of<WorkZoneBloc>(context).add(SearchWorkZoneAtTime(
+          siteName, it.start, it.end,
+          filteredMachines: filteredMachines));
 }

@@ -12,7 +12,7 @@ AppBar buildLandingHomePageWebHeader(BuildContext context) => AppBar(
         child: Container(
           margin: EdgeInsets.all(7),
           child: Image(
-              image: AssetImage('icon/logo.png'),
+              image: AssetImage('assets/icon/logo.png'),
               color: Theme.of(context).colorScheme.primary),
         )),
     Center(
