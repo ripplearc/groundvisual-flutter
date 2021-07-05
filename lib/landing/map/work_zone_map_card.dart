@@ -40,9 +40,10 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> {
 
   Widget _buildMapCardWithPolygons(WorkZoneState state) {
     if (state is WorkZonePolygons) {
-      return _buildMapCard(context, state.cameraPosition, state.workZone);
+      return _buildMapCard(context, state.cameraPosition, state.workZone,
+          state.highlightedWorkZone);
     } else if (state is WorkZoneInitial) {
-      return _buildMapCard(context, state.cameraPosition, Set());
+      return _buildMapCard(context, state.cameraPosition, Set(), Set());
     } else {
       return Container();
     }
@@ -58,34 +59,37 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> {
   }
 
   Widget _buildMapCard(BuildContext context, CameraPosition cameraPosition,
-          Set<Polygon> workZone) =>
+          Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
       widget.embedInCard
           ? Card(
               color: Theme.of(context).colorScheme.background,
               elevation: 4,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6)),
-              child: _buildCardContent(context, cameraPosition, workZone))
-          : _buildCardContent(context, cameraPosition, workZone);
+              child: _buildCardContent(
+                  context, cameraPosition, workZone, highlightedWorkZone))
+          : _buildCardContent(
+              context, cameraPosition, workZone, highlightedWorkZone);
 
   Widget _buildCardContent(BuildContext context, CameraPosition cameraPosition,
-          Set<Polygon> workZone) =>
+          Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
       widget.showTitle
           ? Column(mainAxisSize: MainAxisSize.max, children: [
               _buildTitle(context),
-              _buildGoogleMap(cameraPosition, workZone)
+              _buildGoogleMap(cameraPosition, workZone, highlightedWorkZone)
             ])
-          : _buildGoogleMap(cameraPosition, workZone);
+          : _buildGoogleMap(cameraPosition, workZone, highlightedWorkZone);
 
   ListTile _buildTitle(BuildContext context) => ListTile(
       title: Text('Work Zone', style: Theme.of(context).textTheme.subtitle1));
 
-  WorkZoneMap _buildGoogleMap(
-          CameraPosition cameraPosition, Set<Polygon> workZone) =>
+  WorkZoneMap _buildGoogleMap(CameraPosition cameraPosition,
+          Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
       WorkZoneMap(
         bottomPadding: widget.bottomPadding,
         cameraPosition: cameraPosition,
         workZone: workZone,
+        highlightedWorkZone: highlightedWorkZone,
         mapController: _controller,
       );
 }

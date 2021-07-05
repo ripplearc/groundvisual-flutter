@@ -17,6 +17,24 @@ class SearchWorkZoneAtTime extends WorkZoneEvent {
   List<Object> get props => [site, startTime, endTime];
 }
 
+/// [HighlightWorkZoneOfTimeOnDate] select a time interval in a day
+/// to query the work zone. The work zone of the day serves as the background,
+/// while the work zone of the time highlights in the foreground.
+/// One use case is on the home landing page. When the user swift through
+/// the time bar chart, the daily work zone remains the same, and the
+/// highlighted work zone changes as selected time changes.
+class HighlightWorkZoneOfTime extends WorkZoneEvent {
+  final String site;
+  final DateTimeRange highlightedTimeRange;
+  final Map<MachineDetail, bool>? filteredMachines;
+
+  HighlightWorkZoneOfTime(this.site, this.highlightedTimeRange,
+      {this.filteredMachines});
+
+  @override
+  List<Object?> get props => [site, highlightedTimeRange, filteredMachines];
+}
+
 /// Select a date to query the work zone.
 class SearchWorkZoneOnDate extends WorkZoneEvent {
   final String site;

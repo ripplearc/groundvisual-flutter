@@ -21,8 +21,8 @@ class MachineWorkingTimeList extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             ListTile(
-              title: Text('Machines',
-                  style: Theme.of(context).textTheme.headline5),
+              title: Text('Equipments',
+                  style: Theme.of(context).textTheme.headline6),
               subtitle: _genLegend(context),
             ),
             _genCardContent(context, state)
