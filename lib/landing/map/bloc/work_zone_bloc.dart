@@ -10,6 +10,7 @@ import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time
 import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time_chart_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
+import 'package:groundvisual_flutter/models/machine_detail.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';

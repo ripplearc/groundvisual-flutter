@@ -6,13 +6,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
-import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
-import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_workzone_map_mixin.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/mobile/timeline_mobile_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -36,7 +35,8 @@ class TimelineSearchMobilePage extends StatefulWidget {
       _TimelineSearchMobilePageState();
 }
 
-class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
+class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage>
+    with TimelineWorkZoneMap {
   final Completer<GoogleMapController> _controller = Completer();
   late Size _screenSize;
   late double _contentHeight;
@@ -93,41 +93,13 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage> {
   Widget build(BuildContext context) => Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
-      body: Stack(children: [_buildMapHeader(context), _buildContent()]));
+      body: Stack(children: [
+        buildMap(context, _controller, bottomPadding: _contentHeight),
+        _buildContent()
+      ]));
 
   PreferredSize _buildAppBar() => PreferredSize(
       preferredSize: Size.fromHeight(150.0), child: TimelineMobileSearchBar());
-
-  Widget _buildMapHeader(BuildContext context) =>
-      BlocConsumer<WorkZoneBloc, WorkZoneState>(
-          listener: (context, state) async {
-        final controller = await _controller.future;
-        _animateCameraPosition(state, controller);
-      }, builder: (context, state) {
-        if (state is WorkZoneInitial)
-          return WorkZoneMap(
-              bottomPadding: _contentHeight,
-              cameraPosition: state.cameraPosition,
-              mapController: _controller);
-        else if (state is WorkZonePolygons)
-          return WorkZoneMap(
-              bottomPadding: _contentHeight,
-              cameraPosition: state.cameraPosition,
-              workZone: state.workZone,
-              mapController: _controller);
-        else
-          return WorkZoneMap(
-              bottomPadding: _contentHeight, mapController: _controller);
-      });
-
-  void _animateCameraPosition(
-      WorkZoneState state, GoogleMapController controller) {
-    if (state is WorkZonePolygons) {
-      controller.animateCamera(
-        CameraUpdate.newCameraPosition(state.cameraPosition),
-      );
-    }
-  }
 
   Align _buildContent() => Align(
       alignment: Alignment.bottomCenter,

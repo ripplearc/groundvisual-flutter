@@ -4,13 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
+import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_workzone_map_mixin.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -32,7 +32,8 @@ class TimelineSearchTabletPage extends StatefulWidget {
   State<StatefulWidget> createState() => TimelineSearchTabletPageState();
 }
 
-class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
+class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
+    with TimelineWorkZoneMap {
   final Completer<GoogleMapController> _controller = Completer();
 
   final ItemPositionsListener itemPositionsListener =
@@ -108,9 +109,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage> {
                         ])),
           )),
       body: Row(children: [
-        Flexible(
-            flex: mapFlex,
-            child: WorkZoneMap(bottomPadding: 0, mapController: _controller)),
+        Flexible(flex: mapFlex, child: buildMap(context, _controller)),
         Flexible(
             flex: contentFlex,
             child: Column(

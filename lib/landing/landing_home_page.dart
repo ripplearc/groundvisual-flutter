@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
+import 'package:groundvisual_flutter/landing/appbar/web/landing_page_web_header.dart';
 import 'package:groundvisual_flutter/landing/body/tablet/landing_page_body.dart';
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/bloc/daily_timeline_bloc.dart';
@@ -54,6 +55,10 @@ class LandingHomePage extends StatelessWidget {
           ),
           tablet: (BuildContext context) => Scaffold(
             appBar: buildLandingHomePageTabletHeader(context),
+            body: LandingHomePageTabletBody(),
+          ),
+          desktop: (BuildContext context) => Scaffold(
+            appBar: buildLandingHomePageWebHeader(context),
             body: LandingHomePageTabletBody(),
           ),
         ));
@@ -130,8 +135,8 @@ class LandingHomePageBlocComponent {
   WorkZoneBloc getWorkZoneMapBloc(SelectedSiteBloc selectedSiteBloc) {
     final bloc = _workZoneMapBloc;
     if (bloc == null) {
-      final newBloc = WorkZoneBloc(getIt<WorkZoneMapViewModel>(),
-          getIt<DailyChartBarConverter>(),
+      final newBloc = WorkZoneBloc(
+          getIt<WorkZoneMapViewModel>(), getIt<DailyChartBarConverter>(),
           selectedSiteBloc: selectedSiteBloc,
           dailyWorkingTimeChartBloc:
               getDailyWorkingTimeChartBloc(selectedSiteBloc),
