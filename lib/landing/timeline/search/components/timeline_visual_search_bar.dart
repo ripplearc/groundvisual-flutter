@@ -64,20 +64,24 @@ class TimelineVisualSearchBar extends StatelessWidget {
                     child: Text(siteName,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.subtitle1)),
-                Spacer(flex: 1),
                 Flexible(
                     flex: 6,
-                    child: Text(dateTimeString,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyText2)),
-                VerticalDivider(
-                  thickness: 2,
-                ),
+                    child: Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Text(dateTimeString,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText2))),
               ],
             ),
           )),
-          SearchFilterButton(filterIndicator: filterIndicator, onTapFilter: onTapFilter)
+          Row(
+            children: [
+              VerticalDivider(thickness: 2),
+              SearchFilterButton(
+                  filterIndicator: filterIndicator, onTapFilter: onTapFilter)
+            ],
+          )
         ],
       )));
 }
