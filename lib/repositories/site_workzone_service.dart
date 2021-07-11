@@ -57,14 +57,15 @@ class SiteWorkZoneServiceImpl extends SiteWorkZoneService {
         .then(_selectRandomZoneFromJsonCollection);
   }
 
-  ConstructionZone _selectRandomZoneFromJsonCollection(decoded) =>
-      SiteConstructionZone.fromJson(decoded)
-          .records
-          .let((elements) => elements.isNotEmpty
-              ? elements.elementAt(rng.nextInt(elements.length))
-              : UnitConstructionZone(Date.startOfToday, 900,
-                  ConstructionZone(<Region>[].toList())))
-          .zone;
+  ConstructionZone _selectRandomZoneFromJsonCollection(decoded) {
+   return SiteConstructionZone.fromJson(decoded)
+        .records
+        .let((elements) => elements.isNotEmpty
+            ? elements.elementAt(rng.nextInt(elements.length))
+            : UnitConstructionZone(
+                Date.startOfToday, 900, ConstructionZone(<Region>[].toList())))
+        .zone;
+  }
 
   @override
   Future<ConstructionZone> getWorkZoneAtPeriod(

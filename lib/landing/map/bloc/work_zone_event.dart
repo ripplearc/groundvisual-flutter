@@ -24,15 +24,13 @@ class SearchWorkZoneAtTime extends WorkZoneEvent {
 /// the time bar chart, the daily work zone remains the same, and the
 /// highlighted work zone changes as selected time changes.
 class HighlightWorkZoneOfTime extends WorkZoneEvent {
-  final String site;
   final DateTimeRange highlightedTimeRange;
   final Map<MachineDetail, bool>? filteredMachines;
 
-  HighlightWorkZoneOfTime(this.site, this.highlightedTimeRange,
-      {this.filteredMachines});
+  HighlightWorkZoneOfTime(this.highlightedTimeRange, {this.filteredMachines});
 
   @override
-  List<Object?> get props => [site, highlightedTimeRange, filteredMachines];
+  List<Object?> get props => [highlightedTimeRange, filteredMachines];
 }
 
 /// Select a date to query the work zone.

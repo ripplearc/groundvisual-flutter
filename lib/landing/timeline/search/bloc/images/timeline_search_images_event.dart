@@ -19,8 +19,16 @@ class SearchDailyTimeline extends TimelineSearchImagesEvent {
       {this.muids, this.zone, this.startTime, this.endTime});
 
   @override
-  List<Object> get props =>
-      [date, muids ?? [], zone ?? ConstructionZone([])];
+  List<Object> get props => [date, muids ?? [], zone ?? ConstructionZone([])];
+}
+
+class HighlightImage extends TimelineSearchImagesEvent {
+  final int index;
+
+  HighlightImage(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 /// Tap on a timestamp cell

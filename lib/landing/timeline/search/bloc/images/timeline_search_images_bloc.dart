@@ -12,8 +12,11 @@ import 'package:groundvisual_flutter/repositories/timeline_images_repository.dar
 import 'package:groundvisual_flutter/router/routes.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 
 part 'timeline_search_images_event.dart';
+
 part 'timeline_search_images_state.dart';
 
 /// Take in the search criteria [TimelineSearchImagesEvent] including location, time,
@@ -42,7 +45,12 @@ class TimelineSearchImagesBloc
           siteName,
           ["00001A"],
           DateTimeRange(start: Date.startOfToday, end: Date.today));
-      yield TimelineSearchResultsLoaded(images);
+      yield TimelineSearchResultsLoaded(siteName, images);
+    } else if (event is HighlightImage) {
+      yield state.images.getOrNull<TimelineImageModel>(event.index)?.let(
+              (image) =>
+                  TimelineSearchResultsHighlighted(state.images, image)) ??
+          state;
     } else if (event is TapImageAndNavigateToGallery) {
       _navigateToGalleryPage(event.context, event.index);
     }

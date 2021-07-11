@@ -28,6 +28,7 @@ mixin TimelineWorkZoneMap {
               bottomPadding: bottomPadding,
               cameraPosition: state.cameraPosition,
               workZone: state.workZone,
+              highlightedWorkZone: state.highlightedWorkZone,
               mapController: controller);
         else
           return WorkZoneMap(
