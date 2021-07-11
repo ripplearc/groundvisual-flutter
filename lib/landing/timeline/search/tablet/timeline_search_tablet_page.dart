@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
@@ -78,6 +79,8 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
         if (value != prevMin) {
           setState(() {
             prevMin = value;
+            BlocProvider.of<TimelineSearchImagesBloc>(context)
+                .add(HighlightImage(value));
           });
         }
       });
@@ -124,7 +127,17 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
       TimelineSheetHeader(width: _contentWidth);
 
   Widget _buildContentBody() =>
-      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+      BlocConsumer<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+          listener: (context, state) {
+            prevMin?.let((index) {
+              if (state is TimelineSearchResultsHighlighted) {
+                final timeRange =
+                    state.images[index].downloadingModel.timeRange;
+                BlocProvider.of<WorkZoneBloc>(context)
+                    .add(HighlightWorkZoneOfTime(timeRange));
+              }
+            });
+          },
           builder: (blocContext, state) => Container(
               alignment: Alignment.center,
               color: Theme.of(context).colorScheme.background,
@@ -145,8 +158,7 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
             )
           : Container();
 
-  BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState> _buildItem(
-          int index) =>
+  _buildItem(int index) =>
       BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
           builder: (context, state) => state.images[index].let((image) =>
               Column(

@@ -3,8 +3,6 @@ part of 'timeline_search_images_bloc.dart';
 @immutable
 abstract class TimelineSearchImagesState extends Equatable {
   final List<TimelineImageModel> images;
-  // final Set<Polygon> workZone;
-  // final CameraPosition? cameraPosition;
 
   TimelineSearchImagesState(this.images);
 
@@ -21,5 +19,23 @@ class TimelineSearching extends TimelineSearchImagesState {
 
 /// Emit images of [TimelineImageModel] after the search query returns.
 class TimelineSearchResultsLoaded extends TimelineSearchImagesState {
-  TimelineSearchResultsLoaded(List<TimelineImageModel> images) : super(images);
+  final String siteName;
+
+  TimelineSearchResultsLoaded(this.siteName, List<TimelineImageModel> images)
+      : super(images);
+
+  @override
+  List<Object?> get props => [images, siteName];
+}
+
+/// Highlight an image of [TimelineImageModel] among the search query returns.
+class TimelineSearchResultsHighlighted extends TimelineSearchImagesState {
+  final TimelineImageModel highlightedImage;
+
+  TimelineSearchResultsHighlighted(
+      List<TimelineImageModel> images, this.highlightedImage)
+      : super(images);
+
+  @override
+  List<Object?> get props => [highlightedImage];
 }

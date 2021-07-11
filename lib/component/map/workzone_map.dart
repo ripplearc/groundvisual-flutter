@@ -12,16 +12,18 @@ class WorkZoneMap extends StatefulWidget {
   final double bottomPadding;
   final CameraPosition cameraPosition;
   final Set<Polygon> workZone;
+  final Set<Polygon> highlightedWorkZone;
   final Completer<GoogleMapController> mapController;
 
-  WorkZoneMap(
-      {Key? key,
-      this.bottomPadding = 0,
-      this.cameraPosition =
-          const CameraPosition(target: LatLng(37.6, -95.665), zoom: 13),
-      this.workZone = const <Polygon>{},
-      required this.mapController})
-      : super(key: key);
+  WorkZoneMap({
+    Key? key,
+    this.bottomPadding = 0,
+    this.cameraPosition =
+        const CameraPosition(target: LatLng(37.6, -95.665), zoom: 13),
+    this.workZone = const <Polygon>{},
+    this.highlightedWorkZone = const <Polygon>{},
+    required this.mapController,
+  }) : super(key: key);
 
   @override
   State<WorkZoneMap> createState() => WorkZoneMapState();
@@ -57,12 +59,23 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
           () => EagerGestureRecognizer(),
         ),
       ].toSet(),
-      polygons: widget.workZone
-          .map((p) => p.copyWith(
-                strokeColorParam: Theme.of(context).colorScheme.primaryVariant,
-                fillColorParam: Theme.of(context).colorScheme.primary,
-              ))
-          .toSet());
+      polygons: _coloredWorkZoneSet);
+
+  Set<Polygon> get _coloredWorkZoneSet => (widget.workZone
+              .map((p) => p.copyWith(
+                    strokeColorParam:
+                        Theme.of(context).colorScheme.primaryVariant,
+                    fillColorParam: Theme.of(context).colorScheme.primary,
+                  ))
+              .toList() +
+          widget.highlightedWorkZone
+              .map((p) => p.copyWith(
+                    strokeColorParam: Theme.of(context).colorScheme.secondary,
+                    fillColorParam:
+                        Theme.of(context).colorScheme.secondaryVariant,
+                  ))
+              .toList())
+      .toSet();
 
   Future _loadMapStyles() async {
     _darkMapStyle = await rootBundle.loadString('assets/map_styles/dark.json');

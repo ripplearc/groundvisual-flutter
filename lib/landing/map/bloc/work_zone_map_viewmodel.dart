@@ -103,11 +103,14 @@ class WorkZoneMapViewModel {
       .map((index, region) => MapEntry(
           index,
           Polygon(
-            polygonId: PolygonId(index.toString()),
+            polygonId: _genUniquePolygonId(index),
             consumeTapEvents: true,
             strokeWidth: 2,
             points: region.points,
           )))
       .values
       .toSet();
+
+  PolygonId _genUniquePolygonId(int index) =>
+      PolygonId(DateTime.now().toString() + index.toString());
 }

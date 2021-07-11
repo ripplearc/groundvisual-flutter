@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/chart/bloc/daily/daily_working_time_chart_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:groundvisual_flutter/landing/chart/bloc/trend/trend_working_time
 import 'package:groundvisual_flutter/landing/chart/converter/daily_chart_bar_converter.dart';
 import 'package:groundvisual_flutter/landing/chart/model/highlighted_bar.dart';
 import 'package:groundvisual_flutter/models/machine_detail.dart';
+import 'package:groundvisual_flutter/extensions/scoped.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -73,9 +75,12 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   void _listenToDailyChartSelection() {
     _dailyChartSubscription = dailyWorkingTimeChartBloc?.stream
         .switchMap((value) => value is DailyWorkingTimeDataLoaded
-            ? value.highlightRodBarStream.map<WorkZoneEvent>((highlight) =>
-                SearchWorkZoneAtTime(highlight.siteName, highlight.time,
-                    _endTimeOfHighlightedRod(highlight)))
+            ? value.highlightRodBarStream
+                .map<WorkZoneEvent>((highlight) => HighlightWorkZoneOfTime(
+                      DateTimeRange(
+                          start: highlight.time,
+                          end: _endTimeOfHighlightedRod(highlight)),
+                    ))
             : Stream.empty())
         .listen((event) => add(event));
   }
@@ -92,8 +97,11 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
   Stream<WorkZoneState> mapEventToState(
     WorkZoneEvent event,
   ) async* {
+    print("🙏 $event");
     if (event is SearchWorkZoneAtTime) {
       yield await _handleSelectWorkZoneAtTime(event);
+    } else if (event is HighlightWorkZoneOfTime) {
+      yield await _handleHighlightedWorkZoneAtTime(event);
     } else if (event is SearchWorkZoneOnDate) {
       yield await _handleSelectWorkZoneAtDate(event);
     } else if (event is SearchWorkZoneAtPeriod) {
@@ -109,7 +117,7 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
       workZoneMapViewModel.getCameraPositionAtPeriod(
           event.site, event.date, event.period)
     ]);
-    return WorkZonePolygons(result[0], result[1]);
+    return WorkZonePolygons(event.site, result[0], {}, result[1]);
   }
 
   Future<WorkZoneState> _handleSelectWorkZoneAtDate(
@@ -118,18 +126,30 @@ class WorkZoneBloc extends Bloc<WorkZoneEvent, WorkZoneState> {
       workZoneMapViewModel.getPolygonAtDate(event.site, event.date),
       workZoneMapViewModel.getCameraPositionAtDate(event.site, event.date)
     ]);
-    return WorkZonePolygons(result[0], result[1]);
+    return WorkZonePolygons(event.site, result[0], {}, result[1]);
   }
 
   Future<WorkZoneState> _handleSelectWorkZoneAtTime(
       SearchWorkZoneAtTime event) async {
     List<dynamic> result = await Future.wait<dynamic>([
+      workZoneMapViewModel.getPolygonAtDate(
+          event.site, event.startTime.startOfDay),
       workZoneMapViewModel.getPolygonAtTime(
           event.site, event.startTime, event.endTime),
       workZoneMapViewModel.getCameraPositionAtTime(
           event.site, event.startTime, event.endTime)
     ]);
-    return WorkZonePolygons(result[0], result[1]);
+    return WorkZonePolygons(event.site, result[0], result[1], result[2]);
+  }
+
+  Future<WorkZoneState> _handleHighlightedWorkZoneAtTime(
+      HighlightWorkZoneOfTime event) async {
+    final newState = await state.siteName?.let((site) => workZoneMapViewModel
+        .getPolygonAtTime(site, event.highlightedTimeRange.start,
+            event.highlightedTimeRange.end)
+        .then((highlight) => WorkZonePolygons(
+            site, state.workZone, highlight, state.cameraPosition)));
+    return newState ?? state;
   }
 
   @override
