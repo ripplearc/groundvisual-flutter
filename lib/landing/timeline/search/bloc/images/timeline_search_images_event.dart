@@ -22,6 +22,7 @@ class SearchDailyTimeline extends TimelineSearchImagesEvent {
   List<Object> get props => [date, muids ?? [], zone ?? ConstructionZone([])];
 }
 
+/// [HighlightImage] happens when the index of the images being highlighted.
 class HighlightImage extends TimelineSearchImagesEvent {
   final int index;
 

@@ -28,7 +28,7 @@ class TimelineSearchResultsLoaded extends TimelineSearchImagesState {
   List<Object?> get props => [images, siteName];
 }
 
-/// Emit images of [TimelineImageModel] after the search query returns.
+/// Highlight an image of [TimelineImageModel] among the search query returns.
 class TimelineSearchResultsHighlighted extends TimelineSearchImagesState {
   final TimelineImageModel highlightedImage;
 
