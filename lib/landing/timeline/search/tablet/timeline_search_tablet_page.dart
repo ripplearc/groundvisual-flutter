@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/query/timeline_search_query_bloc.dart';
@@ -131,10 +132,12 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
           listener: (context, state) {
             prevMin?.let((index) {
               if (state is TimelineSearchResultsHighlighted) {
-                final timeRange =
-                    state.images[index].downloadingModel.timeRange;
-                BlocProvider.of<WorkZoneBloc>(context)
-                    .add(HighlightWorkZoneOfTime(timeRange));
+                state.images
+                    .getOrNull<TimelineImageModel>(index)
+                    ?.downloadingModel
+                    .timeRange
+                    .let((timeRange) => BlocProvider.of<WorkZoneBloc>(context)
+                        .add(HighlightWorkZoneOfTime(timeRange)));
               }
             });
           },
@@ -151,21 +154,19 @@ class TimelineSearchTabletPageState extends State<TimelineSearchTabletPage>
               separatorBuilder: (context, index) =>
                   Divider(color: Theme.of(context).colorScheme.onBackground),
               itemCount: images.length,
-              itemBuilder: (context, index) => _buildItem(index),
+              itemBuilder: (context, index) => _buildItem(index, images),
               initialScrollIndex: widget.initialImageIndex,
               itemPositionsListener: itemPositionsListener,
               scrollDirection: Axis.vertical,
             )
           : Container();
 
-  _buildItem(int index) =>
-      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
-          builder: (context, state) => state.images[index].let((image) =>
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _getImageWidgets(index, image, state.images,
-                          context, index == prevMin) +
-                      [TimelinePhotoDownloader()])));
+  _buildItem(int index, List<TimelineImageModel> images) =>
+      images.getOrNull<TimelineImageModel>(index)?.let((image) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _getImageWidgets(
+                  index, image, images, context, index == prevMin) +
+              [TimelinePhotoDownloader()]));
 
   List<Widget> _getImageWidgets(
           int index,

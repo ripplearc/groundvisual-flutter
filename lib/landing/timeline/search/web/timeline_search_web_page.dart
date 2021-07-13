@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/extensions/collection.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
@@ -126,6 +128,8 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage>
               .asStream()
               .listen((_) => setState(() {
                     _selectedIndex = index;
+                    BlocProvider.of<TimelineSearchImagesBloc>(context)
+                        .add(HighlightImage(_selectedIndex));
                   }));
         },
         child: child);
@@ -135,7 +139,17 @@ class TimelineSearchWebPageState extends State<TimelineSearchWebPage>
     final imageFlex = 4;
     final accessoryFlex = 3;
     final imageWidth = _contentWidth * 4 / 7;
-    return BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+    return BlocConsumer<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+        listener: (context, state) {
+          if (state is TimelineSearchResultsHighlighted) {
+            state.images
+                .getOrNull<TimelineImageModel>(index)
+                ?.downloadingModel
+                .timeRange
+                .let((timeRange) => BlocProvider.of<WorkZoneBloc>(context)
+                    .add(HighlightWorkZoneOfTime(timeRange)));
+          }
+        },
         builder: (context, state) => state.images[index].let((image) {
               final viewer = _getImageWidgets(index, image, state.images,
                   imageWidth, context, index == _selectedIndex);
