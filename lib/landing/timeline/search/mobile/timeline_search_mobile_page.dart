@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/drawing/clip_shadow_path.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
+import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timeline_search_images_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
@@ -78,7 +78,7 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage>
           setState(() {
             prevMin = value;
             BlocProvider.of<TimelineSearchImagesBloc>(context)
-                .add(SearchDailyTimeline(Date.today));
+                .add(HighlightImage(value));
           });
         }
       });
@@ -128,7 +128,19 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage>
           child: TimelineSheetHeader(width: _screenSize.width)));
 
   Widget _buildContentBody() =>
-      BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+      BlocConsumer<TimelineSearchImagesBloc, TimelineSearchImagesState>(
+          listener: (context, state) {
+            prevMin?.let((index) {
+              if (state is TimelineSearchResultsHighlighted) {
+                state.images
+                    .getOrNull<TimelineImageModel>(index)
+                    ?.downloadingModel
+                    .timeRange
+                    .let((timeRange) => BlocProvider.of<WorkZoneBloc>(context)
+                        .add(HighlightWorkZoneOfTime(timeRange)));
+              }
+            });
+          },
           builder: (blocContext, state) => Expanded(
               child: Container(
                   alignment: Alignment.center,
@@ -146,22 +158,17 @@ class _TimelineSearchMobilePageState extends State<TimelineSearchMobilePage>
           itemCount: images.length,
           itemPositionsListener: _itemPositionsListener,
           itemBuilder: (_, index) =>
-              BlocBuilder<TimelineSearchImagesBloc, TimelineSearchImagesState>(
-                  builder: (context, state) =>
-                      state.images
-                          .getOrNull<TimelineImageModel>(index)
-                          ?.let((image) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: _buildImageItem(
-                                        index, image, state.images, context) +
-                                    [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          child: TimelinePhotoDownloader()),
-                                    ],
-                              )) ??
-                      Container()));
+              images.getOrNull<TimelineImageModel>(index)?.let((image) =>
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _buildImageItem(index, image, images, context) +
+                        [
+                          Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: TimelinePhotoDownloader()),
+                        ],
+                  )) ??
+              Container());
 
   List<Widget> _buildImageItem(int index, TimelineImageModel image,
           List<TimelineImageModel> images, BuildContext context) =>
