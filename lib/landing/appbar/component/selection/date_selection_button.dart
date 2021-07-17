@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
+import 'package:groundvisual_flutter/component/card/calendar_period_sheet.dart';
 import 'package:groundvisual_flutter/component/card/calendar_sheet.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
@@ -52,7 +53,8 @@ class DateSelectionButton extends StatelessWidget {
     DateTime initialSelectedDate,
     String title,
   ) =>
-      CalendarSheet(initialSelectedDate: initialSelectedDate, title: title);
+      CalendarPeriodSheet(
+          initialSelectedDate: initialSelectedDate, title: title);
 
   Future<DateTimeRange?> _showMaterialDialog(
           BuildContext scaffoldContext, SelectedSiteAtDate state) =>

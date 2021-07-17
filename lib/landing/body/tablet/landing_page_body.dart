@@ -18,7 +18,7 @@ class LandingHomePageTabletBody extends StatelessWidget {
             flex: 5,
             child: Padding(
                 padding: EdgeInsets.only(right: 5),
-                child: WorkZoneMapCard(showTitle: false, embedInCard: false))),
+                child: WorkZoneMapCard(embedInCard: false))),
         Expanded(
             flex: 4,
             child: Padding(
