@@ -13,15 +13,17 @@ class CalendarPeriodSheet extends StatefulWidget {
   CalendarPeriodSheet({
     Key? key,
     this.initialSelectedDate,
+    this.initialPeriod,
     this.title,
   }) : super(key: key);
 
   final String? title;
   final DateTime? initialSelectedDate;
+  final TrendPeriod? initialPeriod;
 
   @override
   _CalendarPeriodSheetState createState() =>
-      _CalendarPeriodSheetState(initialSelectedDate ?? Date.today);
+      _CalendarPeriodSheetState(initialSelectedDate, initialPeriod);
 }
 
 class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
@@ -32,7 +34,7 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
   late RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.disabled;
   late DateTime _focusedDay;
 
-  _CalendarPeriodSheetState(this._selectedDay) {
+  _CalendarPeriodSheetState(this._selectedDay, this._selectedPeriod) {
     _focusedDay = _selectedDay ?? Date.today;
     _highlightedSelectedDateRangeColor = Colors.transparent;
   }
@@ -238,6 +240,12 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
                       Navigator.of(context).pop(DateTimeRange(
                           start: selectedDay.startOfDay,
                           end: selectedDay.endOfDay.subMilliseconds(1)));
+                    final selectedPeriod = _selectedPeriod;
+                    if (selectedPeriod != null)
+                      Navigator.of(context).pop(DateTimeRange(
+                          start: Date.today
+                              .sub(Duration(days: selectedPeriod.days)),
+                          end: Date.today));
                   }),
             ),
           ),

@@ -32,7 +32,7 @@ class SiteDropDownList extends StatelessWidget {
           elevation: 16,
           isExpanded: true,
           itemHeight: kToolbarHeight,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.subtitle1,
           dropdownColor: Theme.of(context).colorScheme.background,
           underline: Container(),
           value: siteName,

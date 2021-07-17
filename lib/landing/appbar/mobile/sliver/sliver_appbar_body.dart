@@ -29,7 +29,7 @@ class SliverAppBarBody extends StatelessWidget {
                   children: [
                     Container(
                       height: 30.0,
-                      width: 130.0,
+                      width: 115.0,
                       child: SiteDropDownList(),
                     ),
                     DayOrTrendSelectionButton()

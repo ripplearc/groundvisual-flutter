@@ -82,3 +82,17 @@ extension Value on TrendPeriod {
     }
   }
 }
+
+extension RangeToPeriod on DateTimeRange {
+  TrendPeriod get trendPeriod {
+    final days = start.differenceInDays(end).abs();
+    if (days <= 7)
+      return TrendPeriod.oneWeek;
+    else if (days <= 14)
+      return TrendPeriod.twoWeeks;
+    else if (days <= 30)
+      return TrendPeriod.oneMonth;
+    else
+      return TrendPeriod.twoMonths;
+  }
+}
