@@ -62,7 +62,7 @@ class PeriodSheetState extends State<PeriodSheet> {
             Divider(thickness: 2),
             SizedBox(height: 10),
             _buildButtons(),
-            SizedBox(height: 30),
+            SizedBox(height: 20)
           ]);
 
   Widget _buildHeaderTile(BuildContext context) => Padding(
@@ -91,9 +91,6 @@ class PeriodSheetState extends State<PeriodSheet> {
           Icons.check,
           color: Theme.of(context).colorScheme.primary,
         ),
-        onTap: () {
-          Navigator.of(context).pop();
-        },
       );
 
   ListTile _buildNormalListTile(TrendPeriod item, BuildContext context) =>

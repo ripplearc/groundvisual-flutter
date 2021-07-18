@@ -74,7 +74,7 @@ class AppTheme {
         onError: Colors.white,
         brightness: Brightness.dark),
     cardTheme: CardTheme(
-      color: Colors.grey[850],
+      color: Colors.grey[750],
     ),
     iconTheme: IconThemeData(
       color: Colors.white54,

@@ -13,7 +13,7 @@ class WorkZoneCompositeCard extends StatelessWidget {
 
   const WorkZoneCompositeCard({
     Key? key,
-    this.mapAspectRatio = 0.75,
+    this.mapAspectRatio = 0.68,
     this.embeddedContentAspectRatio = 1.3,
     this.embeddedContentSidePadding = 10,
     this.embeddedContentBottomPadding = 10,
@@ -35,9 +35,8 @@ class WorkZoneCompositeCard extends StatelessWidget {
           embeddedContentAspectRatio +
       embeddedContentBottomPadding;
 
-  Widget _buildMapCard(double bottomPadding) => Positioned.fill(
-      child:
-          WorkZoneMapCard(bottomPadding: bottomPadding, showTitle: false));
+  Widget _buildMapCard(double bottomPadding) =>
+      Positioned.fill(child: WorkZoneMapCard(bottomPadding: bottomPadding));
 
   Widget _buildEmbeddedContent() => Positioned.fill(
       bottom: embeddedContentBottomPadding,

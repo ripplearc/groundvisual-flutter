@@ -11,7 +11,7 @@ import 'package:groundvisual_flutter/landing/timeline/search/bloc/images/timelin
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_photo_downloader.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_search_photo_viewer.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_sheet_header.dart';
-import 'package:groundvisual_flutter/landing/timeline/search/components/timeline_workzone_map_mixin.dart';
+import 'package:groundvisual_flutter/component/map/timeline_workzone_map_mixin.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/tablet/timeline_tablet_search_bar.dart';
 import 'package:groundvisual_flutter/models/timeline_image_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -34,7 +34,7 @@ class TimelineSearchWebPage extends StatefulWidget {
 }
 
 class TimelineSearchWebPageState extends State<TimelineSearchWebPage>
-    with TimelineWorkZoneMap {
+    with WorkZoneMapBuilder {
   final Completer<GoogleMapController> _controller = Completer();
 
   late Size _screenSize;

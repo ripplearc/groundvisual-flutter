@@ -27,5 +27,5 @@ Column _genChartSectionWithTitleInNormalMode(
     );
 
 ListTile _genTitle(BuildContext context) => ListTile(
-      title: Text('Working Time', style: Theme.of(context).textTheme.subtitle1),
+      title: Text('Working Time', style: Theme.of(context).textTheme.headline6),
     );

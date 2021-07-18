@@ -12,7 +12,7 @@ class LandingHomePageMobileHeader extends StatelessWidget {
       title: SliverAppBarContainer(
           child: SliverAppBarTitle(), shouldStayWhenCollapse: true),
       pinned: true,
-      expandedHeight: 120,
+      expandedHeight: 70,
       excludeHeaderSemantics: true,
       backgroundColor: Theme.of(context).colorScheme.background,
       flexibleSpace: FlexibleSpaceBar(

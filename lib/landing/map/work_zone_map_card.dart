@@ -12,15 +12,8 @@ import 'bloc/work_zone_bloc.dart';
 /// Use Google map to show the work zone at date or period.
 class WorkZoneMapCard extends StatefulWidget {
   final double bottomPadding;
-  final bool showTitle;
-  final bool embedInCard;
 
-  WorkZoneMapCard(
-      {Key? key,
-      this.bottomPadding = 0,
-      this.showTitle = true,
-      this.embedInCard = true})
-      : super(key: key);
+  WorkZoneMapCard({Key? key, this.bottomPadding = 0}) : super(key: key);
 
   @override
   State<WorkZoneMapCard> createState() => WorkZoneMapCardState();
@@ -60,28 +53,26 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> {
 
   Widget _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
-      widget.embedInCard
-          ? Card(
-              color: Theme.of(context).colorScheme.background,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              child: _buildCardContent(
-                  context, cameraPosition, workZone, highlightedWorkZone))
-          : _buildCardContent(
-              context, cameraPosition, workZone, highlightedWorkZone);
+      Card(
+          color: Theme.of(context).colorScheme.background,
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          child: _buildCardContent(
+              context, cameraPosition, workZone, highlightedWorkZone));
 
   Widget _buildCardContent(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
-      widget.showTitle
-          ? Column(mainAxisSize: MainAxisSize.max, children: [
-              _buildTitle(context),
-              _buildGoogleMap(cameraPosition, workZone, highlightedWorkZone)
-            ])
-          : _buildGoogleMap(cameraPosition, workZone, highlightedWorkZone);
-
-  ListTile _buildTitle(BuildContext context) => ListTile(
-      title: Text('Work Zone', style: Theme.of(context).textTheme.subtitle1));
+      Column(
+        children: [
+          Divider(
+              thickness: 3,
+              height: 1,
+              color: Theme.of(context).colorScheme.primary),
+          Expanded(
+              child: _buildGoogleMap(
+                  cameraPosition, workZone, highlightedWorkZone))
+        ],
+      );
 
   WorkZoneMap _buildGoogleMap(CameraPosition cameraPosition,
           Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
