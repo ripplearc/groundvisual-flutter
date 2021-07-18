@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 /// Use Google map to show the work zone of polygon.
 class WorkZoneMap extends StatefulWidget {
@@ -30,8 +31,6 @@ class WorkZoneMap extends StatefulWidget {
 }
 
 class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
-  static const Duration delayInitialAnimationAndStylingAfterMapCreated =
-      Duration(milliseconds: 500);
   String? _darkMapStyle;
   String? _lightMapStyle;
 
@@ -49,7 +48,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
       mapType: MapType.normal,
       initialCameraPosition: widget.cameraPosition,
       onMapCreated: (GoogleMapController controller) async {
-        await Future.delayed(delayInitialAnimationAndStylingAfterMapCreated);
+        await Future.delayed(_delayInitialAnimationAndStylingAfterMapCreated);
         widget.mapController.complete(controller);
       },
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
@@ -60,6 +59,13 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
         ),
       ].toSet(),
       polygons: _coloredWorkZoneSet);
+
+  Duration get _delayInitialAnimationAndStylingAfterMapCreated =>
+      getValueForScreenType(
+          context: context,
+          mobile: Duration(milliseconds: 500),
+          tablet: Duration(milliseconds: 500),
+          desktop: Duration(milliseconds: 1000));
 
   Set<Polygon> get _coloredWorkZoneSet => (widget.workZone
               .map((p) => p.copyWith(

@@ -42,7 +42,7 @@ class LandingHomePageTabletBodyState extends State<LandingHomePageTabletBody>
       ]);
 
   AspectRatio _buildDigestWorkingTime() => AspectRatio(
-      aspectRatio: 1.3,
+      aspectRatio: 1.5,
       child: BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
           buildWhen: (prev, curr) =>
               curr is SelectedSiteAtDate || curr is SelectedSiteAtTrend,

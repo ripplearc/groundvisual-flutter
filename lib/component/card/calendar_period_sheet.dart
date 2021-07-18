@@ -121,7 +121,6 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
                           : _normalPeriodButtonStyle,
                       onPressed: () async {
                         await _highlightSelectedPeriod(period);
-                        // await
                       },
                       child: Text(period.value()))))
               .toList()));

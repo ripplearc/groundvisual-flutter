@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
-import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_embedded_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/daily_timeline.dart';
@@ -70,9 +69,9 @@ class _SliverBuilder {
             embeddedContent: WorkingTimeEmbeddedChart(
                 aspectRatio: embeddedTrendContentAspectRatio));
       case 1:
-        return MachineWorkingTimeList();
+        return DailyTimeline();
       case 2:
-        return WorkingTimeChart();
+        return MachineWorkingTimeList();
       default:
         return Container();
     }
