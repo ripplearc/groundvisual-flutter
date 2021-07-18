@@ -6,10 +6,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:groundvisual_flutter/component/map/workzone_map.dart';
 import 'package:groundvisual_flutter/landing/map/bloc/work_zone_bloc.dart';
 
-/// [TimelineWorkZoneMap] displays the [WorkZoneMap] in the timeline search pages
+/// [WorkZoneMapBuilder] displays the [WorkZoneMap] in the timeline search pages
 /// , and reacts to [WorkZoneBloc] update such as refreshing based on [WorkZonePolygons]'s
 /// [cameraPosition] and [workZone].
-mixin TimelineWorkZoneMap {
+mixin WorkZoneMapBuilder {
   Widget buildMap(
           BuildContext context, Completer<GoogleMapController> controller,
           {double bottomPadding = 0}) =>

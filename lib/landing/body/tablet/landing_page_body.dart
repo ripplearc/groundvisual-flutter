@@ -1,16 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:groundvisual_flutter/component/map/timeline_workzone_map_mixin.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
 import 'package:groundvisual_flutter/landing/body/component/digest_working_time_composite_content.dart';
 import 'package:groundvisual_flutter/landing/chart/component/working_time_chart.dart';
 import 'package:groundvisual_flutter/landing/machine/widgets/machine_working_time_list.dart';
-import 'package:groundvisual_flutter/landing/map/work_zone_map_card.dart';
 import 'package:groundvisual_flutter/landing/timeline/daily/widget/daily_timeline.dart';
 
 /// The tablet version of the Landing Home Page body which divides itself horizontally
 /// to map zone and information zone.
-class LandingHomePageTabletBody extends StatelessWidget {
+class LandingHomePageTabletBody extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => LandingHomePageTabletBodyState();
+}
+
+class LandingHomePageTabletBodyState extends State<LandingHomePageTabletBody>
+    with WorkZoneMapBuilder {
+  final Completer<GoogleMapController> _controller = Completer();
+
   @override
   Widget build(BuildContext context) =>
       Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -18,7 +29,7 @@ class LandingHomePageTabletBody extends StatelessWidget {
             flex: 5,
             child: Padding(
                 padding: EdgeInsets.only(right: 5),
-                child: WorkZoneMapCard(embedInCard: false))),
+                child: buildMap(context, _controller))),
         Expanded(
             flex: 4,
             child: Padding(

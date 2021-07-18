@@ -12,10 +12,8 @@ import 'bloc/work_zone_bloc.dart';
 /// Use Google map to show the work zone at date or period.
 class WorkZoneMapCard extends StatefulWidget {
   final double bottomPadding;
-  final bool embedInCard;
 
-  WorkZoneMapCard({Key? key, this.bottomPadding = 0, this.embedInCard = true})
-      : super(key: key);
+  WorkZoneMapCard({Key? key, this.bottomPadding = 0}) : super(key: key);
 
   @override
   State<WorkZoneMapCard> createState() => WorkZoneMapCardState();
@@ -55,16 +53,12 @@ class WorkZoneMapCardState extends State<WorkZoneMapCard> {
 
   Widget _buildMapCard(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>
-      widget.embedInCard
-          ? Card(
-              color: Theme.of(context).colorScheme.background,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              child: _buildCardContent(
-                  context, cameraPosition, workZone, highlightedWorkZone))
-          : _buildCardContent(
-              context, cameraPosition, workZone, highlightedWorkZone);
+      Card(
+          color: Theme.of(context).colorScheme.background,
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          child: _buildCardContent(
+              context, cameraPosition, workZone, highlightedWorkZone));
 
   Widget _buildCardContent(BuildContext context, CameraPosition cameraPosition,
           Set<Polygon> workZone, Set<Polygon> highlightedWorkZone) =>

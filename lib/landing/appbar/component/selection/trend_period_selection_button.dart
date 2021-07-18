@@ -14,12 +14,8 @@ typedef _OnTapAction = Future<TrendPeriod?> Function(
 /// or between date and trend. Once a new period is selected, it updates the <SelectedSiteBloc>.
 class TrendPeriodSelectionButton extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout.builder(
-        mobile: (_) =>
-            _buildTrendButton(_buildTrendWindowSelectionInBottomSheet),
-        tablet: (_) => _buildTrendButton(_buildTrendWindowSelectionInDialog),
-        desktop: (_) => _buildTrendButton(_buildTrendWindowSelectionInDialog),
-      );
+  Widget build(BuildContext context) =>
+      _buildTrendButton(_buildTrendWindowSelectionInDialog);
 
   _buildTrendButton(_OnTapAction onTapAction) =>
       BlocBuilder<SelectedSiteBloc, SelectedSiteState>(
@@ -36,17 +32,6 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                   })
               : Container());
 
-  Future<TrendPeriod?> _buildTrendWindowSelectionInBottomSheet(
-          BuildContext context, SelectedSiteAtTrend state) =>
-      showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Theme.of(context).cardTheme.color,
-          builder: (_) => PeriodSheet(
-                title: state.siteName,
-                initialPeriod: state.period,
-              ));
-
   Future<TrendPeriod?> _buildTrendWindowSelectionInDialog(
           BuildContext scaffoldContext, SelectedSiteAtTrend state) =>
       showDialog(
@@ -55,8 +40,8 @@ class TrendPeriodSelectionButton extends StatelessWidget {
                   backgroundColor: Theme.of(scaffoldContext).cardTheme.color,
                   children: [
                     Container(
-                        width: 300,
-                        height: 330,
+                        width: 400,
+                        height: 600,
                         child: PeriodSheet(
                           title: state.siteName,
                           initialPeriod: state.period,
