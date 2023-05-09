@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Highlight the bar rod being selected. It iterates through the group data
@@ -26,7 +25,7 @@ class BarRodMagnifier {
           return BarChartRodStackItem(
               item.fromY * verticalMagnifier,
               item.toY * verticalMagnifier,
-              Theme.of(context).colorScheme.primaryVariant);
+              Theme.of(context).colorScheme.primaryContainer);
         } else if (entry.key == 1) {
           return BarChartRodStackItem(item.fromY * verticalMagnifier,
               item.toY * verticalMagnifier, item.color);

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/date.dart';
@@ -50,7 +49,7 @@ class _DailyTimelineState extends State<DailyTimeline> {
                   flex: 1,
                   child: ListTile(
                     title: Text('Timelapse',
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.titleLarge),
                   ),
                 ),
                 Flexible(

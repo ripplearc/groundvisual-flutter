@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Expand or collapse the app bar content when swipe down or up.
@@ -34,7 +33,7 @@ class _SliverAppBarContainerState extends State<SliverAppBarContainer> {
   }
 
   void _addListener() {
-    _position = Scrollable.of(context)?.position;
+    _position = Scrollable.of(context).position;
     _position?.addListener(_positionListener);
     _positionListener();
   }

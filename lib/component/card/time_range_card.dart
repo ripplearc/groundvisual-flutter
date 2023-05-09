@@ -1,5 +1,4 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/buttons/cancel_button.dart';
 import 'package:groundvisual_flutter/component/buttons/confirm_button.dart';
@@ -51,24 +50,24 @@ class TimeRangeCardState extends State<TimeRangeCard> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(widget.title ?? "",
-                  style: Theme.of(context).textTheme.headline5),
+                  style: Theme.of(context).textTheme.headlineSmall),
             ),
           Padding(
             padding: const EdgeInsets.only(left: 20, bottom: 30),
             child: Text(widget.initialDateTimeRange.start.toShortString(),
-                style: Theme.of(context).textTheme.subtitle1),
+                style: Theme.of(context).textTheme.titleMedium),
           ),
           Divider(thickness: 2),
           SizedBox(height: 20),
           TimeRange(
             fromTitle:
-                Text('FROM', style: Theme.of(context).textTheme.headline6),
-            toTitle: Text('TO', style: Theme.of(context).textTheme.headline6),
+                Text('FROM', style: Theme.of(context).textTheme.titleLarge),
+            toTitle: Text('TO', style: Theme.of(context).textTheme.titleLarge),
             titlePadding: leftPadding,
-            textStyle: Theme.of(context).textTheme.bodyText2,
+            textStyle: Theme.of(context).textTheme.bodyMedium,
             activeTextStyle: Theme.of(context)
                 .textTheme
-                .bodyText2
+                .bodyMedium
                 ?.apply(color: Theme.of(context).colorScheme.background),
             borderColor: Theme.of(context).colorScheme.onSurface,
             activeBorderColor: Theme.of(context).colorScheme.primary,

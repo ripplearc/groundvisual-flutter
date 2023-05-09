@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
@@ -25,17 +24,17 @@ class ToggleButton extends StatelessWidget {
       width: widthPercent,
       borderRadius: 30,
       height: height,
-      initialIndex: initialIndex,
+      selectedIndex: initialIndex,
       selectedBackgroundColors: [Theme.of(context).colorScheme.primary],
       unSelectedBackgroundColors: [Theme.of(context).colorScheme.surface],
       selectedTextStyle: Theme.of(context)
               .textTheme
-              .caption
+              .bodySmall
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       unSelectedTextStyle: Theme.of(context)
               .textTheme
-              .caption
+              .bodySmall
               ?.apply(color: Theme.of(context).colorScheme.primary) ??
           TextStyle(color: Theme.of(context).colorScheme.primary),
       labels: labels,

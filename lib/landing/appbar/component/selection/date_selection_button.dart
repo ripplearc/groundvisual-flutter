@@ -1,5 +1,4 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
@@ -21,7 +20,7 @@ class DateSelectionButton extends StatelessWidget with WebDialogConfig {
       builder: (context, state) => state is SelectedSiteAtDate
           ? DateButton(
               iconSize: 12,
-              textStyle: Theme.of(context).textTheme.caption,
+              textStyle: Theme.of(context).textTheme.bodySmall,
               dateText: state.date.toShortString(),
               action: () async {
                 final range = await _showMaterialDialog(context, state);

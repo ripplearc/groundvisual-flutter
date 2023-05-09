@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/di/di.dart';
@@ -7,7 +6,7 @@ import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart
 import 'package:groundvisual_flutter/landing/landing_home_page.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 import 'package:groundvisual_flutter/router/placeholder_navigation_page.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 /// Tablet layout of the root home page.
 class RootHomeTabletPage extends StatefulWidget {

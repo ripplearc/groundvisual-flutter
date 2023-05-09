@@ -1,5 +1,4 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
@@ -50,7 +49,7 @@ class TimelineEditSearchBar extends StatelessWidget {
             Expanded(
                 child: Center(
                     child: Text("Edit your search",
-                        style: Theme.of(context).textTheme.headline6))),
+                        style: Theme.of(context).textTheme.titleLarge))),
             SearchFilterButton(
                 filterIndicator: filterIndicator, onTapFilter: onTapFilter)
           ],
@@ -93,7 +92,7 @@ class TimelineEditSearchBar extends StatelessWidget {
           BuildContext context, TimelineSearchQueryState state) =>
       Expanded(
           child: DateButton(
-              textStyle: Theme.of(context).textTheme.bodyText2,
+              textStyle: Theme.of(context).textTheme.bodyMedium,
               dateText: state.timeString,
               icon: Icon(Icons.timer, size: 20),
               action: state.enableTimeEdit
@@ -122,7 +121,7 @@ class TimelineEditSearchBar extends StatelessWidget {
           BuildContext context, TimelineSearchQueryState state) =>
       Expanded(
           child: DateButton(
-              textStyle: Theme.of(context).textTheme.bodyText2,
+              textStyle: Theme.of(context).textTheme.bodyMedium,
               dateText: state.dateString,
               action: () async {
                 final range = await showModalBottomSheet<DateTimeRange>(

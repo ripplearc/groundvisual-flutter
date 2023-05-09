@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:groundvisual_flutter/component/buttons/confirm_button.dart';
 
 /// [DecoratedDialog] is the RDS design that allows customization of icon at the header of the Dialog.
@@ -46,12 +45,12 @@ class DecoratedDialog extends StatelessWidget {
               Text(title,
                   style: Theme.of(context)
                       .textTheme
-                      .headline5
+                      .headlineSmall
                       ?.apply(fontWeightDelta: 2)),
               SizedBox(height: 15),
               Text(
                 descriptions,
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 22),

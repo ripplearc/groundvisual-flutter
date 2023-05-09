@@ -1,7 +1,5 @@
-import 'dart:ui';
 
 import 'package:dart_date/dart_date.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/buttons/date_button.dart';
@@ -61,7 +59,7 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
                     if (displayBackButton == true) SizedBox(width: 20),
                     Text(state.siteName,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.subtitle1),
+                        style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
                 VerticalDivider(thickness: 2),
@@ -87,7 +85,7 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
   Widget _buildTimeEditButton(
           BuildContext context, TimelineSearchQueryState state) =>
       DateButton(
-          textStyle: Theme.of(context).textTheme.bodyText2,
+          textStyle: Theme.of(context).textTheme.bodyMedium,
           dateText: state.timeString,
           icon: Icon(Icons.timer, size: 20),
           action: state.enableTimeEdit
@@ -117,7 +115,7 @@ class TimelineTabletSearchBar extends StatelessWidget with WebDialogConfig {
   Widget _buildDateEditButton(
           BuildContext context, TimelineSearchQueryState state) =>
       DateButton(
-          textStyle: Theme.of(context).textTheme.bodyText2,
+          textStyle: Theme.of(context).textTheme.bodyMedium,
           dateText: state.dateString,
           action: () async {
             final range = await showDialog<DateTimeRange>(

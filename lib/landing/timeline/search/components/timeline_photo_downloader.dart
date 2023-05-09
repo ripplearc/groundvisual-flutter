@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
 import 'package:groundvisual_flutter/models/machine_online_status.dart';

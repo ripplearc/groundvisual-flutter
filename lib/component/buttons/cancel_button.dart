@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// RDS cancel button for dismissing a widget without executing a cancel
@@ -17,7 +16,7 @@ class CancelButton extends StatelessWidget {
               'Cancel',
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1
+                  .titleMedium
                   ?.apply(color: Theme.of(context).colorScheme.primary),
             ),
             style: OutlinedButton.styleFrom(

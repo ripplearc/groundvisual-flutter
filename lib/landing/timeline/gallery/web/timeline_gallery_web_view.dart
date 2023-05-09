@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/bloc/timeline_gallery_bloc.dart';
 import 'package:groundvisual_flutter/landing/timeline/gallery/widgets/timeline_gallery_actions.dart';
@@ -74,7 +73,7 @@ class _TimelineGalleryWebViewState extends State<TimelineGalleryWebView>
           children: buildTitleContent(galleryItems, currentIndex, context,
                   style: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headlineMedium
                       ?.apply(fontWeightDelta: 2)) +
               [Spacer()] +
               buildActions(context, simplified: false) +

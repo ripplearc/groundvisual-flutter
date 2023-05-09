@@ -76,7 +76,7 @@ class _CalendarSheetState extends State<CalendarSheet>
                 padding: EdgeInsets.all(20),
                 child: Text(
                   widget.title ?? "",
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.left,
                 )),
           if (widget.allowRangeSelection) _buildDateRangeToggle(),
@@ -177,7 +177,7 @@ class _CalendarSheetState extends State<CalendarSheet>
       ),
       selectedTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       rangeStartDecoration: BoxDecoration(
@@ -191,26 +191,26 @@ class _CalendarSheetState extends State<CalendarSheet>
       rangeHighlightColor: Theme.of(context).colorScheme.primary.withAlpha(64),
       rangeStartTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       rangeEndTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       weekendTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
-              ?.apply(color: Theme.of(context).colorScheme.secondaryVariant) ??
-          TextStyle(color: Theme.of(context).colorScheme.secondaryVariant),
+              .titleMedium
+              ?.apply(color: Theme.of(context).colorScheme.secondaryContainer) ??
+          TextStyle(color: Theme.of(context).colorScheme.secondaryContainer),
       todayDecoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           shape: BoxShape.circle),
-      todayTextStyle: Theme.of(context).textTheme.subtitle1?.apply(color: Theme.of(context).colorScheme.background) ??
+      todayTextStyle: Theme.of(context).textTheme.titleMedium?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       disabledTextStyle:
-          Theme.of(context).textTheme.subtitle1?.apply(color: Theme.of(context).colorScheme.onSurface) ??
+          Theme.of(context).textTheme.titleMedium?.apply(color: Theme.of(context).colorScheme.onSurface) ??
               TextStyle(color: Theme.of(context).colorScheme.onSurface));
 
   Row _buildButtons() => Row(

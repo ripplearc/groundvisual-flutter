@@ -1,5 +1,4 @@
 import 'package:dart_date/dart_date.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/buttons/cancel_button.dart';
 import 'package:groundvisual_flutter/component/buttons/confirm_button.dart';
@@ -46,7 +45,7 @@ class PeriodSheetState extends State<PeriodSheet> {
                   Date.today
                       .subDays(_selectedPeriod.days)
                       .toStartEndDateString(Date.today),
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
             Divider(thickness: 2),
           ] +
@@ -69,7 +68,7 @@ class PeriodSheetState extends State<PeriodSheet> {
       padding: EdgeInsets.all(20),
       child: Text(
         widget.title ?? "",
-        style: Theme.of(context).textTheme.headline5,
+        style: Theme.of(context).textTheme.headlineSmall,
         textAlign: TextAlign.left,
       ));
 
@@ -83,7 +82,7 @@ class PeriodSheetState extends State<PeriodSheet> {
           child: Text(item.value(),
               style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.apply(color: Theme.of(context).colorScheme.primary) ??
                   TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
@@ -98,7 +97,7 @@ class PeriodSheetState extends State<PeriodSheet> {
         title: Padding(
           padding: EdgeInsets.only(left: _leadingPadding),
           child:
-              Text(item.value(), style: Theme.of(context).textTheme.subtitle1),
+              Text(item.value(), style: Theme.of(context).textTheme.titleMedium),
         ),
         onTap: () {
           setState(() {

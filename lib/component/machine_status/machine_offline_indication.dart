@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Offline indication with warning message for how long the machine has been offline.
@@ -34,7 +33,7 @@ class MachineOfflineIndication extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context)
                   .textTheme
-                  .overline
+                  .labelSmall
                   ?.apply(color: Theme.of(context).colorScheme.error) ??
               TextStyle(color: Theme.of(context).colorScheme.error),
         ),

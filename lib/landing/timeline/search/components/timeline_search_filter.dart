@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/component/buttons/cancel_button.dart';
 import 'package:groundvisual_flutter/component/buttons/confirm_button.dart';
@@ -34,18 +33,18 @@ class TimelineSearchFilterState extends State<TimelineSearchFilter> {
               padding: EdgeInsets.all(20),
               child: Text(
                 widget.title,
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.left,
               )),
           Padding(
               padding: const EdgeInsets.all(20),
               child: Text(widget.subtitle,
-                  style: Theme.of(context).textTheme.subtitle1)),
+                  style: Theme.of(context).textTheme.titleMedium)),
           Divider(thickness: 2),
           Padding(
               padding: const EdgeInsets.all(20),
               child: Text("Equipments",
-                  style: Theme.of(context).textTheme.headline6)),
+                  style: Theme.of(context).textTheme.titleLarge)),
           Expanded(
               child: ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -56,7 +55,7 @@ class TimelineSearchFilterState extends State<TimelineSearchFilter> {
                             .modelYear),
                         value: widget.filteredMachines.values.elementAt(index),
                         activeColor:
-                            Theme.of(context).colorScheme.secondaryVariant,
+                            Theme.of(context).colorScheme.secondaryContainer,
                         onChanged: (bool? value) {
                           setState(() {
                             final key =

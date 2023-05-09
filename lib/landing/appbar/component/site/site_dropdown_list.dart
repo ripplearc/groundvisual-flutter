@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/appbar/bloc/selected_site_bloc.dart';
@@ -35,8 +34,8 @@ class SiteDropDownList extends StatelessWidget {
           itemHeight: kToolbarHeight,
           style: getValueForScreenType<TextStyle?>(
               context: context,
-              mobile: Theme.of(context).textTheme.subtitle1,
-              tablet: Theme.of(context).textTheme.headline5),
+              mobile: Theme.of(context).textTheme.titleMedium,
+              tablet: Theme.of(context).textTheme.headlineSmall),
           dropdownColor: Theme.of(context).colorScheme.background,
           underline: Container(),
           value: siteName,

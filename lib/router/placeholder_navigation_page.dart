@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/router/bottom_navigation.dart';
 
@@ -32,7 +31,7 @@ class PlaceholderWidget extends StatelessWidget {
                       ),
                       Text(
                         pageTitle ?? "",
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ],
                   ))),

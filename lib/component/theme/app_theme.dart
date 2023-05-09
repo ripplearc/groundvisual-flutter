@@ -13,17 +13,14 @@ class AppTheme {
         color: Colors.orangeAccent,
       ),
     ),
-    bottomAppBarColor: Colors.grey[100],
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.grey[100],
     ),
     highlightColor: Colors.green,
     colorScheme: ColorScheme(
         primary: Colors.orangeAccent,
-        primaryVariant: Colors.yellowAccent,
         onPrimary: Colors.black,
         secondary: Colors.deepOrangeAccent,
-        secondaryVariant: Colors.deepOrange,
         onSecondary: Colors.black,
         background: Colors.white,
         onBackground: Colors.black54,
@@ -39,11 +36,11 @@ class AppTheme {
       color: Colors.white54,
     ),
     textTheme: TextTheme(
-      bodyText1: TextStyle(
+      bodyLarge: TextStyle(
         color: Colors.white,
         fontSize: 20.0,
       ),
-      subtitle2: TextStyle(
+      titleSmall: TextStyle(
         color: Colors.white70,
         fontSize: 18.0,
       ),
@@ -62,9 +59,9 @@ class AppTheme {
     colorScheme: ColorScheme(
         primary: Colors.orangeAccent,
         onPrimary: Colors.black87,
-        primaryVariant: Colors.yellowAccent,
+        primaryContainer: Colors.yellowAccent,
         secondary: Colors.deepOrangeAccent,
-        secondaryVariant: Colors.deepOrange,
+        secondaryContainer: Colors.deepOrange,
         onSecondary: Colors.black87,
         background: Colors.black87,
         onBackground: Colors.white,

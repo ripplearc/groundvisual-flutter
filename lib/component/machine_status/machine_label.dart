@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Label showing machine name and online status.
@@ -46,7 +45,7 @@ class MachineLabel extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context)
                     .textTheme
-                    .bodyText1
+                    .bodyLarge
                     ?.apply(color: Theme.of(context).colorScheme.primary) ??
                 TextStyle(color: Theme.of(context).colorScheme.primary),
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// [SearchFilterButton] invokes [onTapFilter] upon touch. It superimposes indicator
 /// on top of the button if the [filterIndicator] is not null.
@@ -39,7 +38,7 @@ class SearchFilterButton extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .button
+                                    .labelLarge
                                     ?.apply(
                                         color: Theme.of(context)
                                             .colorScheme

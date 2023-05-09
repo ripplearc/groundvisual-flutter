@@ -69,7 +69,7 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
       padding: EdgeInsets.all(20),
       child: Text(
         widget.title ?? "",
-        style: Theme.of(context).textTheme.headline5,
+        style: Theme.of(context).textTheme.headlineSmall,
         textAlign: TextAlign.left,
       ));
 
@@ -77,7 +77,7 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
       padding: EdgeInsets.all(20),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.left,
       ));
 
@@ -89,7 +89,7 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
               borderRadius: BorderRadius.all(Radius.circular(5))),
           duration: Duration(milliseconds: 500),
           child: Text(_getSelectedDateRangeText(),
-              style: Theme.of(context).textTheme.subtitle1),
+              style: Theme.of(context).textTheme.titleMedium),
         ),
         Spacer()
       ]);
@@ -201,25 +201,25 @@ class _CalendarPeriodSheetState extends State<CalendarPeriodSheet>
       ),
       selectedTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       weekendTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
-              ?.apply(color: Theme.of(context).colorScheme.secondaryVariant) ??
-          TextStyle(color: Theme.of(context).colorScheme.secondaryVariant),
+              .titleMedium
+              ?.apply(color: Theme.of(context).colorScheme.secondaryContainer) ??
+          TextStyle(color: Theme.of(context).colorScheme.secondaryContainer),
       todayDecoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           shape: BoxShape.circle),
       todayTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.background) ??
           TextStyle(color: Theme.of(context).colorScheme.background),
       disabledTextStyle: Theme.of(context)
               .textTheme
-              .subtitle1
+              .titleMedium
               ?.apply(color: Theme.of(context).colorScheme.onSurface) ??
           TextStyle(color: Theme.of(context).colorScheme.onSurface));
 

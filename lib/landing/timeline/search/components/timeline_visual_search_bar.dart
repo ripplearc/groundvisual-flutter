@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/landing/timeline/search/components/search_filter_button.dart';
 
@@ -63,7 +61,7 @@ class TimelineVisualSearchBar extends StatelessWidget {
                     flex: 6,
                     child: Text(siteName,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.subtitle1)),
+                        style: Theme.of(context).textTheme.titleMedium)),
                 Flexible(
                     flex: 6,
                     child: Padding(
@@ -71,7 +69,7 @@ class TimelineVisualSearchBar extends StatelessWidget {
                         child: Text(dateTimeString,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText2))),
+                            style: Theme.of(context).textTheme.bodyMedium))),
               ],
             ),
           )),

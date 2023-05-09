@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
@@ -58,7 +57,7 @@ class TimelineImages extends StatelessWidget with TimelineImageBuilder {
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: padding),
                 child: Text(image.timeString,
-                    style: Theme.of(context).textTheme.headline6)),
+                    style: Theme.of(context).textTheme.titleLarge)),
           ]);
 
   Padding _buildShimmerCell(BuildContext context) => Padding(

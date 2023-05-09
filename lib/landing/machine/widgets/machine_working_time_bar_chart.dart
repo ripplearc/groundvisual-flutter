@@ -1,6 +1,5 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groundvisual_flutter/extensions/color.dart';
 import 'package:groundvisual_flutter/models/machine_unit_working_time.dart';
@@ -24,7 +23,7 @@ class MachineWorkingTimeChart extends StatelessWidget {
   Widget build(BuildContext context) => charts.BarChart(
         _createSeries(context),
         vertical: false,
-        barRendererDecorator: _genAnnotationTextStyle(context),
+        // barRendererDecorator: _genAnnotationTextStyle(context),
         domainAxis: charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
         primaryMeasureAxis: charts.NumericAxisSpec(
             renderSpec: charts.NoneRenderSpec(),

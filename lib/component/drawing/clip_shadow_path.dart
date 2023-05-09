@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
 /// https://gist.github.com/coman3/e631fd55cd9cdf9bd4efe8ecfdbb85a7
 /// Add boxShadow to ClipPath

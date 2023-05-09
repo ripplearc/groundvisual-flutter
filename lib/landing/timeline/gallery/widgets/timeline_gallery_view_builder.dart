@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:photo_view/photo_view.dart';

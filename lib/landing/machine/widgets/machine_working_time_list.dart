@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/component/machine_status/machine_avatar.dart';
@@ -22,7 +21,7 @@ class MachineWorkingTimeList extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             ListTile(
               title: Text('Equipments',
-                  style: Theme.of(context).textTheme.headline6),
+                  style: Theme.of(context).textTheme.titleLarge),
               subtitle: _genLegend(context),
             ),
             _genCardContent(context, state)
@@ -33,14 +32,14 @@ class MachineWorkingTimeList extends StatelessWidget {
         Container(
             color: Theme.of(context).colorScheme.primary, width: 60, height: 5),
         Spacer(flex: 2),
-        Text(' working ', style: Theme.of(context).textTheme.caption),
+        Text(' working ', style: Theme.of(context).textTheme.bodySmall),
         Spacer(flex: 2),
         Container(
             color: Theme.of(context).colorScheme.onSurface,
             width: 60,
             height: 5),
         Spacer(flex: 2),
-        Text(' idling ', style: Theme.of(context).textTheme.caption),
+        Text(' idling ', style: Theme.of(context).textTheme.bodySmall),
         Spacer(flex: 10),
       ]);
 

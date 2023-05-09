@@ -57,7 +57,7 @@ mixin TimelineImageBuilder {
                         child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15.0),
                             child: Text(label.toUpperCase(),
-                                style: Theme.of(context).textTheme.button)))))
+                                style: Theme.of(context).textTheme.labelLarge)))))
                 .toList()),
       );
 

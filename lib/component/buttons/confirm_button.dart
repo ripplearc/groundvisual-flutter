@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// RDS confirm button for executing an action.
@@ -14,9 +13,9 @@ class ConfirmButton extends StatelessWidget {
         onPressed: confirmAction,
         child: Text(text ?? 'Confirm'),
         style: TextButton.styleFrom(
-            primary: Theme.of(context).colorScheme.background,
+            foregroundColor: Theme.of(context).colorScheme.background,
             backgroundColor: Theme.of(context).colorScheme.primary,
             minimumSize: Size(160, 40),
-            textStyle: Theme.of(context).textTheme.subtitle1),
+            textStyle: Theme.of(context).textTheme.titleMedium),
       );
 }

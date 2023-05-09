@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _loadMapStyles();
     _setMapStyle();
   }
@@ -70,7 +69,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
   Set<Polygon> get _coloredWorkZoneSet => (widget.workZone
               .map((p) => p.copyWith(
                     strokeColorParam:
-                        Theme.of(context).colorScheme.primaryVariant,
+                        Theme.of(context).colorScheme.primaryContainer,
                     fillColorParam: Theme.of(context).colorScheme.primary,
                   ))
               .toList() +
@@ -78,7 +77,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
               .map((p) => p.copyWith(
                     strokeColorParam: Theme.of(context).colorScheme.secondary,
                     fillColorParam:
-                        Theme.of(context).colorScheme.secondaryVariant,
+                        Theme.of(context).colorScheme.secondaryContainer,
                   ))
               .toList())
       .toSet();
@@ -96,7 +95,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
 
   Future _setMapStyle() async {
     final controller = await widget.mapController.future;
-    final theme = WidgetsBinding.instance?.window.platformBrightness;
+    final theme = WidgetsBinding.instance.window.platformBrightness;
     if (theme == Brightness.dark)
       controller.setMapStyle(_darkMapStyle);
     else
@@ -105,7 +104,7 @@ class WorkZoneMapState extends State<WorkZoneMap> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

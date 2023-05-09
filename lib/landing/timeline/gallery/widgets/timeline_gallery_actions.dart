@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:groundvisual_flutter/landing/timeline/model/gallery_item.dart';
 import 'package:groundvisual_flutter/extensions/collection.dart';
 import 'package:groundvisual_flutter/extensions/scoped.dart';
@@ -15,10 +14,10 @@ mixin TimelineGalleryViewAccessories {
           {TextStyle? style}) =>
       galleryItems.getOrNull<GalleryItem>(index)?.let((item) => [
             Text(item.tag,
-                style: style ?? Theme.of(context).textTheme.headline6),
+                style: style ?? Theme.of(context).textTheme.titleLarge),
             if (item.statusLabel.isNotEmpty)
               Text(item.statusLabel,
-                  style: style ?? Theme.of(context).textTheme.headline6)
+                  style: style ?? Theme.of(context).textTheme.titleLarge)
           ]) ??
       [];
 

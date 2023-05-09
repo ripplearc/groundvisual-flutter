@@ -87,7 +87,7 @@ class _BarChartState extends State<_BarChart> {
           bottomTitles: SideTitles(
             showTitles: true,
             getTextStyles: (value) =>
-                Theme.of(context).textTheme.bodyText2 ?? TextStyle(),
+                Theme.of(context).textTheme.bodyMedium ?? TextStyle(),
             margin: 2,
             getTitles: (double index) =>
                 widget.trendChartData.chartData.bottomTitles[index.toInt()],
@@ -96,7 +96,7 @@ class _BarChartState extends State<_BarChart> {
             showTitles: true,
             interval: widget.trendChartData.chartData.leftTitleInterval,
             getTextStyles: (value) =>
-                Theme.of(context).textTheme.caption ?? TextStyle(),
+                Theme.of(context).textTheme.bodySmall ?? TextStyle(),
           ),
         ),
         borderData: FlBorderData(
@@ -116,7 +116,7 @@ class _BarChartState extends State<_BarChart> {
           int groupIndex, int rodIndex, BuildContext context) =>
       Theme.of(context)
           .textTheme
-          .caption
+          .bodySmall
           ?.apply(color: Theme.of(context).colorScheme.onBackground)
           .let((textStyle) => BarTooltipItem(
               widget.trendChartData.chartData.tooltips[groupIndex][rodIndex],

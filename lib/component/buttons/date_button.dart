@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// RDS Button for showing the date or period. The action usually invoke
@@ -24,8 +23,8 @@ class DateButton extends StatelessWidget {
       icon: icon ?? Icon(Icons.calendar_today_outlined, size: iconSize),
       label: Text(dateText),
       style: TextButton.styleFrom(
-          primary: Theme.of(context).colorScheme.primary,
-          textStyle: textStyle ?? Theme.of(context).textTheme.bodyText2,
+          foregroundColor: Theme.of(context).colorScheme.primary,
+          textStyle: textStyle ?? Theme.of(context).textTheme.bodyMedium,
           minimumSize: Size(40, 20)),
       onPressed: action);
 }

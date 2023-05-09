@@ -10,7 +10,6 @@ import 'package:groundvisual_flutter/repositories/current_selected_site.dart';
 import 'package:groundvisual_flutter/repositories/machine_detail_repository.dart';
 import 'package:groundvisual_flutter/repositories/machine_working_time_repository.dart';
 import 'package:injectable/injectable.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'timeline_search_query_event.dart';

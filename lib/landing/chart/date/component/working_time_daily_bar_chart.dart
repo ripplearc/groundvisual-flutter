@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +53,7 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
             show: true,
             bottomTitles: Theme.of(context)
                 .textTheme
-                .caption
+                .bodySmall
                 ?.let((textStyle) => SideTitles(
                       showTitles: true,
                       getTextStyles: (value) => textStyle,
@@ -64,7 +63,7 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
                     )),
             leftTitles: Theme.of(context)
                 .textTheme
-                .caption
+                .bodySmall
                 ?.let((textStyle) => SideTitles(
                       showTitles: true,
                       interval: barChartDataAtDate.chartData.leftTitleInterval,
@@ -86,7 +85,7 @@ class WorkingTimeDailyBarChart extends StatelessWidget {
           int groupIndex, int rodIndex, BuildContext context) =>
       Theme.of(context)
           .textTheme
-          .caption
+          .bodySmall
           ?.apply(color: Theme.of(context).colorScheme.onBackground)
           .let((textStyle) => BarTooltipItem(
               barChartDataAtDate.chartData.tooltips[groupIndex][rodIndex],
