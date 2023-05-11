@@ -21,6 +21,14 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// TODO: Create a new file named keys.properties in the android directory of your Flutter project.
+//  Add your own Google Maps API key to the file keys.properties
+//  google_maps_api_key=your key here
+def keysPropertiesFile = rootProject.file('keys.properties')
+def keysProperties = new Properties()
+keysProperties.load(new FileInputStream(keysPropertiesFile))
+
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -42,6 +50,8 @@ android {
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        resValue "string", "google_maps_api_key", keysProperties['google_maps_api_key']
     }
 
     buildTypes {
