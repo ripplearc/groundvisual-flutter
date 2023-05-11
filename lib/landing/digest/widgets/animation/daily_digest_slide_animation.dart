@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 /// Animate the debut of the image slide.
@@ -7,13 +8,13 @@ class DailyDigestSlideAnimation extends StatelessWidget {
   final AnimationController controller;
   final Animation<RelativeRect> _relativeRect;
 
-  final String image;
+  final String imageUrl;
   final Size imageSize;
 
   DailyDigestSlideAnimation(
       {Key? key,
       required this.controller,
-      required this.image,
+      required this.imageUrl,
       required this.imageSize})
       : _relativeRect = rectSequence(imageSize).animate(CurvedAnimation(
             parent: controller,
@@ -27,7 +28,10 @@ class DailyDigestSlideAnimation extends StatelessWidget {
   Widget _buildAnimation(BuildContext context, Widget? child) =>
       Positioned.fromRect(
           rect: _relativeRect.value.toRect(imageRect(imageSize)),
-          child: Image.asset(image, fit: BoxFit.cover));
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+          ));
 
   static const zoomLevel = 1.04;
 

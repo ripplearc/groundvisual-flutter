@@ -18,18 +18,24 @@ class DailyDigestViewModel {
   final _imageListOfSiteAtDate =
       Map<Tuple2<String, DateTime>, List<Tuple2<String, DateTime>>>();
 
-  Future<List<String>> coverImages(String siteName, DateTime date) =>
-      Future.value(List.generate(
-          5, (index) => 'images/digest/summary_${index + 1}.jpg'));
+  Future<List<String>> coverImages(String siteName, DateTime date) {
+    final baseUrl =
+        'https://raw.githubusercontent.com/ripplearc/ripplearc.github.io/main/images/Flutter/groundvisual/images/digest/';
+    return Future.value(
+        List.generate(5, (index) => baseUrl + 'summary_${index + 1}.jpg'));
+  }
 
-  Future<List<Tuple2<String, DateTime>>> get _digestImages =>
-      Future.value(List.generate(
-          _NumberOfImages,
-          (index) => Tuple2(
-              'images/digest/summary_${index + 1}.jpg',
-              Date.startOfToday
-                  .addHours(6 + index * 2)
-                  .addMinutes(_random.nextInt(4) * 15))));
+  Future<List<Tuple2<String, DateTime>>> get _digestImages {
+    final baseUrl =
+        'https://raw.githubusercontent.com/ripplearc/ripplearc.github.io/main/images/Flutter/groundvisual/images/digest/';
+    return Future.value(List.generate(
+        _NumberOfImages,
+        (index) => Tuple2(
+            baseUrl + 'summary_${index + 1}.jpg',
+            Date.startOfToday
+                .addHours(6 + index * 2)
+                .addMinutes(_random.nextInt(4) * 15))));
+  }
 
   Future<void> preloadImages(String siteName, DateTime date) async {
     await _digestImages.then((value) => _imageListOfSiteAtDate.putIfAbsent(

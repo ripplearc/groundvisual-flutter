@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
@@ -95,11 +96,13 @@ Widget _layoutImagesVertically(List<String> images) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: images.map((image) => _paddedImage(image, 1)).toList());
 
-Widget _paddedImage(String image, int flex) => Expanded(
-    flex: flex,
-    child: Padding(
+Widget _paddedImage(String imageUrl, int flex) => Expanded(
+      flex: flex,
+      child: Padding(
         padding: EdgeInsets.all(0.2),
-        child: Image.asset(
-          image,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
           fit: BoxFit.cover,
-        )));
+        ),
+      ),
+    );

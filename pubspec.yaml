@@ -28,6 +28,7 @@ dependencies:
   intl: ^0.17.0
   # Http
   json_annotation: ^4.0.1
+  cached_network_image: ^3.2.3
   # Architecture
   rxdart: ^0.26.0
   get_it: ^7.6.0

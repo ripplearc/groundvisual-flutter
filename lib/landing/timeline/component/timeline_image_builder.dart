@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -57,7 +58,8 @@ mixin TimelineImageBuilder {
                         child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15.0),
                             child: Text(label.toUpperCase(),
-                                style: Theme.of(context).textTheme.labelLarge)))))
+                                style:
+                                    Theme.of(context).textTheme.labelLarge)))))
                 .toList()),
       );
 
@@ -78,6 +80,15 @@ mixin TimelineImageBuilder {
               padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.orange, width: 5)),
-              child: Image.asset(imageName, width: width, fit: BoxFit.fitWidth))
-          : Image.asset(imageName, width: width, fit: BoxFit.fitWidth);
+              child: CachedNetworkImage(
+                imageUrl: imageName,
+                width: width,
+                fit: BoxFit.fitWidth,
+              ),
+            )
+          : CachedNetworkImage(
+              imageUrl: imageName,
+              width: width,
+              fit: BoxFit.fitWidth,
+            );
 }

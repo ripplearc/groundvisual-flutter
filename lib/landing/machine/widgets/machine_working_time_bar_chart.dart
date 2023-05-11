@@ -23,14 +23,14 @@ class MachineWorkingTimeChart extends StatelessWidget {
   Widget build(BuildContext context) => charts.BarChart(
         _createSeries(context),
         vertical: false,
-        // barRendererDecorator: _genAnnotationTextStyle(context),
+        barRendererDecorator: _genAnnotationTextStyle(context),
         domainAxis: charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
         primaryMeasureAxis: charts.NumericAxisSpec(
             renderSpec: charts.NoneRenderSpec(),
             tickProviderSpec: charts.StaticNumericTickProviderSpec(scale)),
       );
 
-  charts.BarLabelDecorator _genAnnotationTextStyle(BuildContext context) =>
+  charts.BarLabelDecorator<String> _genAnnotationTextStyle(BuildContext context) =>
       charts.BarLabelDecorator(
           insideLabelStyleSpec: new charts.TextStyleSpec(
               color: Theme.of(context).colorScheme.background.toChartColor()),

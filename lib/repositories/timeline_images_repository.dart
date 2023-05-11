@@ -33,22 +33,26 @@ class TimelineImagesRepositoryImpl extends TimelineImagesRepository {
           ConstructionZone zone, List<String> muids, DateTimeRange timeRange) =>
       _getMockImages(timeRange);
 
-  Future<List<TimelineImageModel>> _getMockImages(DateTimeRange timeRange) =>
-      Future.value(List.generate(
-          50,
-          (index) => TimelineImageModel(
-              index == 4
-                  ? 'assets/icon/excavator.svg'
-                  : 'images/thumbnails/${index + 1}.jpg',
-              downloadingModel: ImageDownloadingModel("00001A",
-                  timeRange: DateTimeRange(
-                      start: timeRange.start.startOfDay
-                          .add(Duration(minutes: index * 15)),
-                      end: timeRange.start.startOfDay
-                          .add(Duration(minutes: index * 15 + 15))),
-                  numberOfImages: 100),
-              status: _getMachineStatus(index),
-              activities: _getMachineActivities(index))));
+  Future<List<TimelineImageModel>> _getMockImages(DateTimeRange timeRange) {
+    final baseUrl =
+        'https://raw.githubusercontent.com/ripplearc/ripplearc.github.io/main/images/Flutter/groundvisual/images/thumbnails/';
+    return Future.value(List.generate(
+        50,
+        (index) => TimelineImageModel(
+            index == 4
+                ? 'assets/icon/excavator.svg'
+                // : 'images/thumbnails/${index + 1}.jpg',
+                : baseUrl + '${index + 1}.jpg',
+            downloadingModel: ImageDownloadingModel("00001A",
+                timeRange: DateTimeRange(
+                    start: timeRange.start.startOfDay
+                        .add(Duration(minutes: index * 15)),
+                    end: timeRange.start.startOfDay
+                        .add(Duration(minutes: index * 15 + 15))),
+                numberOfImages: 100),
+            status: _getMachineStatus(index),
+            activities: _getMachineActivities(index))));
+  }
 
   MachineStatus _getMachineStatus(int index) {
     if (index == 3) {

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groundvisual_flutter/landing/digest/bloc/play/play_digest_bloc.dart';
@@ -74,14 +75,14 @@ class DailyDigestSlidePlaying extends StatelessWidget {
 
   Function _getSlideAnimationBuilder(String image, Size imageSize) =>
       (AnimationController controller) => DailyDigestSlideAnimation(
-          controller: controller, image: image, imageSize: imageSize);
+          controller: controller, imageUrl: image, imageSize: imageSize);
 
   Function _getDecorationAnimationBuilder(Size size, RelativeRectTween tween) =>
       (AnimationController controller) => DailyDigestDecorationAnimation(
           controller: controller, imageSize: size, tween: tween);
 
-  Image _genStaticImage(String images) => Image.asset(
-        images,
+  CachedNetworkImage _genStaticImage(String imageUrl) => CachedNetworkImage(
+        imageUrl: imageUrl,
         fit: BoxFit.cover,
       );
 }
