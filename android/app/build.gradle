@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 // TODO: Create a new file named keys.properties in the android directory of your Flutter project.
 //  Add your own Google Maps API key to the file keys.properties
 //  google_maps_api_key=your key here
+//  Apply for API key: https://developers.google.com/maps/documentation/embed/get-api-key#create-api-keys
 def keysPropertiesFile = rootProject.file('keys.properties')
 def keysProperties = new Properties()
 keysProperties.load(new FileInputStream(keysPropertiesFile))
@@ -55,9 +56,9 @@ android {
     }
 
     buildTypes {
-		debug {
-			applicationIdSuffix ".staging"
-		}
+        debug {
+            applicationIdSuffix ".staging"
+        }
         release {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug

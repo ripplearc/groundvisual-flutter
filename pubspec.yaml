@@ -60,6 +60,8 @@ dependencies:
   # Charts
   fl_chart: ^0.35.0
   charts_flutter: ^0.12.0
+  # Web
+  dotenv: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -88,6 +90,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - web/.env
     - assets/
     - assets/map_styles/
     - assets/mock_response/
