@@ -21,10 +21,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-// TODO: Create a new file named keys.properties in the android directory of your Flutter project.
-//  Add your own Google Maps API key to the file keys.properties
+// TODO: Add your own Google Maps API key to the file android/keys.properties
 //  google_maps_api_key=your key here
 //  Apply for API key: https://developers.google.com/maps/documentation/embed/get-api-key#create-api-keys
+//  Make sure to enable the Android SDK API for you API key
 def keysPropertiesFile = rootProject.file('keys.properties')
 def keysProperties = new Properties()
 keysProperties.load(new FileInputStream(keysPropertiesFile))
