@@ -8,7 +8,12 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyBsCU8j-MG07caGkz1fRNtFL5ydz68VFpk")
+
+// TODO: Create a new file named Keys.swift in the ios/Runner directory of your Flutter project.
+//  Add your own Google Maps API key to the file Keys.swift
+//  static let googleMapsApiKey = "YOUR_API_KEY"
+//  Apply for API key: https://developers.google.com/maps/documentation/embed/get-api-key#create-api-keys
+    GMSServices.provideAPIKey(Keys.googleMapsApiKey)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
