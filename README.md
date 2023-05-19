@@ -11,6 +11,12 @@ Generate files from build_runner
 flutter pub get; \
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+Gogole Map API key is senstiive information and should not be committed to the repository.
+```shell
+git update-index --skip-worktree android/keys.properties ios/Runner/Keys.swift web/.env
+```
+
 ### Build Android App
 
 1. Replace the Google Map API key in `keys.properties` in the `android` directory
