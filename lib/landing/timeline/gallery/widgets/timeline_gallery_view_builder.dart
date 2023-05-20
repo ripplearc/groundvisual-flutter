@@ -33,7 +33,7 @@ mixin TimelineGalleryViewBuilder {
 
   PhotoViewGalleryPageOptions _buildImageAsset(GalleryItem item) =>
       PhotoViewGalleryPageOptions(
-        imageProvider: AssetImage(item.imageName),
+        imageProvider: NetworkImage(item.imageName),
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * ScaleFactor,
